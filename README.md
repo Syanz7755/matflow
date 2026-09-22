@@ -44,16 +44,18 @@ npm run dev
 
 Open the local address shown by Vite (normally `http://localhost:5173`). Try the suggested prompts to create the EIS pipeline, update its frequency threshold, and insert a Human Decision node.
 
-## Configure an AI provider
+## Configure the local LiteLLM gateway
 
-MatFlow does not store API keys in `data/settings.json`. Set the key in the environment that starts MatFlow, then open **Settings → Agent runtime** and enter an OpenAI-compatible base URL and model name.
+The default startup now runs a local LiteLLM gateway on `http://127.0.0.1:4000`, then starts MatFlow against it on port 8000. MatFlow defaults to the `qwen` model and uses the local gateway key `sk-local-wqs`; the gateway forwards upstream using the environment variable below.
 
 ```powershell
-$env:MATFLOW_API_KEY = "your-key"
+$env:SJTU_ZHIYUAN_API_KEY = "your-key"
 uv run matflow start
 ```
 
-To use a different environment-variable name, change **API key environment variable** in Settings before starting a new session with that variable set.
+The gateway model definitions live in [config/litellm.yaml](config/litellm.yaml), including `qwen`, `minimax`, `deepseek-chat`, `deepseek-reasoner`, and `glm`. The upstream key is never persisted in `data/settings.json`.
+
+For a manually started gateway, run `uv run litellm --config config/litellm.yaml --port 4000`, then set MatFlow's Agent runtime base URL to `http://127.0.0.1:4000/v1`, model to `qwen`, and API-key environment variable to `MATFLOW_LITELLM_API_KEY` with value `sk-local-wqs`.
 
 Each agent turn automatically loads `runtime_skills/matflow_agent_runtime.md`. This is the governing runtime behavior: it tells the model to inspect files, use only registered tools, make all graph changes through schema validation, and ask rather than guess. Add or version more Runtime Skills in that directory as the project’s operating policy evolves.
 

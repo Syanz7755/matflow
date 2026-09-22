@@ -2,9 +2,12 @@
 from __future__ import annotations
 
 import argparse
+import os
 import shutil
 import subprocess
 import sys
+import time
+from urllib import request as urlrequest
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -48,7 +51,31 @@ def start() -> int:
     if not (ROOT / "frontend" / "node_modules").exists():
         print("Frontend packages are missing. Run: matflow install-frontend", file=sys.stderr)
         return 1
-    api = subprocess.Popen([sys.executable, "-m", "uvicorn", "backend.main:app", "--port", "8000"], cwd=ROOT)
+    litellm_config = ROOT / "config" / "litellm.yaml"
+    litellm = None
+    if not os.environ.get("SJTU_ZHIYUAN_API_KEY"):
+        print("SJTU_ZHIYUAN_API_KEY is not set; LiteLLM will start but upstream requests will fail.", file=sys.stderr)
+    try:
+        with urlrequest.urlopen("http://127.0.0.1:4000/health/readiness", timeout=1):
+            gateway_ready = True
+    except Exception:
+        gateway_ready = False
+    if not gateway_ready:
+        litellm = subprocess.Popen([sys.executable, "-m", "litellm", "--config", str(litellm_config), "--port", "4000"], cwd=ROOT)
+        for _ in range(30):
+            try:
+                with urlrequest.urlopen("http://127.0.0.1:4000/health/readiness", timeout=1):
+                    break
+            except Exception:
+                if litellm.poll() is not None:
+                    raise RuntimeError("LiteLLM proxy exited during startup. Check its console output.")
+                time.sleep(1)
+        else:
+            litellm.terminate()
+            raise RuntimeError("LiteLLM proxy did not become ready on http://127.0.0.1:4000.")
+
+    os.environ.setdefault("MATFLOW_LITELLM_API_KEY", "sk-local-wqs")
+    api = subprocess.Popen([sys.executable, "-m", "uvicorn", "backend.main:app", "--port", "8000"], cwd=ROOT, env=os.environ.copy())
     try:
         print("MatFlow is starting. Open the Vite URL below (normally http://localhost:5173).")
         return subprocess.call([shutil.which("npm") or "npm", "run", "dev"], cwd=ROOT / "frontend")
@@ -60,6 +87,12 @@ def start() -> int:
             api.wait(timeout=5)
         except subprocess.TimeoutExpired:
             api.kill()
+        if litellm is not None:
+            litellm.terminate()
+            try:
+                litellm.wait(timeout=5)
+            except subprocess.TimeoutExpired:
+                litellm.kill()
 
 
 def main() -> int:

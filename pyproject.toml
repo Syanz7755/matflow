@@ -15,6 +15,7 @@ dependencies = [
   "numpy>=1.26,<3.0",
   "pandas>=2.2,<4.0",
   "python-multipart>=0.0.20,<1.0",
+  "litellm[proxy]>=1.74,<2.0",
 ]
 
 [project.scripts]

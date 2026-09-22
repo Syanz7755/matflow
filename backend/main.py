@@ -72,9 +72,9 @@ def default_settings() -> dict[str, Any]:
     return {
         "agent": {
             "provider": "openai_compatible",
-            "base_url": "https://api.openai.com/v1",
-            "model": "",
-            "api_key_env": "MATFLOW_API_KEY",
+            "base_url": "http://127.0.0.1:4000/v1",
+            "model": "qwen",
+            "api_key_env": "MATFLOW_LITELLM_API_KEY",
             "temperature": 0.2,
             "system_prompt": "Respect the runtime skills. Use tools to inspect files and execute work; never invent observations.",
             "max_tool_rounds": 8,
