@@ -1,0 +1,76 @@
+"""Command line entry point for the local MatFlow demo."""
+from __future__ import annotations
+
+import argparse
+import shutil
+import subprocess
+import sys
+from pathlib import Path
+
+ROOT = Path(__file__).resolve().parents[1]
+
+
+def diagnose() -> int:
+    """Print actionable checks without making changes."""
+    checks = [
+        ("Python", f"{sys.version_info.major}.{sys.version_info.minor}.{sys.version_info.micro}"),
+        ("uv environment", str(ROOT / ".venv")),
+        ("Project root", str(ROOT)),
+        ("Node.js", shutil.which("node") or "not found"),
+        ("npm", shutil.which("npm") or "not found"),
+        ("Frontend packages", "installed" if (ROOT / "frontend" / "node_modules").exists() else "missing; run matflow install-frontend"),
+    ]
+    for label, value in checks:
+        print(f"{label:18} {value}")
+    try:
+        from fastapi import __version__ as fastapi_version
+        import numpy, pandas
+        print(f"FastAPI             {fastapi_version}")
+        print(f"NumPy / Pandas      {numpy.__version__} / {pandas.__version__}")
+    except ImportError as exc:
+        print(f"Python packages     missing: {exc.name}; run python -m pip install -e .")
+        return 1
+    return 0
+
+
+def install_frontend() -> int:
+    npm = shutil.which("npm")
+    if not npm:
+        print("Node.js/npm was not found. Activate the Conda environment created from environment.yml.", file=sys.stderr)
+        return 1
+    command = [npm, "ci"] if (ROOT / "frontend" / "package-lock.json").exists() else [npm, "install"]
+    return subprocess.call(command, cwd=ROOT / "frontend")
+
+
+def start() -> int:
+    if diagnose():
+        return 1
+    if not (ROOT / "frontend" / "node_modules").exists():
+        print("Frontend packages are missing. Run: matflow install-frontend", file=sys.stderr)
+        return 1
+    api = subprocess.Popen([sys.executable, "-m", "uvicorn", "backend.main:app", "--port", "8000"], cwd=ROOT)
+    try:
+        print("MatFlow is starting. Open the Vite URL below (normally http://localhost:5173).")
+        return subprocess.call([shutil.which("npm") or "npm", "run", "dev"], cwd=ROOT / "frontend")
+    except KeyboardInterrupt:
+        return 0
+    finally:
+        api.terminate()
+        try:
+            api.wait(timeout=5)
+        except subprocess.TimeoutExpired:
+            api.kill()
+
+
+def main() -> int:
+    parser = argparse.ArgumentParser(prog="matflow", description="Local Materials Graph Demo")
+    commands = parser.add_subparsers(dest="command", required=True)
+    commands.add_parser("diagnose", help="check Conda, Python and frontend readiness")
+    commands.add_parser("install-frontend", help="install locked frontend packages")
+    commands.add_parser("start", help="start the API and visual workflow editor")
+    args = parser.parse_args()
+    return {"diagnose": diagnose, "install-frontend": install_frontend, "start": start}[args.command]()
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

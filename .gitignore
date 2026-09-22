@@ -1,0 +1,39 @@
+# Secrets and local environment overrides
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.p12
+*.pfx
+
+# Python environments, builds, caches, and test output
+.venv/
+venv/
+ENV/
+__pycache__/
+*.py[cod]
+*.egg-info/
+build/
+dist/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+coverage.xml
+htmlcov/
+
+# Frontend dependencies and generated output
+frontend/node_modules/
+frontend/dist/
+
+# Local application state and uploaded research data
+data/graph_state.json
+data/settings.json
+data/uploads/
+
+# Local tooling and diagnostics
+.spec-render/
+*.log
+.DS_Store
+Thumbs.db
