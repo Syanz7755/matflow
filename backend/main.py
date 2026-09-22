@@ -3,21 +3,24 @@ from __future__ import annotations
 
 import copy
 import json
-import logging
 import os
 import re
 import uuid
 from pathlib import Path
-from typing import Any, Literal
+from typing import Any
 from urllib import error as urlerror
 from urllib import request as urlrequest
 
 import numpy as np
 import pandas as pd
 
-from fastapi import FastAPI, File, Form, HTTPException, UploadFile
+from fastapi import FastAPI, File, Form, HTTPException, Request, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
-from pydantic import BaseModel, Field, model_validator
+from pydantic import BaseModel, Field
+
+from .contracts import DATA_TYPES, Edge, GraphPatch, GraphState, Node, Operation
+from .observability import audit, reset_trace_id, set_trace_id
+from .tool_registry import ToolRegistry, builtin_specs
 
 ROOT = Path(__file__).resolve().parents[1]
 STATE_FILE = ROOT / "data" / "graph_state.json"
@@ -25,71 +28,21 @@ SETTINGS_FILE = ROOT / "data" / "settings.json"
 UPLOAD_DIR = ROOT / "data" / "uploads"
 RUNTIME_SKILLS_DIR = ROOT / "runtime_skills"
 
-logging.basicConfig(level=logging.INFO, format="%(asctime)s | %(levelname)s | %(message)s")
-LOGGER = logging.getLogger("matflow")
-
-def audit(event: str, **context: Any) -> None:
-    """Emit structured, safe-to-read lifecycle events to the server console."""
-    LOGGER.info("%s %s", event, json.dumps(context, ensure_ascii=False, default=str))
-
 app = FastAPI(title="Materials Graph Demo")
 app.add_middleware(CORSMiddleware, allow_origins=["http://localhost:5173", "http://127.0.0.1:5173"], allow_methods=["*"], allow_headers=["*"])
 
-DATA_TYPES = ["RawData", "TypedTable", "EISData", "EISQCReport", "Plot", "Decision", "Artifact"]
-REGISTRY: dict[str, dict[str, Any]] = {
-    "raw_file_import": {"label": "Raw File Import", "category": "Input", "inputs": {}, "outputs": {"raw": "RawData"}, "params": {"file_name": "eis_measurement.csv", "upload_id": ""}, "description": "Import a specific uploaded CSV, Excel, TXT or JSON data file."},
-    "normalize_columns": {"label": "Normalize / Column Mapping", "category": "Transform", "inputs": {"raw": "RawData"}, "outputs": {"table": "TypedTable"}, "params": {"frequency_column": "frequency_hz", "real_column": "z_real", "imag_column": "z_imag"}, "description": "Map user column names into a typed measurement table."},
-    "eis_basic_qc": {"label": "EIS Basic Analysis", "category": "Analysis", "inputs": {"data": "TypedTable"}, "outputs": {"report": "EISQCReport", "data": "EISData"}, "params": {"min_frequency_hz": 10, "fit_model": "None"}, "description": "Nyquist/Bode quality checks and a typed EIS output."},
-    "plot_nyquist": {"label": "Plot Nyquist", "category": "Output", "inputs": {"data": "EISData"}, "outputs": {"plot": "Plot"}, "params": {"title": "Nyquist plot"}, "description": "Create a standard Nyquist plot."},
-    "human_decision": {"label": "Human Decision", "category": "Control", "inputs": {"context": "EISQCReport"}, "outputs": {"decision": "Decision"}, "params": {"prompt": "Approve the EIS fit?", "options": ["approve", "revise"]}, "description": "Pause a workflow for an expert choice."},
-    "skill_node": {"label": "AI Skill Node", "category": "AI", "inputs": {"dataset": "TypedTable"}, "outputs": {"artifact": "Artifact"}, "params": {"skill_id": "", "instructions": "", "output_schema": {}}, "description": "Runs a versioned domain skill against typed data and returns a schema-bound artifact."},
-}
 
-class Node(BaseModel):
-    id: str
-    type: str
-    label: str | None = None
-    params: dict[str, Any] = Field(default_factory=dict)
-    position: dict[str, float] = Field(default_factory=lambda: {"x": 100, "y": 100})
-    status: Literal["ready", "running", "completed", "waiting", "error"] = "ready"
-    output: dict[str, Any] | None = None
-
-class Edge(BaseModel):
-    id: str
-    source: str
-    source_port: str
-    target: str
-    target_port: str
-
-class GraphState(BaseModel):
-    version: int = 0
-    nodes: list[Node] = Field(default_factory=list)
-    edges: list[Edge] = Field(default_factory=list)
-    history: list[dict[str, Any]] = Field(default_factory=list)
-
-class Operation(BaseModel):
-    op: Literal["add_node", "update_node", "delete_node", "connect", "disconnect"]
-    node: Node | None = None
-    node_id: str | None = None
-    params: dict[str, Any] | None = None
-    edge: Edge | None = None
-    edge_id: str | None = None
-
-    @model_validator(mode="after")
-    def required_fields(self):
-        if self.op == "add_node" and not self.node: raise ValueError("add_node requires node")
-        if self.op == "update_node" and not self.node_id: raise ValueError("update_node requires node_id")
-        if self.op == "delete_node" and not self.node_id: raise ValueError("delete_node requires node_id")
-        if self.op == "connect" and not self.edge: raise ValueError("connect requires edge")
-        if self.op == "disconnect" and not self.edge_id: raise ValueError("disconnect requires edge_id")
-        return self
-
-class GraphPatch(BaseModel):
-    patch_id: str = Field(default_factory=lambda: str(uuid.uuid4()))
-    base_version: int
-    operations: list[Operation] = Field(min_length=1)
-    rationale: str = ""
-    requires_human_confirmation: bool = False
+@app.middleware("http")
+async def trace_request(request: Request, call_next):
+    """Correlate all lifecycle logs and responses for one user request."""
+    trace_id = request.headers.get("X-Trace-ID") or uuid.uuid4().hex
+    token = set_trace_id(trace_id)
+    try:
+        response = await call_next(request)
+        response.headers["X-Trace-ID"] = trace_id
+        return response
+    finally:
+        reset_trace_id(token)
 
 class ChatRequest(BaseModel):
     message: str = ""
@@ -118,6 +71,11 @@ def default_settings() -> dict[str, Any]:
         },
         "runtime_skills": {"enabled": ["matflow_agent_runtime.md"]},
         "custom_nodes": {},
+        "features": {
+            "tool_manager_search": False,
+            "tool_manager_adapt": False,
+            "tool_manager_build": False,
+        },
     }
 
 def load_settings() -> dict[str, Any]:
@@ -130,6 +88,7 @@ def load_settings() -> dict[str, Any]:
         "agent": {**defaults["agent"], **loaded.get("agent", {})},
         "runtime_skills": {**defaults["runtime_skills"], **loaded.get("runtime_skills", {})},
         "custom_nodes": loaded.get("custom_nodes", {}),
+        "features": {**defaults["features"], **loaded.get("features", {})},
     }
 
 def save_settings(settings: dict[str, Any]) -> None:
@@ -137,7 +96,7 @@ def save_settings(settings: dict[str, Any]) -> None:
     SETTINGS_FILE.write_text(json.dumps(settings, ensure_ascii=False, indent=2), encoding="utf-8")
 
 def registry() -> dict[str, dict[str, Any]]:
-    return {**REGISTRY, **load_settings()["custom_nodes"]}
+    return ToolRegistry(load_settings()["custom_nodes"]).legacy_view()
 
 def load_runtime_skills() -> list[dict[str, str]]:
     settings = load_settings(); enabled = settings.get("runtime_skills", {}).get("enabled", [])
@@ -201,7 +160,9 @@ def standard_node(kind: str, i: int) -> Node:
     return Node(id=f"{kind}-{i}", type=kind, label=spec["label"], params=copy.deepcopy(spec["params"]), position={"x": 80 + i * 230, "y": 140 + (i % 2) * 170})
 
 @app.get("/api/state")
-def get_state(): return {"state": load().model_dump(), "registry": registry(), "data_types": DATA_TYPES, "settings": load_settings()["agent"], "runtime_skills": [skill["name"] for skill in load_runtime_skills()]}
+def get_state():
+    settings = load_settings()
+    return {"state": load().model_dump(), "registry": registry(), "data_types": DATA_TYPES, "settings": settings["agent"], "runtime_skills": [skill["name"] for skill in load_runtime_skills()], "features": settings["features"]}
 
 @app.get("/api/settings")
 def get_settings(): return load_settings()
@@ -232,7 +193,7 @@ def add_library_node(payload: NodeLibraryPayload):
     try:
         settings = load_settings(); node = validate_library_node(payload.node)
         key = payload.key or re.sub(r"[^a-z0-9_]+", "_", node["label"].lower()).strip("_")
-        if not key or key in REGISTRY or key in settings["custom_nodes"]: raise ValueError("Choose a unique node key")
+        if not key or key in builtin_specs() or key in settings["custom_nodes"]: raise ValueError("Choose a unique node key")
         settings["custom_nodes"][key] = node; save_settings(settings); audit("node_library.created", key=key)
         return {"key": key, "node": node}
     except ValueError as exc: raise HTTPException(status_code=422, detail=str(exc))
