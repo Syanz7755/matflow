@@ -133,6 +133,17 @@ class RouterCandidate(BaseModel):
     reasons: list[str] = Field(default_factory=list)
 
 
+class ModelDecisionEvidence(BaseModel):
+    """A provider-neutral, redacted record of one routing-model decision."""
+
+    profile: str
+    model: str
+    selected_tool_id: str | None = None
+    score: float = Field(ge=0, le=1)
+    calibrated: bool
+    evidence: dict[str, Any] = Field(default_factory=dict)
+
+
 class TaskState(BaseModel):
     """The normalized routing context, separate from transient model messages."""
 
@@ -152,6 +163,7 @@ class RouterDecision(BaseModel):
     confidence: float = Field(ge=0, le=1)
     rationale: str
     requires_human_confirmation: bool = False
+    model_decisions: list[ModelDecisionEvidence] = Field(default_factory=list)
 
 
 class ExecutionError(BaseModel):

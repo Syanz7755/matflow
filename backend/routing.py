@@ -3,7 +3,8 @@ from __future__ import annotations
 
 import re
 
-from .contracts import RouterCandidate, RouterDecision, TaskState, ToolSpec
+from .contracts import ModelDecisionEvidence, RouterCandidate, RouterDecision, TaskState, ToolSpec
+from .jev_routing import JevDecisionRouter
 from .tool_registry import ToolRegistry
 
 
@@ -36,8 +37,9 @@ class CandidateRetriever:
 class DecisionRouter:
     """Produce an auditable route; a future model adapter can sit behind this interface."""
 
-    def __init__(self, retriever: CandidateRetriever | None = None):
+    def __init__(self, retriever: CandidateRetriever | None = None, jev_router: JevDecisionRouter | None = None):
         self._retriever = retriever or CandidateRetriever()
+        self._jev_router = jev_router
 
     def decide(self, task: TaskState, registry: ToolRegistry) -> RouterDecision:
         candidates = self._retriever.retrieve(task, registry)
@@ -53,13 +55,30 @@ class DecisionRouter:
             )
         winner = candidates[0]
         spec: ToolSpec = registry.get(winner.tool_id)
-        confirmation = winner.score < 0.6 or spec.risk_level != "low"
+        confirmation = (len(candidates) > 1 and winner.score < 0.6) or spec.risk_level != "low"
+        model_decisions: list[ModelDecisionEvidence] = []
+        rationale = f"Selected {spec.label} from {len(candidates)} compatible candidate(s)."
+        if self._jev_router:
+            model_winner, model_confidence, model_confirmation, selections, model_rationale = self._jev_router.decide(task, candidates, registry)
+            model_decisions = [ModelDecisionEvidence.model_validate(selection.model_dump()) for selection in selections]
+            if model_winner:
+                winner = model_winner
+                spec = registry.get(winner.tool_id)
+                confirmation = model_confirmation or spec.risk_level != "low"
+                confidence = model_confidence
+            else:
+                confirmation = confirmation or model_confirmation
+                confidence = winner.score
+            rationale = model_rationale
+        else:
+            confidence = winner.score
         return RouterDecision(
             task_id=task.task_id,
             graph_version=task.graph_version,
             candidates=candidates,
             selected=[winner],
-            confidence=winner.score,
-            rationale=f"Selected {spec.label} from {len(candidates)} compatible candidate(s).",
+            confidence=confidence,
+            rationale=rationale,
             requires_human_confirmation=confirmation,
+            model_decisions=model_decisions,
         )
