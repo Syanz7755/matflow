@@ -1,0 +1,27 @@
+{
+  "version": 1,
+  "services": [
+    {
+      "id": "litellm_gateway",
+      "enabled": true,
+      "mode": "online_api",
+      "working_directory": ".",
+      "executable": "uv",
+      "arguments": ["run", "litellm", "--config", "config/litellm.yaml", "--port", "4000"],
+      "required_environment": ["SJTU_ZHIYUAN_API_KEY"],
+      "health_url": "http://127.0.0.1:4000/health/readiness",
+      "startup_timeout_seconds": 30
+    },
+    {
+      "id": "jev_decision_gateway",
+      "enabled": true,
+      "mode": "local",
+      "working_directory": "D:\\Models\\jev\\gateway",
+      "executable": "powershell.exe",
+      "arguments": ["-NoProfile", "-ExecutionPolicy", "Bypass", "-File", "D:\\Models\\jev\\gateway\\start-jevd.ps1"],
+      "required_environment": [],
+      "health_url": "http://127.0.0.1:4079/health",
+      "startup_timeout_seconds": 30
+    }
+  ]
+}

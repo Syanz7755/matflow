@@ -1,5 +1,15 @@
 # 本地 Jev Router 配置
 
+## 双模型启动
+
+双击项目根目录的 `start_model_services.bat`，会按 `model_services.json` 启动两个模型网关：`litellm_gateway`（`online_api` 模式，读取 `litellm.yaml`）与 `jev_decision_gateway`（`local` 模式）。该启动器不显示或保存任何密钥；只检查 LiteLLM 所需环境变量的名称。
+
+`start_matflow.bat` 会先运行该双模型启动器，再打开 MatFlow。已在运行的健康网关会被复用，不会重复占用端口。可用以下命令只校验进程配置而不启动模型：
+
+```powershell
+powershell -NoProfile -ExecutionPolicy Bypass -File scripts\start_model_services.ps1 -ValidateOnly
+```
+
 `jev_router.json` 是 MatFlow 路由层的非机密运行配置。它将 Laya 与 Sematic（网关模型标识为 `semantic`）接入候选工具选择；两者是结构化决策模型，不用于聊天生成。
 
 配置路径可用 `MATFLOW_JEV_ROUTER_CONFIG` 环境变量覆盖，便于不同机器或部署环境使用各自的 JSON 文件。配置中不允许放 API key；当前本地网关也不需要 API key。
