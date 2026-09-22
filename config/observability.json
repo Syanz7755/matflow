@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "task_summaries": {
+    "enabled": true,
+    "jsonl_path": "data/audit/task_summaries.jsonl"
+  }
+}
