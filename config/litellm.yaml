@@ -28,7 +28,9 @@ model_list:
       api_base: https://models.sjtu.edu.cn/api/v1
 
 general_settings:
-  master_key: sk-local-wqs
+  # Authentication for callers of this local gateway only.  This is not an
+  # upstream provider credential; provider credentials remain environment-only.
+  master_key: sk-matflow-local-gateway-8f3c1a9d6e2b
 
 litellm_settings:
   drop_params: true
