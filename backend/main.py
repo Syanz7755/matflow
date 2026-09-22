@@ -18,10 +18,11 @@ from fastapi import FastAPI, File, Form, HTTPException, Request, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, Field
 
-from .contracts import DATA_TYPES, Edge, GraphPatch, GraphState, Node, Operation, TaskState
+from .contracts import DATA_TYPES, Edge, ExecutionError, ExecutionResult, GraphPatch, GraphState, Node, Operation, TaskState
 from .jev_routing import JevDecisionRouter
 from .observability import audit, reset_trace_id, set_trace_id
 from .routing import DecisionRouter
+from .task_summary import TaskSummaryService
 from .tool_registry import ToolRegistry, builtin_specs
 from .validator import GraphValidator, node_by_id
 
@@ -50,7 +51,9 @@ async def trace_request(request: Request, call_next):
 class ChatRequest(BaseModel):
     message: str = ""
     attachments: list[dict[str, Any]] = Field(default_factory=list)
-class ExecuteRequest(BaseModel): node_id: str
+class ExecuteRequest(BaseModel):
+    node_id: str
+    task_id: str | None = None
 class SettingsPayload(BaseModel): agent: dict[str, Any]
 class NodeLibraryPayload(BaseModel): key: str | None = None; node: dict[str, Any]
 
@@ -222,9 +225,21 @@ def post_patch(patch: GraphPatch):
 
 @app.post("/api/route")
 def route_task(request: RouteRequest):
-    decision = DecisionRouter(jev_router=JevDecisionRouter()).decide(request.task, ToolRegistry(load_settings()["custom_nodes"]))
+    tool_registry = ToolRegistry(load_settings()["custom_nodes"])
+    decision = DecisionRouter(jev_router=JevDecisionRouter()).decide(request.task, tool_registry)
+    summary = TaskSummaryService().record_routing(request.task, decision, tool_registry)
     audit("router.decided", task_id=request.task.task_id, graph_version=request.task.graph_version, candidates=[candidate.tool_id for candidate in decision.candidates], selected=[candidate.tool_id for candidate in decision.selected], confidence=decision.confidence, requires_human_confirmation=decision.requires_human_confirmation)
-    return decision
+    # Keep the established route fields at the top level while introducing the
+    # richer summary contract, so existing WebUI callers remain compatible.
+    return decision.model_dump() | {"summary": summary}
+
+
+@app.get("/api/task-summaries/{task_id}")
+def get_task_summary(task_id: str):
+    summary = TaskSummaryService().get(task_id)
+    if summary is None:
+        raise HTTPException(status_code=404, detail="No persisted task summary exists for this task_id.")
+    return summary
 
 def upload_path(upload_id: str) -> Path:
     """Resolve a server-generated upload token without allowing path traversal."""
@@ -385,10 +400,24 @@ def reset():
 @app.post("/api/execute")
 def execute(request: ExecuteRequest):
     state = load()
+    tool_registry = ToolRegistry(load_settings()["custom_nodes"])
     try:
         node = node_by_id(state, request.node_id)
         result = run_node_in_state(state, node); save(state)
-        return {"state": state.model_dump(), "result": result}
+        spec = tool_registry.get(node.tool_id or node.type)
+        execution = ExecutionResult(
+            node_id=node.id, tool_id=spec.tool_id, tool_version=spec.version,
+            status="waiting" if node.status == "waiting" else "completed", output=result,
+            output_schema_valid=result.get("kind") in spec.outputs.values(), trace_id=current_trace_id(),
+        )
+        summary = TaskSummaryService().record_execution(request.task_id, execution, tool_registry) if request.task_id else None
+        return {"state": state.model_dump(), "result": result, "execution": execution, "summary": summary}
     except ValueError as exc:
         audit("executor.failed", node_id=request.node_id, error=str(exc))
+        if request.task_id:
+            node = next((item for item in state.nodes if item.id == request.node_id), None)
+            if node is not None:
+                spec = tool_registry.get(node.tool_id or node.type)
+                failed = ExecutionResult(node_id=node.id, tool_id=spec.tool_id, tool_version=spec.version, status="failed", trace_id=current_trace_id(), error=ExecutionError(code="execution_failed", message=str(exc), retryable=True))
+                TaskSummaryService().record_execution(request.task_id, failed, tool_registry)
         raise HTTPException(status_code=422, detail=str(exc))

@@ -14,3 +14,11 @@
 `minimum_calibrated_confidence` 只应用于 Laya 的校准置信度。即使两模型选中同一工具，低于这个门槛仍会转为人工确认；Sematic 的分数是声明候选之间的条件评分，不能当作校准置信度。
 
 为检查当前网关，请访问 `/health` 和 `/v1/models`。端点、模型标识和超时均只从此配置读取，业务代码中不嵌入这些值。
+
+## 任务摘要日志
+
+`observability.json` 配置用户可读的任务摘要 JSONL 日志。每一条摘要始终保留原始 `user_prompt`，并依次记录输入上下文、候选工具、模型意见、最终选择、执行结果，以及错误与安全处理方式。
+
+所有工具证据同时包含面向人的 `label` 和稳定的 `registered_id` / `version`；因此 UI 不需要从中文或英文说明中反推实际注册工具。默认文件写到 `data/audit/task_summaries.jsonl`，该目录已被 Git 忽略，避免研究任务内容或用户 prompt 被提交到远端。
+
+路由接口 `/api/route` 在既有路由字段外增加 `summary`；后续执行请求可携带同一个 `task_id`，将执行结果合并进该任务摘要。`GET /api/task-summaries/{task_id}` 返回该任务最近的完整摘要。

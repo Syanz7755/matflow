@@ -182,3 +182,30 @@ class ExecutionResult(BaseModel):
     output_schema_valid: bool = False
     trace_id: str
     error: ExecutionError | None = None
+
+
+class RegisteredToolReference(BaseModel):
+    """Human-readable registry evidence retained beside its stable identity."""
+
+    registered_id: str
+    version: str
+    label: str
+    category: str
+
+
+class TaskLogSummary(BaseModel):
+    """A user-facing, auditable snapshot of one task lifecycle.
+
+    The summary deliberately contains the original user prompt and stable registry
+    identifiers.  It is a view contract for the WebUI and is not an executor log.
+    """
+
+    schema_version: Literal["1.0"] = "1.0"
+    task_id: str
+    trace_id: str
+    status: Literal["routed", "waiting_for_confirmation", "completed", "waiting", "failed"]
+    user_prompt: str
+    input_context: dict[str, Any] = Field(default_factory=dict)
+    decision: dict[str, Any] | None = None
+    result: dict[str, Any] | None = None
+    error_and_handling: dict[str, Any] = Field(default_factory=dict)

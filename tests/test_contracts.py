@@ -50,6 +50,9 @@ class RuntimeIntegrationTests(unittest.TestCase):
         decision = response.json()
         self.assertEqual(decision["selected"][0]["tool_id"], "eis_basic_qc")
         self.assertFalse(decision["requires_human_confirmation"])
+        summary = response.json()["summary"]
+        self.assertEqual(summary["user_prompt"], "Run basic EIS quality checks")
+        self.assertEqual(summary["decision"]["selected_tools"][0]["registered_id"], "eis_basic_qc")
 
     def test_route_returns_confirmation_when_no_tool_matches(self):
         response = TestClient(app).post("/api/route", json={"task": {"task_id": "route-unknown", "user_message": "Perform quantum diffraction tomography", "graph_version": 0, "available_input_types": ["TypedTable"]}})

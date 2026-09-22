@@ -32,6 +32,7 @@ frontend/dist/
 data/graph_state.json
 data/settings.json
 data/uploads/
+data/audit/
 
 # Local tooling and diagnostics
 .spec-render/
