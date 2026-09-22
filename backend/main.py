@@ -144,6 +144,23 @@ def get_state():
     settings = load_settings()
     return {"state": load().model_dump(), "registry": registry(), "data_types": DATA_TYPES, "settings": settings["agent"], "runtime_skills": [skill["name"] for skill in load_runtime_skills()], "features": settings["features"]}
 
+
+@app.get("/api/capabilities")
+def get_capabilities():
+    """Stable, read-only control-plane data for a future WebUI or other client."""
+    settings = load_settings()
+    return {
+        "registry": registry(),
+        "data_types": DATA_TYPES,
+        "features": settings["features"],
+        "operations": {
+            "route": "POST /api/route",
+            "read_task_summary": "GET /api/task-summaries/{task_id}",
+            "apply_graph_patch": "POST /api/patch",
+            "execute_node": "POST /api/execute",
+        },
+    }
+
 @app.get("/api/settings")
 def get_settings(): return load_settings()
 

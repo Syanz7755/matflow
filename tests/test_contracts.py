@@ -44,6 +44,14 @@ class RuntimeIntegrationTests(unittest.TestCase):
         self.assertEqual(response.json()["registry"]["eis_basic_qc"]["version"], "1.0.0")
         self.assertFalse(response.json()["features"]["tool_manager_build"])
 
+    def test_capabilities_exposes_future_client_operations_without_frontend(self):
+        response = TestClient(app).get("/api/capabilities")
+        self.assertEqual(response.status_code, 200)
+        payload = response.json()
+        self.assertEqual(payload["registry"]["eis_basic_qc"]["version"], "1.0.0")
+        self.assertEqual(payload["operations"]["route"], "POST /api/route")
+        self.assertEqual(payload["operations"]["execute_node"], "POST /api/execute")
+
     def test_route_selects_compatible_eis_tool_with_auditable_decision(self):
         response = TestClient(app).post("/api/route", json={"task": {"task_id": "route-eis", "user_message": "Run basic EIS quality checks", "graph_version": 0, "available_input_types": ["TypedTable"]}})
         self.assertEqual(response.status_code, 200)
@@ -53,6 +61,9 @@ class RuntimeIntegrationTests(unittest.TestCase):
         summary = response.json()["summary"]
         self.assertEqual(summary["user_prompt"], "Run basic EIS quality checks")
         self.assertEqual(summary["decision"]["selected_tools"][0]["registered_id"], "eis_basic_qc")
+        read_summary = TestClient(app).get("/api/task-summaries/route-eis")
+        self.assertEqual(read_summary.status_code, 200)
+        self.assertEqual(read_summary.json()["user_prompt"], "Run basic EIS quality checks")
 
     def test_route_returns_confirmation_when_no_tool_matches(self):
         response = TestClient(app).post("/api/route", json={"task": {"task_id": "route-unknown", "user_message": "Perform quantum diffraction tomography", "graph_version": 0, "available_input_types": ["TypedTable"]}})
