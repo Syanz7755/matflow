@@ -43,3 +43,16 @@ class RuntimeIntegrationTests(unittest.TestCase):
         self.assertEqual(response.json()["state"]["graph_id"], "local-default")
         self.assertEqual(response.json()["registry"]["eis_basic_qc"]["version"], "1.0.0")
         self.assertFalse(response.json()["features"]["tool_manager_build"])
+
+    def test_route_selects_compatible_eis_tool_with_auditable_decision(self):
+        response = TestClient(app).post("/api/route", json={"task": {"task_id": "route-eis", "user_message": "Run basic EIS quality checks", "graph_version": 0, "available_input_types": ["TypedTable"]}})
+        self.assertEqual(response.status_code, 200)
+        decision = response.json()
+        self.assertEqual(decision["selected"][0]["tool_id"], "eis_basic_qc")
+        self.assertFalse(decision["requires_human_confirmation"])
+
+    def test_route_returns_confirmation_when_no_tool_matches(self):
+        response = TestClient(app).post("/api/route", json={"task": {"task_id": "route-unknown", "user_message": "Perform quantum diffraction tomography", "graph_version": 0, "available_input_types": ["TypedTable"]}})
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json()["selected"], [])
+        self.assertTrue(response.json()["requires_human_confirmation"])

@@ -18,9 +18,11 @@ from fastapi import FastAPI, File, Form, HTTPException, Request, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, Field
 
-from .contracts import DATA_TYPES, Edge, GraphPatch, GraphState, Node, Operation
+from .contracts import DATA_TYPES, Edge, GraphPatch, GraphState, Node, Operation, TaskState
 from .observability import audit, reset_trace_id, set_trace_id
+from .routing import DecisionRouter
 from .tool_registry import ToolRegistry, builtin_specs
+from .validator import GraphValidator, node_by_id
 
 ROOT = Path(__file__).resolve().parents[1]
 STATE_FILE = ROOT / "data" / "graph_state.json"
@@ -50,6 +52,10 @@ class ChatRequest(BaseModel):
 class ExecuteRequest(BaseModel): node_id: str
 class SettingsPayload(BaseModel): agent: dict[str, Any]
 class NodeLibraryPayload(BaseModel): key: str | None = None; node: dict[str, Any]
+
+
+class RouteRequest(BaseModel):
+    task: TaskState
 
 def load() -> GraphState:
     return GraphState.model_validate_json(STATE_FILE.read_text(encoding="utf-8")) if STATE_FILE.exists() else GraphState()
@@ -107,38 +113,8 @@ def load_runtime_skills() -> list[dict[str, str]]:
         else: audit("runtime_skill.missing", skill=name)
     return skills
 
-def node_by_id(state: GraphState, node_id: str) -> Node:
-    return next((node for node in state.nodes if node.id == node_id), None) or (_ for _ in ()).throw(ValueError(f"Unknown node: {node_id}"))
-
 def validate_patch(state: GraphState, patch: GraphPatch) -> None:
-    if patch.base_version != state.version: raise ValueError(f"Version conflict: patch is based on v{patch.base_version}, current graph is v{state.version}")
-    scratch = copy.deepcopy(state)
-    for operation in patch.operations:
-        if operation.op == "add_node":
-            specs = registry()
-            if operation.node.type not in specs: raise ValueError(f"Unknown registry node: {operation.node.type}")
-            if any(n.id == operation.node.id for n in scratch.nodes): raise ValueError(f"Duplicate node id: {operation.node.id}")
-            scratch.nodes.append(operation.node)
-        elif operation.op == "update_node":
-            node = node_by_id(scratch, operation.node_id)
-            allowed = registry()[node.type]["params"]
-            invalid = set((operation.params or {})) - set(allowed)
-            if invalid: raise ValueError(f"Unsupported parameter(s) for {node.type}: {', '.join(invalid)}")
-            node.params.update(operation.params or {})
-        elif operation.op == "delete_node":
-            node_by_id(scratch, operation.node_id)
-            scratch.nodes = [n for n in scratch.nodes if n.id != operation.node_id]
-            scratch.edges = [e for e in scratch.edges if e.source != operation.node_id and e.target != operation.node_id]
-        elif operation.op == "connect":
-            edge = operation.edge; source = node_by_id(scratch, edge.source); target = node_by_id(scratch, edge.target)
-            specs = registry(); source_type = specs[source.type]["outputs"].get(edge.source_port)
-            target_type = specs[target.type]["inputs"].get(edge.target_port)
-            if not source_type or not target_type: raise ValueError("Unknown port in edge")
-            if source_type != target_type: raise ValueError(f"Type mismatch: {source_type} cannot connect to {target_type}")
-            if any(e.id == edge.id for e in scratch.edges): raise ValueError(f"Duplicate edge id: {edge.id}")
-            scratch.edges.append(edge)
-        elif operation.op == "disconnect":
-            if not any(e.id == operation.edge_id for e in scratch.edges): raise ValueError(f"Unknown edge: {operation.edge_id}")
+    GraphValidator().validate(state, patch, ToolRegistry(load_settings()["custom_nodes"]))
 
 def apply_patch(state: GraphState, patch: GraphPatch) -> GraphState:
     audit("patch.received", patch_id=patch.patch_id, base_version=patch.base_version, operations=[operation.op for operation in patch.operations])
@@ -241,6 +217,13 @@ async def upload_files(files: list[UploadFile] = File(...)):
 def post_patch(patch: GraphPatch):
     try: return {"state": apply_patch(load(), patch).model_dump()}
     except ValueError as exc: raise HTTPException(status_code=422, detail=str(exc))
+
+
+@app.post("/api/route")
+def route_task(request: RouteRequest):
+    decision = DecisionRouter().decide(request.task, ToolRegistry(load_settings()["custom_nodes"]))
+    audit("router.decided", task_id=request.task.task_id, graph_version=request.task.graph_version, candidates=[candidate.tool_id for candidate in decision.candidates], selected=[candidate.tool_id for candidate in decision.selected], confidence=decision.confidence, requires_human_confirmation=decision.requires_human_confirmation)
+    return decision
 
 def upload_path(upload_id: str) -> Path:
     """Resolve a server-generated upload token without allowing path traversal."""

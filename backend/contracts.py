@@ -133,6 +133,16 @@ class RouterCandidate(BaseModel):
     reasons: list[str] = Field(default_factory=list)
 
 
+class TaskState(BaseModel):
+    """The normalized routing context, separate from transient model messages."""
+
+    task_id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+    user_message: str = Field(min_length=1, max_length=4000)
+    graph_version: int = Field(ge=0)
+    available_input_types: list[DataType] = Field(default_factory=list)
+    assumptions: list[str] = Field(default_factory=list)
+
+
 class RouterDecision(BaseModel):
     decision_id: str = Field(default_factory=lambda: str(uuid.uuid4()))
     task_id: str
