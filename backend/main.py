@@ -19,6 +19,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, Field
 
 from .contracts import DATA_TYPES, Edge, GraphPatch, GraphState, Node, Operation, TaskState
+from .jev_routing import JevDecisionRouter
 from .observability import audit, reset_trace_id, set_trace_id
 from .routing import DecisionRouter
 from .tool_registry import ToolRegistry, builtin_specs
@@ -221,7 +222,7 @@ def post_patch(patch: GraphPatch):
 
 @app.post("/api/route")
 def route_task(request: RouteRequest):
-    decision = DecisionRouter().decide(request.task, ToolRegistry(load_settings()["custom_nodes"]))
+    decision = DecisionRouter(jev_router=JevDecisionRouter()).decide(request.task, ToolRegistry(load_settings()["custom_nodes"]))
     audit("router.decided", task_id=request.task.task_id, graph_version=request.task.graph_version, candidates=[candidate.tool_id for candidate in decision.candidates], selected=[candidate.tool_id for candidate in decision.selected], confidence=decision.confidence, requires_human_confirmation=decision.requires_human_confirmation)
     return decision
 

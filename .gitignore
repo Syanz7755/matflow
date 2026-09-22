@@ -22,6 +22,7 @@ dist/
 .coverage
 coverage.xml
 htmlcov/
+examples/reports/
 
 # Frontend dependencies and generated output
 frontend/node_modules/
