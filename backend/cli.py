@@ -10,7 +10,18 @@ import time
 from urllib import request as urlrequest
 from pathlib import Path
 
+import yaml
+
 ROOT = Path(__file__).resolve().parents[1]
+
+
+def configured_litellm_gateway_key(config_path: Path) -> str:
+    """Return the local gateway key from the single project configuration source."""
+    config = yaml.safe_load(config_path.read_text(encoding="utf-8")) or {}
+    key = config.get("general_settings", {}).get("master_key")
+    if not isinstance(key, str) or not key.strip():
+        raise RuntimeError("config/litellm.yaml must set general_settings.master_key.")
+    return key
 
 
 def diagnose() -> int:
@@ -74,7 +85,7 @@ def start() -> int:
             litellm.terminate()
             raise RuntimeError("LiteLLM proxy did not become ready on http://127.0.0.1:4000.")
 
-    os.environ.setdefault("MATFLOW_LITELLM_API_KEY", "sk-local-wqs")
+    os.environ.setdefault("MATFLOW_LITELLM_API_KEY", configured_litellm_gateway_key(litellm_config))
     api = subprocess.Popen([sys.executable, "-m", "uvicorn", "backend.main:app", "--port", "8000"], cwd=ROOT, env=os.environ.copy())
     try:
         print("MatFlow is starting. Open the Vite URL below (normally http://localhost:5173).")

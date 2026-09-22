@@ -7,7 +7,7 @@
 启动后，可在另一个终端设置本地网关访问令牌并执行功能探测：
 
 ```powershell
-$env:MATFLOW_LITELLM_API_KEY = "sk-local-wqs"
+The project launcher and the gateway-check script read the local gateway key from `config/litellm.yaml` automatically. It does not need to be copied into a terminal or displayed.
 uv run python examples\evaluate_llm_gateway.py
 ```
 

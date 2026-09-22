@@ -6,22 +6,19 @@ import os
 from pathlib import Path
 from urllib import error, request
 
-from backend.main import default_settings
+from backend.cli import configured_litellm_gateway_key
+from backend.main import ROOT, default_settings
 
 
 def main() -> None:
     agent = default_settings()["agent"]
-    api_key = os.environ.get(agent["api_key_env"])
+    api_key = os.environ.get(agent["api_key_env"]) or configured_litellm_gateway_key(ROOT / "config" / "litellm.yaml")
     report = {
         "base_url": agent["base_url"], "model": agent["model"],
         "credential_present": bool(api_key), "models_reachable": False,
         "text_completion_reachable": False, "tool_call_reachable": False,
         "failure": None,
     }
-    if not api_key:
-        report["failure"] = f"Set {agent['api_key_env']} in the process that runs this script."
-        print(json.dumps(report, ensure_ascii=False, indent=2))
-        return
     headers = {"Content-Type": "application/json", "Authorization": f"Bearer {api_key}"}
 
     def call(path: str, body: dict | None = None) -> dict:

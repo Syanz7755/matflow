@@ -55,7 +55,7 @@ uv run matflow start
 
 The gateway model definitions live in [config/litellm.yaml](config/litellm.yaml), including `qwen`, `minimax`, `deepseek-chat`, `deepseek-reasoner`, and `glm`. The upstream key is never persisted in `data/settings.json`.
 
-For a manually started gateway, run `uv run litellm --config config/litellm.yaml --port 4000`, then set MatFlow's Agent runtime base URL to `http://127.0.0.1:4000/v1`, model to `qwen`, and API-key environment variable to `MATFLOW_LITELLM_API_KEY` with value `sk-local-wqs`.
+For a manually started gateway, run `uv run litellm --config config/litellm.yaml --port 4000`, then set MatFlow's Agent runtime base URL to `http://127.0.0.1:4000/v1`, model to `qwen`, and API-key environment variable to `MATFLOW_LITELLM_API_KEY`. When MatFlow is started through the project launcher, this local gateway key is loaded automatically from `config/litellm.yaml`; do not copy provider credentials into project files.
 
 Each agent turn automatically loads `runtime_skills/matflow_agent_runtime.md`. This is the governing runtime behavior: it tells the model to inspect files, use only registered tools, make all graph changes through schema validation, and ask rather than guess. Add or version more Runtime Skills in that directory as the project’s operating policy evolves.
 
