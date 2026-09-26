@@ -27,6 +27,8 @@ examples/reports/
 # Frontend dependencies and generated output
 frontend/node_modules/
 frontend/dist/
+frontend/test-results/
+frontend/playwright-report/
 
 # Local application state and uploaded research data
 data/graph_state.json

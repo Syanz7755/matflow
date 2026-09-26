@@ -1,4 +1,4 @@
-# Materials Graph Demo v0.1
+# MatFlow v0.2
 
 A local, schema-constrained materials-agent workspace. MatFlow delegates planning to a user-configured OpenAI-compatible model, then constrains it with versioned Runtime Skills and an audited tool registry.
 
@@ -42,11 +42,20 @@ Set-Location frontend
 npm run dev
 ```
 
-Open the local address shown by Vite (normally `http://localhost:5173`). Try the suggested prompts to create the EIS pipeline, update its frequency threshold, and insert a Human Decision node.
+Open the local address shown by Vite (normally `http://localhost:5173`). The v0.2 Research Workbench reads server-confirmed GraphState and registry data, routes a research task, and presents its auditable decision record. It does not autonomously modify the graph or execute a tool.
+
+To verify the browser-facing slice, run:
+
+```powershell
+Set-Location frontend
+npm run test:e2e
+```
+
+This starts isolated test services on local test ports and checks an EIS route, desktop/mobile accessibility, keyboard focus and touch-target sizing. Run `npm run build` to create a production frontend bundle.
 
 ## Configure the local LiteLLM gateway
 
-The default startup now runs a local LiteLLM gateway on `http://127.0.0.1:4000`, then starts MatFlow against it on port 8000. MatFlow defaults to the `qwen` model and uses the local gateway key `sk-local-wqs`; the gateway forwards upstream using the environment variable below.
+The default startup now runs a local LiteLLM gateway on `http://127.0.0.1:4000`, then starts MatFlow against it on port 8000. MatFlow defaults to the `qwen` model; the local gateway key is loaded from the project configuration rather than copied into commands or documentation. The gateway forwards upstream using the environment variable below.
 
 ```powershell
 $env:SJTU_ZHIYUAN_API_KEY = "your-key"
@@ -61,9 +70,10 @@ Each agent turn automatically loads `runtime_skills/matflow_agent_runtime.md`. T
 
 Material-domain abilities should be represented as **AI Skill Nodes** in the graph. They consume `TypedTable` and return a contract-bound `Artifact`; their `skill_id`, instructions, and output JSON schema travel with the workflow, so the graph executor remains compatible while individual skills evolve.
 
-## Workspace capabilities
+## Current workspace capabilities
 
-- Chat-style workflow conversation with drag-and-drop or `+` file attachment. Files remain in `data/uploads/` on the local machine and are limited to supported scientific/demo formats and 25 MB each.
+- Research Workbench: a server-authoritative screen for inspecting GraphState, the active registry, feature flags, task routing, registered tool IDs, decision rationale and error-handling evidence.
+- Versioned control-plane interfaces: state, capabilities, route, GraphPatch, execution and task summaries. See [docs/BACKEND_API_CONTRACT.md](docs/BACKEND_API_CONTRACT.md).
 - Runtime Agent loop: the model can inspect uploads, read the graph, apply validated patches, add compatible Skill Nodes, and run the workflow. Every call and failure is logged to the server console.
 - Real tabular EIS execution path: uploaded data is parsed, column mappings are validated, QC uses the uploaded values, and Nyquist points are generated from the uploaded values.
 - Settings drawer for provider configuration and the local materials-node library. Preset nodes are protected; custom nodes support JSON import, prompt-built templates, rename and deletion.
