@@ -1,5 +1,183 @@
-import React,{useEffect,useRef,useState}from'react';import{createRoot}from'react-dom/client';import{ReactFlow,Background,Controls,Handle,Position,MarkerType}from'@xyflow/react';import'@xyflow/react/dist/style.css';import'./style.css';
-const API='http://localhost:8000/api';const call=async(p,o={})=>{const r=await fetch(API+p,o),b=await r.json();if(!r.ok)throw Error(b.detail||'Request failed');return b};
-function Card({data}){return <div className="card"><Handle type="target" position={Position.Left}/><i>{data.category}</i><b>{data.label}</b><span>{data.detail}</span><div>{data.inputs.map(([k,v])=><small key={k}>← {k}: {v}</small>)}{data.outputs.map(([k,v])=><small key={k}>{k}: {v} →</small>)}</div><Handle type="source" position={Position.Right}/></div>}const nodeTypes={workflow:Card};
-function Settings({open,close,changed}){const[tab,setTab]=useState('agent'),[settings,setSettings]=useState(),[lib,setLib]=useState(),[skills,setSkills]=useState(),[draft,setDraft]=useState(''),[note,setNote]=useState('');const load=async()=>{setSettings(await call('/settings'));setLib(await call('/node-library'));setSkills(await call('/runtime-skills'))};useEffect(()=>{if(open)load()},[open]);const save=async()=>{await call('/settings',{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify({agent:settings.agent})});setNote('Provider settings saved. API keys remain in your environment.')};const build=async()=>{try{const b=await call('/node-library/prompt-build',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({message:draft})});await call('/node-library',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(b)});setDraft('');setNote(`Added ${b.node.label}.`);load();changed()}catch(e){setNote(e.message)}};const importing=async e=>{try{const node=JSON.parse(await e.target.files[0].text());await call('/node-library',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({node})});setNote(`Imported ${node.label}.`);load();changed()}catch(err){setNote(`Import failed: ${err.message}`)}};const rename=async(k,n)=>{const label=prompt('Node label',n.label);if(label){await call('/node-library/'+k,{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify({node:{...n,label}})});load();changed()}};const remove=async k=>{if(confirm(`Delete ${k}?`)){await call('/node-library/'+k,{method:'DELETE'});load();changed()}};if(!open)return null;return <div className="shade" onMouseDown={close}><aside className="settings" onMouseDown={e=>e.stopPropagation()}><header><div><em>WORKSPACE</em><h2>Settings</h2></div><button onClick={close}>×</button></header><nav><button className={tab==='agent'?'on':''} onClick={()=>setTab('agent')}>Agent runtime</button><button className={tab==='nodes'?'on':''} onClick={()=>setTab('nodes')}>Materials nodes</button></nav>{!settings?<main>Loading…</main>:tab==='agent'?<main><p>OpenAI-compatible provider. The API key is read only from the named environment variable.</p><label>Base URL<input value={settings.agent.base_url||''} onChange={e=>setSettings({...settings,agent:{...settings.agent,base_url:e.target.value}})}/></label><label>Model<input value={settings.agent.model||''} placeholder="e.g. your-model-name" onChange={e=>setSettings({...settings,agent:{...settings.agent,model:e.target.value}})}/></label><label>API key environment variable<input value={settings.agent.api_key_env||'MATFLOW_API_KEY'} onChange={e=>setSettings({...settings,agent:{...settings.agent,api_key_env:e.target.value}})}/></label><label>Temperature <output>{settings.agent.temperature}</output><input type="range" min="0" max="1" step=".1" value={settings.agent.temperature} onChange={e=>setSettings({...settings,agent:{...settings.agent,temperature:+e.target.value}})}/></label><label>Runtime addition<textarea value={settings.agent.system_prompt} onChange={e=>setSettings({...settings,agent:{...settings.agent,system_prompt:e.target.value}})}/></label><h3>Enabled Runtime Skills</h3>{skills?.enabled.map(s=><div className="item preset" key={s}><b>{s}</b><span>Injected every turn</span></div>)}<button className="primary" onClick={save}>Save settings</button></main>:<main><p>Preset nodes are protected. Custom nodes can be managed here.</p><label className="import">Import node JSON<input type="file" accept="application/json" onChange={importing}/></label><label>Prompt-build a node<textarea value={draft} onChange={e=>setDraft(e.target.value)} placeholder="e.g. Convert XRD peaks to d spacing…"/></label><button className="secondary" disabled={!draft.trim()} onClick={build}>Build from prompt</button><h3>Custom nodes</h3>{lib&&Object.entries(lib.custom).map(([k,n])=><div className="item" key={k}><div><b>{n.label}</b><small>{k}</small></div><div><button onClick={()=>rename(k,n)}>Rename</button><button className="danger" onClick={()=>remove(k)}>Delete</button></div></div>)}<h3>Preset nodes</h3>{lib&&Object.entries(lib.preset).map(([k,n])=><div className="item preset" key={k}><div><b>{n.label}</b><small>{k}</small></div><span>Protected</span></div>)}</main>}<footer>{note}</footer></aside></div>}
-function App(){const[data,setData]=useState(),[messages,setMessages]=useState([{role:'agent',text:'配置模型后，我会在 Runtime Skill 约束下检查文件、规划并调用受限工具。'}]),[text,setText]=useState(''),[files,setFiles]=useState([]),[busy,setBusy]=useState(false),[drag,setDrag]=useState(false),[settings,setSettings]=useState(false),[notice,setNotice]=useState('等待模型配置或对话输入'),ref=useRef();const refresh=async()=>setData(await call('/state'));useEffect(()=>{refresh().catch(e=>setNotice(e.message))},[]);const upload=async fs=>{if(!fs.length)return;const f=new FormData();[...fs].forEach(x=>f.append('files',x));try{setBusy(true);const r=await call('/uploads',{method:'POST',body:f});setFiles(a=>[...a,...r.files]);setNotice(`${r.files.length} file(s) attached and logged.`)}catch(e){setNotice(`Upload failed: ${e.message}`)}finally{setBusy(false)}};const send=async e=>{e?.preventDefault();if((!text.trim()&&!files.length)||busy)return;const out={role:'user',text:text.trim()||'Analyze these uploaded files.',files};setMessages(a=>[...a,out]);setText('');setFiles([]);setBusy(true);try{const r=await call('/chat',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({message:out.text,attachments:out.files})});setData(a=>({...a,state:r.state}));setMessages(a=>[...a,{role:'agent',text:r.summary}]);setNotice(`${r.trace?.filter(x=>x.ok).length||0} tool call(s) completed · graph v${r.state.version}.`)}catch(err){setMessages(a=>[...a,{role:'agent',text:`I stopped before making an unverified change: ${err.message}`}]);setNotice(`Runtime handled: ${err.message}`)}finally{setBusy(false)}};if(!data)return <div className="loading">Connecting to MatFlow…</div>;const{state,registry}=data,nodes=state.nodes.map(n=>({id:n.id,type:'workflow',position:n.position,data:{label:n.label||registry[n.type]?.label||n.type,category:registry[n.type]?.category||'Custom',detail:registry[n.type]?.description||'Custom materials node',inputs:Object.entries(registry[n.type]?.inputs||{}),outputs:Object.entries(registry[n.type]?.outputs||{})}})),edges=state.edges.map(e=>({id:e.id,source:e.source,target:e.target,animated:true,markerEnd:{type:MarkerType.ArrowClosed}}));return <div className="app"><aside className="chat"><header className="brand"><strong>M</strong><div><b>MatFlow</b><span>Runtime agent workspace</span></div><button onClick={()=>setSettings(true)}>⚙</button></header><section className="history">{messages.map((m,i)=><article className={'msg '+m.role} key={i}><i>{m.role==='agent'?'✦':'◉'}</i><div><small>{m.role==='agent'?'MatFlow':'You'}</small><p>{m.text}</p>{m.files?.length>0&&<aside>{m.files.map(f=><span key={f.id}>⌁ {f.name}</span>)}</aside>}</div></article>)}{busy&&<article className="msg agent"><i>✦</i><div><small>MatFlow runtime</small><p className="typing">● ● ● Planning and calling bounded tools…</p></div></article>}</section><section className={'composer '+(drag?'active':'')} onDragOver={e=>{e.preventDefault();setDrag(true)}} onDragLeave={()=>setDrag(false)} onDrop={e=>{e.preventDefault();setDrag(false);upload(e.dataTransfer.files)}}>{files.length>0&&<aside>{files.map(f=><span key={f.id}>⌁ {f.name}<button onClick={()=>setFiles(a=>a.filter(x=>x.id!==f.id))}>×</button></span>)}</aside>}<form onSubmit={send}><button type="button" className="plus" onClick={()=>ref.current.click()}>+</button><input ref={ref} hidden type="file" multiple accept=".csv,.txt,.xlsx,.xls,.json,.png,.jpg,.jpeg,.tif,.tiff" onChange={e=>upload(e.target.files)}/><textarea rows="1" value={text} onChange={e=>setText(e.target.value)} onKeyDown={e=>{if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();send()}}} placeholder="Ask about a file or a workflow…"/><button className="send" disabled={busy||(!text.trim()&&!files.length)}>↑</button></form><small>Enter to send · Shift+Enter for newline · Files stay local</small></section></aside><section className="work"><header><div><em>AGENT WORKFLOW</em><h1>Experiment canvas</h1></div><span><i/> Graph v{state.version} · {state.nodes.length} nodes · schema valid</span></header><main><ReactFlow nodes={nodes} edges={edges} nodeTypes={nodeTypes} fitView><Background color="#dce1e8" gap={24}/><Controls showInteractive={false}/></ReactFlow><aside className="event"><b>Runtime event</b>{notice}</aside></main><footer>Console: runtime skill → model → tool registry → graph executor <span>All changes are versioned locally</span></footer></section><Settings open={settings} close={()=>setSettings(false)} changed={refresh}/></div>};createRoot(document.getElementById('root')).render(<App/>);
+import { useEffect, useId, useState } from 'react';
+import { createRoot } from 'react-dom/client';
+import './style.css';
+
+const API = (import.meta.env.VITE_MATFLOW_API_URL ?? 'http://127.0.0.1:8000/api').replace(/\/$/, '');
+
+async function request(path, options = {}) {
+  const response = await fetch(`${API}${path}`, options);
+  const payload = await response.json().catch(() => ({}));
+  if (!response.ok) throw new Error(payload.detail ?? 'The MatFlow service could not complete this request.');
+  return payload;
+}
+
+function uniqueTaskId() {
+  return globalThis.crypto?.randomUUID?.() ?? `task-${Date.now()}-${Math.random().toString(16).slice(2)}`;
+}
+
+function RegistryItem({ toolId, tool }) {
+  return (
+    <li className="registry-item">
+      <div>
+        <strong>{tool.label}</strong>
+        <span className="registered-id">{toolId}</span>
+      </div>
+      <span className="tool-version">v{tool.version}</span>
+    </li>
+  );
+}
+
+function DecisionRecord({ summary }) {
+  if (!summary) {
+    return (
+      <section className="decision-panel empty-panel" aria-labelledby="decision-heading">
+        <div className="section-heading"><span className="section-index">02</span><h2 id="decision-heading">Decision record</h2></div>
+        <p>提交研究任务后，这里会保留服务端的候选工具、注册 ID、路由理由与安全处理建议。</p>
+      </section>
+    );
+  }
+
+  const selected = summary.decision?.selected_tools ?? [];
+  const candidates = summary.decision?.candidate_tools ?? [];
+  const waiting = summary.status === 'waiting_for_confirmation';
+  return (
+    <section className="decision-panel" aria-labelledby="decision-heading">
+      <div className="section-heading">
+        <span className="section-index">02</span>
+        <div><h2 id="decision-heading">Decision record</h2><p>服务端已记录此任务的可审计路由结果。</p></div>
+        <span className={`state-badge ${waiting ? 'state-attention' : 'state-ready'}`}>{waiting ? '需要确认' : '已路由'}</span>
+      </div>
+
+      <dl className="audit-facts">
+        <div><dt>Task ID</dt><dd>{summary.task_id}</dd></div>
+        <div><dt>Trace ID</dt><dd>{summary.trace_id}</dd></div>
+        <div><dt>Graph version</dt><dd>v{summary.input_context?.graph_version ?? '—'}</dd></div>
+      </dl>
+
+      <div className="prompt-evidence"><span>User prompt</span><p>{summary.user_prompt}</p></div>
+
+      <div className="decision-columns">
+        <div>
+          <h3>Selected registered tool</h3>
+          {selected.length ? <ul className="tool-list">{selected.map((tool) => <li key={tool.registered_id}><strong>{tool.label}</strong><code>{tool.registered_id}</code><span>v{tool.version}</span></li>)}</ul> : <p className="muted">没有自动选择工具。</p>}
+        </div>
+        <div>
+          <h3>Candidate retrieval</h3>
+          {candidates.length ? <ul className="candidate-list">{candidates.map((tool) => <li key={tool.registered_id}><code>{tool.registered_id}</code><span>{Math.round((tool.retrieval_score ?? 0) * 100)}% match</span></li>)}</ul> : <p className="muted">没有匹配候选。</p>}
+        </div>
+      </div>
+
+      <div className="rationale"><h3>Why this decision</h3><p>{summary.decision?.rationale ?? 'No rationale was returned.'}</p></div>
+      <div className={`handling ${waiting ? 'handling-attention' : ''}`}><span>{waiting ? 'Human review required' : 'Error & handling'}</span><p>{summary.error_and_handling?.handling ?? 'No handling record was returned.'}</p></div>
+    </section>
+  );
+}
+
+function App() {
+  const questionId = useId();
+  const [state, setState] = useState(null);
+  const [capabilities, setCapabilities] = useState(null);
+  const [question, setQuestion] = useState('');
+  const [inputTypes, setInputTypes] = useState([]);
+  const [summary, setSummary] = useState(null);
+  const [status, setStatus] = useState({ kind: 'loading', message: '正在读取 MatFlow 控制面…' });
+  const [busy, setBusy] = useState(false);
+
+  async function refreshControlPlane() {
+    setStatus({ kind: 'loading', message: '正在刷新服务端状态…' });
+    try {
+      const [nextState, nextCapabilities] = await Promise.all([request('/state'), request('/capabilities')]);
+      setState(nextState);
+      setCapabilities(nextCapabilities);
+      setStatus({ kind: 'ready', message: `已连接 · Graph v${nextState.state.version}` });
+    } catch (error) {
+      setStatus({ kind: 'error', message: error.message });
+    }
+  }
+
+  useEffect(() => { refreshControlPlane(); }, []);
+
+  function toggleInputType(type) {
+    setInputTypes((current) => current.includes(type) ? current.filter((item) => item !== type) : [...current, type]);
+  }
+
+  async function routeTask(event) {
+    event.preventDefault();
+    if (!question.trim() || !state) return;
+    setBusy(true);
+    setStatus({ kind: 'loading', message: '正在请求服务端路由决策…' });
+    try {
+      const taskId = uniqueTaskId();
+      const routed = await request('/route', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ task: { task_id: taskId, user_message: question.trim(), graph_version: state.state.version, available_input_types: inputTypes } }),
+      });
+      const persisted = await request(`/task-summaries/${encodeURIComponent(taskId)}`);
+      setSummary(persisted ?? routed.summary);
+      setStatus({ kind: routed.requires_human_confirmation ? 'attention' : 'ready', message: routed.requires_human_confirmation ? '路由等待人工确认' : '路由决策已保存' });
+    } catch (error) {
+      setStatus({ kind: 'error', message: error.message });
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  const registry = capabilities?.registry ?? state?.registry ?? {};
+  const graph = state?.state;
+  const dataTypes = capabilities?.data_types ?? state?.data_types ?? [];
+
+  return (
+    <div className="shell">
+      <a className="skip-link" href="#main-content">Skip to main content</a>
+      <header className="topbar">
+        <a className="brand" href="#main-content" aria-label="MatFlow research workbench home"><span className="brand-mark" aria-hidden="true">M</span><span><strong>MatFlow</strong><small>materials research agent</small></span></a>
+        <div className={`connection connection-${status.kind}`} role="status" aria-live="polite"><span aria-hidden="true" />{status.message}</div>
+      </header>
+
+      <div className="workspace">
+        <aside className="evidence-sidebar" aria-label="Server confirmed workflow evidence">
+          <section className="sidebar-section">
+            <div className="eyebrow-row"><span>Graph state</span><button type="button" onClick={refreshControlPlane} disabled={busy}>Refresh</button></div>
+            {graph ? <><strong className="graph-version">v{graph.version}</strong><p>{graph.nodes.length} nodes · {graph.edges.length} edges</p></> : <p>等待服务端状态。</p>}
+            <div className="graph-summary" aria-label="Current graph summary">
+              {graph?.nodes.length ? graph.nodes.map((node) => <div key={node.id}><span className={`node-dot node-${node.status}`} aria-hidden="true" /><strong>{node.label ?? node.type}</strong><code>{node.tool_id}</code></div>) : <p className="muted">当前图为空。路由不会自行修改它。</p>}
+            </div>
+          </section>
+
+          <section className="sidebar-section registry-section">
+            <div className="eyebrow-row"><span>Active registry</span><small>{Object.keys(registry).length} tools</small></div>
+            <ul className="registry-list" tabIndex="0" aria-label="Active registry tools">{Object.entries(registry).map(([toolId, tool]) => <RegistryItem key={toolId} toolId={toolId} tool={tool} />)}</ul>
+          </section>
+
+          <section className="sidebar-section feature-section">
+            <span className="eyebrow">Feature flags</span>
+            {Object.entries(capabilities?.features ?? {}).map(([feature, enabled]) => <p key={feature}><span className={enabled ? 'flag-on' : 'flag-off'} aria-hidden="true" />{feature.replaceAll('_', ' ')} <b>{enabled ? 'enabled' : 'disabled'}</b></p>)}
+          </section>
+        </aside>
+
+        <main id="main-content" className="main-content">
+          <section className="intro">
+            <p className="kicker">A server-authoritative control plane</p>
+            <h1>Research workbench</h1>
+            <p>先提出研究任务，再查看 MatFlow 基于注册工具与当前输入作出的决策。图、工具兼容性和执行规则始终由后端确认。</p>
+          </section>
+
+          <section className="task-panel" aria-labelledby="task-heading">
+            <div className="section-heading"><span className="section-index">01</span><div><h2 id="task-heading">Route a research task</h2><p>描述你想分析的材料数据，并声明目前可用的输入。</p></div></div>
+            <form onSubmit={routeTask}>
+              <label htmlFor={questionId}>研究问题 <span className="label-hint">Research question</span></label>
+              <textarea id={questionId} aria-label="Research question" value={question} onChange={(event) => setQuestion(event.target.value)} placeholder="例如：对已规范化的阻抗谱执行基础 EIS 质量检查" rows="4" required />
+              <fieldset><legend>Available input types</legend><div className="input-type-grid">{dataTypes.map((type) => <label key={type} className="type-option"><input type="checkbox" checked={inputTypes.includes(type)} onChange={() => toggleInputType(type)} /><span>{type}</span></label>)}</div></fieldset>
+              <div className="task-actions"><p>路由只生成决策和审计记录，不会自动执行工具或修改 GraphState。</p><button type="submit" disabled={busy || !question.trim() || !state}>{busy ? 'Routing…' : 'Get routing decision'}</button></div>
+            </form>
+          </section>
+
+          <DecisionRecord summary={summary} />
+        </main>
+      </div>
+    </div>
+  );
+}
+
+createRoot(document.getElementById('root')).render(<App />);
