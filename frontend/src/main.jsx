@@ -80,15 +80,18 @@ function App() {
   const [question, setQuestion] = useState('');
   const [inputTypes, setInputTypes] = useState([]);
   const [summary, setSummary] = useState(null);
+  const [datasets, setDatasets] = useState([]);
+  const [datasetDetail, setDatasetDetail] = useState(null);
   const [status, setStatus] = useState({ kind: 'loading', message: '正在读取 MatFlow 控制面…' });
   const [busy, setBusy] = useState(false);
 
   async function refreshControlPlane() {
     setStatus({ kind: 'loading', message: '正在刷新服务端状态…' });
     try {
-      const [nextState, nextCapabilities] = await Promise.all([request('/state'), request('/capabilities')]);
+      const [nextState, nextCapabilities, nextDatasets] = await Promise.all([request('/state'), request('/capabilities'), request('/uploads')]);
       setState(nextState);
       setCapabilities(nextCapabilities);
+      setDatasets(nextDatasets.files ?? []);
       setStatus({ kind: 'ready', message: `已连接 · Graph v${nextState.state.version}` });
     } catch (error) {
       setStatus({ kind: 'error', message: error.message });
@@ -123,6 +126,36 @@ function App() {
     }
   }
 
+  async function uploadDataset(event) {
+    const file = event.target.files?.[0];
+    if (!file) return;
+    setBusy(true);
+    setStatus({ kind: 'loading', message: `正在导入 ${file.name}…` });
+    try {
+      const body = new FormData();
+      body.append('files', file);
+      const imported = await request('/uploads', { method: 'POST', body });
+      const record = imported.files[0];
+      setDatasetDetail(await request(`/uploads/${encodeURIComponent(record.id)}`));
+      const listed = await request('/uploads');
+      setDatasets(listed.files ?? []);
+      setStatus({ kind: 'ready', message: `已导入 ${record.name}` });
+    } catch (error) {
+      setStatus({ kind: 'error', message: error.message });
+    } finally {
+      setBusy(false);
+      event.target.value = '';
+    }
+  }
+
+  async function inspectDataset(uploadId) {
+    try {
+      setDatasetDetail(await request(`/uploads/${encodeURIComponent(uploadId)}`));
+    } catch (error) {
+      setStatus({ kind: 'error', message: error.message });
+    }
+  }
+
   const registry = capabilities?.registry ?? state?.registry ?? {};
   const graph = state?.state;
   const dataTypes = capabilities?.data_types ?? state?.data_types ?? [];
@@ -148,6 +181,13 @@ function App() {
           <section className="sidebar-section registry-section">
             <div className="eyebrow-row"><span>Active registry</span><small>{Object.keys(registry).length} tools</small></div>
             <ul className="registry-list" tabIndex="0" aria-label="Active registry tools">{Object.entries(registry).map(([toolId, tool]) => <RegistryItem key={toolId} toolId={toolId} tool={tool} />)}</ul>
+          </section>
+
+          <section className="sidebar-section dataset-section">
+            <div className="eyebrow-row"><span>Datasets</span><small>{datasets.length} files</small></div>
+            <label className="dataset-upload">Import dataset<input type="file" onChange={uploadDataset} disabled={busy} accept=".csv,.txt,.xlsx,.xls,.json,.png,.jpg,.jpeg,.tif,.tiff" /></label>
+            {datasets.length ? <ul className="dataset-list" aria-label="Imported datasets">{datasets.map((dataset) => <li className="registry-item" key={dataset.id}><button type="button" onClick={() => inspectDataset(dataset.id)}><strong>{dataset.name}</strong><span>{Math.ceil(dataset.size / 1024)} KB</span></button></li>)}</ul> : <p className="muted">尚未导入数据。</p>}
+            {datasetDetail && <div className="dataset-detail"><strong>{datasetDetail.name}</strong><p>{datasetDetail.kind === 'table' ? `${datasetDetail.rows} rows · ${datasetDetail.columns.length} columns` : datasetDetail.kind}</p></div>}
           </section>
 
           <section className="sidebar-section feature-section">

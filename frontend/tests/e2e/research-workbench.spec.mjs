@@ -37,7 +37,7 @@ test('researcher can route an EIS task and inspect its auditable decision', asyn
 
   await expect(page.getByRole('heading', { name: 'Decision record' })).toBeVisible();
   await expect(page.getByText('eis_basic_qc', { exact: true })).toBeVisible();
-  await expect(page.getByText('Run basic EIS quality checks', { exact: true })).toBeVisible();
+  await expect(page.locator('.prompt-evidence').getByText('Run basic EIS quality checks', { exact: true })).toBeVisible();
   await audit(page, testInfo, 'workbench-desktop');
   await page.screenshot({ path: testInfo.outputPath('workbench-desktop.png'), fullPage: true });
 });
@@ -58,12 +58,15 @@ test('keyboard users meet the visible-focus and touch-target baseline', async ({
   await expect(page.getByRole('heading', { name: 'Research workbench' })).toBeVisible();
   await page.getByLabel('Research question').fill('Check keyboard navigation for an EIS task');
   await page.evaluate(() => document.activeElement?.blur());
+  const datasetButtons = await page.getByRole('list', { name: 'Imported datasets' }).getByRole('button').all();
 
   const tabOrder = [
     page.locator('.skip-link'),
     page.locator('.brand'),
     page.getByRole('button', { name: 'Refresh' }),
     page.locator('.registry-list'),
+    page.getByLabel('Import dataset'),
+    ...datasetButtons,
     page.getByLabel('Research question'),
     page.getByRole('checkbox', { name: 'RawData' }),
     page.getByRole('checkbox', { name: 'TypedTable' }),

@@ -6,6 +6,7 @@ import json
 import os
 import re
 import uuid
+from contextlib import asynccontextmanager
 from pathlib import Path
 from typing import Any
 from urllib import error as urlerror
@@ -25,6 +26,8 @@ from .routing import DecisionRouter
 from .task_summary import TaskSummaryService
 from .tool_registry import ToolRegistry, builtin_specs
 from .validator import GraphValidator, node_by_id
+from .workspace_runtime import WorkspaceRuntime
+from .mcp_server import create_mcp_server
 
 ROOT = Path(__file__).resolve().parents[1]
 STATE_FILE = ROOT / "data" / "graph_state.json"
@@ -32,7 +35,21 @@ SETTINGS_FILE = ROOT / "data" / "settings.json"
 UPLOAD_DIR = ROOT / "data" / "uploads"
 RUNTIME_SKILLS_DIR = ROOT / "runtime_skills"
 
-app = FastAPI(title="Materials Graph Demo")
+def _runtime_model_adapter(messages: list[dict[str, Any]], tools: list[dict[str, Any]]) -> dict[str, Any]:
+    return model_completion(messages, tools)
+
+
+workspace = WorkspaceRuntime(model_complete=_runtime_model_adapter)
+mcp_server = create_mcp_server(workspace)
+
+
+@asynccontextmanager
+async def lifespan(_: FastAPI):
+    async with mcp_server.session_manager.run():
+        yield
+
+
+app = FastAPI(title="Materials Graph Demo", lifespan=lifespan)
 app.add_middleware(CORSMiddleware, allow_origins=["http://localhost:5173", "http://127.0.0.1:5173"], allow_methods=["*"], allow_headers=["*"])
 
 
@@ -141,8 +158,8 @@ def standard_node(kind: str, i: int) -> Node:
 
 @app.get("/api/state")
 def get_state():
-    settings = load_settings()
-    return {"state": load().model_dump(), "registry": registry(), "data_types": DATA_TYPES, "settings": settings["agent"], "runtime_skills": [skill["name"] for skill in load_runtime_skills()], "features": settings["features"]}
+    snapshot = workspace.workspace_snapshot()
+    return snapshot | {"settings": workspace.read_settings()["agent"]}
 
 
 @app.get("/api/capabilities")
@@ -155,6 +172,8 @@ def get_capabilities():
         "features": settings["features"],
         "operations": {
             "route": "POST /api/route",
+            "list_datasets": "GET /api/uploads",
+            "import_dataset": "POST /api/uploads",
             "read_task_summary": "GET /api/task-summaries/{task_id}",
             "apply_graph_patch": "POST /api/patch",
             "execute_node": "POST /api/execute",
@@ -223,37 +242,42 @@ def prompt_build_node(request: ChatRequest):
 
 @app.post("/api/uploads")
 async def upload_files(files: list[UploadFile] = File(...)):
-    UPLOAD_DIR.mkdir(parents=True, exist_ok=True); uploaded = []
+    uploaded = []
     for file in files:
-        filename = Path(file.filename or "upload").name
-        suffix = Path(filename).suffix.lower()
-        if suffix not in {".csv", ".txt", ".xlsx", ".xls", ".json", ".png", ".jpg", ".jpeg", ".tif", ".tiff"}: raise HTTPException(status_code=415, detail=f"Unsupported file type: {suffix or 'none'}")
-        token = f"{uuid.uuid4().hex}_{filename}"; destination = UPLOAD_DIR / token; content = await file.read()
-        if len(content) > 25 * 1024 * 1024: raise HTTPException(status_code=413, detail=f"{filename} exceeds the 25 MB demo limit")
-        destination.write_bytes(content); record = {"id": token, "name": filename, "size": len(content), "type": file.content_type or "application/octet-stream"}; uploaded.append(record)
-        audit("upload.saved", **record)
+        try:
+            uploaded.append(workspace.import_dataset(file.filename or "upload", await file.read(), file.content_type or "application/octet-stream"))
+        except ValueError as exc:
+            status = 413 if "25 MB" in str(exc) else 415
+            raise HTTPException(status_code=status, detail=str(exc)) from exc
     return {"files": uploaded}
+
+
+@app.get("/api/uploads")
+def list_uploads():
+    return {"files": workspace.list_datasets()}
+
+
+@app.get("/api/uploads/{upload_id}")
+def inspect_uploaded_file(upload_id: str):
+    try:
+        return workspace.inspect_dataset(upload_id)
+    except ValueError as exc:
+        raise HTTPException(status_code=404, detail=str(exc)) from exc
 
 @app.post("/api/patch")
 def post_patch(patch: GraphPatch):
-    try: return {"state": apply_patch(load(), patch).model_dump()}
+    try: return {"state": workspace.apply_graph_patch(patch).model_dump()}
     except ValueError as exc: raise HTTPException(status_code=422, detail=str(exc))
 
 
 @app.post("/api/route")
 def route_task(request: RouteRequest):
-    tool_registry = ToolRegistry(load_settings()["custom_nodes"])
-    decision = DecisionRouter(jev_router=JevDecisionRouter()).decide(request.task, tool_registry)
-    summary = TaskSummaryService().record_routing(request.task, decision, tool_registry)
-    audit("router.decided", task_id=request.task.task_id, graph_version=request.task.graph_version, candidates=[candidate.tool_id for candidate in decision.candidates], selected=[candidate.tool_id for candidate in decision.selected], confidence=decision.confidence, requires_human_confirmation=decision.requires_human_confirmation)
-    # Keep the established route fields at the top level while introducing the
-    # richer summary contract, so existing WebUI callers remain compatible.
-    return decision.model_dump() | {"summary": summary}
+    return workspace.route_task(request.task)
 
 
 @app.get("/api/task-summaries/{task_id}")
 def get_task_summary(task_id: str):
-    summary = TaskSummaryService().get(task_id)
+    summary = workspace.task_summary(task_id)
     if summary is None:
         raise HTTPException(status_code=404, detail="No persisted task summary exists for this task_id.")
     return summary
@@ -386,6 +410,8 @@ def run_agent_tool(name: str, arguments: dict[str, Any]) -> dict[str, Any]:
 
 @app.post("/api/chat")
 def chat(request: ChatRequest):
+    if os.getenv("MATFLOW_ENABLE_LEGACY_CHAT", "").lower() not in {"1", "true", "yes"}:
+        raise HTTPException(status_code=410, detail="The built-in agent is retired. Connect an AI client through /mcp. Set MATFLOW_ENABLE_LEGACY_CHAT=1 only for migration.")
     audit("chat.received", message=request.message[:1000], attachments=[item.get("name") for item in request.attachments])
     skills = load_runtime_skills()
     system = "\n\n".join(["You are the MatFlow runtime agent.", *[f"## Runtime Skill: {skill['name']}\n{skill['content']}" for skill in skills], load_settings()["agent"].get("system_prompt", "")])
@@ -416,25 +442,11 @@ def reset():
 
 @app.post("/api/execute")
 def execute(request: ExecuteRequest):
-    state = load()
-    tool_registry = ToolRegistry(load_settings()["custom_nodes"])
     try:
-        node = node_by_id(state, request.node_id)
-        result = run_node_in_state(state, node); save(state)
-        spec = tool_registry.get(node.tool_id or node.type)
-        execution = ExecutionResult(
-            node_id=node.id, tool_id=spec.tool_id, tool_version=spec.version,
-            status="waiting" if node.status == "waiting" else "completed", output=result,
-            output_schema_valid=result.get("kind") in spec.outputs.values(), trace_id=current_trace_id(),
-        )
-        summary = TaskSummaryService().record_execution(request.task_id, execution, tool_registry) if request.task_id else None
-        return {"state": state.model_dump(), "result": result, "execution": execution, "summary": summary}
+        return workspace.execute_node(request.node_id, request.task_id)
     except ValueError as exc:
-        audit("executor.failed", node_id=request.node_id, error=str(exc))
-        if request.task_id:
-            node = next((item for item in state.nodes if item.id == request.node_id), None)
-            if node is not None:
-                spec = tool_registry.get(node.tool_id or node.type)
-                failed = ExecutionResult(node_id=node.id, tool_id=spec.tool_id, tool_version=spec.version, status="failed", trace_id=current_trace_id(), error=ExecutionError(code="execution_failed", message=str(exc), retryable=True))
-                TaskSummaryService().record_execution(request.task_id, failed, tool_registry)
-        raise HTTPException(status_code=422, detail=str(exc))
+        raise HTTPException(status_code=422, detail=str(exc)) from exc
+
+
+# Mount last so the established /api routes win before the MCP adapter's root mount.
+app.mount("/", mcp_server.streamable_http_app())
