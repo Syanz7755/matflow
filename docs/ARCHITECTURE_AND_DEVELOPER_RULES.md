@@ -1,12 +1,18 @@
-# MatFlow Architecture and AI Developer Rules (v1)
+# MatFlow 架构与 AI 开发规则（v1.1）
 
-**Status:** baseline design and implementation contract
-**Audience:** product owner, backend/frontend developers, and AI coding agents
-**Scope:** local, single-user materials-research workflow agent
+**状态：** 当前架构基线与实现约束
+
+**读者：** 产品负责人、后端/前端开发者和 AI 编码代理
+
+**范围：** 本地、单用户、由外部 AI 客户端接入的材料研究工作区
+
+文档导航：[文档中心](README.md) · [用户说明书](USER_MANUAL.md) · [接口契约](BACKEND_API_CONTRACT.md)
 
 ## 1. Product intent
 
-MatFlow helps materials researchers turn a research request and uploaded data into an **auditable, typed workflow graph**: inspect data, select compatible capabilities, validate a plan, execute it, and expose the resulting state and evidence in a WebUI.
+MatFlow helps materials researchers turn a research request and uploaded data into an **auditable, typed workflow graph**: inspect data, select compatible capabilities, validate a plan, execute it, and expose the resulting state and evidence in a WebUI or MCP client.
+
+The AI agent is outside MatFlow. ChatGPT, DeepSeek Harness, or another MCP client owns conversation and planning; MatFlow owns workspace truth, validation, persistence, and execution. The retired built-in chat loop is not part of the normal architecture.
 
 The v1 demo must make one closed loop reliable:
 
@@ -34,32 +40,31 @@ User request + upload -> inspect/retrieve -> decide -> validate -> execute -> up
 
 ```mermaid
 flowchart LR
-    U[Researcher] --> P[Parser / Task State]
-    P --> CR[Candidate Retrieval]
-    DTR[Dynamic Tool Registry] --> CR
-    CR --> DR[Decision Router]
-    TS[Tool Manager\nsearch / adapt / build] --> DTR
-    DR --> V[Validator]
-    V -->|valid plan| E[Executor]
-    V -->|needs clarification / invalid| U
-    E --> GS[(Versioned Graph State)]
-    GS --> UI[WebUI\nstructured state viewer + controls]
-    E --> OBS[Audit Log / Observability]
-    P --> OBS
-    CR --> OBS
-    DR --> OBS
-    V --> OBS
-    TS --> OBS
-    UI -->|typed commands only| P
+    U[Researcher] <--> AI[External AI client\nChatGPT / DSH / MCP client]
+    U <--> UI[WebUI control plane]
+    AI --> MCP[MCP adapter]
+    UI --> HTTP[HTTP adapter]
+    MCP --> WR[WorkspaceRuntime]
+    HTTP --> WR
+    WR --> REG[Tool registry + router]
+    WR --> VAL[Graph validator]
+    WR --> EXE[Executor]
+    WR --> DATA[(Graph state\nsettings\nuploads)]
+    WR --> OBS[Audit + task summaries]
+    REG --> VAL
+    VAL --> EXE
 ```
+
+`WorkspaceRuntime` is the deep, transport-neutral module. HTTP and MCP are adapters over the same operations; they must not independently implement routing, graph mutation, upload policy, persistence, or execution semantics.
 
 ### Control rules
 
 1. The backend owns task state, registry state, routing, validation, graph mutation, execution, and audit records.
-2. The WebUI renders returned structured state and sends typed user commands. It never decides a tool, mutates a graph locally, or interprets tool output as authoritative.
+2. The WebUI and MCP clients render returned structured state and send typed user commands. They never mutate persisted graph state directly or interpret unvalidated model output as authoritative.
 3. Every graph write is a version-checked, validated `GraphPatch`; the graph is never edited as an unvalidated side effect of a chat response.
 4. Every execution receives a validated tool specification and produces a normalized `ExecutionResult`.
-5. Advanced Tool Manager actions remain disabled by feature flags until their contracts, review gates, and tests exist.
+5. Reads may run automatically. Dataset import, patch application, execution, and human-decision submission require explicit user approval in AI clients.
+6. Advanced Tool Manager actions remain disabled by feature flags until their contracts, review gates, and tests exist.
 
 ## 3. Canonical data contracts
 
@@ -153,7 +158,10 @@ Allowed statuses: `completed`, `waiting`, `failed`, `cancelled`. A failed result
 
 | Module | Owns | Must not do |
 | --- | --- | --- |
-| Parser / Task State | Normalize request, attachments, assumptions, clarification needs | Execute tools or mutate graph |
+| External AI client | Conversation, intent parsing, proposing typed calls, asking for approval | Treat model memory as workspace truth or bypass server validation |
+| HTTP / MCP adapters | Transport decoding, public schemas, response envelopes | Reimplement runtime policy or write persistence files directly |
+| `WorkspaceRuntime` | Stable operations for state, datasets, routing, patches, execution and decisions | Depend on one specific UI or AI provider |
+| Task State | Normalize request, available inputs, assumptions, clarification needs | Execute tools or mutate graph |
 | Dynamic Tool Registry | Versioned `ToolSpec` discovery and lifecycle | Infer user intent |
 | Candidate Retrieval | Find and rank compatible tools | Execute candidates |
 | Decision Router | Select/propose a minimal plan with rationale | Skip validation |
@@ -162,7 +170,7 @@ Allowed statuses: `completed`, `waiting`, `failed`, `cancelled`. A failed result
 | Graph State | Durable versioned graph, patches, history | Present UI-only state as truth |
 | Tool Manager | Search, adapt, or scaffold tools behind review gates | Auto-activate generated tools |
 | Observability | Correlated audit events and safe diagnostics | Store API keys or unbounded raw sensitive data |
-| WebUI | Render state, collect commands, show trace/status | Duplicate backend rules |
+| WebUI | Render state, collect commands, show trace/status | Duplicate backend rules or act as an AI agent |
 
 ## 5. Development sequence
 

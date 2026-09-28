@@ -1,0 +1,365 @@
+"""Transport-neutral MatFlow workspace runtime.
+
+HTTP, MCP, and tests cross this single seam.  Persistence, validation, routing,
+uploads, and execution stay local to the implementation so adapters cannot
+silently develop different workflow semantics.
+"""
+from __future__ import annotations
+
+import copy
+import json
+import os
+import tempfile
+import threading
+import uuid
+from pathlib import Path
+from typing import Any, Callable
+
+import numpy as np
+import pandas as pd
+
+from .contracts import (
+    DATA_TYPES,
+    ExecutionError,
+    ExecutionResult,
+    GraphPatch,
+    GraphState,
+    Node,
+    TaskState,
+)
+from .jev_routing import JevDecisionRouter
+from .observability import audit, current_trace_id
+from .routing import DecisionRouter
+from .task_summary import TaskSummaryService
+from .tool_registry import ToolRegistry
+from .validator import GraphValidator, node_by_id
+
+ROOT = Path(__file__).resolve().parents[1]
+MAX_UPLOAD_BYTES = 25 * 1024 * 1024
+ALLOWED_UPLOAD_SUFFIXES = {
+    ".csv", ".txt", ".xlsx", ".xls", ".json", ".png", ".jpg", ".jpeg", ".tif", ".tiff"
+}
+
+
+def default_settings() -> dict[str, Any]:
+    return {
+        "agent": {
+            "provider": "openai_compatible",
+            "base_url": "http://127.0.0.1:4000/v1",
+            "model": "qwen",
+            "api_key_env": "MATFLOW_LITELLM_API_KEY",
+            "temperature": 0.2,
+            "system_prompt": "Respect the runtime skills. Use tools to inspect files and execute work; never invent observations.",
+            "max_tool_rounds": 8,
+        },
+        "runtime_skills": {"enabled": ["matflow_mcp_runtime.md"]},
+        "custom_nodes": {},
+        "features": {
+            "tool_manager_search": False,
+            "tool_manager_adapt": False,
+            "tool_manager_build": False,
+        },
+    }
+
+
+class WorkspaceRuntime:
+    """Deep module for all server-authoritative workspace operations."""
+
+    def __init__(
+        self,
+        root: Path = ROOT,
+        *,
+        model_complete: Callable[[list[dict[str, Any]], list[dict[str, Any]]], dict[str, Any]] | None = None,
+        summary_service: TaskSummaryService | None = None,
+    ):
+        self.root = root.resolve()
+        self.state_file = self.root / "data" / "graph_state.json"
+        self.settings_file = self.root / "data" / "settings.json"
+        self.upload_dir = self.root / "data" / "uploads"
+        self.runtime_skills_dir = self.root / "runtime_skills"
+        self._model_complete = model_complete
+        self._summaries = summary_service or TaskSummaryService()
+        self._write_lock = threading.RLock()
+
+    def read_state(self) -> GraphState:
+        if not self.state_file.exists():
+            return GraphState()
+        return GraphState.model_validate_json(self.state_file.read_text(encoding="utf-8"))
+
+    def write_state(self, state: GraphState) -> None:
+        with self._write_lock:
+            self._atomic_write(self.state_file, state.model_dump_json(indent=2))
+
+    def read_settings(self) -> dict[str, Any]:
+        defaults = default_settings()
+        if not self.settings_file.exists():
+            return defaults
+        loaded = json.loads(self.settings_file.read_text(encoding="utf-8"))
+        return {
+            **defaults,
+            **loaded,
+            "agent": {**defaults["agent"], **loaded.get("agent", {})},
+            "runtime_skills": {**defaults["runtime_skills"], **loaded.get("runtime_skills", {})},
+            "custom_nodes": loaded.get("custom_nodes", {}),
+            "features": {**defaults["features"], **loaded.get("features", {})},
+        }
+
+    def write_settings(self, settings: dict[str, Any]) -> None:
+        with self._write_lock:
+            self._atomic_write(self.settings_file, json.dumps(settings, ensure_ascii=False, indent=2))
+
+    def registry(self) -> ToolRegistry:
+        return ToolRegistry(self.read_settings()["custom_nodes"])
+
+    def workspace_snapshot(self) -> dict[str, Any]:
+        settings = self.read_settings()
+        return {
+            "state": self.read_state().model_dump(),
+            "registry": self.registry().legacy_view(),
+            "data_types": DATA_TYPES,
+            "runtime_skills": [item["name"] for item in self.runtime_skills()],
+            "features": settings["features"],
+        }
+
+    def runtime_skills(self) -> list[dict[str, str]]:
+        enabled = self.read_settings().get("runtime_skills", {}).get("enabled", [])
+        result: list[dict[str, str]] = []
+        for name in enabled:
+            path = self.runtime_skills_dir / Path(name).name
+            if path.exists():
+                result.append({"name": path.name, "content": path.read_text(encoding="utf-8")})
+            else:
+                audit("runtime_skill.missing", skill=name)
+        return result
+
+    def import_dataset(self, name: str, content: bytes, content_type: str = "application/octet-stream") -> dict[str, Any]:
+        filename = Path(name or "upload").name
+        suffix = Path(filename).suffix.lower()
+        if suffix not in ALLOWED_UPLOAD_SUFFIXES:
+            raise ValueError(f"Unsupported file type: {suffix or 'none'}")
+        if len(content) > MAX_UPLOAD_BYTES:
+            raise ValueError(f"{filename} exceeds the 25 MB limit")
+        self.upload_dir.mkdir(parents=True, exist_ok=True)
+        upload_id = f"{uuid.uuid4().hex}_{filename}"
+        destination = self.upload_dir / upload_id
+        with self._write_lock:
+            self._atomic_write_bytes(destination, content)
+        record = {"id": upload_id, "name": filename, "size": len(content), "type": content_type}
+        audit("upload.saved", **record)
+        return record
+
+    def inspect_dataset(self, upload_id: str) -> dict[str, Any]:
+        path = self._upload_path(upload_id)
+        result: dict[str, Any] = {
+            "upload_id": upload_id,
+            "name": path.name.split("_", 1)[-1],
+            "suffix": path.suffix.lower(),
+            "bytes": path.stat().st_size,
+        }
+        try:
+            frame = self._dataframe(upload_id)
+            result.update({
+                "kind": "table",
+                "rows": len(frame),
+                "columns": [{"name": str(name), "dtype": str(dtype)} for name, dtype in frame.dtypes.items()],
+                "preview": frame.head(8).replace({np.nan: None}).to_dict(orient="records"),
+            })
+        except ValueError:
+            result["kind"] = "binary"
+        except Exception as exc:
+            result.update({"kind": "unreadable", "error": str(exc)})
+        audit("tool.inspect_upload", upload_id=upload_id, kind=result["kind"])
+        return result
+
+    def list_datasets(self) -> list[dict[str, Any]]:
+        if not self.upload_dir.exists():
+            return []
+        datasets = []
+        for path in sorted(self.upload_dir.iterdir(), key=lambda item: item.stat().st_mtime, reverse=True):
+            if path.is_file():
+                datasets.append({"id": path.name, "name": path.name.split("_", 1)[-1], "size": path.stat().st_size, "suffix": path.suffix.lower()})
+        return datasets
+
+    def validate_graph_patch(self, patch: GraphPatch) -> dict[str, Any]:
+        state = self.read_state()
+        GraphValidator().validate(state, patch, self.registry())
+        return {"valid": True, "current_version": state.version, "next_version": state.version + 1, "patch_id": patch.patch_id}
+
+    def apply_graph_patch(self, patch: GraphPatch) -> GraphState:
+        with self._write_lock:
+            state = self.read_state()
+            audit("patch.received", patch_id=patch.patch_id, base_version=patch.base_version, operations=[op.op for op in patch.operations])
+            GraphValidator().validate(state, patch, self.registry())
+            before = state.model_dump()
+            for operation in patch.operations:
+                if operation.op == "add_node": state.nodes.append(operation.node)
+                elif operation.op == "update_node": node_by_id(state, operation.node_id or "").params.update(operation.params or {})
+                elif operation.op == "delete_node":
+                    state.nodes = [node for node in state.nodes if node.id != operation.node_id]
+                    state.edges = [edge for edge in state.edges if edge.source != operation.node_id and edge.target != operation.node_id]
+                elif operation.op == "connect": state.edges.append(operation.edge)
+                else: state.edges = [edge for edge in state.edges if edge.id != operation.edge_id]
+            state.version += 1
+            state.history.append({"version": state.version, "patch": patch.model_dump(), "before": before})
+            self.write_state(state)
+            audit("patch.applied", version=state.version, patch_id=patch.patch_id)
+            return state
+
+    def route_task(self, task: TaskState) -> dict[str, Any]:
+        registry = self.registry()
+        decision = DecisionRouter(jev_router=JevDecisionRouter()).decide(task, registry)
+        summary = self._summaries.record_routing(task, decision, registry)
+        audit("router.decided", task_id=task.task_id, graph_version=task.graph_version, selected=[c.tool_id for c in decision.selected], confidence=decision.confidence, requires_human_confirmation=decision.requires_human_confirmation)
+        return decision.model_dump() | {"summary": summary.model_dump()}
+
+    def task_summary(self, task_id: str) -> dict[str, Any] | None:
+        summary = self._summaries.get(task_id)
+        return summary.model_dump() if summary else None
+
+    def execute_node(self, node_id: str, task_id: str | None = None) -> dict[str, Any]:
+        with self._write_lock:
+            state = self.read_state()
+            node = node_by_id(state, node_id)
+            try:
+                output = self._run_node(state, node)
+                self.write_state(state)
+                spec = self.registry().get(node.tool_id or node.type)
+                execution = ExecutionResult(node_id=node.id, tool_id=spec.tool_id, tool_version=spec.version, status="waiting" if node.status == "waiting" else "completed", output=output, output_schema_valid=output.get("kind") in spec.outputs.values(), trace_id=current_trace_id())
+                summary = self._summaries.record_execution(task_id, execution, self.registry()) if task_id else None
+                return {"state": state.model_dump(), "result": output, "execution": execution.model_dump(), "summary": summary.model_dump() if summary else None}
+            except ValueError as exc:
+                node.status = "error"
+                node.output = {"error": str(exc)}
+                self.write_state(state)
+                audit("executor.failed", node_id=node_id, error=str(exc))
+                if task_id:
+                    spec = self.registry().get(node.tool_id or node.type)
+                    failed = ExecutionResult(node_id=node.id, tool_id=spec.tool_id, tool_version=spec.version, status="failed", trace_id=current_trace_id(), error=ExecutionError(code="execution_failed", message=str(exc), retryable=True))
+                    self._summaries.record_execution(task_id, failed, self.registry())
+                raise
+
+    def execute_workflow(self) -> dict[str, Any]:
+        results: list[dict[str, Any]] = []
+        while True:
+            state = self.read_state()
+            node = next((item for item in state.nodes if item.status not in {"completed", "waiting"}), None)
+            if node is None:
+                return {"state": state.model_dump(), "results": results}
+            try:
+                outcome = self.execute_node(node.id)
+                results.append({"node_id": node.id, "result": outcome["result"]})
+                if outcome["execution"]["status"] == "waiting":
+                    return {"state": outcome["state"], "results": results}
+            except ValueError as exc:
+                results.append({"node_id": node.id, "error": str(exc)})
+                return {"state": self.read_state().model_dump(), "results": results}
+
+    def submit_human_decision(self, node_id: str, decision: str) -> dict[str, Any]:
+        with self._write_lock:
+            state = self.read_state()
+            node = node_by_id(state, node_id)
+            if node.type != "human_decision" or node.status != "waiting":
+                raise ValueError("The node is not waiting for a human decision")
+            options = node.params.get("options", [])
+            if decision not in options:
+                raise ValueError(f"Decision must be one of: {', '.join(options)}")
+            node.status = "completed"
+            node.output = {"kind": "Decision", "decision": decision}
+            self.write_state(state)
+            audit("decision.submitted", node_id=node_id, decision=decision)
+            return {"state": state.model_dump(), "decision": node.output}
+
+    def _run_node(self, state: GraphState, node: Node) -> dict[str, Any]:
+        node.status = "running"
+        audit("executor.started", node_id=node.id, node_type=node.type)
+        if node.type == "raw_file_import":
+            upload_id = str(node.params.get("upload_id") or "")
+            if not upload_id: raise ValueError("Raw File Import has no upload_id")
+            inspected = self.inspect_dataset(upload_id)
+            if inspected["kind"] != "table": raise ValueError("Raw File Import only supports tabular data")
+            node.output = {"kind": "RawData", "upload_id": upload_id, "rows": inspected["rows"], "columns": [column["name"] for column in inspected["columns"]], "preview": inspected["preview"]}
+        elif node.type == "normalize_columns":
+            raw = self._node_input(state, node.id, "raw")
+            if not raw.output: raise ValueError(f"Upstream node {raw.id} has not run")
+            columns = set(raw.output["columns"]); mapping = node.params
+            missing = [mapping[key] for key in ("frequency_column", "real_column", "imag_column") if mapping.get(key) not in columns]
+            if missing: raise ValueError(f"Column mapping does not match the uploaded file: {missing}")
+            node.output = {"kind": "TypedTable", "upload_id": raw.output["upload_id"], "mapping": mapping, "rows": raw.output["rows"]}
+        elif node.type == "eis_basic_qc":
+            table = self._node_input(state, node.id, "data")
+            if not table.output: raise ValueError(f"Upstream node {table.id} has not run")
+            frame = self._dataframe(table.output["upload_id"]); mapping = table.output["mapping"]
+            frequency = pd.to_numeric(frame[mapping["frequency_column"]], errors="coerce")
+            real = pd.to_numeric(frame[mapping["real_column"]], errors="coerce")
+            imag = pd.to_numeric(frame[mapping["imag_column"]], errors="coerce")
+            valid = frequency.notna() & real.notna() & imag.notna() & (frequency > 0)
+            threshold = float(node.params["min_frequency_hz"])
+            node.output = {"kind": "EISQCReport", "upload_id": table.output["upload_id"], "mapping": mapping, "rows_valid": int(valid.sum()), "rows_retained": int((valid & (frequency >= threshold)).sum()), "min_frequency_hz": threshold, "pass": bool(valid.any()), "issues": [] if valid.all() else [f"{int((~valid).sum())} invalid rows ignored"]}
+        elif node.type == "plot_nyquist":
+            report = self._node_input(state, node.id, "data")
+            if not report.output: raise ValueError(f"Upstream node {report.id} has not run")
+            frame = self._dataframe(report.output["upload_id"]); mapping = report.output["mapping"]
+            real = pd.to_numeric(frame[mapping["real_column"]], errors="coerce"); imag = pd.to_numeric(frame[mapping["imag_column"]], errors="coerce")
+            valid = real.notna() & imag.notna()
+            points = [[float(x), float(-y)] for x, y in zip(real[valid].head(500), imag[valid].head(500))]
+            node.output = {"kind": "Plot", "plot_type": "Nyquist", "title": node.params["title"], "series": points, "points": len(points)}
+        elif node.type == "human_decision":
+            node.status = "waiting"
+            node.output = {"kind": "Decision", "prompt": node.params["prompt"], "options": node.params["options"]}
+            return node.output
+        elif node.type == "skill_node":
+            if self._model_complete is None: raise ValueError("Skill Node execution requires a configured model adapter")
+            table = self._node_input(state, node.id, "dataset")
+            if not table.output: raise ValueError(f"Upstream node {table.id} has not run")
+            contract = {"skill_id": node.params.get("skill_id"), "instructions": node.params.get("instructions"), "input": {"mapping": table.output.get("mapping"), "preview": self.inspect_dataset(str(table.output["upload_id"])).get("preview", [])}, "output_schema": node.params.get("output_schema", {})}
+            answer = self._model_complete([{"role": "system", "content": "Execute this Skill Node. Return only JSON conforming to output_schema."}, {"role": "user", "content": json.dumps(contract, ensure_ascii=False)}], [])
+            try: payload = json.loads(answer.get("content") or "{}")
+            except json.JSONDecodeError as exc: raise ValueError(f"Skill Node returned invalid JSON: {exc}") from exc
+            node.output = {"kind": "Artifact", "skill_id": node.params.get("skill_id"), "schema": node.params.get("output_schema", {}), "data": payload}
+        else:
+            raise ValueError("No executor registered for this node")
+        node.status = "completed"
+        audit("executor.completed", node_id=node.id, result_kind=node.output.get("kind"))
+        return node.output
+
+    def _node_input(self, state: GraphState, node_id: str, port: str) -> Node:
+        edge = next((edge for edge in state.edges if edge.target == node_id and edge.target_port == port), None)
+        if not edge: raise ValueError(f"{node_id} requires an input connected to '{port}'")
+        return node_by_id(state, edge.source)
+
+    def _upload_path(self, upload_id: str) -> Path:
+        if upload_id != Path(upload_id).name:
+            raise ValueError("Unknown upload. Ask the user to upload the file again.")
+        candidate = self.upload_dir / upload_id
+        if not candidate.is_file():
+            raise ValueError("Unknown upload. Ask the user to upload the file again.")
+        return candidate
+
+    def _dataframe(self, upload_id: str) -> pd.DataFrame:
+        path = self._upload_path(upload_id); suffix = path.suffix.lower()
+        if suffix in {".csv", ".txt"}: return pd.read_csv(path, sep=None, engine="python")
+        if suffix in {".xlsx", ".xls"}: return pd.read_excel(path)
+        if suffix == ".json": return pd.read_json(path)
+        raise ValueError(f"{suffix} is not a tabular file")
+
+    @staticmethod
+    def _atomic_write(path: Path, content: str) -> None:
+        path.parent.mkdir(parents=True, exist_ok=True)
+        fd, temporary = tempfile.mkstemp(dir=path.parent, prefix=f".{path.name}.", suffix=".tmp")
+        try:
+            with os.fdopen(fd, "w", encoding="utf-8") as handle:
+                handle.write(content); handle.flush(); os.fsync(handle.fileno())
+            os.replace(temporary, path)
+        finally:
+            if os.path.exists(temporary): os.unlink(temporary)
+
+    @staticmethod
+    def _atomic_write_bytes(path: Path, content: bytes) -> None:
+        path.parent.mkdir(parents=True, exist_ok=True)
+        fd, temporary = tempfile.mkstemp(dir=path.parent, prefix=f".{path.name}.", suffix=".tmp")
+        try:
+            with os.fdopen(fd, "wb") as handle:
+                handle.write(content); handle.flush(); os.fsync(handle.fileno())
+            os.replace(temporary, path)
+        finally:
+            if os.path.exists(temporary): os.unlink(temporary)

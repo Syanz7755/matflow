@@ -1,6 +1,15 @@
 # MatFlow v0.2
 
-A local, schema-constrained materials-agent workspace. MatFlow delegates planning to a user-configured OpenAI-compatible model, then constrains it with versioned Runtime Skills and an audited tool registry.
+A local, schema-constrained materials workflow workspace. MatFlow exposes one server-authoritative runtime through HTTP and MCP; ChatGPT, DeepSeek Harness, or another MCP client supplies the agent.
+
+## Documentation
+
+- [文档中心](docs/README.md)
+- [用户说明书](docs/USER_MANUAL.md)
+- [MCP 与 AI 客户端接入指南](docs/MCP_INTEGRATION_GUIDE.md)
+- [部署与运维指南](docs/DEPLOYMENT_AND_OPERATIONS.md)
+- [架构与开发规则](docs/ARCHITECTURE_AND_DEVELOPER_RULES.md)
+- [HTTP/MCP 接口契约](docs/BACKEND_API_CONTRACT.md)
 
 ## Install and run locally with uv
 
@@ -53,20 +62,37 @@ npm run test:e2e
 
 This starts isolated test services on local test ports and checks an EIS route, desktop/mobile accessibility, keyboard focus and touch-target sizing. Run `npm run build` to create a production frontend bundle.
 
-## Configure the local LiteLLM gateway
+## Connect local DeepSeek Harness
 
-The default startup now runs a local LiteLLM gateway on `http://127.0.0.1:4000`, then starts MatFlow against it on port 8000. MatFlow defaults to the `qwen` model; the local gateway key is loaded from the project configuration rather than copied into commands or documentation. The gateway forwards upstream using the environment variable below.
+The installer creates a dedicated `matflow` Web profile, leaving an existing `web` profile unchanged:
+
+```powershell
+uv run matflow configure-dsh --profile matflow
+uv run matflow diagnose --dsh
+uv run matflow start-dsh
+```
+
+DSH connects to `http://127.0.0.1:8000/mcp`. Reads run directly; dataset imports, graph changes, execution, and human decisions display DSH's one-shot approval UI. Local attachment import is limited to the active workspace and DSH attachment storage, rejects symlinks/path escape, and enforces the server's 25 MB limit.
+
+To run only the interface for another MCP client, use `uv run matflow serve`. The MCP URL is `http://127.0.0.1:8000/mcp`.
+
+For ChatGPT, expose that private endpoint with OpenAI's Secure MCP Tunnel, then add the tunnel URL as the plugin's MCP server. The `import_dataset` tool advertises ChatGPT's standard file-parameter metadata, so attached files arrive as authorized temporary HTTPS downloads rather than embedded UI state.
+
+## Legacy local model gateway (optional)
+
+LiteLLM is no longer started by default because the AI agent now lives in the MCP client. It remains available only for migration use with the retired built-in chat loop or AI Skill Node execution.
 
 ```powershell
 $env:SJTU_ZHIYUAN_API_KEY = "your-key"
-uv run matflow start
+uv run litellm --config config/litellm.yaml --port 4000
+$env:MATFLOW_ENABLE_LEGACY_CHAT = "1"
 ```
 
 The gateway model definitions live in [config/litellm.yaml](config/litellm.yaml), including `qwen`, `minimax`, `deepseek-chat`, `deepseek-reasoner`, and `glm`. The upstream key is never persisted in `data/settings.json`.
 
-For a manually started gateway, run `uv run litellm --config config/litellm.yaml --port 4000`, then set MatFlow's Agent runtime base URL to `http://127.0.0.1:4000/v1`, model to `qwen`, and API-key environment variable to `MATFLOW_LITELLM_API_KEY`. When MatFlow is started through the project launcher, this local gateway key is loaded automatically from `config/litellm.yaml`; do not copy provider credentials into project files.
+After starting the optional gateway, set MatFlow's legacy Agent runtime base URL to `http://127.0.0.1:4000/v1`, model to `qwen`, and API-key environment variable to `MATFLOW_LITELLM_API_KEY`. The regular `matflow start`, `serve`, and `start-dsh` commands do not start LiteLLM or load gateway credentials.
 
-Each agent turn automatically loads `runtime_skills/matflow_agent_runtime.md`. This is the governing runtime behavior: it tells the model to inspect files, use only registered tools, make all graph changes through schema validation, and ask rather than guess. Add or version more Runtime Skills in that directory as the project’s operating policy evolves.
+MCP clients follow `runtime_skills/matflow_mcp_runtime.md`: inspect first, use registered identifiers, validate patches, and confirm writes or execution. `runtime_skills/matflow_agent_runtime.md` remains only for the optional legacy agent loop.
 
 Material-domain abilities should be represented as **AI Skill Nodes** in the graph. They consume `TypedTable` and return a contract-bound `Artifact`; their `skill_id`, instructions, and output JSON schema travel with the workflow, so the graph executor remains compatible while individual skills evolve.
 
@@ -74,6 +100,6 @@ Material-domain abilities should be represented as **AI Skill Nodes** in the gra
 
 - Research Workbench: a server-authoritative screen for inspecting GraphState, the active registry, feature flags, task routing, registered tool IDs, decision rationale and error-handling evidence.
 - Versioned control-plane interfaces: state, capabilities, route, GraphPatch, execution and task summaries. See [docs/BACKEND_API_CONTRACT.md](docs/BACKEND_API_CONTRACT.md).
-- Runtime Agent loop: the model can inspect uploads, read the graph, apply validated patches, add compatible Skill Nodes, and run the workflow. Every call and failure is logged to the server console.
+- MCP interface: external agents can inspect uploads, read the graph, validate/apply patches, route tasks, execute workflows, resolve human decisions, and read audit summaries.
 - Real tabular EIS execution path: uploaded data is parsed, column mappings are validated, QC uses the uploaded values, and Nyquist points are generated from the uploaded values.
 - Settings drawer for provider configuration and the local materials-node library. Preset nodes are protected; custom nodes support JSON import, prompt-built templates, rename and deletion.
