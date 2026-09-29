@@ -11,7 +11,7 @@ from mcp.server.fastmcp import FastMCP
 from mcp.types import ToolAnnotations
 from pydantic import BaseModel
 
-from .contracts import GraphPatch, TaskState
+from .contracts import DataTypeDefinition, GraphPatch, TaskState
 from .workspace_runtime import WorkspaceRuntime
 
 
@@ -100,6 +100,16 @@ def create_mcp_server(runtime: WorkspaceRuntime) -> FastMCP:
         """Select compatible registered tools without changing or executing the graph."""
         return _call(lambda: runtime.route_task(TaskState.model_validate(task)))
 
+    @server.tool(annotations=ToolAnnotations(readOnlyHint=False, destructiveHint=False, idempotentHint=False))
+    def create_data_type(name: str, parents: list[str], description: str = "") -> dict[str, Any]:
+        """Create a custom data type after validating the full multiple-inheritance graph. Ask the user before calling."""
+        return _call(lambda: runtime.create_data_type(DataTypeDefinition(name=name, parents=parents, description=description)))
+
+    @server.tool(annotations=ToolAnnotations(readOnlyHint=False, destructiveHint=True, idempotentHint=False))
+    def update_data_type_inheritance(name: str, parents: list[str]) -> dict[str, Any]:
+        """Replace a custom type's ordered parents if the hierarchy and current workflow remain valid. Ask the user before calling."""
+        return _call(lambda: runtime.update_data_type_inheritance(name, parents))
+
     @server.tool(annotations=ToolAnnotations(readOnlyHint=True, destructiveHint=False, idempotentHint=True))
     def validate_graph_patch(patch: dict[str, Any]) -> dict[str, Any]:
         """Validate a proposed graph patch without changing workspace state."""
@@ -119,6 +129,11 @@ def create_mcp_server(runtime: WorkspaceRuntime) -> FastMCP:
     def submit_human_decision(node_id: str, decision: str) -> dict[str, Any]:
         """Resolve a waiting human-decision node. Ask the user before calling."""
         return _call(lambda: runtime.submit_human_decision(node_id, decision))
+
+    @server.tool(annotations=ToolAnnotations(readOnlyHint=False, destructiveHint=True, idempotentHint=False))
+    def submit_node_review(node_id: str, decision: str, comment: str | None = None) -> dict[str, Any]:
+        """Continue, revise, or stop a node waiting after its progressive preview. Ask first."""
+        return _call(lambda: runtime.submit_node_review(node_id, decision, comment))
 
     @server.tool(annotations=ToolAnnotations(readOnlyHint=True, destructiveHint=False, idempotentHint=True))
     def get_task_summary(task_id: str) -> dict[str, Any]:

@@ -1,5 +1,6 @@
-import { useEffect, useId, useState } from 'react';
+import { useEffect, useId, useRef, useState } from 'react';
 import { createRoot } from 'react-dom/client';
+import WorkflowEditor from './WorkflowEditor.jsx';
 import './style.css';
 
 const API = (import.meta.env.VITE_MATFLOW_API_URL ?? 'http://127.0.0.1:8000/api').replace(/\/$/, '');
@@ -24,6 +25,65 @@ function RegistryItem({ toolId, tool }) {
       </div>
       <span className="tool-version">v{tool.version}</span>
     </li>
+  );
+}
+
+function ModalDialog({ labelledBy, onClose, children, className = '' }) {
+  const dialogRef = useRef(null);
+  const restoreFocusRef = useRef(null);
+
+  useEffect(() => {
+    restoreFocusRef.current = document.activeElement;
+    const dialog = dialogRef.current;
+    const focusable = () => [...dialog.querySelectorAll('button:not(:disabled), [href], input:not(:disabled), select:not(:disabled), textarea:not(:disabled), [tabindex]:not([tabindex="-1"])')];
+    const first = focusable()[0];
+    first?.focus();
+    function handleKeyDown(event) {
+      if (event.key === 'Escape') { event.preventDefault(); onClose(); return; }
+      if (event.key !== 'Tab') return;
+      const items = focusable();
+      if (!items.length) { event.preventDefault(); return; }
+      const firstItem = items[0];
+      const lastItem = items[items.length - 1];
+      if (event.shiftKey && document.activeElement === firstItem) { event.preventDefault(); lastItem.focus(); }
+      if (!event.shiftKey && document.activeElement === lastItem) { event.preventDefault(); firstItem.focus(); }
+    }
+    dialog.addEventListener('keydown', handleKeyDown);
+    return () => { dialog.removeEventListener('keydown', handleKeyDown); restoreFocusRef.current?.focus?.(); };
+  }, [onClose]);
+
+  return (
+    <div className="modal-backdrop" role="presentation" onMouseDown={(event) => { if (event.target === event.currentTarget) onClose(); }}>
+      <section ref={dialogRef} className={`workbench-dialog ${className}`} role="dialog" aria-modal="true" aria-labelledby={labelledBy}>{children}</section>
+    </div>
+  );
+}
+
+function WorkspacePanel({ graph, registry, datasets, capabilities, datasetDetail, busy, onRefresh, onUpload, onInspect }) {
+  return (
+    <div className="evidence-sidebar-content">
+      <section className="sidebar-section">
+        <div className="eyebrow-row"><span>Graph state</span><button type="button" onClick={onRefresh} disabled={busy}>Refresh</button></div>
+        {graph ? <><strong className="graph-version">v{graph.version}</strong><p>{graph.nodes.length} nodes · {graph.edges.length} edges</p></> : <p>等待服务端状态。</p>}
+        <div className="graph-summary" aria-label="Current graph summary">
+          {graph?.nodes.length ? graph.nodes.map((node) => <div key={node.id}><span className={`node-dot node-${node.status}`} aria-hidden="true" /><strong>{node.label ?? node.type}</strong><code>{node.tool_id}</code></div>) : <p className="muted">当前图为空。路由不会自行修改它。</p>}
+        </div>
+      </section>
+      <section className="sidebar-section registry-section">
+        <div className="eyebrow-row"><span>Active registry</span><small>{Object.keys(registry).length} tools</small></div>
+        <ul className="registry-list" tabIndex="0" aria-label="Active registry tools">{Object.entries(registry).map(([toolId, tool]) => <RegistryItem key={toolId} toolId={toolId} tool={tool} />)}</ul>
+      </section>
+      <section className="sidebar-section dataset-section">
+        <div className="eyebrow-row"><span>Datasets</span><small>{datasets.length} files</small></div>
+        <label className="dataset-upload">Import dataset<input type="file" onChange={onUpload} disabled={busy} accept=".csv,.txt,.xlsx,.xls,.json,.png,.jpg,.jpeg,.tif,.tiff" /></label>
+        {datasets.length ? <ul className="dataset-list" aria-label="Imported datasets">{datasets.map((dataset) => <li className="registry-item" key={dataset.id}><button type="button" onClick={() => onInspect(dataset.id)}><strong>{dataset.name}</strong><span>{Math.ceil(dataset.size / 1024)} KB</span></button></li>)}</ul> : <p className="muted">尚未导入数据。</p>}
+        {datasetDetail && <div className="dataset-detail"><strong>{datasetDetail.name}</strong><p>{datasetDetail.kind === 'table' ? `${datasetDetail.rows} rows · ${datasetDetail.columns.length} columns` : datasetDetail.kind}</p></div>}
+      </section>
+      <section className="sidebar-section feature-section">
+        <span className="eyebrow">Feature flags</span>
+        {Object.entries(capabilities?.features ?? {}).map(([feature, enabled]) => <p key={feature}><span className={enabled ? 'flag-on' : 'flag-off'} aria-hidden="true" />{feature.replaceAll('_', ' ')} <b>{enabled ? 'enabled' : 'disabled'}</b></p>)}
+      </section>
+    </div>
   );
 }
 
@@ -81,17 +141,20 @@ function App() {
   const [inputTypes, setInputTypes] = useState([]);
   const [summary, setSummary] = useState(null);
   const [datasets, setDatasets] = useState([]);
+  const [providers, setProviders] = useState([]);
   const [datasetDetail, setDatasetDetail] = useState(null);
   const [status, setStatus] = useState({ kind: 'loading', message: '正在读取 MatFlow 控制面…' });
   const [busy, setBusy] = useState(false);
+  const [activeDialog, setActiveDialog] = useState(null);
 
   async function refreshControlPlane() {
     setStatus({ kind: 'loading', message: '正在刷新服务端状态…' });
     try {
-      const [nextState, nextCapabilities, nextDatasets] = await Promise.all([request('/state'), request('/capabilities'), request('/uploads')]);
+      const [nextState, nextCapabilities, nextDatasets, nextProviders] = await Promise.all([request('/state'), request('/capabilities'), request('/uploads'), request('/model-providers')]);
       setState(nextState);
       setCapabilities(nextCapabilities);
       setDatasets(nextDatasets.files ?? []);
+      setProviders(nextProviders.providers ?? []);
       setStatus({ kind: 'ready', message: `已连接 · Graph v${nextState.state.version}` });
     } catch (error) {
       setStatus({ kind: 'error', message: error.message });
@@ -119,6 +182,7 @@ function App() {
       const persisted = await request(`/task-summaries/${encodeURIComponent(taskId)}`);
       setSummary(persisted ?? routed.summary);
       setStatus({ kind: routed.requires_human_confirmation ? 'attention' : 'ready', message: routed.requires_human_confirmation ? '路由等待人工确认' : '路由决策已保存' });
+      setActiveDialog('decision');
     } catch (error) {
       setStatus({ kind: 'error', message: error.message });
     } finally {
@@ -156,6 +220,91 @@ function App() {
     }
   }
 
+  async function saveWorkflow(patch) {
+    setBusy(true);
+    setStatus({ kind: 'loading', message: '正在验证并保存工作流…' });
+    try {
+      const saved = await request('/patch', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(patch),
+      });
+      setState((current) => ({ ...current, state: saved.state }));
+      setStatus({ kind: 'ready', message: `已保存 · Graph v${saved.state.version}` });
+      return saved.state;
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  async function runWorkflow(options) {
+    setBusy(true);
+    setStatus({ kind: 'loading', message: '正在从头运行工作流…' });
+    try {
+      const outcome = await request('/workflow/execute', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(options),
+      });
+      setState((current) => ({ ...current, state: outcome.state }));
+      const failed = outcome.results?.some((item) => item.error);
+      setStatus({ kind: failed ? 'error' : 'ready', message: failed ? '工作流在错误处停止' : '工作流运行完成' });
+      return outcome;
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  async function submitDecision(nodeId, decision) {
+    setBusy(true);
+    try {
+      const result = await request('/workflow/decision', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ node_id: nodeId, decision }),
+      });
+      setState((current) => ({ ...current, state: result.state }));
+      setStatus({ kind: 'ready', message: `已提交决策：${decision}` });
+      return result;
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  async function proposeNodeRevision(payload) {
+    setBusy(true);
+    setStatus({ kind: 'loading', message: '正在生成隔离的节点修订提案…' });
+    try {
+      const proposal = await request('/node-revisions/proposals', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
+      setStatus({ kind: 'attention', message: '修订提案已生成，尚未修改工作流' });
+      return proposal;
+    } finally { setBusy(false); }
+  }
+
+  async function applyNodeRevision(proposalId, edgeDecisions) {
+    setBusy(true);
+    setStatus({ kind: 'loading', message: '正在原子应用节点修订…' });
+    try {
+      const result = await request(`/node-revisions/proposals/${encodeURIComponent(proposalId)}/apply`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ edge_decisions: edgeDecisions }) });
+      const snapshot = await request('/state');
+      setState(snapshot);
+      setCapabilities((current) => ({ ...current, registry: snapshot.registry, data_types: snapshot.data_types, data_type_definitions: snapshot.data_type_definitions, features: snapshot.features }));
+      setStatus({ kind: 'ready', message: `修订已应用 · Graph v${result.state.version}` });
+      return snapshot.state;
+    } finally { setBusy(false); }
+  }
+
+  async function addModelProvider(payload) {
+    setBusy(true);
+    try {
+      const created = await request('/model-providers', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
+      const refreshed = await request('/model-providers');
+      setProviders(refreshed.providers ?? []);
+      setStatus({ kind: created.key_configured ? 'ready' : 'attention', message: created.key_configured ? `已添加模型 API：${created.label}` : `已添加 ${created.label}；请在 .env 中配置 ${created.api_key_env}` });
+      return created;
+    } finally { setBusy(false); }
+  }
+
   const registry = capabilities?.registry ?? state?.registry ?? {};
   const graph = state?.state;
   const dataTypes = capabilities?.data_types ?? state?.data_types ?? [];
@@ -166,56 +315,29 @@ function App() {
       <header className="topbar">
         <a className="brand" href="#main-content" aria-label="MatFlow research workbench home"><span className="brand-mark" aria-hidden="true">M</span><span><strong>MatFlow</strong><small>materials research agent</small></span></a>
         <div className={`connection connection-${status.kind}`} role="status" aria-live="polite"><span aria-hidden="true" />{status.message}</div>
+        <nav className="topbar-actions" aria-label="Research workbench actions">
+          <button type="button" onClick={() => setActiveDialog('task')}>Route a research task</button>
+          <button type="button" onClick={() => setActiveDialog('decision')}>Decision record</button>
+        </nav>
       </header>
 
-      <div className="workspace">
-        <aside className="evidence-sidebar" aria-label="Server confirmed workflow evidence">
-          <section className="sidebar-section">
-            <div className="eyebrow-row"><span>Graph state</span><button type="button" onClick={refreshControlPlane} disabled={busy}>Refresh</button></div>
-            {graph ? <><strong className="graph-version">v{graph.version}</strong><p>{graph.nodes.length} nodes · {graph.edges.length} edges</p></> : <p>等待服务端状态。</p>}
-            <div className="graph-summary" aria-label="Current graph summary">
-              {graph?.nodes.length ? graph.nodes.map((node) => <div key={node.id}><span className={`node-dot node-${node.status}`} aria-hidden="true" /><strong>{node.label ?? node.type}</strong><code>{node.tool_id}</code></div>) : <p className="muted">当前图为空。路由不会自行修改它。</p>}
-            </div>
-          </section>
-
-          <section className="sidebar-section registry-section">
-            <div className="eyebrow-row"><span>Active registry</span><small>{Object.keys(registry).length} tools</small></div>
-            <ul className="registry-list" tabIndex="0" aria-label="Active registry tools">{Object.entries(registry).map(([toolId, tool]) => <RegistryItem key={toolId} toolId={toolId} tool={tool} />)}</ul>
-          </section>
-
-          <section className="sidebar-section dataset-section">
-            <div className="eyebrow-row"><span>Datasets</span><small>{datasets.length} files</small></div>
-            <label className="dataset-upload">Import dataset<input type="file" onChange={uploadDataset} disabled={busy} accept=".csv,.txt,.xlsx,.xls,.json,.png,.jpg,.jpeg,.tif,.tiff" /></label>
-            {datasets.length ? <ul className="dataset-list" aria-label="Imported datasets">{datasets.map((dataset) => <li className="registry-item" key={dataset.id}><button type="button" onClick={() => inspectDataset(dataset.id)}><strong>{dataset.name}</strong><span>{Math.ceil(dataset.size / 1024)} KB</span></button></li>)}</ul> : <p className="muted">尚未导入数据。</p>}
-            {datasetDetail && <div className="dataset-detail"><strong>{datasetDetail.name}</strong><p>{datasetDetail.kind === 'table' ? `${datasetDetail.rows} rows · ${datasetDetail.columns.length} columns` : datasetDetail.kind}</p></div>}
-          </section>
-
-          <section className="sidebar-section feature-section">
-            <span className="eyebrow">Feature flags</span>
-            {Object.entries(capabilities?.features ?? {}).map(([feature, enabled]) => <p key={feature}><span className={enabled ? 'flag-on' : 'flag-off'} aria-hidden="true" />{feature.replaceAll('_', ' ')} <b>{enabled ? 'enabled' : 'disabled'}</b></p>)}
-          </section>
-        </aside>
-
-        <main id="main-content" className="main-content">
-          <section className="intro">
-            <p className="kicker">A server-authoritative control plane</p>
-            <h1>Research workbench</h1>
-            <p>先提出研究任务，再查看 MatFlow 基于注册工具与当前输入作出的决策。图、工具兼容性和执行规则始终由后端确认。</p>
-          </section>
-
-          <section className="task-panel" aria-labelledby="task-heading">
-            <div className="section-heading"><span className="section-index">01</span><div><h2 id="task-heading">Route a research task</h2><p>描述你想分析的材料数据，并声明目前可用的输入。</p></div></div>
-            <form onSubmit={routeTask}>
-              <label htmlFor={questionId}>研究问题 <span className="label-hint">Research question</span></label>
-              <textarea id={questionId} aria-label="Research question" value={question} onChange={(event) => setQuestion(event.target.value)} placeholder="例如：对已规范化的阻抗谱执行基础 EIS 质量检查" rows="4" required />
-              <fieldset><legend>Available input types</legend><div className="input-type-grid">{dataTypes.map((type) => <label key={type} className="type-option"><input type="checkbox" checked={inputTypes.includes(type)} onChange={() => toggleInputType(type)} /><span>{type}</span></label>)}</div></fieldset>
-              <div className="task-actions"><p>路由只生成决策和审计记录，不会自动执行工具或修改 GraphState。</p><button type="submit" disabled={busy || !question.trim() || !state}>{busy ? 'Routing…' : 'Get routing decision'}</button></div>
-            </form>
-          </section>
-
-          <DecisionRecord summary={summary} />
-        </main>
-      </div>
+      <main id="main-content" className="main-content">
+        <h1 className="visually-hidden">MatFlow research workbench</h1>
+        {graph && <WorkflowEditor graph={graph} registry={registry} dataTypes={dataTypes} dataTypeDefinitions={capabilities?.data_type_definitions ?? state?.data_type_definitions ?? {}} datasets={datasets} providers={providers} busy={busy} onSave={saveWorkflow} onRun={runWorkflow} onDecision={submitDecision} onProposeRevision={proposeNodeRevision} onApplyRevision={applyNodeRevision} onAddProvider={addModelProvider} onStatus={setStatus} workspacePanel={<WorkspacePanel graph={graph} registry={registry} datasets={datasets} capabilities={capabilities} datasetDetail={datasetDetail} busy={busy} onRefresh={refreshControlPlane} onUpload={uploadDataset} onInspect={inspectDataset} />} />}
+      </main>
+      {activeDialog === 'task' && <ModalDialog labelledBy="task-heading" onClose={() => setActiveDialog(null)} className="task-dialog">
+        <header className="dialog-header"><div><h2 id="task-heading">Route a research task</h2><p>描述你想分析的材料数据，并声明目前可用的输入。</p></div><button type="button" aria-label="Close route task dialog" onClick={() => setActiveDialog(null)}>×</button></header>
+        <form onSubmit={routeTask} className="dialog-form">
+          <label htmlFor={questionId}>研究问题 <span className="label-hint">Research question</span></label>
+          <textarea id={questionId} aria-label="Research question" value={question} onChange={(event) => setQuestion(event.target.value)} placeholder="例如：对已规范化的阻抗谱执行基础 EIS 质量检查" rows="4" required />
+          <fieldset><legend>Available input types</legend><div className="input-type-grid">{dataTypes.map((type) => <label key={type} className="type-option"><input type="checkbox" checked={inputTypes.includes(type)} onChange={() => toggleInputType(type)} /><span>{type}</span></label>)}</div></fieldset>
+          <div className="task-actions"><p>路由只生成决策和审计记录，不会自动执行工具或修改 GraphState。</p><button type="submit" disabled={busy || !question.trim() || !state}>{busy ? 'Routing…' : 'Get routing decision'}</button></div>
+        </form>
+      </ModalDialog>}
+      {activeDialog === 'decision' && <ModalDialog labelledBy="decision-heading" onClose={() => setActiveDialog(null)} className="decision-dialog">
+        <button type="button" className="dialog-close" aria-label="Close decision record" onClick={() => setActiveDialog(null)}>×</button>
+        <DecisionRecord summary={summary} />
+      </ModalDialog>}
     </div>
   );
 }

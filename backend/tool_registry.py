@@ -4,17 +4,19 @@ from __future__ import annotations
 from typing import Any
 
 from .contracts import ToolSpec
+from .data_types import DataTypeRegistry
 
 
 def builtin_specs() -> dict[str, ToolSpec]:
     """Return the v0.2 built-in catalog. Callers receive immutable-by-convention specs."""
     entries = {
-        "raw_file_import": {"label": "Raw File Import", "category": "Input", "inputs": {}, "outputs": {"raw": "RawData"}, "params": {"file_name": "eis_measurement.csv", "upload_id": ""}, "description": "Import a specific uploaded CSV, Excel, TXT or JSON data file."},
-        "normalize_columns": {"label": "Normalize / Column Mapping", "category": "Transform", "inputs": {"raw": "RawData"}, "outputs": {"table": "TypedTable"}, "params": {"frequency_column": "frequency_hz", "real_column": "z_real", "imag_column": "z_imag"}, "description": "Map user column names into a typed measurement table."},
-        "eis_basic_qc": {"label": "EIS Basic Analysis", "category": "Analysis", "inputs": {"data": "TypedTable"}, "outputs": {"report": "EISQCReport", "data": "EISData"}, "params": {"min_frequency_hz": 10, "fit_model": "None"}, "description": "Nyquist/Bode quality checks and a typed EIS output."},
-        "plot_nyquist": {"label": "Plot Nyquist", "category": "Output", "inputs": {"data": "EISData"}, "outputs": {"plot": "Plot"}, "params": {"title": "Nyquist plot"}, "description": "Create a standard Nyquist plot."},
-        "human_decision": {"label": "Human Decision", "category": "Control", "inputs": {"context": "EISQCReport"}, "outputs": {"decision": "Decision"}, "params": {"prompt": "Approve the EIS fit?", "options": ["approve", "revise"]}, "description": "Pause a workflow for an expert choice."},
-        "skill_node": {"label": "AI Skill Node", "category": "AI", "inputs": {"dataset": "TypedTable"}, "outputs": {"artifact": "Artifact"}, "params": {"skill_id": "", "instructions": "", "output_schema": {}}, "description": "Runs a versioned domain skill against typed data and returns a schema-bound artifact."},
+        "raw_file_import": {"label": "Raw File Import", "category": "Input", "inputs": {}, "outputs": {"raw": "RawData"}, "params": {"file_name": "eis_measurement.csv", "upload_id": ""}, "description": "Import a specific uploaded CSV, Excel, TXT or JSON data file.", "preview_spec": {"outputs": {"raw": {"renderer": "table_head"}}}},
+        "normalize_columns": {"label": "Normalize / Column Mapping", "category": "Transform", "inputs": {"raw": "RawData"}, "outputs": {"table": "TypedTable"}, "params": {"frequency_column": "frequency_hz", "real_column": "z_real", "imag_column": "z_imag"}, "description": "Map user column names into a typed measurement table.", "preview_spec": {"outputs": {"table": {"renderer": "json_tree"}}}},
+        "eis_basic_qc": {"label": "EIS Basic Analysis", "category": "Analysis", "inputs": {"data": "TypedTable"}, "outputs": {"report": "EISQCReport", "data": "EISData"}, "params": {"min_frequency_hz": 10, "fit_model": "None"}, "description": "Nyquist/Bode quality checks and a typed EIS output.", "preview_spec": {"outputs": {"report": {"renderer": "json_tree"}, "data": {"renderer": "json_tree"}}}},
+        "plot_nyquist": {"label": "Plot Nyquist", "category": "Output", "inputs": {"data": "EISData"}, "outputs": {"plot": "Plot"}, "params": {"title": "Nyquist plot"}, "description": "Create a standard Nyquist plot.", "preview_spec": {"outputs": {"plot": {"renderer": "json_tree"}}}},
+        "type_cast": {"label": "Type Cast", "category": "Transform", "inputs": {"value": "RawData"}, "outputs": {"value": "RawData"}, "params": {"source_type": "RawData", "target_type": "RawData"}, "description": "Abstract pass-through node whose concrete input and output types are selected per node instance.", "preview_spec": {"outputs": {"value": {"renderer": "json_tree"}}}, "abstract": True},
+        "human_decision": {"label": "Human Decision (legacy)", "category": "Control", "inputs": {"context": "EISQCReport"}, "outputs": {"decision": "Decision"}, "params": {"prompt": "Approve this result?", "options": ["approve", "stop"]}, "description": "Deprecated legacy gate. Use review_policy.after_run on any node.", "status": "deprecated"},
+        "skill_node": {"label": "AI Skill Node", "category": "AI", "inputs": {"dataset": "TypedTable"}, "outputs": {"artifact": "Artifact"}, "params": {"skill_id": "", "instructions": "", "output_schema": {}}, "description": "Runs a versioned domain skill against typed data and returns a schema-bound artifact.", "preview_spec": {"outputs": {"artifact": {"renderer": "json_tree"}}}},
     }
     return {
         tool_id: ToolSpec(tool_id=tool_id, executor_ref=f"builtin:{tool_id}", **entry)
@@ -25,15 +27,17 @@ def builtin_specs() -> dict[str, ToolSpec]:
 class ToolRegistry:
     """A small interface over active, versioned tool declarations."""
 
-    def __init__(self, custom_nodes: dict[str, dict[str, Any]] | None = None):
+    def __init__(self, custom_nodes: dict[str, dict[str, Any]] | None = None, type_registry: DataTypeRegistry | None = None):
+        self.type_registry = type_registry or DataTypeRegistry()
         self._specs = builtin_specs()
         for tool_id, node in (custom_nodes or {}).items():
-            self._specs[tool_id] = ToolSpec(
-                tool_id=tool_id,
-                executor_ref=f"custom:{tool_id}",
-                provenance={"kind": "custom", "reviewed_by": "local-user"},
-                **node,
-            )
+            payload = dict(node)
+            payload.setdefault("tool_id", tool_id)
+            payload.setdefault("executor_ref", f"custom:{tool_id}")
+            payload.setdefault("provenance", {"kind": "custom", "reviewed_by": "local-user"})
+            self._specs[tool_id] = ToolSpec.model_validate(payload)
+        for spec in self._specs.values():
+            self.type_registry.validate_port_types((*spec.inputs.values(), *spec.outputs.values()))
 
     def get(self, tool_id: str) -> ToolSpec:
         try:
@@ -56,6 +60,11 @@ class ToolRegistry:
                 "description": spec.description,
                 "version": spec.version,
                 "status": spec.status,
+                "preview_spec": spec.preview_spec.model_dump(),
+                "parent_tool_id": spec.parent_tool_id,
+                "parent_version": spec.parent_version,
+                "generated_code_status": spec.generated_code_status,
+                "abstract": spec.abstract,
             }
             for tool_id, spec in self.active().items()
         }

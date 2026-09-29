@@ -99,6 +99,14 @@ Required invariants: unique `(tool_id, version)`; declared ports and data types;
 
 The durable workflow state. `version` increments exactly once for each accepted patch.
 
+Graph invariants are enforced by `GraphValidator`: the graph must remain acyclic, every edge must bind declared ports with compatible data types, and each input port accepts at most one incoming edge. Output ports may fan out to multiple downstream inputs.
+
+Data-type semantics live behind the `DataTypeRegistry` interface. Types form a nominal, ordered multiple-inheritance DAG validated with C3 linearization. A definition is rejected if its name or parents are invalid, a parent is missing or duplicated, the graph is cyclic, or the declared parent order cannot be linearized consistently. Built-in types are immutable; custom types may inherit from built-in or custom types.
+
+MatFlow's flow rule is intentionally parent-to-child: an output of type `P` may connect to an input of type `C` when `P == C` or `P` is an ancestor of `C`. The graph validator, task router, node-revision edge migration, and Web editor all use this same rule. Changes to a custom type's parents are atomic and must leave the complete type hierarchy, active tool registry, and saved graph valid.
+
+`type_cast` is the built-in abstract node. Each node instance supplies `source_type` and `target_type`; these parameters resolve its concrete `value` input and output ports during validation and execution. Execution is an explicit pass-through retagging operation and records cast provenance in the output.
+
 ```json
 {
   "graph_id": "local-default",
@@ -110,7 +118,9 @@ The durable workflow state. `version` increments exactly once for each accepted 
 }
 ```
 
-Node statuses are `ready`, `running`, `completed`, `waiting`, or `error`. An edge is valid only when its source and target ports exist and their declared types match. Existing `Node`, `Edge`, and `GraphPatch` models are the v1 implementation baseline; evolve them additively and version public API changes.
+Node statuses are `ready`, `running`, `completed`, `waiting`, `error`, or `cancelled`. `waiting` represents a completed node whose progressive preview is awaiting review; downstream execution remains blocked. Human review is a Node policy, not a ToolSpec with artificial data ports. An edge is valid only when its source and target ports exist and their declared types match. Existing `Node`, `Edge`, and `GraphPatch` models are the v1 implementation baseline; evolve them additively and version public API changes.
+
+AI-assisted node evolution is two-stage. A model may create a validated `NodeRevisionProposal`, but it cannot mutate the graph. Applying a proposal uses one version-checked `replace_node_revision` operation after every non-exact edge migration has an explicit user decision. Generated executor code remains draft and is never executed automatically.
 
 ### 3.3 `RouterDecision`
 
@@ -195,6 +205,21 @@ Implement in this order; each step is complete only when its tests pass.
 - Never render tool output as trusted HTML. Do not put provider keys, full prompts containing secrets, or raw stack traces in browser state.
 
 ## 7. Testing and observability
+
+### Local baseline
+
+Before changing public behavior, verify the current baseline:
+
+```powershell
+Set-Location D:\Projects\matflow
+uv sync
+uv run matflow install-frontend
+uv run --group dev python -m unittest discover -v
+Set-Location frontend
+npm run build
+```
+
+Public behavior changes must update the implementation, tests, and corresponding documentation together.
 
 ### Required test layers
 

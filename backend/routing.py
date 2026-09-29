@@ -18,9 +18,13 @@ class CandidateRetriever:
     def retrieve(self, task: TaskState, registry: ToolRegistry) -> list[RouterCandidate]:
         query = _tokens(task.user_message)
         available = set(task.available_input_types)
+        registry.type_registry.validate_port_types(available)
         candidates: list[RouterCandidate] = []
         for spec in registry.active().values():
-            if spec.inputs and not set(spec.inputs.values()).issubset(available):
+            if spec.inputs and not all(
+                any(registry.type_registry.can_flow(source, required) for source in available)
+                for required in spec.inputs.values()
+            ):
                 continue
             terms = _tokens(" ".join((spec.tool_id, spec.label, spec.description)))
             matched = sorted(query & terms)

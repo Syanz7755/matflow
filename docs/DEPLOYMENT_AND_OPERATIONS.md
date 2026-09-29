@@ -29,6 +29,8 @@ uv run matflow diagnose
 
 ## 3. 启动方式
 
+For the complete launcher reference—including the important difference between `start_matflow.bat` and `scripts/start.ps1`, model-service prerequisites, shutdown behavior, and test helpers—see [Startup Scripts Guide](STARTUP_SCRIPTS.md).
+
 | 场景 | 命令 | 启动内容 |
 | --- | --- | --- |
 | WebUI 开发 | `uv run matflow start` | 后端 + Vite 前端 |
@@ -181,4 +183,3 @@ $env:MATFLOW_ENABLE_LEGACY_CHAT = "1"
 ```
 
 此路径不属于推荐部署，也不应与“外部 AI 客户端通过 MCP 接入”的主路径混淆。
-

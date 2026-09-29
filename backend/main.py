@@ -11,6 +11,7 @@ from pathlib import Path
 from typing import Any
 from urllib import error as urlerror
 from urllib import request as urlrequest
+from urllib.parse import urlparse
 
 import numpy as np
 import pandas as pd
@@ -19,7 +20,8 @@ from fastapi import FastAPI, File, Form, HTTPException, Request, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, Field
 
-from .contracts import DATA_TYPES, Edge, ExecutionError, ExecutionResult, GraphPatch, GraphState, Node, Operation, TaskState
+from .contracts import DataType, DataTypeDefinition, Edge, ExecutionError, ExecutionResult, GraphPatch, GraphState, Node, Operation, ReviewPolicy, TaskState
+from .data_types import DataTypeRegistry
 from .jev_routing import JevDecisionRouter
 from .observability import audit, reset_trace_id, set_trace_id
 from .routing import DecisionRouter
@@ -35,8 +37,21 @@ SETTINGS_FILE = ROOT / "data" / "settings.json"
 UPLOAD_DIR = ROOT / "data" / "uploads"
 RUNTIME_SKILLS_DIR = ROOT / "runtime_skills"
 
-def _runtime_model_adapter(messages: list[dict[str, Any]], tools: list[dict[str, Any]]) -> dict[str, Any]:
-    return model_completion(messages, tools)
+
+def load_local_env() -> None:
+    path = ROOT / ".env"
+    if not path.exists(): return
+    for raw in path.read_text(encoding="utf-8").splitlines():
+        line = raw.strip()
+        if not line or line.startswith("#") or "=" not in line: continue
+        name, value = line.split("=", 1)
+        os.environ.setdefault(name.strip(), value.strip().strip('"').strip("'"))
+
+
+load_local_env()
+
+def _runtime_model_adapter(messages: list[dict[str, Any]], tools: list[dict[str, Any]], provider_id: str | None = None, model: str | None = None) -> dict[str, Any]:
+    return model_completion(messages, tools, provider_id=provider_id, model=model)
 
 
 workspace = WorkspaceRuntime(model_complete=_runtime_model_adapter)
@@ -50,7 +65,9 @@ async def lifespan(_: FastAPI):
 
 
 app = FastAPI(title="Materials Graph Demo", lifespan=lifespan)
-app.add_middleware(CORSMiddleware, allow_origins=["http://localhost:5173", "http://127.0.0.1:5173"], allow_methods=["*"], allow_headers=["*"])
+cors_origins = ["http://localhost:5173", "http://127.0.0.1:5173"]
+cors_origins.extend(origin.strip() for origin in os.getenv("MATFLOW_CORS_ORIGINS", "").split(",") if origin.strip())
+app.add_middleware(CORSMiddleware, allow_origins=cors_origins, allow_methods=["*"], allow_headers=["*"])
 
 
 @app.middleware("http")
@@ -71,8 +88,32 @@ class ChatRequest(BaseModel):
 class ExecuteRequest(BaseModel):
     node_id: str
     task_id: str | None = None
+class ExecuteWorkflowRequest(BaseModel):
+    restart: bool = False
+class HumanDecisionRequest(BaseModel):
+    node_id: str
+    decision: str
+    comment: str | None = None
+class RevisionProposalRequest(BaseModel):
+    node_id: str
+    prompt: str = Field(min_length=1, max_length=8000)
+    provider_id: str = "local_litellm"
+    model: str = "qwen"
+class ApplyRevisionRequest(BaseModel):
+    edge_decisions: dict[str, str | None] = Field(default_factory=dict)
+class CodeReviewRequest(BaseModel):
+    approved: bool
+class ModelProviderPayload(BaseModel):
+    provider_id: str = Field(pattern=r"^[a-z][a-z0-9_]*$")
+    label: str = Field(min_length=1, max_length=120)
+    base_url: str
+    api_key_env: str = Field(pattern=r"^[A-Z][A-Z0-9_]*$")
+    models: list[str] = Field(min_length=1)
+class LegacyMigrationRequest(BaseModel):
+    apply: bool = False
 class SettingsPayload(BaseModel): agent: dict[str, Any]
 class NodeLibraryPayload(BaseModel): key: str | None = None; node: dict[str, Any]
+class DataTypeInheritancePayload(BaseModel): parents: list[DataType] = Field(default_factory=list)
 
 
 class RouteRequest(BaseModel):
@@ -98,6 +139,11 @@ def default_settings() -> dict[str, Any]:
         },
         "runtime_skills": {"enabled": ["matflow_agent_runtime.md"]},
         "custom_nodes": {},
+        "custom_data_types": {},
+        "revision_proposals": {},
+        "model_providers": {
+            "local_litellm": {"label": "Local LiteLLM gateway", "base_url": "http://127.0.0.1:4000/v1", "api_key_env": "MATFLOW_LITELLM_API_KEY", "models": ["deepseek-chat", "deepseek-reasoner", "minimax", "glm", "qwen"]}
+        },
         "features": {
             "tool_manager_search": False,
             "tool_manager_adapt": False,
@@ -115,6 +161,9 @@ def load_settings() -> dict[str, Any]:
         "agent": {**defaults["agent"], **loaded.get("agent", {})},
         "runtime_skills": {**defaults["runtime_skills"], **loaded.get("runtime_skills", {})},
         "custom_nodes": loaded.get("custom_nodes", {}),
+        "custom_data_types": loaded.get("custom_data_types", {}),
+        "revision_proposals": loaded.get("revision_proposals", {}),
+        "model_providers": loaded.get("model_providers", defaults["model_providers"]),
         "features": {**defaults["features"], **loaded.get("features", {})},
     }
 
@@ -123,7 +172,8 @@ def save_settings(settings: dict[str, Any]) -> None:
     SETTINGS_FILE.write_text(json.dumps(settings, ensure_ascii=False, indent=2), encoding="utf-8")
 
 def registry() -> dict[str, dict[str, Any]]:
-    return ToolRegistry(load_settings()["custom_nodes"]).legacy_view()
+    settings = load_settings()
+    return ToolRegistry(settings["custom_nodes"], DataTypeRegistry(settings["custom_data_types"])).legacy_view()
 
 def load_runtime_skills() -> list[dict[str, str]]:
     settings = load_settings(); enabled = settings.get("runtime_skills", {}).get("enabled", [])
@@ -135,7 +185,7 @@ def load_runtime_skills() -> list[dict[str, str]]:
     return skills
 
 def validate_patch(state: GraphState, patch: GraphPatch) -> None:
-    GraphValidator().validate(state, patch, ToolRegistry(load_settings()["custom_nodes"]))
+    GraphValidator().validate(state, patch, workspace.registry())
 
 def apply_patch(state: GraphState, patch: GraphPatch) -> GraphState:
     audit("patch.received", patch_id=patch.patch_id, base_version=patch.base_version, operations=[operation.op for operation in patch.operations])
@@ -143,11 +193,21 @@ def apply_patch(state: GraphState, patch: GraphPatch) -> GraphState:
     before = state.model_dump()
     for operation in patch.operations:
         if operation.op == "add_node": state.nodes.append(operation.node)
-        elif operation.op == "update_node": node_by_id(state, operation.node_id).params.update(operation.params or {})
+        elif operation.op == "update_node":
+            node = node_by_id(state, operation.node_id)
+            node.params.update(operation.params or {})
+            changes = operation.changes or {}
+            if "label" in changes: node.label = changes["label"]
+            if "position" in changes: node.position = changes["position"]
+            if "review_policy" in changes: node.review_policy = ReviewPolicy.model_validate(changes["review_policy"])
         elif operation.op == "delete_node":
             state.nodes = [n for n in state.nodes if n.id != operation.node_id]; state.edges = [e for e in state.edges if e.source != operation.node_id and e.target != operation.node_id]
         elif operation.op == "connect": state.edges.append(operation.edge)
-        else: state.edges = [e for e in state.edges if e.id != operation.edge_id]
+        elif operation.op == "disconnect": state.edges = [e for e in state.edges if e.id != operation.edge_id]
+        else:
+            state.nodes = [operation.replacement_node if n.id == operation.node_id else n for n in state.nodes]
+            state.edges = [e for e in state.edges if e.source != operation.node_id and e.target != operation.node_id]
+            state.edges.extend(operation.reconnect_edges or [])
     state.version += 1
     state.history.append({"version": state.version, "patch": patch.model_dump(), "before": before})
     save(state); audit("patch.applied", version=state.version, patch_id=patch.patch_id); return state
@@ -165,10 +225,12 @@ def get_state():
 @app.get("/api/capabilities")
 def get_capabilities():
     """Stable, read-only control-plane data for a future WebUI or other client."""
-    settings = load_settings()
+    settings = workspace.read_settings()
+    type_registry = workspace.data_type_registry()
     return {
-        "registry": registry(),
-        "data_types": DATA_TYPES,
+        "registry": workspace.registry().legacy_view(),
+        "data_types": list(type_registry.names()),
+        "data_type_definitions": type_registry.definitions(),
         "features": settings["features"],
         "operations": {
             "route": "POST /api/route",
@@ -177,15 +239,42 @@ def get_capabilities():
             "read_task_summary": "GET /api/task-summaries/{task_id}",
             "apply_graph_patch": "POST /api/patch",
             "execute_node": "POST /api/execute",
+            "execute_workflow": "POST /api/workflow/execute",
+            "propose_node_revision": "POST /api/node-revisions/proposals",
+            "submit_node_review": "POST /api/workflow/decision",
+            "create_data_type": "POST /api/data-types",
+            "update_data_type_inheritance": "PUT /api/data-types/{name}/parents",
         },
     }
 
+
+@app.get("/api/data-types")
+def get_data_types():
+    type_registry = workspace.data_type_registry()
+    return {"data_types": list(type_registry.names()), "definitions": type_registry.definitions()}
+
+
+@app.post("/api/data-types")
+def create_data_type(payload: DataTypeDefinition):
+    try:
+        return workspace.create_data_type(payload)
+    except ValueError as exc:
+        raise HTTPException(status_code=422, detail=str(exc)) from exc
+
+
+@app.put("/api/data-types/{name}/parents")
+def update_data_type_inheritance(name: str, payload: DataTypeInheritancePayload):
+    try:
+        return workspace.update_data_type_inheritance(name, payload.parents)
+    except ValueError as exc:
+        raise HTTPException(status_code=422, detail=str(exc)) from exc
+
 @app.get("/api/settings")
-def get_settings(): return load_settings()
+def get_settings(): return workspace.read_settings()
 
 @app.put("/api/settings")
 def update_settings(payload: SettingsPayload):
-    settings = load_settings(); settings["agent"] = payload.agent; save_settings(settings)
+    settings = workspace.read_settings(); settings["agent"] = payload.agent; workspace.write_settings(settings)
     audit("settings.updated", keys=list(payload.agent)); return settings
 
 @app.get("/api/runtime-skills")
@@ -193,15 +282,81 @@ def get_runtime_skills():
     return {"enabled": load_settings().get("runtime_skills", {}).get("enabled", []), "available": [path.name for path in RUNTIME_SKILLS_DIR.glob("*.md")] if RUNTIME_SKILLS_DIR.exists() else []}
 
 @app.get("/api/node-library")
-def get_node_library(): return {"preset": REGISTRY, "custom": load_settings()["custom_nodes"]}
+def get_node_library(): return {"preset": ToolRegistry().legacy_view(), "custom": workspace.read_settings()["custom_nodes"]}
+
+
+def validate_provider_url(value: str) -> str:
+    parsed = urlparse(value)
+    loopback = parsed.hostname in {"127.0.0.1", "localhost", "::1"}
+    if parsed.scheme not in ({"http", "https"} if loopback else {"https"}) or not parsed.hostname or parsed.username or parsed.password:
+        raise ValueError("Provider URL must use HTTPS, except HTTP is allowed for a loopback gateway")
+    return value.rstrip("/")
+
+
+@app.get("/api/model-providers")
+def get_model_providers(refresh: bool = False):
+    providers = workspace.read_settings().get("model_providers", {})
+    result = []
+    for key, value in providers.items():
+        item = {"id": key, **value, "key_configured": bool(os.getenv(value["api_key_env"]))}
+        if refresh and item["key_configured"]:
+            request = urlrequest.Request(value["base_url"].rstrip("/") + "/models", headers={"Authorization": f"Bearer {os.environ[value['api_key_env']]}"})
+            try:
+                with urlrequest.urlopen(request, timeout=3) as response:
+                    payload = json.loads(response.read(512 * 1024))
+                item["models"] = [entry["id"] for entry in payload.get("data", []) if isinstance(entry, dict) and isinstance(entry.get("id"), str)] or value["models"]
+                item["reachable"] = True
+            except Exception:
+                item["reachable"] = False
+        result.append(item)
+    return {"providers": result}
+
+
+@app.post("/api/model-providers")
+def put_model_provider(payload: ModelProviderPayload):
+    try: base_url = validate_provider_url(payload.base_url)
+    except ValueError as exc: raise HTTPException(status_code=422, detail=str(exc)) from exc
+    settings = workspace.read_settings()
+    settings.setdefault("model_providers", {})[payload.provider_id] = {"label": payload.label, "base_url": base_url, "api_key_env": payload.api_key_env, "models": payload.models}
+    workspace.write_settings(settings)
+    return {"id": payload.provider_id, **settings["model_providers"][payload.provider_id], "key_configured": bool(os.getenv(payload.api_key_env))}
+
+
+@app.post("/api/node-revisions/proposals")
+def create_node_revision(request: RevisionProposalRequest):
+    try: return workspace.create_revision_proposal(request.node_id, request.prompt, request.provider_id, request.model)
+    except ValueError as exc: raise HTTPException(status_code=422, detail=str(exc)) from exc
+
+
+@app.get("/api/node-revisions/proposals/{proposal_id}")
+def get_node_revision(proposal_id: str):
+    try: return workspace.get_revision_proposal(proposal_id)
+    except ValueError as exc: raise HTTPException(status_code=404, detail=str(exc)) from exc
+
+
+@app.post("/api/node-revisions/proposals/{proposal_id}/review-code")
+def review_node_revision_code(proposal_id: str, request: CodeReviewRequest):
+    try: return workspace.review_revision_code(proposal_id, request.approved)
+    except ValueError as exc: raise HTTPException(status_code=422, detail=str(exc)) from exc
+
+
+@app.post("/api/node-revisions/proposals/{proposal_id}/apply")
+def apply_node_revision(proposal_id: str, request: ApplyRevisionRequest):
+    try: return {"state": workspace.apply_revision_proposal(proposal_id, request.edge_decisions).model_dump()}
+    except ValueError as exc: raise HTTPException(status_code=422, detail=str(exc)) from exc
+
+
+@app.post("/api/migrations/human-decision")
+def migrate_human_decisions(request: LegacyMigrationRequest):
+    try: return workspace.migrate_legacy_human_decisions(apply=request.apply)
+    except ValueError as exc: raise HTTPException(status_code=422, detail=str(exc)) from exc
 
 def validate_library_node(node: dict[str, Any]) -> dict[str, Any]:
     required = {"label", "category", "inputs", "outputs", "params", "description"}
     missing = required - set(node)
     if missing: raise ValueError(f"Node definition is missing: {', '.join(sorted(missing))}")
     if not isinstance(node["inputs"], dict) or not isinstance(node["outputs"], dict) or not isinstance(node["params"], dict): raise ValueError("inputs, outputs and params must be JSON objects")
-    unknown_types = (set(node["inputs"].values()) | set(node["outputs"].values())) - set(DATA_TYPES)
-    if unknown_types: raise ValueError(f"Unknown data types: {', '.join(unknown_types)}")
+    workspace.data_type_registry().validate_port_types((*node["inputs"].values(), *node["outputs"].values()))
     return node
 
 @app.post("/api/node-library")
@@ -376,8 +531,16 @@ TOOL_SCHEMAS = [
     {"type": "function", "function": {"name": "add_skill_node", "description": "Add an AI Skill Node with a stable TypedTable input and Artifact output. Connect it with apply_graph_patch.", "parameters": {"type": "object", "properties": {"label": {"type": "string"}, "skill_id": {"type": "string"}, "instructions": {"type": "string"}, "output_schema": {"type": "object"}}, "required": ["label", "skill_id", "instructions", "output_schema"], "additionalProperties": False}}},
 ]
 
-def model_completion(messages: list[dict[str, Any]], tools: list[dict[str, Any]]) -> dict[str, Any]:
-    config = load_settings()["agent"]; key = os.getenv(config.get("api_key_env", "MATFLOW_API_KEY"), "")
+def model_completion(messages: list[dict[str, Any]], tools: list[dict[str, Any]], provider_id: str | None = None, model: str | None = None) -> dict[str, Any]:
+    if provider_id and os.getenv("MATFLOW_ALLOW_MODEL_MOCK") == "1" and os.getenv("MATFLOW_REVISION_MOCK_JSON"):
+        return {"role": "assistant", "content": os.environ["MATFLOW_REVISION_MOCK_JSON"]}
+    settings = workspace.read_settings() if "workspace" in globals() else load_settings()
+    config = settings["agent"]
+    if provider_id:
+        provider = settings.get("model_providers", {}).get(provider_id)
+        if provider is None: raise HTTPException(status_code=422, detail=f"Unknown model provider: {provider_id}")
+        config = {**config, **provider, "model": model or provider["models"][0]}
+    key = os.getenv(config.get("api_key_env", "MATFLOW_API_KEY"), "")
     if not config.get("model") or not key:
         raise HTTPException(status_code=503, detail=f"Agent is not configured. Set a model in Settings and set environment variable {config.get('api_key_env', 'MATFLOW_API_KEY')}.")
     url = config.get("base_url", "").rstrip("/") + "/chat/completions"
@@ -385,7 +548,7 @@ def model_completion(messages: list[dict[str, Any]], tools: list[dict[str, Any]]
     if tools: body["tools"] = tools; body["tool_choice"] = "auto"
     req = urlrequest.Request(url, data=json.dumps(body).encode(), headers={"Content-Type": "application/json", "Authorization": f"Bearer {key}"}, method="POST")
     try:
-        with urlrequest.urlopen(req, timeout=90) as response: data = json.loads(response.read())
+        with urlrequest.urlopen(req, timeout=90) as response: data = json.loads(response.read(2 * 1024 * 1024))
         return data["choices"][0]["message"]
     except (urlerror.URLError, KeyError, IndexError, json.JSONDecodeError) as exc:
         audit("model.failed", error=str(exc)); raise HTTPException(status_code=502, detail=f"Model provider request failed: {exc}")
@@ -415,7 +578,7 @@ def chat(request: ChatRequest):
     audit("chat.received", message=request.message[:1000], attachments=[item.get("name") for item in request.attachments])
     skills = load_runtime_skills()
     system = "\n\n".join(["You are the MatFlow runtime agent.", *[f"## Runtime Skill: {skill['name']}\n{skill['content']}" for skill in skills], load_settings()["agent"].get("system_prompt", "")])
-    user_context = {"message": request.message, "uploads": request.attachments, "runtime_skills": [skill["name"] for skill in skills], "node_catalog": registry(), "data_types": DATA_TYPES, "instruction": "Use tools for observations and changes. If required information is ambiguous, ask the user a concise question instead of guessing."}
+    user_context = {"message": request.message, "uploads": request.attachments, "runtime_skills": [skill["name"] for skill in skills], "node_catalog": registry(), "data_types": list(workspace.data_type_registry().names()), "instruction": "Use tools for observations and changes. If required information is ambiguous, ask the user a concise question instead of guessing."}
     messages: list[dict[str, Any]] = [{"role": "system", "content": system}, {"role": "user", "content": json.dumps(user_context, ensure_ascii=False)}]
     trace: list[dict[str, Any]] = []
     try:
@@ -437,13 +600,37 @@ def chat(request: ChatRequest):
         audit("agent.failed", error=str(exc)); raise HTTPException(status_code=422, detail=str(exc))
 
 @app.post("/api/reset")
-def reset():
-    save(GraphState()); return {"ok": True}
+def reset(include_settings: bool = False):
+    workspace.write_state(GraphState())
+    if include_settings:
+        if os.getenv("MATFLOW_ALLOW_MODEL_MOCK") != "1":
+            raise HTTPException(status_code=403, detail="Full reset is available only in an isolated test runtime")
+        workspace.write_settings(default_settings())
+        if workspace.upload_dir.exists():
+            for path in workspace.upload_dir.iterdir():
+                if path.is_file(): path.unlink()
+    return {"ok": True}
 
 @app.post("/api/execute")
 def execute(request: ExecuteRequest):
     try:
         return workspace.execute_node(request.node_id, request.task_id)
+    except ValueError as exc:
+        raise HTTPException(status_code=422, detail=str(exc)) from exc
+
+
+@app.post("/api/workflow/execute")
+def execute_workflow(request: ExecuteWorkflowRequest):
+    try:
+        return workspace.execute_workflow(restart=request.restart)
+    except ValueError as exc:
+        raise HTTPException(status_code=422, detail=str(exc)) from exc
+
+
+@app.post("/api/workflow/decision")
+def submit_workflow_decision(request: HumanDecisionRequest):
+    try:
+        return workspace.submit_node_review(request.node_id, request.decision, request.comment)
     except ValueError as exc:
         raise HTTPException(status_code=422, detail=str(exc)) from exc
 

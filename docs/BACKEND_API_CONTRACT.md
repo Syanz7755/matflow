@@ -20,6 +20,7 @@ MatFlow 将工作区规则集中在 `WorkspaceRuntime` 深模块中。HTTP 控�
 | 读取任务摘要 | `GET /api/task-summaries/{task_id}` | 最近一条完整 `TaskLogSummary` |
 | 数据集列表 | `GET /api/uploads` | 已导入文件的稳定 upload ID、名称与大小 |
 | 检查数据集 | `GET /api/uploads/{upload_id}` | 表格列、类型、行数与最多 8 行预览 |
+| 读取类型结构 | `GET /api/data-types` | 全部类型、直接父类、内置标记和描述 |
 
 ## 有状态操作
 
@@ -42,6 +43,12 @@ MatFlow 将工作区规则集中在 `WorkspaceRuntime` 深模块中。HTTP 控�
 
 请求为 `GraphPatch`。后端验证工具身份、端口类型和版本后才会应用；校验失败时不修改图。
 
+### 创建和修改数据类型
+
+`POST /api/data-types` 接受 `{name, parents, description}`，创建自定义类型。`PUT /api/data-types/{name}/parents` 接受 `{parents}`，原子替换自定义类型的有序父类列表。两者都会校验未知/重复父类、循环继承、C3 多继承一致性、工具端口和当前工作流；失败时不写入设置。内置类型的继承关系不可修改。
+
+连线兼容规则为“父类输出可进入要求子类的输入”。`type_cast` 是参数化抽象节点，其 `source_type` 和 `target_type` 决定实例的实际输入输出类型。
+
 ### 执行节点
 
 `POST /api/execute`
@@ -54,7 +61,7 @@ MatFlow 将工作区规则集中在 `WorkspaceRuntime` 深模块中。HTTP 控�
 
 ## MCP 工具
 
-所有工具统一返回 `{ok, data, error}`。只读工具是 `get_workspace_state`、`inspect_dataset`、`route_research_task`、`validate_graph_patch`、`get_task_summary`；写入或执行工具是 `import_dataset`、`apply_graph_patch`、`execute_workflow`、`submit_human_decision`。后者都带 MCP destructive/write 注解，客户端应在调用前征得用户确认。`import_dataset` 声明 `_meta["openai/fileParams"]`，接受 ChatGPT 标准文件对象；服务端只下载公网 HTTPS 地址、校验每次跳转并限制为 25 MB。
+所有工具统一返回 `{ok, data, error}`。只读工具是 `get_workspace_state`、`inspect_dataset`、`route_research_task`、`validate_graph_patch`、`get_task_summary`；写入或执行工具包括 `create_data_type`、`update_data_type_inheritance`、`import_dataset`、`apply_graph_patch`、`execute_workflow` 和人工决策工具。客户端应在调用前征得用户确认。`import_dataset` 声明 `_meta["openai/fileParams"]`，接受 ChatGPT 标准文件对象；服务端只下载公网 HTTPS 地址、校验每次跳转并限制为 25 MB。
 
 内置 `POST /api/chat` 默认返回 `410 Gone`。迁移期只有显式设置 `MATFLOW_ENABLE_LEGACY_CHAT=1` 才会恢复旧 agent loop；正常路径由 ChatGPT、DSH 或其他 MCP 客户端承担 agent 角色。
 
@@ -70,6 +77,31 @@ uv run matflow start-dsh
 
 ## 当前后端验收
 
+在项目目录启动服务：
+
+```powershell
+uv run matflow serve
+```
+
+保持服务运行，并在另一个 PowerShell 窗口检查能力接口：
+
+```powershell
+Invoke-RestMethod http://127.0.0.1:8000/api/capabilities | ConvertTo-Json -Depth 6
+```
+
+返回内容应包含 `registry`、`data_types` 和 `operations`。浏览器访问 `http://127.0.0.1:8000/docs` 可查看和试用 HTTP 接口。
+
 执行 `test_backend.bat`（或 `uv run --group dev python -m unittest discover -v`）。此入口只运行 Python 后端测试；不会启动或构建 WebUI。
 
-当前可真正执行的材料学链路是 EIS 导入、列映射、基础质检与 Nyquist 绘图。XRD、UV-Vis、比重瓶和 TGA 目前仅有路由评估声明，不应由客户端标记为“执行完成”。
+当前可真正执行的材料学链路是 EIS 导入、列映射、基础质检与 Nyquist 绘图。仓库中的 XRD、UV-Vis、比重瓶和 TGA 等示例用于测试任务表达和数据夹具，不代表已经注册了相应的完整执行器。
+## Node revision and review APIs
+
+`GET /api/model-providers` returns provider IDs, labels, model names, health metadata, and whether the referenced environment variable is configured. It never returns a credential. `POST /api/model-providers` stores an OpenAI-compatible provider definition; remote URLs require HTTPS and loopback URLs may use HTTP.
+
+`POST /api/node-revisions/proposals` accepts `{node_id, prompt, provider_id, model}`. It calls the selected model with the current Node, ToolSpec, incident edges, and `NODE_PREVIEW_SPEC.md`, validates the JSON response, and persists an isolated `NodeRevisionProposal`. The graph is unchanged.
+
+`POST /api/node-revisions/proposals/{proposal_id}/apply` accepts explicit decisions for every non-exact edge mapping. The server installs a reviewed declarative ToolSpec and applies one `replace_node_revision` operation. Version, port, single-input, and DAG validation occur before the graph is written. A proposal containing generated code or changed ports remains blocked until a compatible reviewed executor is installed.
+
+`POST /api/workflow/decision` accepts `{node_id, decision, comment?}` where decision is `continue`, `revise`, or `stop`. Continue resumes eligible downstream work. Preview generation occurs before a node enters the waiting state.
+
+`POST /api/migrations/human-decision` provides a dry run by default. With `{apply: true}`, terminal legacy Human Decision nodes with exactly one incoming edge are replaced by `review_policy.after_run` on the upstream node. Ambiguous graphs are reported without mutation.

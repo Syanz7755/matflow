@@ -104,7 +104,7 @@ uv run matflow diagnose --dsh --profile matflow
 uv run matflow configure-dsh --profile matflow --dry-run
 ```
 
-### 日常启动
+### 后续启动
 
 ```powershell
 uv run matflow start-dsh --profile matflow
@@ -206,4 +206,3 @@ uv run matflow configure-dsh --profile matflow
 ### 工具调用成功但 `ok` 为 `false`
 
 这表示 MCP 传输正常，但 MatFlow 业务校验失败。读取 `error.message`，修正参数后再调用；不要自动无限重试。
-

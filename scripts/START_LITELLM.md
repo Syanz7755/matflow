@@ -1,14 +1,17 @@
-# LiteLLM 双击启动器
+# Model Service Launcher
 
-双击项目根目录的 `start_model_services.bat` 可启动本地 LiteLLM 网关和 Jev 决策网关。`start_litellm.bat` 保留为兼容别名，也会启动这两个模型。启动器仅检查环境变量是否存在；不会显示、提示输入或将 `SJTU_ZHIYUAN_API_KEY` 写入任何文件。
+`start_model_services.bat` starts every enabled service in `config/model_services.json`, currently the LiteLLM gateway and the Jev decision gateway. `start_litellm.bat` is a backward-compatible alias and starts the same complete set of services despite its older name.
 
-前提是该密钥已作为 Windows **用户环境变量**配置。若刚配置完成，请重新打开终端或重新登录 Windows 后再双击启动器。模型进程在后台运行；再次双击会复用健康的实例，不会重复占用端口。
+The launcher checks only whether required environment variables exist. It never displays, prompts for, or persists their values. If a user environment variable was added recently, open a new terminal or sign in again before launching the script.
 
-启动后，可在另一个终端设置本地网关访问令牌并执行功能探测：
+Healthy services are reused instead of started twice. Newly started services run in hidden background processes. The current repository does not provide a matching stop script.
+
+See the authoritative [Startup Scripts Guide](../docs/STARTUP_SCRIPTS.md) for configuration, ports, validation mode, failure recovery, and the distinction between model-service and MatFlow launchers.
+
+To probe the gateway after startup, run:
 
 ```powershell
-The project launcher and the gateway-check script read the local gateway key from `config/litellm.yaml` automatically. It does not need to be copied into a terminal or displayed.
 uv run python examples\evaluate_llm_gateway.py
 ```
 
-上游密钥不应填入 `litellm.yaml`、`data/settings.json`、脚本、Git 提交或测试报告。
+Never put upstream credentials in `config/litellm.yaml`, `data/settings.json`, scripts, Git commits, or test reports.

@@ -4,6 +4,8 @@ A local, schema-constrained materials workflow workspace. MatFlow exposes one se
 
 ## Documentation
 
+- [快速使用指南](docs/GETTING_STARTED.md)
+- [Startup scripts guide](docs/STARTUP_SCRIPTS.md)
 - [文档中心](docs/README.md)
 - [用户说明书](docs/USER_MANUAL.md)
 - [MCP 与 AI 客户端接入指南](docs/MCP_INTEGRATION_GUIDE.md)
@@ -28,9 +30,9 @@ Once installed, the single startup command is:
 uv run matflow start
 ```
 
-The equivalent PowerShell helper is `./scripts/start.ps1`.
+The equivalent PowerShell helper is `./scripts/start.ps1`. It starts only MatFlow and the Web UI.
 
-On Windows, you may also double-click `start_matflow.bat`.
+On Windows, `start_matflow.bat` is the full workstation launcher: it starts the model services declared in `config/model_services.json` (currently LiteLLM and Jev) before starting MatFlow and the Web UI. It therefore requires the configured model-service paths and environment variables. See the [startup scripts guide](docs/STARTUP_SCRIPTS.md) before using it.
 
 ## Optional Conda runtime
 
@@ -102,4 +104,4 @@ Material-domain abilities should be represented as **AI Skill Nodes** in the gra
 - Versioned control-plane interfaces: state, capabilities, route, GraphPatch, execution and task summaries. See [docs/BACKEND_API_CONTRACT.md](docs/BACKEND_API_CONTRACT.md).
 - MCP interface: external agents can inspect uploads, read the graph, validate/apply patches, route tasks, execute workflows, resolve human decisions, and read audit summaries.
 - Real tabular EIS execution path: uploaded data is parsed, column mappings are validated, QC uses the uploaded values, and Nyquist points are generated from the uploaded values.
-- Settings drawer for provider configuration and the local materials-node library. Preset nodes are protected; custom nodes support JSON import, prompt-built templates, rename and deletion.
+- HTTP interfaces for local provider settings and custom node definitions. These management operations are not exposed in the current WebUI.

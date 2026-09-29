@@ -38,7 +38,8 @@ class McpAdapterTests(unittest.IsolatedAsyncioTestCase):
                 {
                     "get_workspace_state", "import_dataset", "inspect_dataset",
                     "route_research_task", "validate_graph_patch", "apply_graph_patch",
-                    "execute_workflow", "submit_human_decision", "get_task_summary",
+                    "execute_workflow", "submit_human_decision", "submit_node_review", "get_task_summary",
+                    "create_data_type", "update_data_type_inheritance",
                 },
             )
             self.assertTrue(tools["get_workspace_state"].annotations.readOnlyHint)

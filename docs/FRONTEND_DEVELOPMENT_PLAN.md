@@ -233,8 +233,10 @@ workflow.failed
 
 ### Phase 0：前端基线审查
 
+- 在项目根目录运行 `uv sync`、`uv run matflow install-frontend` 和 `uv run matflow start`，确认现有页面可以打开。
+- 在 `frontend/` 目录运行 `npm run build` 和 `npm run test:e2e`，记录基线结果。
 - 盘点现有 `frontend/src/main.jsx` 和 `style.css` 的状态、组件和 API 调用。
-- 记录当前 v0.1 画布、对话区、设置抽屉和节点库的实际行为。
+- 记录当前工作流画布、任务路由、数据集侧栏和决策记录的实际行为。
 - 列出当前 API 与计划目标之间的缺口。
 - 产出：前端现状清单、问题截图、API 缺口表。
 
@@ -250,6 +252,7 @@ workflow.failed
 - 拆分当前单文件界面为工作流栏、节点库、画布、Inspector、Execution Console 等边界清晰的组件。
 - 保留后端作为唯一业务规则来源。
 - 首先实现 loading、empty、error、version conflict 和 waiting 状态。
+- 当前已实现的画布切片：独立的 `WorkflowGraph` 只读组件通过纯转换层消费 `GraphState + registry`；每个声明的输入/输出参数渲染为独立端口，支持缩放和平移，并在画布下方报告结构完整性问题。
 - 产出：可导航的工作台骨架，不改变后端执行语义。
 
 ### Phase 3：节点与连接操作
@@ -321,4 +324,3 @@ workflow.failed
 - 暂不进行 ComfyUI 视觉仿制或大规模换肤。
 - 暂不启用自动生成工具、未经审核的 custom node 或 Tool Manager 高级能力。
 - 暂不把任何前端本地状态提升为后端业务真相。
-

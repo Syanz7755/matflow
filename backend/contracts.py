@@ -2,26 +2,62 @@
 from __future__ import annotations
 
 import uuid
-from typing import Any, Literal
+from typing import Annotated, Any, Literal
 
-from pydantic import BaseModel, Field, model_validator
+from pydantic import BaseModel, Field, StringConstraints, field_validator, model_validator
 
 
-DataType = Literal[
-    "RawData", "TypedTable", "EISData", "EISQCReport", "Plot", "Decision", "Artifact"
-]
-NodeStatus = Literal["ready", "running", "completed", "waiting", "error"]
+DataType = Annotated[str, StringConstraints(pattern=r"^[A-Z][A-Za-z0-9_]{0,63}$")]
+NodeStatus = Literal["ready", "running", "completed", "waiting", "error", "cancelled"]
 ToolStatus = Literal["draft", "active", "deprecated", "disabled"]
 RiskLevel = Literal["low", "medium", "high"]
 
-DATA_TYPES: tuple[DataType, ...] = (
+DATA_TYPES: tuple[str, ...] = (
     "RawData", "TypedTable", "EISData", "EISQCReport", "Plot", "Decision", "Artifact"
 )
+
+
+class DataTypeDefinition(BaseModel):
+    """One nominal data type in the validated multiple-inheritance graph."""
+
+    name: DataType
+    parents: list[DataType] = Field(default_factory=list)
+    description: str = Field(default="", max_length=500)
+    builtin: bool = False
+
+    @field_validator("parents")
+    @classmethod
+    def unique_parents(cls, parents: list[str]) -> list[str]:
+        if len(parents) != len(set(parents)):
+            raise ValueError("A data type cannot declare the same parent more than once")
+        return parents
 
 
 class ToolProvenance(BaseModel):
     kind: Literal["builtin", "custom", "generated"] = "builtin"
     reviewed_by: str | None = None
+
+
+class PreviewRule(BaseModel):
+    renderer: Literal["text", "table_head", "image", "json_tree"]
+    max_rows: int = Field(default=8, ge=1, le=50)
+    max_columns: int = Field(default=20, ge=1, le=100)
+    max_characters: int = Field(default=4000, ge=100, le=20000)
+
+
+class PreviewSpec(BaseModel):
+    version: Literal["1.0"] = "1.0"
+    outputs: dict[str, PreviewRule] = Field(default_factory=dict)
+
+
+class ReviewPolicy(BaseModel):
+    after_run: bool = False
+    prompt: str = Field(default="Review this result before continuing.", max_length=500)
+
+
+class ReviewState(BaseModel):
+    status: Literal["off", "pending", "approved", "stopped"] = "off"
+    comment: str | None = Field(default=None, max_length=1000)
 
 
 class ToolSpec(BaseModel):
@@ -42,6 +78,11 @@ class ToolSpec(BaseModel):
     risk_level: RiskLevel = "low"
     status: ToolStatus = "active"
     provenance: ToolProvenance = Field(default_factory=ToolProvenance)
+    parent_tool_id: str | None = None
+    parent_version: str | None = None
+    preview_spec: PreviewSpec = Field(default_factory=PreviewSpec)
+    generated_code_status: Literal["none", "draft", "reviewed"] = "none"
+    abstract: bool = False
 
     @model_validator(mode="after")
     def validate_lifecycle(self):
@@ -70,6 +111,9 @@ class Node(BaseModel):
     position: dict[str, float] = Field(default_factory=lambda: {"x": 100, "y": 100})
     status: NodeStatus = "ready"
     output: dict[str, Any] | None = None
+    preview: dict[str, Any] | None = None
+    review_policy: ReviewPolicy = Field(default_factory=ReviewPolicy)
+    review_state: ReviewState = Field(default_factory=ReviewState)
 
     @model_validator(mode="after")
     def set_legacy_tool_identity(self):
@@ -97,12 +141,16 @@ class GraphState(BaseModel):
 
 
 class Operation(BaseModel):
-    op: Literal["add_node", "update_node", "delete_node", "connect", "disconnect"]
+    op: Literal["add_node", "update_node", "delete_node", "connect", "disconnect", "replace_node_revision"]
     node: Node | None = None
     node_id: str | None = None
     params: dict[str, Any] | None = None
+    changes: dict[str, Any] | None = None
     edge: Edge | None = None
     edge_id: str | None = None
+    replacement_node: Node | None = None
+    reconnect_edges: list[Edge] | None = None
+    proposal_id: str | None = None
 
     @model_validator(mode="after")
     def required_fields(self):
@@ -112,6 +160,7 @@ class Operation(BaseModel):
             "delete_node": self.node_id,
             "connect": self.edge,
             "disconnect": self.edge_id,
+            "replace_node_revision": self.node_id and self.replacement_node and self.proposal_id,
         }
         if not requirements[self.op]:
             raise ValueError(f"{self.op} requires its corresponding payload")
