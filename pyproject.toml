@@ -4,8 +4,8 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "matflow"
-version = "0.1.0"
-description = "Schema-constrained materials workflow graph demo"
+version = "1.0.0"
+description = "Authoritative HTTP backend for schema-constrained materials workflows"
 readme = "README.md"
 requires-python = ">=3.11,<3.14"
 dependencies = [
@@ -15,7 +15,6 @@ dependencies = [
   "numpy>=1.26,<3.0",
   "pandas>=2.2,<4.0",
   "python-multipart>=0.0.20,<1.0",
-  "mcp>=1.30,<2.0",
   "litellm[proxy]>=1.74,<2.0",
 ]
 

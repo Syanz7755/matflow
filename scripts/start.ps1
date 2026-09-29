@@ -10,4 +10,4 @@ if (-not (Get-Command uv -ErrorAction SilentlyContinue)) {
     throw "uv was not found on PATH. Install uv, then run: uv sync"
 }
 Push-Location $projectRoot
-try { & uv run matflow start } finally { Pop-Location }
+try { & uv run matflow start --ui webui } finally { Pop-Location }

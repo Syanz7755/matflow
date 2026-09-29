@@ -17,6 +17,8 @@ __pycache__/
 build/
 dist/
 .pytest_cache/
+.tmp/
+.uv-cache/
 .mypy_cache/
 .ruff_cache/
 .coverage
@@ -24,7 +26,7 @@ coverage.xml
 htmlcov/
 examples/reports/
 
-# Frontend dependencies and generated output
+# Legacy frontend generated output left by pre-split checkouts
 frontend/node_modules/
 frontend/dist/
 frontend/test-results/

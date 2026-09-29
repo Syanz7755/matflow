@@ -15,7 +15,7 @@ matflow是一个为材料学领域研究人员设计的vibe research工具框架
 | 了解功能、完成分析并解释结果 | [用户说明书](USER_MANUAL.md) |
 | 连接本机 DSH、ChatGPT 或其他 MCP 客户端 | [MCP 与 AI 客户端接入指南](MCP_INTEGRATION_GUIDE.md) |
 | 日常启动、诊断、备份和排障 | [部署与运维指南](DEPLOYMENT_AND_OPERATIONS.md) |
-| 了解 HTTP/MCP 的字段和调用约定 | [后端接口契约](BACKEND_API_CONTRACT.md) |
+| 了解 HTTP 字段和客户端调用约定 | [后端接口契约](BACKEND_API_CONTRACT.md) |
 | 开发安全的节点阶段性预览 | [Node preview specification](NODE_PREVIEW_SPEC.md) |
 | 理解模块边界并继续开发 | [架构与开发规则](ARCHITECTURE_AND_DEVELOPER_RULES.md) |
 | 查看后续前端演进设想 | [前端开发计划](FRONTEND_DEVELOPMENT_PLAN.md) |

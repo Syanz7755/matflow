@@ -58,7 +58,7 @@ def default_settings() -> dict[str, Any]:
             "system_prompt": "Respect the runtime skills. Use tools to inspect files and execute work; never invent observations.",
             "max_tool_rounds": 8,
         },
-        "runtime_skills": {"enabled": ["matflow_mcp_runtime.md"]},
+        "runtime_skills": {"enabled": []},
         "custom_nodes": {},
         "custom_data_types": {},
         "revision_proposals": {},

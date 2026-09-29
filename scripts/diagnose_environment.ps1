@@ -19,7 +19,7 @@ Push-Location $projectRoot
 try {
     if (Test-Path '.venv') { Write-Host 'uv virtual environment: OK' } else { Write-Warning 'uv virtual environment missing. Run: uv sync' }
     & uv run python -c "import fastapi,numpy,pandas; print('Python packages: OK')"
-    if (Test-Path 'frontend/node_modules') { Write-Host 'Frontend packages: OK' } else { Write-Warning 'Frontend packages missing. Run: uv run matflow install-frontend' }
+    if (Test-Path '..\matflow-frontend\node_modules') { Write-Host 'Sibling frontend packages: OK' } else { Write-Warning 'Optional sibling frontend packages missing. Run npm install in ..\matflow-frontend' }
     if (Get-Command node -ErrorAction SilentlyContinue) { Write-Host "Node: $(& node --version)" } else { Write-Warning 'Node.js missing. Install Node.js 22 or later.' }
     & uv run matflow diagnose
 } finally { Pop-Location }

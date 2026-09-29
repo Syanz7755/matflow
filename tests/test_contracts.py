@@ -119,10 +119,18 @@ class RuntimeIntegrationTests(unittest.TestCase):
         response = TestClient(app).get("/api/capabilities")
         self.assertEqual(response.status_code, 200)
         payload = response.json()
+        self.assertEqual(payload["api_contract"], {"name": "matflow-http", "version": "1.0"})
+        self.assertEqual(payload["server_version"], "1.0.0")
         self.assertEqual(payload["registry"]["eis_basic_qc"]["version"], "1.0.0")
         self.assertEqual(payload["operations"]["route"], "POST /api/route")
         self.assertEqual(payload["operations"]["execute_node"], "POST /api/execute")
         self.assertEqual(payload["operations"]["execute_workflow"], "POST /api/workflow/execute")
+        self.assertEqual(payload["operations"]["validate_graph_patch"], "POST /api/patch/validate")
+
+    def test_stale_patch_returns_stable_conflict(self):
+        response = TestClient(app).post("/api/patch/validate", json={"base_version": 999, "operations": [{"op": "add_node", "node": {"id": "stale-test", "type": "raw_file_import"}}]})
+        self.assertEqual(response.status_code, 409)
+        self.assertEqual(response.json()["detail"]["code"], "graph_version_conflict")
 
     def test_route_selects_compatible_eis_tool_with_auditable_decision(self):
         response = TestClient(app).post("/api/route", json={"task": {"task_id": "route-eis", "user_message": "Run basic EIS quality checks", "graph_version": 0, "available_input_types": ["TypedTable"]}})

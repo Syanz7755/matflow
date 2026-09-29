@@ -14,7 +14,7 @@ call "%~dp0start_model_services.bat"
 if errorlevel 1 exit /b 1
 
 echo [MatFlow] Starting local workspace...
-uv run matflow start
+uv run matflow start --ui webui
 
 if errorlevel 1 (
   echo.

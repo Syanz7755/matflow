@@ -6,7 +6,6 @@ import json
 import os
 import re
 import uuid
-from contextlib import asynccontextmanager
 from pathlib import Path
 from typing import Any
 from urllib import error as urlerror
@@ -29,7 +28,6 @@ from .task_summary import TaskSummaryService
 from .tool_registry import ToolRegistry, builtin_specs
 from .validator import GraphValidator, node_by_id
 from .workspace_runtime import WorkspaceRuntime
-from .mcp_server import create_mcp_server
 
 ROOT = Path(__file__).resolve().parents[1]
 STATE_FILE = ROOT / "data" / "graph_state.json"
@@ -55,16 +53,7 @@ def _runtime_model_adapter(messages: list[dict[str, Any]], tools: list[dict[str,
 
 
 workspace = WorkspaceRuntime(model_complete=_runtime_model_adapter)
-mcp_server = create_mcp_server(workspace)
-
-
-@asynccontextmanager
-async def lifespan(_: FastAPI):
-    async with mcp_server.session_manager.run():
-        yield
-
-
-app = FastAPI(title="Materials Graph Demo", lifespan=lifespan)
+app = FastAPI(title="MatFlow Backend", version="1.0.0")
 cors_origins = ["http://localhost:5173", "http://127.0.0.1:5173"]
 cors_origins.extend(origin.strip() for origin in os.getenv("MATFLOW_CORS_ORIGINS", "").split(",") if origin.strip())
 app.add_middleware(CORSMiddleware, allow_origins=cors_origins, allow_methods=["*"], allow_headers=["*"])
@@ -228,6 +217,8 @@ def get_capabilities():
     settings = workspace.read_settings()
     type_registry = workspace.data_type_registry()
     return {
+        "api_contract": {"name": "matflow-http", "version": "1.0"},
+        "server_version": "1.0.0",
         "registry": workspace.registry().legacy_view(),
         "data_types": list(type_registry.names()),
         "data_type_definitions": type_registry.definitions(),
@@ -238,10 +229,12 @@ def get_capabilities():
             "import_dataset": "POST /api/uploads",
             "read_task_summary": "GET /api/task-summaries/{task_id}",
             "apply_graph_patch": "POST /api/patch",
+            "validate_graph_patch": "POST /api/patch/validate",
             "execute_node": "POST /api/execute",
             "execute_workflow": "POST /api/workflow/execute",
             "propose_node_revision": "POST /api/node-revisions/proposals",
             "submit_node_review": "POST /api/workflow/decision",
+            "submit_human_decision": "POST /api/workflow/human-decision",
             "create_data_type": "POST /api/data-types",
             "update_data_type_inheritance": "PUT /api/data-types/{name}/parents",
         },
@@ -421,8 +414,22 @@ def inspect_uploaded_file(upload_id: str):
 
 @app.post("/api/patch")
 def post_patch(patch: GraphPatch):
-    try: return {"state": workspace.apply_graph_patch(patch).model_dump()}
-    except ValueError as exc: raise HTTPException(status_code=422, detail=str(exc))
+    try:
+        return {"state": workspace.apply_graph_patch(patch).model_dump()}
+    except ValueError as exc:
+        if str(exc).startswith("Version conflict:"):
+            raise HTTPException(status_code=409, detail={"code": "graph_version_conflict", "message": str(exc), "current_version": workspace.read_state().version}) from exc
+        raise HTTPException(status_code=422, detail={"code": "invalid_graph_patch", "message": str(exc)}) from exc
+
+
+@app.post("/api/patch/validate")
+def validate_graph_patch(patch: GraphPatch):
+    try:
+        return workspace.validate_graph_patch(patch)
+    except ValueError as exc:
+        if str(exc).startswith("Version conflict:"):
+            raise HTTPException(status_code=409, detail={"code": "graph_version_conflict", "message": str(exc), "current_version": workspace.read_state().version}) from exc
+        raise HTTPException(status_code=422, detail={"code": "invalid_graph_patch", "message": str(exc)}) from exc
 
 
 @app.post("/api/route")
@@ -574,7 +581,7 @@ def run_agent_tool(name: str, arguments: dict[str, Any]) -> dict[str, Any]:
 @app.post("/api/chat")
 def chat(request: ChatRequest):
     if os.getenv("MATFLOW_ENABLE_LEGACY_CHAT", "").lower() not in {"1", "true", "yes"}:
-        raise HTTPException(status_code=410, detail="The built-in agent is retired. Connect an AI client through /mcp. Set MATFLOW_ENABLE_LEGACY_CHAT=1 only for migration.")
+        raise HTTPException(status_code=410, detail="The built-in agent is retired. Connect a client through the versioned HTTP API or the separate matflow-frontend MCP bridge. Set MATFLOW_ENABLE_LEGACY_CHAT=1 only for migration.")
     audit("chat.received", message=request.message[:1000], attachments=[item.get("name") for item in request.attachments])
     skills = load_runtime_skills()
     system = "\n\n".join(["You are the MatFlow runtime agent.", *[f"## Runtime Skill: {skill['name']}\n{skill['content']}" for skill in skills], load_settings()["agent"].get("system_prompt", "")])
@@ -635,5 +642,9 @@ def submit_workflow_decision(request: HumanDecisionRequest):
         raise HTTPException(status_code=422, detail=str(exc)) from exc
 
 
-# Mount last so the established /api routes win before the MCP adapter's root mount.
-app.mount("/", mcp_server.streamable_http_app())
+@app.post("/api/workflow/human-decision")
+def submit_human_decision(request: HumanDecisionRequest):
+    try:
+        return workspace.submit_human_decision(request.node_id, request.decision)
+    except ValueError as exc:
+        raise HTTPException(status_code=422, detail=str(exc)) from exc
