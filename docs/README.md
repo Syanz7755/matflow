@@ -17,6 +17,8 @@ matflow是一个为材料学领域研究人员设计的vibe research工具框架
 | 日常启动、诊断、备份和排障 | [部署与运维指南](DEPLOYMENT_AND_OPERATIONS.md) |
 | 了解 HTTP 字段和客户端调用约定 | [后端接口契约](BACKEND_API_CONTRACT.md) |
 | 开发安全的节点阶段性预览 | [Node preview specification](NODE_PREVIEW_SPEC.md) |
+| 查看当前完成度、里程碑和下一阶段 | [项目阶段完成度评估](PROJECT_STATUS.md) |
+| 理解设计理念、模块和运行流程 | [设计理念与实现架构](DESIGN_AND_ARCHITECTURE.md) |
 | 理解模块边界并继续开发 | [架构与开发规则](ARCHITECTURE_AND_DEVELOPER_RULES.md) |
 
 ## 推荐阅读路径
@@ -35,8 +37,8 @@ matflow是一个为材料学领域研究人员设计的vibe research工具框架
 
 ### 开发者
 
-1. 先读[架构与开发规则](ARCHITECTURE_AND_DEVELOPER_RULES.md)。
-2. 再读[后端接口契约](BACKEND_API_CONTRACT.md)。
+1. 先读[设计理念与实现架构](DESIGN_AND_ARCHITECTURE.md)和根目录 `CONTEXT.md`。
+2. 再读[架构与开发规则](ARCHITECTURE_AND_DEVELOPER_RULES.md)与[后端接口契约](BACKEND_API_CONTRACT.md)。
 3. 修改公共行为时同时更新实现、测试和对应文档。
 
 ## 当前能力边界
@@ -45,7 +47,7 @@ matflow是一个为材料学领域研究人员设计的vibe research工具框架
 - 仓库包含 XRD、UV-Vis、比重瓶和 TGA 等任务示例，但它们不是当前内置的完整执行链路。
 - WebUI 与 MCP bridge 通过 HTTP 共用同一个后端工作区；不支持多用户权限隔离。
 - 默认只监听本机 `127.0.0.1:8000`，未内置公网认证。
-- 内置聊天接口已停用；AI 应通过 MCP 接入。
+- 后端提供 `/api/chat` 作为受轮次限制的 AI 辅助接口；复杂中文规划和领域工具生成仍属于 Alpha，MCP bridge 是另一种客户端接入方式。
 
 ## 文档维护约定
 
@@ -55,4 +57,6 @@ matflow是一个为材料学领域研究人员设计的vibe research工具框架
 - MCP 与 DSH 文档由 `matflow-frontend` 仓库维护。
 - `DEPLOYMENT_AND_OPERATIONS.md` 面向本机部署与维护。
 - `BACKEND_API_CONTRACT.md` 是传输层的接口参考。
+- `PROJECT_STATUS.md` 记录阶段性完成度、验证证据和下一里程碑。
+- `DESIGN_AND_ARCHITECTURE.md` 记录设计理念、实现架构与能力边界。
 - `ARCHITECTURE_AND_DEVELOPER_RULES.md` 是实现边界和变更规则。

@@ -1,0 +1,54 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://matflow.local/schemas/scenario-suite-2.0.json",
+  "title": "MatFlow configuration-driven scenario suite",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "suite_id", "defaults", "cases"],
+  "properties": {
+    "schema_version": {"const": "2.0"},
+    "suite_id": {"type": "string", "minLength": 1},
+    "description": {"type": "string"},
+    "defaults": {"$ref": "#/$defs/defaults"},
+    "cases": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/case"}}
+  },
+  "$defs": {
+    "service_access": {
+      "type": "object", "additionalProperties": false,
+      "properties": {"jev_like": {"type": "boolean", "default": false}, "llm": {"type": "boolean", "default": false}}
+    },
+    "defaults": {
+      "type": "object", "additionalProperties": false,
+      "properties": {
+        "service_access": {"$ref": "#/$defs/service_access"},
+        "repair_budget": {"type": "integer", "minimum": 0, "maximum": 5, "default": 2},
+        "isolation_backend": {"enum": ["docker", "microsandbox"], "default": "docker"}
+      }
+    },
+    "fixture": {
+      "type": "object", "additionalProperties": false,
+      "properties": {
+        "path": {"type": ["string", "null"]}, "paths": {"type": "array", "items": {"type": "string"}},
+        "generator": {"type": ["string", "null"]}, "seed": {"type": ["integer", "null"]},
+        "seeds": {"type": "array", "items": {"type": "integer"}},
+        "noise_profile": {"type": "object"}, "ground_truth": {"type": "object"},
+        "optional_external_path": {"type": ["string", "null"]}
+      }
+    },
+    "case": {
+      "type": "object", "additionalProperties": false,
+      "required": ["case_id", "kind", "prompt"],
+      "properties": {
+        "case_id": {"type": "string", "pattern": "^[a-zA-Z][a-zA-Z0-9_-]*$"},
+        "kind": {"enum": ["workflow_generation", "workflow_execution", "tool_construction", "tool_selection", "tool_repair"]},
+        "prompt": {"type": "string", "minLength": 1},
+        "inputs": {"type": "array", "items": {"type": "object"}}, "parameters": {"type": "object"}, "workflow": {"type": "object"},
+        "service_access": {"$ref": "#/$defs/service_access"},
+        "tool_visibility": {"enum": ["hidden_reference", "published_reference"]},
+        "fixture": {"$ref": "#/$defs/fixture"}, "expected": {"type": "object"},
+        "repair_budget": {"type": "integer", "minimum": 0, "maximum": 5},
+        "tags": {"type": "array", "items": {"type": "string"}}
+      }
+    }
+  }
+}

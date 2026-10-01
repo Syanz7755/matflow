@@ -33,6 +33,24 @@ function Test-Healthy([string]$HealthUrl) {
     }
 }
 
+function Test-ServiceReady($Service) {
+    if (-not (Test-Healthy $Service.health_url)) { return $false }
+    if (-not $Service.PSObject.Properties.Name.Contains('readiness_url')) { return $true }
+    $headers = @{}
+    if ($Service.PSObject.Properties.Name.Contains('readiness_api_key_env')) {
+        $credentialName = [string]$Service.readiness_api_key_env
+        $credential = [Environment]::GetEnvironmentVariable($credentialName)
+        if (-not $credential) { return $false }
+        $headers.Authorization = "Bearer $credential"
+    }
+    try {
+        $response = Invoke-WebRequest -UseBasicParsing -Uri $Service.readiness_url -Headers $headers -TimeoutSec 2
+        return $response.StatusCode -ge 200 -and $response.StatusCode -lt 300
+    } catch {
+        return $false
+    }
+}
+
 function Assert-ServiceConfig($Service) {
     foreach ($field in 'id', 'mode', 'working_directory', 'executable', 'arguments', 'health_url', 'startup_timeout_seconds') {
         if (-not $Service.PSObject.Properties.Name.Contains($field)) {
@@ -54,6 +72,10 @@ function Assert-ServiceConfig($Service) {
             throw "[$($Service.id)] Required environment variable '$environmentName' is unavailable in this session."
         }
     }
+    if ($Service.PSObject.Properties.Name.Contains('readiness_api_key_env') -and
+        -not $Service.PSObject.Properties.Name.Contains('readiness_url')) {
+        throw "[$($Service.id)] readiness_api_key_env requires readiness_url."
+    }
 }
 
 $enabled = @($config.services | Where-Object { $_.enabled -eq $true })
@@ -66,8 +88,8 @@ if ($ValidateOnly) {
 $started = @()
 try {
     foreach ($service in $enabled) {
-        if (Test-Healthy $service.health_url) {
-            Write-Host "[MatFlow] $($service.id) is already healthy ($($service.mode))."
+        if (Test-ServiceReady $service) {
+            Write-Host "[MatFlow] $($service.id) is already ready ($($service.mode))."
             continue
         }
         $workingDirectory = Resolve-ServicePath $service.working_directory
@@ -76,12 +98,12 @@ try {
         $started += $process
         $deadline = (Get-Date).AddSeconds([int]$service.startup_timeout_seconds)
         while ((Get-Date) -lt $deadline) {
-            if (Test-Healthy $service.health_url) { break }
+            if (Test-ServiceReady $service) { break }
             if ($process.HasExited) { throw "[$($service.id)] Process exited before its health check passed." }
             Start-Sleep -Milliseconds 500
         }
-        if (-not (Test-Healthy $service.health_url)) {
-            throw "[$($service.id)] Health check did not pass before timeout."
+        if (-not (Test-ServiceReady $service)) {
+            throw "[$($service.id)] Readiness check did not pass before timeout."
         }
         Write-Host "[MatFlow] $($service.id) is ready."
     }

@@ -1,0 +1,43 @@
+Context: The user provides attachments containing raw impedance spectroscopy scan files and a rule description document for the same experimental set. The measurement setup uses a four-probe structure with cobalt electrodes and molybdenum wires.
+
+Inputs:
+1. Raw scan files: Contain individual scan curves with timestamps or relative time.
+2. Rule description document: Records the furnace segmented program and sample geometry information.
+
+Objectives:
+1. Data Preprocessing & Calibration:
+   - Read both file types.
+   - Map relative time to temperature using the furnace program.
+   - Generate complete impedance spectrum scan data indexed by temperature.
+   - Verify the true meaning, units, and sign conventions of original columns before any physical quantity conversion. Do not assume column names or similar electrical meanings imply completed conversion.
+2. Data Validity Assessment:
+   - Evaluate data validity using diagnostic methods suitable for this impedance spectroscopy type.
+   - Consider: data integrity, frequency coverage, repeated/anomalous points, physical consistency, instrument/electrode/lead artifacts, equivalent circuit fitting quality, model identifiability, and uncertainty.
+3. Tool Construction (if necessary):
+   - If existing workflow nodes are insufficient, propose or construct tools with explicit inputs, outputs, units, and failure conditions.
+   - Tools must undergo necessary evaluation or human review before integration.
+   - Prohibitions: Do not substitute unverified model outputs for numerical calculations. Do not claim execution of literature retrieval capabilities not provided by the system.
+4. Quality Gating:
+   - Merge diagnostic results into a traceable data quality assessment and quality gate.
+   - Proceed to mechanism analysis only if quality requirements are met.
+   - If quality is insufficient, output problem localization and recommended re-measurement/repair steps.
+5. Mechanism Analysis:
+   - Extract contribution ratios of different conduction mechanisms or electrical processes from the impedance spectra.
+   - Determine required methods and plots first, then plan tools (e.g., equivalent circuit components, relaxation time distribution, or other evidence-supported decomposition methods).
+   - Report model dependencies and uncertainties.
+   - Prohibition: Do not force-naming mechanisms without evidence.
+6. Output Generation:
+   - Temperature-calibrated per-scan data.
+   - Quality metrics and diagnostic plots.
+   - Candidate circuits and fitting comparisons.
+   - Quality gate conclusions.
+   - Contribution ratios and uncertainties (only if gate passed).
+   - Required plots: Nyquist, Bode, residuals, and parameter evolution with temperature.
+   - List of methods and assumptions.
+
+Workflow Topology Constraints:
+- The task is not a single chain. Use branches for parallelizable tasks: document parsing, raw data checking, method selection, different diagnostics, and different plotting.
+- Use merge points for locations requiring joint judgment.
+- Implement an explicit quality gate after quality assessment. Mechanism contribution analysis must not execute if the gate is not passed.
+- Read the current graph and attachments first, then construct the workflow using type-safe graph patches.
+- If limited by missing read, retrieval, tool generation, data type, or execution capabilities, stop accurately at the corresponding position and list the gaps. Do not pretend completion via text.

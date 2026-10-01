@@ -59,7 +59,7 @@ class DecisionRouter:
             )
         winner = candidates[0]
         spec: ToolSpec = registry.get(winner.tool_id)
-        confirmation = (len(candidates) > 1 and winner.score < 0.6) or spec.risk_level != "low"
+        confirmation = winner.score < 0.6 or spec.risk_level != "low"
         model_decisions: list[ModelDecisionEvidence] = []
         rationale = f"Selected {spec.label} from {len(candidates)} compatible candidate(s)."
         if self._jev_router:

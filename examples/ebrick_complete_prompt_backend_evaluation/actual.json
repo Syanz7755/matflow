@@ -1,0 +1,100 @@
+{
+  "test_mode": "backend_only",
+  "graph_isolation": {
+    "reset_before_test": true,
+    "final_graph_version": 0,
+    "final_nodes": 0,
+    "final_edges": 0
+  },
+  "inputs": {
+    "raw_csv": {
+      "upload_id": "0ea240b024dd457897cc7dcc0a43f70b_05-MgO-Ni15-20min50deg.csv",
+      "inspect_status": "success",
+      "kind": "table",
+      "rows": 33027,
+      "columns": 11
+    },
+    "rules_document": {
+      "original_markdown_upload": "rejected: Unsupported file type: .md",
+      "text_mirror_upload_id": "9576aa09742d46a7893b0825789e8b5a_05-description.txt",
+      "text_mirror_inspect_kind": "binary",
+      "content_visible_to_runtime": false
+    }
+  },
+  "agent_endpoint": {
+    "endpoint": "POST /api/chat",
+    "status": "retired",
+    "response": "The built-in agent is retired. Connect a client through the versioned HTTP API or the separate matflow-frontend MCP bridge. Set MATFLOW_ENABLE_LEGACY_CHAT=1 only for migration.",
+    "legacy_agent_enabled_for_test": false
+  },
+  "routing_comparison": {
+    "original_chinese": {
+      "task_id": "ebrick-complete-route-original",
+      "decision_id": "916deda7-c84c-49fc-b29e-b8b3782b0eb5",
+      "candidate_count": 0,
+      "selected": [],
+      "confidence": 0.0,
+      "rationale": "No active compatible tool matched the request."
+    },
+    "first_normalization_with_language_drift": {
+      "task_id": "ebrick-complete-route-normalized",
+      "decision_id": "78bb06b3-fe10-4d4e-8394-1a40c45f573e",
+      "output_language": "English",
+      "candidate_count": 6,
+      "selected": ["ebrick_case05_import"],
+      "confidence": 1.0,
+      "requires_human_confirmation": true,
+      "rationale": "Jev models disagreed; confirmation is required.",
+      "jev_disagreement": {
+        "laya_selected": "raw_file_import_raw_file_import_1_f29b82",
+        "semantic_selected": "raw_file_import"
+      }
+    },
+    "guarded_same_language_normalization": {
+      "task_id": "ebrick-complete-route-normalized-zh",
+      "decision_id": "56e35ac7-11a0-4b9f-8a53-995f6ddbfade",
+      "output_language": "Chinese",
+      "candidate_count": 0,
+      "selected": [],
+      "confidence": 0.0,
+      "rationale": "No active compatible tool matched the request."
+    }
+  },
+  "prompt_build_comparison": {
+    "original_chinese": {
+      "key": "1_2_3_4_5_6_nyquistbode",
+      "label": "1 2 3 4 5 6 NyquistBode"
+    },
+    "english_drift": {
+      "key": "context_the_user_provides_attachments_containing",
+      "label": "Context The user provides attachments containing"
+    },
+    "guarded_chinese": {
+      "key": "1_2_3_4",
+      "label": "1    -    -    - 2    -    - 3    -    -    - 4"
+    },
+    "common_contract": {
+      "category": "Derived",
+      "inputs": {"input": "TypedTable"},
+      "outputs": {"output": "TypedTable"},
+      "params": {"method": "default"},
+      "registered": false,
+      "executable_domain_logic": false
+    }
+  },
+  "matflow_planning_result": {
+    "plan_generated": false,
+    "tools_researched": false,
+    "domain_tools_generated": false,
+    "graph_patch_generated": false,
+    "graph_patch_validated": false,
+    "workflow_executed": false,
+    "non_linear_topology_satisfied": false
+  },
+  "normalizer": {
+    "implementation": "backend/prompt_normalizer.py",
+    "cli": "scripts/normalize_prompt.py",
+    "tests": {"passed": 5, "failed": 0},
+    "language_drift_guard_added_after_first_observation": true
+  }
+}

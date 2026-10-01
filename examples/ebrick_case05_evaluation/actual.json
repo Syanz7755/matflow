@@ -1,0 +1,56 @@
+{
+  "executed_in_local_matflow": true,
+  "routing": {
+    "task_id": "552c9af7-f14d-4fe5-9dbf-ecd853696506",
+    "trace_id": "f851ef3f823e43a2a270a78a43e4ae18",
+    "graph_version_after_route": 1,
+    "selected_tool": "ebrick_case05_import",
+    "human_review_required": true,
+    "rationale": "Jev models disagreed; confirmation is required.",
+    "candidates": [
+      {"tool": "ebrick_case05_import", "score": 1.0},
+      {"tool": "ebrick_cp_g_normalize", "score": 1.0},
+      {"tool": "normalize_columns", "score": 1.0},
+      {"tool": "raw_file_import", "score": 1.0},
+      {"tool": "raw_file_import_raw_file_import_1_f29b82", "score": 1.0},
+      {"tool": "type_cast", "score": 0.5}
+    ],
+    "generated_long_workflow": false
+  },
+  "workflow": {
+    "graph_version_after_import": 2,
+    "nodes": 10,
+    "edges": 9,
+    "first_run_terminal_state": "waiting_for_final_review",
+    "review": {
+      "node_id": "preview-100khz",
+      "decision": "continue",
+      "comment": "Structural workflow accepted; scientific Nyquist validity explicitly not accepted."
+    },
+    "after_continue_terminal_state": "completed",
+    "node_outputs": {
+      "case05-import": {"status": "completed", "output_type": "RawData"},
+      "raw-checkpoint": {"status": "completed", "output_type": "RawData"},
+      "cp-g-map": {"status": "completed", "output_type": "TypedTable"},
+      "typed-checkpoint": {"status": "completed", "output_type": "TypedTable"},
+      "qc-20hz": {"status": "completed", "output_type": "EISQCReport", "rows_valid": 33027, "rows_retained": 33027},
+      "qc-1khz": {"status": "completed", "output_type": "EISQCReport", "rows_valid": 33027, "rows_retained": 22563},
+      "qc-100khz": {"status": "completed", "output_type": "EISQCReport", "rows_valid": 33027, "rows_retained": 10464},
+      "preview-20hz": {"status": "completed", "output_type": "Plot", "points": 500},
+      "preview-1khz": {"status": "completed", "output_type": "Plot", "points": 500},
+      "preview-100khz": {"status": "completed", "output_type": "Plot", "points": 500}
+    }
+  },
+  "scientific_check": {
+    "structural_success": true,
+    "scientific_success": false,
+    "actual_first_preview_point": [-1.00071e-10, -3.68831e-08],
+    "correct_first_impedance_plot_point": [24289150.09711124, -8281385.588959115],
+    "all_three_preview_branches_identical": true,
+    "cause": "The preview executor reloads the uploaded table, maps Cp/G directly to the plot axes, takes the first 500 rows, and does not consume the thresholded QC result."
+  },
+  "ui_observation": {
+    "reported_workflow_finished_while_final_node_waiting": true,
+    "note": "The top-level completion message did not reflect the outstanding human-review gate."
+  }
+}

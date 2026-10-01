@@ -1,0 +1,79 @@
+{
+  "schema_version": "1.0",
+  "visibility_during_design": "hidden_from_router_prompt",
+  "note": "These reviewed aliases were designed before routing. Their IDs and definitions are intentionally absent from prompt.txt.",
+  "nodes": [
+    {
+      "key": "ebrick_case05_import",
+      "node": {
+        "tool_id": "ebrick_case05_import",
+        "version": "1.0.0",
+        "label": "EBrick Case 05 CSV Import",
+        "category": "EBrick Input",
+        "description": "Import the EBrick case 05 Cp-G temperature and frequency sweep CSV.",
+        "inputs": {},
+        "outputs": {"raw": "RawData"},
+        "params": {"file_name": "05-MgO-Ni15-20min50deg.csv", "upload_id": ""},
+        "executor_ref": "builtin:raw_file_import",
+        "risk_level": "low",
+        "status": "active",
+        "provenance": {"kind": "custom", "reviewed_by": "local-user"},
+        "generated_code_status": "none"
+      }
+    },
+    {
+      "key": "ebrick_cp_g_normalize",
+      "node": {
+        "tool_id": "ebrick_cp_g_normalize",
+        "version": "1.0.0",
+        "label": "EBrick Cp-G Column Normalization",
+        "category": "EBrick Transform",
+        "description": "Normalize EBrick Cp-G sweep columns frequency_hz, primary Cp, and secondary conductance G into a typed table without claiming impedance conversion.",
+        "inputs": {"raw": "RawData"},
+        "outputs": {"table": "TypedTable"},
+        "params": {"frequency_column": "frequency_hz", "real_column": "primary", "imag_column": "secondary"},
+        "executor_ref": "builtin:normalize_columns",
+        "risk_level": "low",
+        "status": "active",
+        "provenance": {"kind": "custom", "reviewed_by": "local-user"},
+        "generated_code_status": "none"
+      }
+    },
+    {
+      "key": "ebrick_cp_g_qc",
+      "node": {
+        "tool_id": "ebrick_cp_g_qc",
+        "version": "1.0.0",
+        "label": "EBrick Cp-G Threshold QC",
+        "category": "EBrick Analysis",
+        "description": "Count valid numeric rows in an EBrick Cp-G sweep after applying a configurable minimum-frequency threshold; this is structural QC, not an impedance fit.",
+        "inputs": {"data": "TypedTable"},
+        "outputs": {"report": "EISQCReport", "data": "EISData"},
+        "params": {"min_frequency_hz": 20, "fit_model": "None"},
+        "executor_ref": "builtin:eis_basic_qc",
+        "risk_level": "low",
+        "status": "active",
+        "provenance": {"kind": "custom", "reviewed_by": "local-user"},
+        "generated_code_status": "none"
+      }
+    },
+    {
+      "key": "ebrick_cp_g_preview",
+      "node": {
+        "tool_id": "ebrick_cp_g_preview",
+        "version": "1.0.0",
+        "label": "EBrick Cp-G Diagnostic Preview",
+        "category": "EBrick Output",
+        "description": "Create a bounded diagnostic preview from the mapped Cp-G columns. The preview is not a scientifically valid Nyquist plot until Cp-G to complex impedance conversion is implemented.",
+        "inputs": {"data": "EISData"},
+        "outputs": {"plot": "Plot"},
+        "params": {"title": "EBrick Cp-G diagnostic preview"},
+        "executor_ref": "builtin:plot_nyquist",
+        "risk_level": "low",
+        "status": "active",
+        "provenance": {"kind": "custom", "reviewed_by": "local-user"},
+        "generated_code_status": "none"
+      }
+    }
+  ]
+}

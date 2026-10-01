@@ -27,6 +27,13 @@ def configured_litellm_gateway_key(config_path: Path) -> str:
     key = config.get("general_settings", {}).get("master_key")
     if not isinstance(key, str) or not key.strip():
         raise RuntimeError("config/litellm.yaml must set general_settings.master_key.")
+    environment_prefix = "os.environ/"
+    if key.startswith(environment_prefix):
+        environment_name = key.removeprefix(environment_prefix)
+        value = os.getenv(environment_name, "")
+        if not value:
+            raise RuntimeError(f"Environment variable {environment_name} is required by config/litellm.yaml.")
+        return value
     return key
 
 

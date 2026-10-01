@@ -30,7 +30,7 @@ model_list:
 general_settings:
   # Authentication for callers of this local gateway only.  This is not an
   # upstream provider credential; provider credentials remain environment-only.
-  master_key: sk-matflow-local-gateway-8f3c1a9d6e2b
+  master_key: os.environ/MATFLOW_LITELLM_API_KEY
 
 litellm_settings:
   drop_params: true

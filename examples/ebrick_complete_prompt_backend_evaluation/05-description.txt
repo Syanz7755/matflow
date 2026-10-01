@@ -1,0 +1,9 @@
+## Furnace program
+- SP1=50, T1=20
+- SP2=50, T2=750
+- SP3=800, T3=60
+- SP4=800, T4=250
+- SP5=50, T5=END
+## Geometry
+- diameter = 10
+- thickness = 5.5

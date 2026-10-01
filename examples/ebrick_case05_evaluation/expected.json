@@ -1,0 +1,40 @@
+{
+  "frozen_before_routing_or_execution": true,
+  "source_evidence": {
+    "raw_csv": "D:/Researches/EBrick/data-raw/config01-curve-scan-continuous/05-MgO-Ni15-20min50deg.csv",
+    "description": "D:/Researches/EBrick/data-raw/config01-curve-scan-continuous/05-description.md",
+    "analysis_report": "D:/Researches/EBrick/analysis/config01/results/05/nyquist/full/nyquist_report.md",
+    "rows": 33027,
+    "columns": 11,
+    "curves": 327,
+    "points_per_curve": 101,
+    "frequency_range_hz": [20, 5000000],
+    "furnace_program": "50 C hold 20 min; ramp 50 to 800 C over 750 min; hold 800 C 60 min; cool 800 to 50 C over 250 min; terminal hold",
+    "geometry_mm": {"diameter": 10, "thickness": 5.5},
+    "reference_equivalent_circuit_fit": {"successful_curves": 257, "incomplete_or_failed_curves": 70}
+  },
+  "routing_expectation": {
+    "selected_tool": "ebrick_cp_g_normalize",
+    "reason": "With RawData declared, its English EBrick/Cp-G/normalize/column terms should outrank generic tools.",
+    "known_risk": "Jev consensus may be unavailable and force confirmed lexical fallback. The router chooses one tool only and should not construct the 10-node graph."
+  },
+  "workflow_expectation": {
+    "nodes": 10,
+    "edges": 9,
+    "first_run_terminal_state": "waiting_for_final_review",
+    "after_continue_terminal_state": "completed",
+    "expected_qc": {
+      "20_hz": {"rows_valid": 33027, "rows_retained": 33027},
+      "1_khz": {"rows_valid": 33027, "rows_retained": 22563},
+      "100_khz": {"rows_valid": 33027, "rows_retained": 10464}
+    },
+    "expected_preview_points_each": 500,
+    "expected_structural_success": true,
+    "expected_scientific_success": false,
+    "scientific_failure_reason": "The current executor interprets mapped primary/secondary as Z real/imag. EBrick stores Cp and G; valid conversion is Y = G + j*2*pi*f*Cp and Z = 1/Y. Thresholds affect QC counts but the preview executor ignores the threshold and always plots the first 500 raw mapped rows."
+  },
+  "spot_check": {
+    "first_row_true_complex_impedance_plot_point": [24289150.09711124, -8281385.588959115],
+    "first_row_current_preview_point": [-1.00071e-10, -3.68831e-08]
+  }
+}

@@ -37,4 +37,31 @@ The former backend `/mcp` endpoint was removed in v1. MCP, DSH, and ChatGPT inte
 uv run --group dev python -m unittest discover -v
 ```
 
+Model routing and application scenarios can also be run separately. The
+default is deterministic and offline; live gateways are explicitly enabled:
+
+```powershell
+.\test_model_scenarios.bat
+.\test_model_scenarios.bat -OnlineJev
+.\test_model_scenarios.bat -OnlineJev -OnlineLlm
+```
+
+Configuration-driven prompt, workflow, and generated-tool suites can be run
+separately. Live services require both a case-level permission and the matching
+command-line switch:
+
+```powershell
+.\test_configured_scenarios.bat
+.\test_configured_scenarios.bat -OnlineJev -OnlineLlm
+```
+
+See `docs/CONFIGURED_SCENARIO_TESTS.md` for the suite contract, deterministic
+XRD/FTIR noise model, Docker fallback policy, and report format.
+
 The server remains a single-user, single-workspace local service. Multiple clients may connect concurrently; graph writes require the current `base_version`, and stale writes return HTTP 409 with `graph_version_conflict`.
+
+Project documentation:
+
+- [Current status and roadmap](docs/PROJECT_STATUS.md)
+- [Design philosophy and implementation architecture](docs/DESIGN_AND_ARCHITECTURE.md)
+- [HTTP API contract](docs/BACKEND_API_CONTRACT.md)

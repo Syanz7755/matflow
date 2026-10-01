@@ -1,0 +1,58 @@
+{
+  "frozen_before_chat": true,
+  "test_mode": "backend_only",
+  "input_case": {
+    "raw_file": "05-MgO-Ni15-20min50deg.csv",
+    "rules_document": "05-description.md",
+    "rows": 33027,
+    "curves": 327,
+    "points_per_curve": 101,
+    "raw_electrical_semantics": {
+      "primary": "Cp",
+      "secondary": "G"
+    }
+  },
+  "required_observations_before_mutation": [
+    "inspect raw CSV",
+    "inspect or explicitly report inability to read the furnace rules document",
+    "read current graph"
+  ],
+  "minimum_scientific_capabilities": [
+    "furnace-program parsing and time-to-temperature mapping",
+    "Cp-G admittance to complex-impedance conversion",
+    "per-scan grouping and temperature indexing",
+    "structural and numerical data QC",
+    "physics-consistency diagnostic such as Kramers-Kronig or Lin-KK",
+    "candidate equivalent-circuit fitting and model comparison",
+    "fit identifiability and uncertainty assessment",
+    "quality aggregation and an explicit gate",
+    "post-gate mechanism/process contribution decomposition",
+    "Nyquist, Bode, residual, parameter-temperature and contribution plots"
+  ],
+  "topology_acceptance": {
+    "must_be_acyclic": true,
+    "must_not_be_single_chain": true,
+    "minimum_branch_points": 3,
+    "minimum_join_or_gate_points": 2,
+    "required_parallel_regions": [
+      "raw-data inspection versus furnace-document parsing",
+      "data-integrity versus physics-consistency versus circuit-fit diagnostics",
+      "post-gate contribution analysis versus visualization/report production where dependencies permit"
+    ],
+    "required_gate": "mechanism contribution nodes must not be executable until the quality decision passes"
+  },
+  "expected_capability_gaps_from_preflight": [
+    "no web or literature-search tool is exposed to the runtime agent",
+    "tool_manager_search, tool_manager_adapt and tool_manager_build are disabled",
+    "declarative recipe proposals only support XRD/FTIR operations, not EIS",
+    "Skill Nodes accept TypedTable and emit Artifact but cannot consume or join Artifact outputs",
+    "the upload inspector treats Markdown as binary and cannot read furnace-document content",
+    "the configured runtime skill name is missing, so no runtime skill content is loaded"
+  ],
+  "safe_expected_outcome": {
+    "status": "waiting_for_confirmation_or_partial_plan",
+    "must_not_claim_full_scientific_execution": true,
+    "should_construct_only_supported_typed_subgraph": true,
+    "should_surface_missing_capabilities": true
+  }
+}

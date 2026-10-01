@@ -30,6 +30,7 @@ from .contracts import (
     ReviewState,
     TaskState,
 )
+from .analysis_recipes import AnalysisRecipe, RecipeEngine
 from .data_types import DataTypeRegistry
 from .jev_routing import JevDecisionRouter
 from .observability import audit, current_trace_id
@@ -62,6 +63,7 @@ def default_settings() -> dict[str, Any]:
         "custom_nodes": {},
         "custom_data_types": {},
         "revision_proposals": {},
+        "tool_recipe_proposals": {},
         "model_providers": {
             "local_litellm": {
                 "label": "Local LiteLLM gateway",
@@ -121,6 +123,7 @@ class WorkspaceRuntime:
             "custom_nodes": loaded.get("custom_nodes", {}),
             "custom_data_types": loaded.get("custom_data_types", {}),
             "revision_proposals": loaded.get("revision_proposals", {}),
+            "tool_recipe_proposals": loaded.get("tool_recipe_proposals", {}),
             "model_providers": loaded.get("model_providers", defaults["model_providers"]),
             "features": {**defaults["features"], **loaded.get("features", {})},
         }
@@ -198,6 +201,26 @@ class WorkspaceRuntime:
 
     def revision_proposals(self) -> dict[str, dict[str, Any]]:
         return self.read_settings().get("revision_proposals", {})
+
+    def propose_analysis_recipe(self, *, label: str, description: str, recipe: dict[str, Any]) -> dict[str, Any]:
+        parsed = AnalysisRecipe.model_validate(recipe)
+        if parsed.status != "draft":
+            raise ValueError("A model-proposed analysis recipe must remain draft until human review")
+        proposal_id = str(uuid.uuid4())
+        proposal = {
+            "proposal_id": proposal_id,
+            "status": "draft",
+            "label": label[:120],
+            "description": description[:1000],
+            "recipe": parsed.model_dump(),
+            "requires_human_review": True,
+            "generated_code": None,
+        }
+        settings = self.read_settings()
+        settings.setdefault("tool_recipe_proposals", {})[proposal_id] = proposal
+        self.write_settings(settings)
+        audit("tool_recipe.proposed", proposal_id=proposal_id, recipe_id=parsed.recipe_id)
+        return proposal
 
     def create_revision_proposal(self, node_id: str, prompt: str, provider_id: str, model: str) -> dict[str, Any]:
         if not prompt.strip(): raise ValueError("A revision prompt is required")
@@ -539,6 +562,17 @@ class WorkspaceRuntime:
             node.output = copy.deepcopy(upstream.output)
             node.output["kind"] = target_type
             node.output["cast"] = {"from": source_type, "to": target_type, "node_id": node.id}
+        elif (spec.executor_ref or "").startswith("recipe:"):
+            raw = self._node_input(state, node.id, "data")
+            if not raw.output:
+                raise ValueError(f"Upstream node {raw.id} has not run")
+            upload_id = str(raw.output.get("upload_id") or "")
+            frame = self._dataframe(upload_id)
+            recipe = node.params.get("recipe") or spec.params.get("recipe")
+            if not recipe:
+                raise ValueError("Recipe-backed tool has no declarative recipe")
+            payload = RecipeEngine().execute(recipe, frame)
+            node.output = {"kind": "Artifact", "recipe_id": recipe.get("recipe_id"), "data": payload}
         else:
             raise ValueError("No executor registered for this node")
         node.status = "completed"

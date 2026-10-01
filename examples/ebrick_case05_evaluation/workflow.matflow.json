@@ -1,0 +1,97 @@
+{
+  "format": "matflow.workflow",
+  "format_version": "1.0",
+  "graph": {
+    "graph_id": "ebrick-case05-multithreshold",
+    "nodes": [
+      {
+        "id": "case05-import",
+        "type": "ebrick_case05_import",
+        "label": "01 Import Case 05 Cp-G sweep",
+        "params": {
+          "file_name": "05-MgO-Ni15-20min50deg.csv",
+          "upload_id": "0ea240b024dd457897cc7dcc0a43f70b_05-MgO-Ni15-20min50deg.csv"
+        },
+        "position": {"x": 40, "y": 250}
+      },
+      {
+        "id": "raw-checkpoint",
+        "type": "type_cast",
+        "label": "02 Raw-data checkpoint",
+        "params": {"source_type": "RawData", "target_type": "RawData"},
+        "position": {"x": 340, "y": 250}
+      },
+      {
+        "id": "cp-g-map",
+        "type": "ebrick_cp_g_normalize",
+        "label": "03 Map frequency, Cp, and G",
+        "params": {"frequency_column": "frequency_hz", "real_column": "primary", "imag_column": "secondary"},
+        "position": {"x": 640, "y": 250}
+      },
+      {
+        "id": "typed-checkpoint",
+        "type": "type_cast",
+        "label": "04 Typed-table checkpoint",
+        "params": {"source_type": "TypedTable", "target_type": "TypedTable"},
+        "position": {"x": 940, "y": 250}
+      },
+      {
+        "id": "qc-20hz",
+        "type": "ebrick_cp_g_qc",
+        "label": "05A QC at 20 Hz",
+        "params": {"min_frequency_hz": 20, "fit_model": "None"},
+        "position": {"x": 1240, "y": 40}
+      },
+      {
+        "id": "qc-1khz",
+        "type": "ebrick_cp_g_qc",
+        "label": "05B QC at 1 kHz",
+        "params": {"min_frequency_hz": 1000, "fit_model": "None"},
+        "position": {"x": 1240, "y": 250}
+      },
+      {
+        "id": "qc-100khz",
+        "type": "ebrick_cp_g_qc",
+        "label": "05C QC at 100 kHz",
+        "params": {"min_frequency_hz": 100000, "fit_model": "None"},
+        "position": {"x": 1240, "y": 460}
+      },
+      {
+        "id": "preview-20hz",
+        "type": "ebrick_cp_g_preview",
+        "label": "06A Diagnostic preview at 20 Hz",
+        "params": {"title": "Case 05 diagnostic preview — QC threshold 20 Hz"},
+        "position": {"x": 1580, "y": 40}
+      },
+      {
+        "id": "preview-1khz",
+        "type": "ebrick_cp_g_preview",
+        "label": "06B Diagnostic preview at 1 kHz",
+        "params": {"title": "Case 05 diagnostic preview — QC threshold 1 kHz"},
+        "position": {"x": 1580, "y": 250}
+      },
+      {
+        "id": "preview-100khz",
+        "type": "ebrick_cp_g_preview",
+        "label": "06C Final diagnostic preview",
+        "params": {"title": "Case 05 diagnostic preview — QC threshold 100 kHz"},
+        "position": {"x": 1580, "y": 460},
+        "review_policy": {
+          "after_run": true,
+          "prompt": "Confirm the structural run only; do not accept this Cp-G preview as a physical Nyquist plot."
+        }
+      }
+    ],
+    "edges": [
+      {"id": "e01", "source": "case05-import", "source_port": "raw", "target": "raw-checkpoint", "target_port": "value"},
+      {"id": "e02", "source": "raw-checkpoint", "source_port": "value", "target": "cp-g-map", "target_port": "raw"},
+      {"id": "e03", "source": "cp-g-map", "source_port": "table", "target": "typed-checkpoint", "target_port": "value"},
+      {"id": "e04a", "source": "typed-checkpoint", "source_port": "value", "target": "qc-20hz", "target_port": "data"},
+      {"id": "e04b", "source": "typed-checkpoint", "source_port": "value", "target": "qc-1khz", "target_port": "data"},
+      {"id": "e04c", "source": "typed-checkpoint", "source_port": "value", "target": "qc-100khz", "target_port": "data"},
+      {"id": "e05a", "source": "qc-20hz", "source_port": "data", "target": "preview-20hz", "target_port": "data"},
+      {"id": "e05b", "source": "qc-1khz", "source_port": "data", "target": "preview-1khz", "target_port": "data"},
+      {"id": "e05c", "source": "qc-100khz", "source_port": "data", "target": "preview-100khz", "target_port": "data"}
+    ]
+  }
+}

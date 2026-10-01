@@ -53,7 +53,7 @@ def _runtime_model_adapter(messages: list[dict[str, Any]], tools: list[dict[str,
 
 
 workspace = WorkspaceRuntime(model_complete=_runtime_model_adapter)
-app = FastAPI(title="MatFlow Backend", version="1.0.0")
+app = FastAPI(title="MatFlow Backend", version="1.1.0")
 cors_origins = ["http://localhost:5173", "http://127.0.0.1:5173"]
 cors_origins.extend(origin.strip() for origin in os.getenv("MATFLOW_CORS_ORIGINS", "").split(",") if origin.strip())
 app.add_middleware(CORSMiddleware, allow_origins=cors_origins, allow_methods=["*"], allow_headers=["*"])
@@ -72,7 +72,9 @@ async def trace_request(request: Request, call_next):
         reset_trace_id(token)
 
 class ChatRequest(BaseModel):
-    message: str = ""
+    message: str = Field(min_length=1, max_length=8000)
+    task_id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+    conversation_id: str = Field(default_factory=lambda: str(uuid.uuid4()))
     attachments: list[dict[str, Any]] = Field(default_factory=list)
 class ExecuteRequest(BaseModel):
     node_id: str
@@ -218,12 +220,13 @@ def get_capabilities():
     type_registry = workspace.data_type_registry()
     return {
         "api_contract": {"name": "matflow-http", "version": "1.0"},
-        "server_version": "1.0.0",
+        "server_version": "1.1.0",
         "registry": workspace.registry().legacy_view(),
         "data_types": list(type_registry.names()),
         "data_type_definitions": type_registry.definitions(),
         "features": settings["features"],
         "operations": {
+            "chat": "POST /api/chat",
             "route": "POST /api/route",
             "list_datasets": "GET /api/uploads",
             "import_dataset": "POST /api/uploads",
@@ -536,6 +539,7 @@ TOOL_SCHEMAS = [
     {"type": "function", "function": {"name": "apply_graph_patch", "description": "Apply a proposed graph patch. The patch is type-checked, version-checked and audited before it changes the graph.", "parameters": {"type": "object", "properties": {"patch": {"type": "object"}}, "required": ["patch"], "additionalProperties": False}}},
     {"type": "function", "function": {"name": "run_workflow", "description": "Execute ready nodes in topological order. Stops safely at an error or human decision.", "parameters": {"type": "object", "properties": {}, "additionalProperties": False}}},
     {"type": "function", "function": {"name": "add_skill_node", "description": "Add an AI Skill Node with a stable TypedTable input and Artifact output. Connect it with apply_graph_patch.", "parameters": {"type": "object", "properties": {"label": {"type": "string"}, "skill_id": {"type": "string"}, "instructions": {"type": "string"}, "output_schema": {"type": "object"}}, "required": ["label", "skill_id", "instructions", "output_schema"], "additionalProperties": False}}},
+    {"type": "function", "function": {"name": "propose_tool_recipe", "description": "Propose a draft, declarative XRD or FTIR analysis recipe. The proposal is isolated and requires evaluation and human review before activation.", "parameters": {"type": "object", "properties": {"label": {"type": "string"}, "description": {"type": "string"}, "recipe": {"type": "object"}}, "required": ["label", "description", "recipe"], "additionalProperties": False}}},
 ]
 
 def model_completion(messages: list[dict[str, Any]], tools: list[dict[str, Any]], provider_id: str | None = None, model: str | None = None) -> dict[str, Any]:
@@ -546,6 +550,8 @@ def model_completion(messages: list[dict[str, Any]], tools: list[dict[str, Any]]
     if provider_id:
         provider = settings.get("model_providers", {}).get(provider_id)
         if provider is None: raise HTTPException(status_code=422, detail=f"Unknown model provider: {provider_id}")
+        if model is not None and model not in provider["models"]:
+            raise HTTPException(status_code=422, detail=f"Unknown model for provider {provider_id}: {model}")
         config = {**config, **provider, "model": model or provider["models"][0]}
     key = os.getenv(config.get("api_key_env", "MATFLOW_API_KEY"), "")
     if not config.get("model") or not key:
@@ -556,36 +562,54 @@ def model_completion(messages: list[dict[str, Any]], tools: list[dict[str, Any]]
     req = urlrequest.Request(url, data=json.dumps(body).encode(), headers={"Content-Type": "application/json", "Authorization": f"Bearer {key}"}, method="POST")
     try:
         with urlrequest.urlopen(req, timeout=90) as response: data = json.loads(response.read(2 * 1024 * 1024))
-        return data["choices"][0]["message"]
-    except (urlerror.URLError, KeyError, IndexError, json.JSONDecodeError) as exc:
+        message = data["choices"][0]["message"]
+        if not isinstance(message, dict):
+            raise TypeError("Model provider message must be a JSON object")
+        return message
+    except (OSError, TypeError, KeyError, IndexError, json.JSONDecodeError) as exc:
         audit("model.failed", error=str(exc)); raise HTTPException(status_code=502, detail=f"Model provider request failed: {exc}")
 
 def run_agent_tool(name: str, arguments: dict[str, Any]) -> dict[str, Any]:
     audit("tool.called", tool=name, arguments=arguments)
-    if name == "inspect_upload": return inspect_upload(arguments["upload_id"])
-    if name == "get_graph": return load().model_dump()
-    if name == "apply_graph_patch": return {"state": apply_patch(load(), GraphPatch.model_validate(arguments["patch"])).model_dump()}
+    if name == "inspect_upload": return workspace.inspect_dataset(arguments["upload_id"])
+    if name == "get_graph": return workspace.read_state().model_dump()
+    if name == "apply_graph_patch": return {"state": workspace.apply_graph_patch(GraphPatch.model_validate(arguments["patch"])).model_dump()}
+    if name == "propose_tool_recipe": return workspace.propose_analysis_recipe(
+        label=str(arguments["label"]), description=str(arguments["description"]), recipe=arguments["recipe"]
+    )
     if name == "add_skill_node":
-        state = load(); node = Node(id=f"skill-{uuid.uuid4().hex[:8]}", type="skill_node", label=arguments["label"], params={key: arguments[key] for key in ("skill_id", "instructions", "output_schema")})
-        return {"state": apply_patch(state, GraphPatch(base_version=state.version, operations=[Operation(op="add_node", node=node)], rationale="Agent added a schema-bound Skill Node.")).model_dump(), "node_id": node.id}
+        state = workspace.read_state(); node = Node(id=f"skill-{uuid.uuid4().hex[:8]}", type="skill_node", label=arguments["label"], params={key: arguments[key] for key in ("skill_id", "instructions", "output_schema")})
+        return {"state": workspace.apply_graph_patch(GraphPatch(base_version=state.version, operations=[Operation(op="add_node", node=node)], rationale="Agent added a schema-bound Skill Node.")).model_dump(), "node_id": node.id}
     if name == "run_workflow":
-        state = load(); results = []
-        for node in state.nodes:
-            if node.status in {"completed", "waiting"}: continue
-            try: results.append({"node_id": node.id, "result": run_node_in_state(state, node)})
-            except ValueError as exc: node.status = "error"; node.output = {"error": str(exc)}; results.append({"node_id": node.id, "error": str(exc)}); break
-            if node.status == "waiting": break
-        save(state); return {"state": state.model_dump(), "results": results}
+        return workspace.execute_workflow()
     raise ValueError(f"Tool is not registered: {name}")
 
 @app.post("/api/chat")
 def chat(request: ChatRequest):
-    if os.getenv("MATFLOW_ENABLE_LEGACY_CHAT", "").lower() not in {"1", "true", "yes"}:
-        raise HTTPException(status_code=410, detail="The built-in agent is retired. Connect a client through the versioned HTTP API or the separate matflow-frontend MCP bridge. Set MATFLOW_ENABLE_LEGACY_CHAT=1 only for migration.")
     audit("chat.received", message=request.message[:1000], attachments=[item.get("name") for item in request.attachments])
+    initial_task = TaskState(
+        user_message=request.message,
+        graph_version=workspace.read_state().version,
+        available_input_types=["RawData", "TypedTable"] if request.attachments else [],
+    )
+    initial_lexical = DecisionRouter().decide(initial_task, workspace.registry())
+    initial_requires_confirmation = not initial_lexical.selected and initial_lexical.requires_human_confirmation
+    if not request.attachments:
+        if initial_requires_confirmation:
+            return {
+                "task_id": request.task_id,
+                "conversation_id": request.conversation_id,
+                "status": "waiting_for_confirmation",
+                "message": "请说明数据类型、输入文件和希望得到的分析结果。",
+                "state": workspace.read_state().model_dump(),
+                "trace": [],
+                "tool_proposals": [],
+                "runtime_skills": [],
+                "error": None,
+            }
     skills = load_runtime_skills()
     system = "\n\n".join(["You are the MatFlow runtime agent.", *[f"## Runtime Skill: {skill['name']}\n{skill['content']}" for skill in skills], load_settings()["agent"].get("system_prompt", "")])
-    user_context = {"message": request.message, "uploads": request.attachments, "runtime_skills": [skill["name"] for skill in skills], "node_catalog": registry(), "data_types": list(workspace.data_type_registry().names()), "instruction": "Use tools for observations and changes. If required information is ambiguous, ask the user a concise question instead of guessing."}
+    user_context = {"message": request.message, "uploads": request.attachments, "runtime_skills": [skill["name"] for skill in skills], "node_catalog": workspace.registry().legacy_view(), "data_types": list(workspace.data_type_registry().names()), "instruction": "Use tools for observations and changes. If a required capability is absent, propose a draft declarative recipe and leave it for evaluation and human review. If required information is ambiguous, ask the user a concise question instead of guessing."}
     messages: list[dict[str, Any]] = [{"role": "system", "content": system}, {"role": "user", "content": json.dumps(user_context, ensure_ascii=False)}]
     trace: list[dict[str, Any]] = []
     try:
@@ -594,14 +618,55 @@ def chat(request: ChatRequest):
             if not tool_calls:
                 content = reply.get("content") or "I completed the available steps."
                 audit("agent.reply", reply=content[:1000], rounds=round_index + 1)
-                return {"state": load().model_dump(), "summary": content, "trace": trace, "runtime_skills": [skill["name"] for skill in skills]}
+                current_state = workspace.read_state().model_dump()
+                recovered_errors = [item.get("error") for item in trace if not item.get("ok", False)]
+                proposals = [
+                    item["result"] for item in trace
+                    if item.get("ok") and item.get("tool") in {"propose_tool_recipe", "propose_node_revision"}
+                ]
+                failed = any(node.get("status") == "error" for node in current_state.get("nodes", [])) or bool(
+                    trace and not trace[-1].get("ok", False)
+                )
+                waiting = any(
+                    node.get("status") == "waiting"
+                    for node in current_state.get("nodes", [])
+                ) or bool(proposals) or (
+                    initial_requires_confirmation and not current_state.get("nodes")
+                )
+                return {
+                    "task_id": request.task_id,
+                    "conversation_id": request.conversation_id,
+                    "status": "failed" if failed else ("waiting_for_confirmation" if waiting else "completed"),
+                    "message": content,
+                    "state": current_state,
+                    "trace": trace,
+                    "tool_proposals": proposals,
+                    "runtime_skills": [skill["name"] for skill in skills],
+                    "error": recovered_errors[-1] if failed and recovered_errors else None,
+                    "warnings": recovered_errors if not failed else [],
+                }
             messages.append({"role": "assistant", "content": reply.get("content") or "", "tool_calls": tool_calls})
             for call in tool_calls:
                 name = call["function"]["name"]
                 try: result = run_agent_tool(name, json.loads(call["function"].get("arguments") or "{}")); event = {"tool": name, "ok": True, "result": result}
                 except Exception as exc: event = {"tool": name, "ok": False, "error": str(exc)}
                 trace.append(event); messages.append({"role": "tool", "tool_call_id": call["id"], "content": json.dumps(event, ensure_ascii=False, default=str)})
-        raise HTTPException(status_code=422, detail="Agent reached the configured tool-round limit without a final answer.")
+        current_state = workspace.read_state().model_dump()
+        return {
+            "task_id": request.task_id,
+            "conversation_id": request.conversation_id,
+            "status": "waiting_for_confirmation",
+            "message": "自动规划已达到本次轮次上限，需要人工确认工具契约、输入或下一步操作。",
+            "state": current_state,
+            "trace": trace,
+            "tool_proposals": [
+                item["result"] for item in trace
+                if item.get("ok") and item.get("tool") in {"propose_tool_recipe", "propose_node_revision"}
+            ],
+            "runtime_skills": [skill["name"] for skill in skills],
+            "error": None,
+            "warnings": ["Agent reached the configured tool-round limit without a final answer."],
+        }
     except HTTPException: raise
     except Exception as exc:
         audit("agent.failed", error=str(exc)); raise HTTPException(status_code=422, detail=str(exc))

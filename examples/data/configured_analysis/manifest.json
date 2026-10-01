@@ -1,0 +1,141 @@
+{
+  "schema_version": "1.0",
+  "generator": "generate_analysis_fixtures",
+  "fixtures": [
+    {
+      "fixture_id": "xrd_20260930",
+      "domain": "xrd",
+      "seed": 20260930,
+      "role": "baseline",
+      "path": "xrd/xrd_20260930.csv",
+      "ground_truth": {
+        "dominant_phase": "anatase_tio2",
+        "main_peak_deg": 25.3,
+        "reference_peaks_deg": [
+          25.3,
+          37.8,
+          48.0,
+          53.9,
+          55.1,
+          62.7
+        ],
+        "zero_shift_deg": -0.004957898497810101,
+        "intensity_scale": 0.9786550607333396,
+        "poisson_counting_noise": true,
+        "sparse_spikes": 2
+      }
+    },
+    {
+      "fixture_id": "xrd_20261001",
+      "domain": "xrd",
+      "seed": 20261001,
+      "role": "holdout",
+      "path": "xrd/xrd_20261001.csv",
+      "ground_truth": {
+        "dominant_phase": "anatase_tio2",
+        "main_peak_deg": 25.3,
+        "reference_peaks_deg": [
+          25.3,
+          37.8,
+          48.0,
+          53.9,
+          55.1,
+          62.7
+        ],
+        "zero_shift_deg": 0.008454163603087941,
+        "intensity_scale": 1.0469312774925812,
+        "poisson_counting_noise": true,
+        "sparse_spikes": 2
+      }
+    },
+    {
+      "fixture_id": "xrd_20261002",
+      "domain": "xrd",
+      "seed": 20261002,
+      "role": "holdout",
+      "path": "xrd/xrd_20261002.csv",
+      "ground_truth": {
+        "dominant_phase": "anatase_tio2",
+        "main_peak_deg": 25.3,
+        "reference_peaks_deg": [
+          25.3,
+          37.8,
+          48.0,
+          53.9,
+          55.1,
+          62.7
+        ],
+        "zero_shift_deg": -0.02163259036853289,
+        "intensity_scale": 0.9364021448832324,
+        "poisson_counting_noise": true,
+        "sparse_spikes": 2
+      }
+    },
+    {
+      "fixture_id": "ftir_20260930",
+      "domain": "ftir",
+      "seed": 20260930,
+      "role": "baseline",
+      "path": "ftir/ftir_20260930.csv",
+      "ground_truth": {
+        "main_peak_cm-1": 1710.0,
+        "assignment": "carbonyl_candidate",
+        "reference_peaks_cm-1": [
+          1710,
+          2920,
+          1450
+        ],
+        "axis_shift_cm-1": -0.33052656652067336,
+        "amplitude_scale": 0.9866594129583373,
+        "noise_sigma_au": 0.004515039732630047,
+        "baseline_offset_au": -0.0017034668573332281,
+        "baseline_slope_au_per_cm-1": -2.741922640481745e-06,
+        "sparse_outliers": 2
+      }
+    },
+    {
+      "fixture_id": "ftir_20261001",
+      "domain": "ftir",
+      "seed": 20261001,
+      "role": "holdout",
+      "path": "ftir/ftir_20261001.csv",
+      "ground_truth": {
+        "main_peak_cm-1": 1710.0,
+        "assignment": "carbonyl_candidate",
+        "reference_peaks_cm-1": [
+          1710,
+          2920,
+          1450
+        ],
+        "axis_shift_cm-1": 0.5636109068725292,
+        "amplitude_scale": 1.0293320484328632,
+        "noise_sigma_au": 0.003232171801874707,
+        "baseline_offset_au": 0.0013580034938710482,
+        "baseline_slope_au_per_cm-1": -1.4574718184583419e-06,
+        "sparse_outliers": 2
+      }
+    },
+    {
+      "fixture_id": "ftir_20261002",
+      "domain": "ftir",
+      "seed": 20261002,
+      "role": "holdout",
+      "path": "ftir/ftir_20261002.csv",
+      "ground_truth": {
+        "main_peak_cm-1": 1710.0,
+        "assignment": "carbonyl_candidate",
+        "reference_peaks_cm-1": [
+          1710,
+          2920,
+          1450
+        ],
+        "axis_shift_cm-1": -1.442172691235526,
+        "amplitude_scale": 0.9602513405520202,
+        "noise_sigma_au": 0.004080077508624842,
+        "baseline_offset_au": 0.002753837323304256,
+        "baseline_slope_au_per_cm-1": 3.3465117090913797e-06,
+        "sparse_outliers": 2
+      }
+    }
+  ]
+}

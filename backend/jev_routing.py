@@ -1,6 +1,7 @@
 """Configuration-driven adapters for the local Jev typed-decision gateway."""
 from __future__ import annotations
 
+from collections.abc import Callable
 import json
 import os
 from pathlib import Path
@@ -45,6 +46,8 @@ class JevConfig(BaseModel):
         names = self.router.profiles
         if self.router.enabled and not names:
             raise ValueError("An enabled Jev router needs at least one profile")
+        if len(names) != len(set(names)):
+            raise ValueError("Jev router profiles must be unique")
         missing = set(names) - set(self.profiles)
         if missing:
             raise ValueError(f"Router references unknown profile(s): {', '.join(sorted(missing))}")
@@ -77,8 +80,13 @@ def load_jev_config(config_path: Path | None = None) -> JevConfig:
 class JevDecisionRouter:
     """One seam for Jev protocol translation, transport and model disagreement handling."""
 
-    def __init__(self, config: JevConfig | None = None):
+    def __init__(
+        self,
+        config: JevConfig | None = None,
+        transport: Callable[[JevProfile, dict[str, Any], int], dict[str, Any]] | None = None,
+    ):
         self._config = config or load_jev_config()
+        self._transport = transport or self._http_transport
 
     @property
     def enabled(self) -> bool:
@@ -98,8 +106,9 @@ class JevDecisionRouter:
                 return None, 0.0, True, selections, f"Jev routing unavailable; lexical fallback requires confirmation: {exc}"
             raise ValueError(f"Jev routing failed without fallback: {exc}") from exc
 
-        chosen_ids = [selection.selected_tool_id for selection in selections if selection.selected_tool_id]
-        if not chosen_ids:
+        candidate_ids = {candidate.tool_id for candidate in candidates}
+        chosen_ids = [selection.selected_tool_id for selection in selections]
+        if not chosen_ids or any(selected_id not in candidate_ids for selected_id in chosen_ids):
             return None, 0.0, True, selections, "Jev models did not return a valid candidate; confirmation is required."
         if self._config.router.strategy == "consensus" and len(set(chosen_ids)) != 1:
             return None, 0.0, True, selections, "Jev models disagreed; confirmation is required."
@@ -142,10 +151,15 @@ class JevDecisionRouter:
         return ModelSelection(profile=profile_name, model=profile.model, selected_tool_id=options[index]["id"], score=score, calibrated=False, evidence=evidence)
 
     def _post(self, profile: JevProfile, body: dict[str, Any]) -> dict[str, Any]:
-        url = str(profile.base_url).rstrip("/") + "/v1/decide"
-        request = urlrequest.Request(url, data=json.dumps(body).encode("utf-8"), headers={"Content-Type": "application/json"}, method="POST")
-        with urlrequest.urlopen(request, timeout=self._config.router.timeout_seconds) as response:
-            payload = json.loads(response.read())
+        payload = self._transport(profile, body, self._config.router.timeout_seconds)
         if not isinstance(payload, dict):
             raise ValueError("Jev gateway response must be a JSON object")
+        return payload
+
+    @staticmethod
+    def _http_transport(profile: JevProfile, body: dict[str, Any], timeout_seconds: int) -> dict[str, Any]:
+        url = str(profile.base_url).rstrip("/") + "/v1/decide"
+        request = urlrequest.Request(url, data=json.dumps(body).encode("utf-8"), headers={"Content-Type": "application/json"}, method="POST")
+        with urlrequest.urlopen(request, timeout=timeout_seconds) as response:
+            payload = json.loads(response.read())
         return payload
