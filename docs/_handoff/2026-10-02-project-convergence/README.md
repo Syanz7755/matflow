@@ -1,8 +1,8 @@
-# 2026-10-02 MatFlow 阶段性交接
+# 2026-10-02 MatFlow Phase Handoff
 
-这是本次“版本收敛与项目记忆建立”的临时交接包。
+This is the temporary handoff package for the current version-convergence and project-memory effort.
 
-- [HANDOFF.md](HANDOFF.md)：新 AI / developer 的 5–10 分钟入口。
-- [SOURCE_SNAPSHOT.md](SOURCE_SNAPSHOT.md)：Git、测试和信息来源快照。
+- [HANDOFF.md](HANDOFF.md): a 5–10 minute entry point for a new AI or developer.
+- [SOURCE_SNAPSHOT.md](SOURCE_SNAPSHOT.md): a snapshot of Git state, tests, and information sources.
 
-长期状态文档位于 `docs/project-memory/`。若二者冲突，以代码、最新测试和 `docs/project-memory/CURRENT_STATE.md` 为准。
+Long-lived state documents are in `docs/project-memory/`. If the two conflict, defer to the code, the latest tests, and `docs/project-memory/CURRENT_STATE.md`.

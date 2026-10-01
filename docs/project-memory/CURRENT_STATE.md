@@ -1,85 +1,85 @@
-# MatFlow 当前状态
+# MatFlow Current State
 
-**核验日期：** 2026-10-02
-**结论：** 后端控制平面阶段性可用；通用材料学智能工作流仍处于 Alpha；不能宣称“任意材料学请求可自动生成可靠科学工作流”。
+**Verification date:** 2026-10-02
+**Conclusion:** The backend control plane is usable at this phase. The general intelligent computational-materials workflow remains Alpha. Do not claim that arbitrary materials-science requests can automatically produce reliable scientific workflows.
 
-## 1. 当前物理边界
+## 1. Current Physical Boundaries
 
-MatFlow 已拆成两个仓库：
+MatFlow has been split into two repositories:
 
-| 仓库 | 当前职责 | 不应承担 |
+| Repository | Current Responsibilities | Must Not Be Responsible For |
 | --- | --- | --- |
-| `D:\Projects\matflow` | 权威状态、类型、Tool Registry、GraphPatch 校验、路由、执行、审核、审计、上传、HTTP API | WebUI、MCP 协议适配、客户端业务状态 |
-| `D:\Projects\matflow-frontend` | React/Vite WebUI、共享 API client、MCP bridge、DSH 集成 | 直接修改后端文件、复制后端业务规则 |
+| `D:\Projects\matflow` | Authoritative state, types, Tool Registry, GraphPatch validation, routing, execution, review, audit, uploads, and HTTP API | WebUI, MCP protocol adaptation, or client-side business state |
+| `D:\Projects\matflow-frontend` | React/Vite WebUI, shared API client, MCP bridge, and DSH integration | Directly modifying backend files or duplicating backend business rules |
 
-两仓以 `matflow-http` v1 契约连接。后端不知道请求来自 WebUI、MCP、DSH 还是其他客户端。
+The repositories communicate through the `matflow-http` v1 contract. The backend does not know whether a request originated from WebUI, MCP, DSH, or another client.
 
-## 2. 已实现并有自动化证据的能力
+## 2. Implemented Capabilities with Automated Evidence
 
-### 后端
+### Backend
 
-- 单工作区 `GraphState` 的读取、原子写入与版本冲突检测；
-- 类型注册、继承、端口兼容、DAG、环路与单输入占用校验；
-- 结构化 `GraphPatch`，包括原子 `replace_node_revision`；
-- 版本化 `ToolSpec`、Tool Registry、候选检索与 Jev 决策适配；
-- Node revision proposal、端口迁移建议、生成代码审核状态；
-- Node 级 `review_policy.after_run`、安全 Preview 与继续/停止控制；
-- 工作流调度、ExecutionResult、Task 摘要、trace 与审计记录；
-- 上传、设置、模型 Provider、运行时 Skill 和节点库接口；
-- 声明式 Tool Recipe 草稿、隐藏夹具评估和有限修复；
-- Prompt normalizer 独立工具：保留原文、同语言门禁、严格 schema；
-- 版本化 HTTP API 与 `/api/capabilities`；后端 `/mcp` 已移除。
+- Read, atomic write, and version-conflict detection for a single-workspace `GraphState`;
+- Type registration, inheritance, port compatibility, DAG, cycle, and single-input-occupancy validation;
+- Structured `GraphPatch`, including atomic `replace_node_revision`;
+- Versioned `ToolSpec`, Tool Registry, candidate retrieval, and Jev decision adapter;
+- Node revision proposals, port-migration suggestions, and generated-code review states;
+- Node-level `review_policy.after_run`, safe Preview, and continue/stop controls;
+- Workflow scheduling, ExecutionResult, Task summaries, traces, and audit records;
+- Upload, settings, model Provider, runtime Skill, and node-library interfaces;
+- Declarative Tool Recipe drafts, hidden-fixture evaluation, and bounded repair;
+- Standalone Prompt normalizer: preserves original text, enforces same-language gating, and uses a strict schema;
+- Versioned HTTP API and `/api/capabilities`; backend `/mcp` has been removed.
 
-### 客户端与适配
+### Clients and Adapters
 
-- 可编辑的 typed workflow canvas、完整端口、Bezier 连线和 Inspector；
-- 导入、导出、保存、运行、路由任务与审计记录查看；
-- 桌面三栏与窄屏抽屉布局，包含键盘焦点和 axe 基线；
-- API client 的契约主版本检查；
-- MCP Streamable HTTP bridge，只经后端 HTTP 工作；
-- DSH 审批与受控本地文件导入。
+- Editable typed workflow canvas with complete ports, Bezier connections, and Inspector;
+- Import, export, save, run, routed tasks, and audit-record viewing;
+- Three-column desktop layout and narrow-screen drawers, including keyboard focus and an axe baseline;
+- Contract-major-version checks in the API client;
+- MCP Streamable HTTP bridge operating only through backend HTTP;
+- DSH approval and controlled local-file import.
 
-## 3. 2026-10-02 验证快照
+## 3. 2026-10-02 Verification Snapshot
 
-| 范围 | 结果 |
+| Scope | Result |
 | --- | --- |
-| 后端离线 unittest | `100 passed, 4 skipped`；跳过项均需显式启用在线 Jev/LLM |
-| 前端/API/MCP 单元测试 | `16 passed`（3 API client + 4 MCP bridge + 9 WebUI） |
-| 前端生产构建 | 成功；仅有依赖包 `use client` bundler warning |
-| WebUI E2E | `6 passed`，使用 `MATFLOW_E2E_FRONTEND_PORT=5174` |
+| Backend offline unittest | `100 passed, 4 skipped`; every skipped item requires explicitly enabled online Jev/LLM access |
+| Frontend/API/MCP unit tests | `16 passed` (3 API client + 4 MCP bridge + 9 WebUI) |
+| Frontend production build | Succeeded; only a dependency-level `use client` bundler warning |
+| WebUI E2E | `6 passed`, using `MATFLOW_E2E_FRONTEND_PORT=5174` |
 
-E2E 默认端口 5173 当时已被其他进程占用；改用 5174 后全部通过。这是本机运行条件，不是已确认的产品缺陷。
+The default E2E port 5173 was occupied by another process at the time. All tests passed after switching to 5174. This was a local execution condition, not a confirmed product defect.
 
-## 4. 已决定但尚未实现完成
+## 4. Decided but Not Fully Implemented
 
-| 目标 | 当前真实状态 |
+| Target | Actual Current State |
 | --- | --- |
-| Domain Package | 概念、术语和迁移方案已明确；尚无完整 manifest/loader/executor registry，EIS/XRD/FTIR 仍进入 Core |
-| 通用 join / quality report / conditional gate | 设计需要明确；当前没有完整数据驱动门控语义 |
-| 任意复杂中文请求生成多分支 DAG | 尚不可靠；中文词法召回和规划器能力不足 |
-| 完整 Tool 生命周期 | 草稿、评估和有限修复已存在；通用审核、发布、隔离代码执行仍不完整 |
-| EBrick 温变 EIS 案例 | 有数据与评估设计；未形成端到端可执行验收闭环 |
-| 多项目/多用户 | 未实现；当前是单用户、单工作区、本地文件持久化 |
-| 公网安全部署 | 未实现；默认 loopback，无完整认证授权体系 |
+| Domain Package | Concept, terminology, and migration plan are clear; there is no complete manifest/loader/executor registry, and EIS/XRD/FTIR still enter Core |
+| Generic join / quality report / conditional gate | The design need is clear; complete data-driven gating semantics do not yet exist |
+| Generate a multi-branch DAG from any complex Chinese request | Not reliable; Chinese lexical retrieval and planner capability are insufficient |
+| Complete Tool lifecycle | Drafting, evaluation, and bounded repair exist; general review, publication, and isolated code execution remain incomplete |
+| EBrick temperature-dependent EIS case | Data and an evaluation design exist; there is no end-to-end executable acceptance loop |
+| Multi-project/multi-user | Not implemented; the current system is single-user, single-workspace, with local-file persistence |
+| Secure public-network deployment | Not implemented; the default is loopback, with no complete authentication and authorization system |
 
-## 5. 已废弃或被替代的设计
+## 5. Deprecated or Replaced Designs
 
-- **后端内置 MCP endpoint：** 已移除；MCP bridge 在 `matflow-frontend`。
-- **独立 Human Decision Tool：** 已标记 deprecated；改为任意 Node 的运行后审核策略。
-- **前后端同仓：** 已由两个独立仓库替代。
-- **AI 直接改 Graph JSON：** 不允许；所有写入必须经 `GraphPatch`、版本和确定性校验。
-- **Normalize 覆盖原始 prompt：** 否决；Normalized Request 只能是可回退的派生视图。
-- **`Project / GraphVersion / Run / EventLog` 作为已实现存储模型：** 这是中期设计词汇，当前代码实际使用 `Workspace / GraphState / Task / ExecutionResult / TaskLogSummary`。未来若建设多项目存储，应另立迁移决策，不得在文档里把概念图写成现状。
-- **Scientific Graph 与 Workflow Graph 双图作为 MatFlow 当前存储模型：** 未在当前代码中落地；现行权威对象是单工作区 typed Workflow。不要与 `synsimul2` 的三图架构混用。
+- **Backend-embedded MCP endpoint:** Removed; the MCP bridge is in `matflow-frontend`.
+- **Standalone Human Decision Tool:** Marked deprecated; replaced by post-run review policy on any Node.
+- **Frontend and backend in one repository:** Replaced by two independent repositories.
+- **AI directly edits Graph JSON:** Prohibited; every write must pass `GraphPatch`, version, and deterministic validation.
+- **Normalization overwrites the original prompt:** Rejected; Normalized Request may only be a reversible derived view.
+- **`Project / GraphVersion / Run / EventLog` as the implemented storage model:** These are mid-stage design terms. The current code actually uses `Workspace / GraphState / Task / ExecutionResult / TaskLogSummary`. If multi-project storage is built later, make a separate migration decision; documentation must not present a conceptual diagram as current reality.
+- **Scientific Graph and Workflow Graph as MatFlow's current dual-graph storage model:** Not implemented in the current code. The authoritative object is a single-workspace typed Workflow. Do not conflate it with `synsimul2`'s three-graph architecture.
 
-## 6. 当前 Git 状态风险
+## 6. Current Git-State Risk
 
-核验开始时：
+At the start of verification:
 
-- 后端分支 `architecture/v0.2-contract-first`，比远端领先 4 个提交；存在大量未提交文档修改和一个未跟踪交接目录；
-- 前端同名分支工作区干净；
-- 本次文档工作只新增项目记忆和交接文件，不覆盖上述既有改动。
+- Backend branch `architecture/v0.2-contract-first` was 4 commits ahead of the remote and contained substantial uncommitted documentation changes plus one untracked handoff directory;
+- The frontend branch with the same name had a clean worktree;
+- This documentation effort added only project-memory and handoff files and did not overwrite those existing changes.
 
-交接文档提交完成后，后端分支比远端领先 5 个提交；上述既有未提交改动和未跟踪目录仍原样保留，未进入交接提交。
+After the handoff-documentation commit, the backend branch was 5 commits ahead of the remote. The existing uncommitted changes and untracked directory remained intact and were not included in the handoff commit.
 
-接手者应先执行 `git status --short --branch`，不要假定工作区干净，也不要把历史文档改动与新功能提交混在一起。
+A new maintainer should first run `git status --short --branch`. Do not assume the worktree is clean, and do not mix historical documentation changes into new-feature commits.

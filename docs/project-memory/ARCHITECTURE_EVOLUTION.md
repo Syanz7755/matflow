@@ -1,33 +1,33 @@
-# MatFlow 架构演化
+# MatFlow Architecture Evolution
 
-**目的：** 解释“为什么当前采用后端权威 + typed graph + 薄客户端”，并防止旧方案重新进入实现。
+**Purpose:** Explain why the current architecture uses an authoritative backend, typed graph, and thin clients, and prevent superseded designs from re-entering the implementation.
 
-## 阶段 0：对话生成材料学工作流
+## Stage 0: Generate Computational-Materials Workflows from Conversation
 
-最初目标是把研究对话转成结构化研究步骤，核心直觉为：
+The original objective was to transform a research conversation into structured research steps. The core intuition was:
 
 ```text
 conversation -> structured graph -> validation -> execution
 ```
 
-这一阶段形成了 Scientific Graph、Workflow Graph、Node、Schema 等大量概念。其长期价值是“研究意图必须结构化、可检查”，但当时尚未明确状态权威和写入边界。
+This stage produced many concepts, including Scientific Graph, Workflow Graph, Node, and Schema. Its lasting value is the requirement that research intent be structured and inspectable. At the time, however, authority over state and write boundaries had not been defined.
 
-## 阶段 1：Jev-like Router 与动态工具库
+## Stage 1: Jev-like Router and Dynamic Tool Library
 
-为了降低大模型成本并提高有限动作决策稳定性，引入：
+To reduce large-model cost and improve the stability of bounded-action decisions, the following flow was introduced:
 
 ```text
 Task -> candidate retrieval -> Jev-like decision -> Tool -> result
 ```
 
-同时提出动态 Tool Registry、Tool Adapter/Builder 和可观察决策日志。后续保留了 Jev 作为可替换决策器，但放弃“Router 自己管理或执行任意代码”的含混边界。
+A dynamic Tool Registry, Tool Adapter/Builder, and observable decision logs were proposed at the same time. Later designs retained Jev as a replaceable decision component but rejected the ambiguous boundary in which the Router itself managed or executed arbitrary code.
 
-**保留：** 候选集、有限动作决策、置信度、审计、未来基于真实日志微调。
-**不保留：** Jev 作为独立产品或工作流状态权威。
+**Retained:** candidate sets, bounded-action decisions, confidence, audit, and future fine-tuning from real logs.
+**Not retained:** Jev as an independent product or authoritative workflow state.
 
-## 阶段 2：Contract-first 图控制
+## Stage 2: Contract-First Graph Control
 
-为避免 AI、后端和 UI 各自解释 Graph，架构收敛为：
+To prevent AI, backend, and UI from interpreting the Graph independently, the architecture converged on:
 
 ```text
 Planner proposes GraphPatch
@@ -36,13 +36,13 @@ Planner proposes GraphPatch
         -> Runner executes validated graph
 ```
 
-这一阶段冻结了 `ToolSpec / GraphState / GraphPatch / RouterDecision / ExecutionResult` 等核心契约，并加入节点版本、Preview、审核和原子替换。
+This stage stabilized core contracts such as `ToolSpec / GraphState / GraphPatch / RouterDecision / ExecutionResult`, and added node versions, Preview, review, and atomic replacement.
 
-**关键决定：** 模型是提议者，后端是唯一裁决与执行者。
+**Key decision:** The model proposes; the backend is the sole authority for decisions and execution.
 
-## 阶段 3：统一 Application API 与外部 AI 客户端
+## Stage 3: Unified Application API and External AI Clients
 
-随着 ChatGPT、DSH 和其他 AI App 接入需求出现，Connector 被重新定义为协议适配器：
+As integration requirements emerged for ChatGPT, DSH, and other AI Apps, Connector was redefined as a protocol adapter:
 
 ```text
 WebUI / CLI / MCP / DSH
@@ -50,11 +50,11 @@ WebUI / CLI / MCP / DSH
           -> MatFlow authoritative runtime
 ```
 
-MCP 只暴露用户任务级 Tool、校验输入输出、处理客户端确认和格式化结果；不承载 Graph 业务逻辑。
+MCP exposes only user-task-level Tools, validates inputs and outputs, handles client confirmation, and formats results. It does not carry Graph business logic.
 
-## 阶段 4：前后端物理分仓
+## Stage 4: Physically Separate Frontend and Backend Repositories
 
-运行时解耦进一步落实为两个仓库：
+Runtime decoupling was implemented further as two repositories:
 
 ```text
 matflow-frontend
@@ -71,11 +71,11 @@ matflow
   - Execution / Review / Audit
 ```
 
-此变化也形成清晰许可证边界：当前自主实现 UI 不应直接复制 ComfyUI GPL 源码。若未来需要 GPL 派生前端，应独立仓库、独立构建，并仅通过稳定 API 与 Core 通信。
+This change also established a clear license boundary: the currently independent UI implementation must not directly copy ComfyUI GPL source code. If a GPL-derived frontend is needed in the future, it should use a separate repository and build, communicating with Core only through the stable API.
 
-## 阶段 5：Platform Core / Domain Package / Reference Case
+## Stage 5: Platform Core / Domain Package / Reference Case
 
-EBrick 评估暴露出新的边界问题：EIS 类型、Nyquist Tool、XRD/FTIR Recipe 和领域执行分支已经进入 Core。当前认可的三层模型为：
+EBrick evaluation exposed a new boundary problem: EIS types, Nyquist Tools, XRD/FTIR Recipes, and domain execution branches had entered Core. The currently accepted three-layer model is:
 
 ```text
 Reference Case (EBrick)
@@ -85,9 +85,9 @@ Domain Package (EIS / XRD / FTIR / ...)
 Platform Core (typed DAG / Tool lifecycle / execution / audit)
 ```
 
-加载方向必须单向，Core 不得按领域名称写条件分支。
+Loading must be one-way. Core must not contain conditional branches keyed by domain name.
 
-## 当前权威架构
+## Current Authoritative Architecture
 
 ```text
 Researcher
@@ -116,11 +116,11 @@ Researcher
   Local or remote scientific executors
 ```
 
-## 不可回退的架构约束
+## Non-Negotiable Architectural Constraints
 
-1. 所有客户端只通过版本化 HTTP 契约工作。
-2. Graph 写入只经结构化、带 `base_version` 的原子 Patch。
-3. Tool 与 Node 分离；模型草稿不是可执行 Tool。
-4. 原始 Research Request 永久保留，normalize 不能覆盖它。
-5. Platform Core 不包含具体科学方法；案例只能验收平台，不能定义平台。
-6. 危险执行和生成代码必须有确定性验证与人工审核。
+1. Every client operates only through a versioned HTTP contract.
+2. Graph writes occur only through structured, atomic Patches carrying `base_version`.
+3. Tools and Nodes are separate; a model draft is not an executable Tool.
+4. The original Research Request is permanently retained; normalization cannot overwrite it.
+5. Platform Core contains no specific scientific method; a case may validate the platform but may not define it.
+6. Dangerous execution and generated code require deterministic validation and human review.
