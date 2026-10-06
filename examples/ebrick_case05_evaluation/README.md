@@ -2,6 +2,8 @@
 
 This folder freezes a prompt, hidden tool-node definitions, a ten-node portable workflow, and the pre-run expected result for an end-to-end MatFlow evaluation.
 
+Scope: this is an EBrick Reference Case. Generic planning, DAG, review, and audit observations may inform Platform Core; Cp/G conversion, impedance types, thresholds, furnace metadata, and scientific expectations belong to an EIS Domain Package or this case and must not become default core behavior.
+
 Recorded artifacts:
 
 - `prompt.txt`: the exact prompt submitted to the router.

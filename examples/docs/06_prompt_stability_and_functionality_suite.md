@@ -2,6 +2,8 @@
 
 本测试集的机器可读来源是 `examples/prompt_stability_suite.json`。共有 23 条提示词：5 个材料学任务族各 4 种语言风格（20 条），以及 3 条安全边界任务。
 
+这里的“功能完整性”仅指这些 Reference Case 的路由和有限执行覆盖，不代表 Platform Core 或任意材料学分析的整体完成度。任务族中的科学语义应归入相应 Domain Package。
+
 ## 测试边界
 
 | 层级 | 数量 | 通过标准 |

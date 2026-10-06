@@ -6,6 +6,14 @@ MatFlow 面向材料学研究中的“vibe research”：用户从自然语言�
 
 MatFlow 当前采用后端权威架构。WebUI、MCP bridge、DSH 或其他 AI 客户端负责交互和适配；后端独占 Workspace 状态、校验、执行、审计和持久化语义。
 
+### 1.1 三层能力边界
+
+- **Platform Core：** 领域无关的 Workspace、类型图、DAG、GraphPatch、Tool 生命周期、执行、审核和审计。
+- **Domain Package：** 某类实验方法的类型、Tool、执行器、Recipe 和领域词汇，例如 EIS、XRD 或 FTIR。
+- **Reference Case：** 使用领域包解决的具体研究场景，例如 EBrick 温变阻抗谱。
+
+Reference Case 可以验证 Platform Core，但不能定义 Platform Core。案例中的材料体系、仪器结构、列名、换算公式和分析方法不得成为所有工作区默认拥有的核心契约。
+
 ## 2. 设计理念
 
 ### 2.1 原始意图不可被中间表示替代
@@ -122,13 +130,15 @@ Capability Gap
 | `backend/validator.py` | GraphPatch 的版本、拓扑、端口和操作校验 | 已实现 |
 | `backend/routing.py` | 确定性候选检索和可审计 Route Decision | 已实现，中文能力弱 |
 | `backend/jev_routing.py` | 多模型选择、共识、校准和安全降级 | 已实现；在线回归需显式开启 |
-| `backend/analysis_recipes.py` | allow-list 声明式分析、评估与有限修复 | 已实现 XRD/FTIR 子集 |
+| `backend/analysis_recipes.py` | 与测量方法无关的声明式信号 Recipe 契约和解释器 | 已实现受限 allow-list；具体 Recipe 与 method Tools 由 XRD/FTIR packages 持有 |
 | `backend/node_evolution.py` | Tool/Node 修订提案和连边迁移计划 | 已实现受限路径 |
 | `backend/prompt_normalizer.py` | 保留原文的结构化 normalize | 已实现为独立 CLI，未接主流程 |
 | `backend/preview.py` | 不可信输出的有界预览 | 已实现 |
 | `backend/task_summary.py` | 用户可读、可审计的 Task 生命周期摘要 | 已实现 |
 | `backend/observability.py` | trace 关联和结构化审计 | 已实现基础能力 |
 | `backend/main.py` | HTTP adapter、运行时 agent adapter 和兼容接口 | 已实现；需继续瘦身 |
+
+随仓只读诊断工具 `flowview/` **不属于**核心模块：它不进入 wheel、不被后端依赖、只读地打印后端流程（Mermaid/表格/JSON），契约见 [`../flowview/CONTRACT.md`](../flowview/CONTRACT.md)，与本文的模块边界规则一致（见[架构与开发规则](ARCHITECTURE_AND_DEVELOPER_RULES.md) §权威边界）。
 
 ## 5. 关键运行流程
 
@@ -160,7 +170,7 @@ Research Request + Dataset references
   -> 执行或等待评估、审核
 ```
 
-当前 `/api/chat` 可以运行有轮次上限的模型工具调用循环，并返回 `completed`、`waiting_for_confirmation` 或 `failed`。但是在线模型质量、中文复杂规划和 EBrick 全流程尚未通过端到端验收，因此该路径仍属于 Alpha。
+当前 `/api/chat` 可以运行有轮次上限的模型工具调用循环，并返回 `completed`、`waiting_for_confirmation` 或 `failed`。但是在线模型质量和中文复杂规划尚未通过通用验收，因此该路径仍属于 Alpha；EBrick 全流程则属于单独的 Reference Case 验收。
 
 ### 5.3 Prompt normalize 路径
 
@@ -188,29 +198,33 @@ Research Request -------------------------------> 审计与最终权威
 
 ## 7. 当前能力边界
 
-已经可以可靠完成：
+Platform Core 已经可以可靠完成：
 
 - 表格 Dataset 的导入和检查；
-- EIS 列映射、基础有效性统计和 Nyquist 数据生成；
 - typed GraphPatch 的校验、应用和版本冲突处理；
 - DAG 的依赖调度和人工 Review Gate；
-- XRD/FTIR allow-list Recipe 的执行、隐藏夹具评估与有限修复；
 - Tool/Node 修订提案、预览、Task Summary 和审计；
 - 离线、配置驱动的场景测试。
 
-尚不能宣称完成：
+当前仓库还带有以下参考领域能力，它们由各自 Domain Package 持有：
+
+- EIS 列映射、基础有效性统计和 Nyquist 数据生成；
+- XRD 峰提取/参考匹配和 FTIR 峰提取/波段标注 Tools，以及隐藏夹具评估与有限修复。
+
+Platform Core 尚不能宣称完成：
 
 - 任意中文复杂请求的可靠多分支 Workflow 规划；
 - Markdown/自然语言实验规则文档的结构化读取；
 - 通用生成代码的安全执行和一键发布；
 - 数据驱动的自动质量分支；
-- EIS 的 KK/Lin-KK、复杂等效电路选择、DRT 和机理贡献定量；
 - 通用科研检索和来源证据管理；
 - 多用户、权限、数据库事务和远程部署安全。
 
-## 8. EBrick 目标架构切片
+EIS Domain Package 或 EBrick Reference Case 尚未完成的能力包括 KK/Lin-KK、复杂等效电路选择、DRT、机理贡献定量和案例特定的时间—温度映射。这些缺口不应作为 Platform Core 的功能清单。
 
-EBrick 温变阻抗谱是下一阶段最合适的纵向切片：
+## 8. EBrick Reference Case（非平台架构）
+
+EBrick 温变阻抗谱可以作为验证平台扩展机制的纵向案例：
 
 ```text
                             +-- 炉程文档解析 --+
@@ -225,25 +239,28 @@ EBrick 温变阻抗谱是下一阶段最合适的纵向切片：
                                                                                                                   +-- 图表/报告
 ```
 
-该切片会同时验证文档解析、物理量转换、并行 DAG、结果汇合、质量门控、领域 Tool 生命周期和科学报告，是比继续增加孤立示例更有价值的里程碑。
+该案例会验证文档解析、并行 DAG、结果汇合、质量门控和领域 Tool 生命周期。图中的物理量转换、诊断方法和科学报告属于 EIS Domain Package 或 EBrick Reference Case；只有 DAG、汇合、门控和生命周期机制属于 Platform Core。
 
 ## 9. 架构演进顺序
 
-建议按以下顺序推进：
+Platform Core 建议按以下顺序推进：
 
-1. 给 Dataset inspection 增加文本/Markdown 的受控读取和结构化文档 Artifact；
-2. 将 Normalized Request 以派生字段接入 Task，增加约束保真检查和多语言检索 query；
-3. 增加通用 join/quality-report/conditional-gate 语义；
-4. 实现 EBrick 必需的 Cp/G 转换、温度映射和三类诊断 Tool；
+1. 定义 Domain Package 清单以及类型、Tool、Recipe、执行器的加载边界；
+2. 给 Dataset inspection 增加文本/Markdown 的受控读取和结构化文档 Artifact；
+3. 将 Normalized Request 以派生字段接入 Task，增加约束保真检查和多语言检索 query；
+4. 增加通用 join/quality-report/conditional-gate 语义；
 5. 补齐 Tool Recipe Proposal 的评估、审核、发布 HTTP interface；
 6. 只有声明式 Recipe 无法表达时，才接入网络隔离、资源受限的代码执行 adapter；
-7. 固化 EBrick 非单链 DAG 的端到端验收，再扩展到更多材料表征领域。
+7. 将平台契约测试与 Domain Package 验收测试分层。
+
+在独立的 EIS Domain Package 与 EBrick Reference Case 中，再实现 Cp/G 转换、温度映射、诊断 Tool 和非单链案例验收。案例实现不得反向增加 Platform Core 的默认科学类型或方法分支。
 
 ## 10. 文档与代码一致性规则
 
 - 设计目标必须明确标记为“目标”，不得写成已经存在的能力；
 - 新增公共行为时同时更新 HTTP 契约、测试和本文件的能力边界；
 - 领域词汇以根目录 `CONTEXT.md` 为准；
+- 文档必须标明能力属于 Platform Core、Domain Package 还是 Reference Case；
 - 历史 evaluation 报告是当时快照，不能替代当前测试与代码；
 - 后端变更至少运行离线完整测试；在线模型测试必须显式授权并单独记录。
 

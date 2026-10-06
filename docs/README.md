@@ -20,6 +20,10 @@ matflow是一个为材料学领域研究人员设计的vibe research工具框架
 | 查看当前完成度、里程碑和下一阶段 | [项目阶段完成度评估](PROJECT_STATUS.md) |
 | 理解设计理念、模块和运行流程 | [设计理念与实现架构](DESIGN_AND_ARCHITECTURE.md) |
 | 理解模块边界并继续开发 | [架构与开发规则](ARCHITECTURE_AND_DEVELOPER_RULES.md) |
+| 在命令行离线查看后端流程（随仓只读工具 FlowView） | [FlowView 使用指南](../flowview/README.md)、[FlowView 内部契约](../flowview/CONTRACT.md) |
+| 运行配置驱动的场景与提示词测试套件 | [配置化场景测试](CONFIGURED_SCENARIO_TESTS.md)、[示例与流程打印产物](../examples/README.md) |
+| 理解 Domain Package 边界、执行器与通用控制语义 | [Domain Package 说明](DOMAIN_PACKAGES.md) |
+| 接手维护：当前状态、未决问题与下一步 | [项目记忆](project-memory/README.md)（历史交接快照只保留在本地，不随仓库分发） |
 
 ## 推荐阅读路径
 
@@ -43,8 +47,9 @@ matflow是一个为材料学领域研究人员设计的vibe research工具框架
 
 ## 当前能力边界
 
-- 已可执行：表格数据导入、列映射、EIS 基础质检和 Nyquist 数据生成。
-- 仓库包含 XRD、UV-Vis、比重瓶和 TGA 等任务示例，但它们不是当前内置的完整执行链路。
+- **平台核心：** 已可执行 Dataset 导入、类型化 GraphPatch 校验、DAG 调度、人工审核、预览和审计。
+- **当前内置 Demo 能力：** 表格列映射、EIS 基础质检和 Nyquist 数据生成。这些是历史演示能力，不代表通用平台必须内置 EIS。
+- **参考领域与案例：** 仓库包含 XRD、FTIR、UV-Vis、比重瓶、TGA 和 EBrick 等测试或示例；它们用于验证平台机制，不定义 Platform Core。
 - WebUI 与 MCP bridge 通过 HTTP 共用同一个后端工作区；不支持多用户权限隔离。
 - 默认只监听本机 `127.0.0.1:8000`，未内置公网认证。
 - 后端提供 `/api/chat` 作为受轮次限制的 AI 辅助接口；复杂中文规划和领域工具生成仍属于 Alpha，MCP bridge 是另一种客户端接入方式。
@@ -60,3 +65,5 @@ matflow是一个为材料学领域研究人员设计的vibe research工具框架
 - `PROJECT_STATUS.md` 记录阶段性完成度、验证证据和下一里程碑。
 - `DESIGN_AND_ARCHITECTURE.md` 记录设计理念、实现架构与能力边界。
 - `ARCHITECTURE_AND_DEVELOPER_RULES.md` 是实现边界和变更规则。
+- `../flowview/README.md` 是随仓 CLI 工具 FlowView 的使用指南：它只读地打印后端流程（Mermaid 图、终端表格、JSON），入口为 `.\.venv\Scripts\python.exe -m flowview graph|flow|summary|doctor`（`run-flow` 是 `flow` 的别名），按设计不进入 wheel；`../flowview/CONTRACT.md` 是它的冻结内部契约。
+- 历史交接快照（任意 `_handoff/` 目录）是本地工作笔记，已在 `.gitignore` 中排除（`**/_handoff/`），只保留在开发机上、不随仓库分发；长期状态以 `project-memory/` 为准。

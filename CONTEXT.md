@@ -16,10 +16,24 @@ _Avoid_: Clean prompt, corrected request
 One auditable attempt to satisfy a Research Request against a particular Workspace version.
 _Avoid_: Chat, run
 
+## Scope boundaries
+
+**Platform Core**:
+The domain-neutral MatFlow runtime and contracts for typed workflows, Tool lifecycle, execution, review and audit. It does not contain measurement-method or project-specific scientific semantics.
+_Avoid_: Built-in scientific suite, EBrick workflow
+
+**Domain Package**:
+A versioned extension that contributes scientific data types, Tools, executors, Recipes and domain vocabulary to the Platform Core.
+_Avoid_: Core module, example fixture
+
+**Reference Case**:
+A concrete research scenario used to demonstrate or accept Platform Core and Domain Package behavior; EBrick is one Reference Case.
+_Avoid_: Platform capability, general workflow
+
 ## Workflow model
 
 **Workspace**:
-The authoritative collection of the current Workflow, available Tools, data types, uploaded Datasets and review state.
+The authoritative collection of the current Workflow, available Tools and Domain Packages, data types, uploaded Datasets and review state.
 _Avoid_: Project, session
 
 **Workflow**:
