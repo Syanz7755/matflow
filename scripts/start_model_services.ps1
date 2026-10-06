@@ -10,6 +10,12 @@ param(
 )
 
 $ErrorActionPreference = 'Stop'
+# Invoke-WebRequest draws a progress bar. When this script runs with redirected
+# or captured output (tests, CI, wrapper launchers) that rendering throws
+# HostException "Access is denied ... console output buffer", which the health
+# probe below would misread as an unhealthy service and silently skip the
+# readiness probe. Progress output must therefore stay off.
+$ProgressPreference = 'SilentlyContinue'
 $projectRoot = (Resolve-Path (Join-Path $PSScriptRoot '..')).Path
 if (-not $ConfigPath) { $ConfigPath = Join-Path $projectRoot 'config\model_services.json' }
 $configFile = (Resolve-Path $ConfigPath).Path

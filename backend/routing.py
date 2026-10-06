@@ -20,7 +20,7 @@ class CandidateRetriever:
         available = set(task.available_input_types)
         registry.type_registry.validate_port_types(available)
         candidates: list[RouterCandidate] = []
-        for spec in registry.active().values():
+        for spec in registry.agent_selectable().values():
             if spec.inputs and not all(
                 any(registry.type_registry.can_flow(source, required) for source in available)
                 for required in spec.inputs.values()

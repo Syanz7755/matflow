@@ -71,7 +71,7 @@ class ConfiguredOnlineScenarios(unittest.TestCase):
                 "main_peak_tolerance": expected["main_peak_tolerance"],
             }
             if truth.get("dominant_phase"):
-                criteria.update({"dominant_phase": truth["dominant_phase"], "minimum_matched_peaks": expected["minimum_matched_peaks"]})
+                criteria.update({"expected_label": truth["dominant_phase"], "minimum_matches": expected["minimum_matched_peaks"]})
             if expected.get("required_assignment"):
                 criteria["required_assignment"] = expected["required_assignment"]
             outcome = evaluator.repair_until_passes(

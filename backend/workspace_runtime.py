@@ -13,7 +13,7 @@ import tempfile
 import threading
 import uuid
 from pathlib import Path
-from typing import Any, Callable
+from typing import Any, Callable, Iterable
 
 import numpy as np
 import pandas as pd
@@ -30,8 +30,15 @@ from .contracts import (
     ReviewState,
     TaskState,
 )
-from .analysis_recipes import AnalysisRecipe, RecipeEngine
+from .analysis_recipes import AnalysisRecipe
 from .data_types import DataTypeRegistry
+from .domain_packages import (
+    DomainPackageLoader,
+    DomainPackageSet,
+    compose_type_registry,
+    load_domain_packages,
+)
+from .executors import ExecutionOutcome, ExecutorRegistry, NodeExecution, ToolExecutionError
 from .jev_routing import JevDecisionRouter
 from .observability import audit, current_trace_id
 from .node_evolution import build_revision_proposal, reconnect_edges
@@ -89,6 +96,9 @@ class WorkspaceRuntime:
         *,
         model_complete: Callable[[list[dict[str, Any]], list[dict[str, Any]]], dict[str, Any]] | None = None,
         summary_service: TaskSummaryService | None = None,
+        packages: Iterable[str] = (),
+        package_loader: DomainPackageLoader | None = None,
+        executors: ExecutorRegistry | None = None,
     ):
         self.root = root.resolve()
         data_root = Path(os.getenv("MATFLOW_DATA_ROOT", str(self.root / "data"))).resolve()
@@ -100,6 +110,11 @@ class WorkspaceRuntime:
         self._model_complete = model_complete
         self._summaries = summary_service or TaskSummaryService()
         self._write_lock = threading.RLock()
+        # A workspace composes the Domain Packages it wants. Loading none leaves
+        # Platform Core domain-neutral, which is the default.
+        self.packages: DomainPackageSet = load_domain_packages(packages, loader=package_loader)
+        self.executors = executors or ExecutorRegistry.platform()
+        self.packages.register_executors(self.executors)
 
     def read_state(self) -> GraphState:
         if not self.state_file.exists():
@@ -132,12 +147,27 @@ class WorkspaceRuntime:
         with self._write_lock:
             self._atomic_write(self.settings_file, json.dumps(settings, ensure_ascii=False, indent=2))
 
+    @property
+    def model_adapter_configured(self) -> bool:
+        return self._model_complete is not None
+
+    def complete_with_model(self, messages: list[dict[str, Any]], tools: list[dict[str, Any]]) -> dict[str, Any]:
+        if self._model_complete is None:
+            raise ValueError("This node execution requires a configured model adapter")
+        return self._model_complete(messages, tools)
+
     def registry(self) -> ToolRegistry:
         settings = self.read_settings()
-        return ToolRegistry(settings["custom_nodes"], DataTypeRegistry(settings["custom_data_types"]))
+        return ToolRegistry(
+            settings["custom_nodes"],
+            self.data_type_registry(settings),
+            package_specs=self.packages.tool_specs(),
+        )
 
-    def data_type_registry(self) -> DataTypeRegistry:
-        return DataTypeRegistry(self.read_settings()["custom_data_types"])
+    def data_type_registry(self, settings: dict[str, Any] | None = None) -> DataTypeRegistry:
+        """Platform types plus every loaded Domain Package type and custom type."""
+        resolved = settings or self.read_settings()
+        return compose_type_registry(self.packages, resolved["custom_data_types"])
 
     def workspace_snapshot(self) -> dict[str, Any]:
         settings = self.read_settings()
@@ -148,6 +178,7 @@ class WorkspaceRuntime:
             "data_type_definitions": self.data_type_registry().definitions(),
             "runtime_skills": [item["name"] for item in self.runtime_skills()],
             "features": settings["features"],
+            "domain_packages": self.packages.legacy_view(),
         }
 
     def create_data_type(self, definition: DataTypeDefinition | dict[str, Any]) -> dict[str, Any]:
@@ -163,7 +194,7 @@ class WorkspaceRuntime:
             settings["custom_data_types"] = custom
             self.write_settings(settings)
             audit("data_type.created", name=item.name, parents=item.parents)
-            return DataTypeRegistry(custom).get(item.name).model_dump()
+            return self.data_type_registry().get(item.name).model_dump()
 
     def update_data_type_inheritance(self, name: str, parents: list[str]) -> dict[str, Any]:
         """Atomically replace a custom type's ordered parents after full compliance checks."""
@@ -181,11 +212,11 @@ class WorkspaceRuntime:
             settings["custom_data_types"] = custom
             self.write_settings(settings)
             audit("data_type.inheritance_updated", name=name, parents=parents)
-            return DataTypeRegistry(custom).get(name).model_dump()
+            return self.data_type_registry().get(name).model_dump()
 
     def _validate_type_configuration(self, custom_types: dict[str, dict[str, Any]], custom_nodes: dict[str, dict[str, Any]]) -> None:
-        type_registry = DataTypeRegistry(custom_types)
-        registry = ToolRegistry(custom_nodes, type_registry)
+        type_registry = self.data_type_registry({"custom_data_types": custom_types})
+        registry = ToolRegistry(custom_nodes, type_registry, package_specs=self.packages.tool_specs())
         GraphValidator().validate_state(self.read_state(), registry)
 
     def runtime_skills(self) -> list[dict[str, str]]:
@@ -204,6 +235,8 @@ class WorkspaceRuntime:
 
     def propose_analysis_recipe(self, *, label: str, description: str, recipe: dict[str, Any]) -> dict[str, Any]:
         parsed = AnalysisRecipe.model_validate(recipe)
+        if parsed.domain not in self.packages.recipe_domains():
+            raise ValueError(f"No loaded Domain Package owns recipe domain: {parsed.domain}")
         if parsed.status != "draft":
             raise ValueError("A model-proposed analysis recipe must remain draft until human review")
         proposal_id = str(uuid.uuid4())
@@ -285,7 +318,13 @@ class WorkspaceRuntime:
             tool = ToolRegistry({proposed_payload["tool_id"]: proposed_payload}, self.data_type_registry()).get(proposed_payload["tool_id"])
             custom_before = copy.deepcopy(settings.get("custom_nodes", {}))
             settings.setdefault("custom_nodes", {})[tool.tool_id] = tool.model_dump()
-            registry = ToolRegistry(settings["custom_nodes"], DataTypeRegistry(settings["custom_data_types"]))
+            # The in-memory candidate must see every loaded Domain Package, or a
+            # revision of a package-typed node fails on its package's own types.
+            registry = ToolRegistry(
+                settings["custom_nodes"],
+                self.data_type_registry(settings),
+                package_specs=self.packages.tool_specs(),
+            )
             replacement = old_node.model_copy(update={
                 "type": tool.tool_id,
                 "tool_id": tool.tool_id,
@@ -313,9 +352,11 @@ class WorkspaceRuntime:
             return updated
 
     def migrate_legacy_human_decisions(self, *, apply: bool = False) -> dict[str, Any]:
+        """Migrate legacy review-gate nodes that a loaded Domain Package declares."""
         state = self.read_state()
         migrations, blocked = [], []
-        for node in [item for item in state.nodes if item.type == "human_decision"]:
+        legacy_types = self.packages.legacy_tool_ids()
+        for node in [item for item in state.nodes if item.type in legacy_types]:
             incoming = [edge for edge in state.edges if edge.target == node.id]
             outgoing = [edge for edge in state.edges if edge.source == node.id]
             if len(incoming) == 1 and not outgoing:
@@ -358,7 +399,7 @@ class WorkspaceRuntime:
             "bytes": path.stat().st_size,
         }
         try:
-            frame = self._dataframe(upload_id)
+            frame = self.dataset_frame(upload_id)
             result.update({
                 "kind": "table",
                 "rows": len(frame),
@@ -437,22 +478,36 @@ class WorkspaceRuntime:
                 self.write_state(state)
                 spec = self.registry().get(node.tool_id or node.type)
                 output_types = self.registry().type_registry.resolve_ports(spec, node)[1].values()
-                execution = ExecutionResult(node_id=node.id, tool_id=spec.tool_id, tool_version=spec.version, status="waiting" if node.status == "waiting" else "completed", output=output, output_schema_valid=output.get("kind") in output_types, trace_id=current_trace_id())
+                # A gate that stopped downstream work must not be recorded as a
+                # completed execution.
+                status = {"waiting": "waiting", "cancelled": "cancelled"}.get(node.status, "completed")
+                execution = ExecutionResult(node_id=node.id, tool_id=spec.tool_id, tool_version=spec.version, status=status, output=output, output_schema_valid=output.get("kind") in output_types, trace_id=current_trace_id())
                 summary = self._summaries.record_execution(task_id, execution, self.registry()) if task_id else None
                 return {"state": state.model_dump(), "result": output, "execution": execution.model_dump(), "summary": summary.model_dump() if summary else None}
-            except ValueError as exc:
+            except ToolExecutionError as exc:
                 node.status = "error"
-                node.output = {"error": str(exc)}
+                node.output = {"error": {"code": exc.code, "message": str(exc)}}
                 self.write_state(state)
-                audit("executor.failed", node_id=node_id, error=str(exc))
+                audit("executor.failed", node_id=node_id, error=str(exc), error_code=exc.code)
                 if task_id:
                     spec = self.registry().get(node.tool_id or node.type)
-                    failed = ExecutionResult(node_id=node.id, tool_id=spec.tool_id, tool_version=spec.version, status="failed", trace_id=current_trace_id(), error=ExecutionError(code="execution_failed", message=str(exc), retryable=True))
+                    failed = ExecutionResult(node_id=node.id, tool_id=spec.tool_id, tool_version=spec.version, status="failed", trace_id=current_trace_id(), error=ExecutionError(code=exc.code, message=str(exc), retryable=exc.retryable))
+                    self._summaries.record_execution(task_id, failed, self.registry())
+                raise
+            except ValueError as exc:
+                node.status = "error"
+                node.output = {"error": {"code": "execution_failed", "message": str(exc)}}
+                self.write_state(state)
+                audit("executor.failed", node_id=node_id, error=str(exc), error_code="execution_failed")
+                if task_id:
+                    spec = self.registry().get(node.tool_id or node.type)
+                    failed = ExecutionResult(node_id=node.id, tool_id=spec.tool_id, tool_version=spec.version, status="failed", trace_id=current_trace_id(), error=ExecutionError(code="execution_failed", message=str(exc), retryable=False))
                     self._summaries.record_execution(task_id, failed, self.registry())
                 raise
 
     def execute_workflow(self, *, restart: bool = False) -> dict[str, Any]:
         results: list[dict[str, Any]] = []
+        GraphValidator().validate_state(self.read_state(), self.registry())
         if restart:
             with self._write_lock:
                 state = self.read_state()
@@ -481,7 +536,7 @@ class WorkspaceRuntime:
                 if outcome["execution"]["status"] == "waiting":
                     return {"state": outcome["state"], "results": results}
             except ValueError as exc:
-                results.append({"node_id": node.id, "error": str(exc)})
+                results.append({"node_id": node.id, "error": str(exc), "error_code": getattr(exc, "code", "execution_failed")})
                 return {"state": self.read_state().model_dump(), "results": results}
 
     def submit_node_review(self, node_id: str, decision: str, comment: str | None = None) -> dict[str, Any]:
@@ -508,85 +563,49 @@ class WorkspaceRuntime:
         return self.submit_node_review(node_id, "continue" if decision in {"approve", "continue"} else "stop")
 
     def _run_node(self, state: GraphState, node: Node) -> dict[str, Any]:
+        """Run one node through the single executor seam.
+
+        Core knows nothing about scientific methods here: it resolves the
+        validated ToolSpec's executor_ref in the workspace ExecutorRegistry,
+        which Platform Core and every loaded Domain Package register into.
+        """
         node.status = "running"
         audit("executor.started", node_id=node.id, node_type=node.type)
         spec = self.registry().get(node.tool_id or node.type)
-        executor_type = spec.executor_ref.split(":", 1)[1] if (spec.executor_ref or "").startswith("builtin:") else node.type
-        if executor_type == "raw_file_import":
-            upload_id = str(node.params.get("upload_id") or "")
-            if not upload_id: raise ValueError("Raw File Import has no upload_id")
-            inspected = self.inspect_dataset(upload_id)
-            if inspected["kind"] != "table": raise ValueError("Raw File Import only supports tabular data")
-            node.output = {"kind": "RawData", "upload_id": upload_id, "rows": inspected["rows"], "columns": [column["name"] for column in inspected["columns"]], "preview": inspected["preview"]}
-        elif executor_type == "normalize_columns":
-            raw = self._node_input(state, node.id, "raw")
-            if not raw.output: raise ValueError(f"Upstream node {raw.id} has not run")
-            columns = set(raw.output["columns"]); mapping = node.params
-            missing = [mapping[key] for key in ("frequency_column", "real_column", "imag_column") if mapping.get(key) not in columns]
-            if missing: raise ValueError(f"Column mapping does not match the uploaded file: {missing}")
-            node.output = {"kind": "TypedTable", "upload_id": raw.output["upload_id"], "mapping": mapping, "rows": raw.output["rows"]}
-        elif executor_type == "eis_basic_qc":
-            table = self._node_input(state, node.id, "data")
-            if not table.output: raise ValueError(f"Upstream node {table.id} has not run")
-            frame = self._dataframe(table.output["upload_id"]); mapping = table.output["mapping"]
-            frequency = pd.to_numeric(frame[mapping["frequency_column"]], errors="coerce")
-            real = pd.to_numeric(frame[mapping["real_column"]], errors="coerce")
-            imag = pd.to_numeric(frame[mapping["imag_column"]], errors="coerce")
-            valid = frequency.notna() & real.notna() & imag.notna() & (frequency > 0)
-            threshold = float(node.params["min_frequency_hz"])
-            node.output = {"kind": "EISQCReport", "upload_id": table.output["upload_id"], "mapping": mapping, "rows_valid": int(valid.sum()), "rows_retained": int((valid & (frequency >= threshold)).sum()), "min_frequency_hz": threshold, "pass": bool(valid.any()), "issues": [] if valid.all() else [f"{int((~valid).sum())} invalid rows ignored"]}
-        elif executor_type == "plot_nyquist":
-            report = self._node_input(state, node.id, "data")
-            if not report.output: raise ValueError(f"Upstream node {report.id} has not run")
-            frame = self._dataframe(report.output["upload_id"]); mapping = report.output["mapping"]
-            real = pd.to_numeric(frame[mapping["real_column"]], errors="coerce"); imag = pd.to_numeric(frame[mapping["imag_column"]], errors="coerce")
-            valid = real.notna() & imag.notna()
-            points = [[float(x), float(-y)] for x, y in zip(real[valid].head(500), imag[valid].head(500))]
-            node.output = {"kind": "Plot", "plot_type": "Nyquist", "title": node.params["title"], "series": points, "points": len(points)}
-        elif executor_type == "skill_node":
-            if self._model_complete is None: raise ValueError("Skill Node execution requires a configured model adapter")
-            table = self._node_input(state, node.id, "dataset")
-            if not table.output: raise ValueError(f"Upstream node {table.id} has not run")
-            contract = {"skill_id": node.params.get("skill_id"), "instructions": node.params.get("instructions"), "input": {"mapping": table.output.get("mapping"), "preview": self.inspect_dataset(str(table.output["upload_id"])).get("preview", [])}, "output_schema": node.params.get("output_schema", {})}
-            answer = self._model_complete([{"role": "system", "content": "Execute this Skill Node. Return only JSON conforming to output_schema."}, {"role": "user", "content": json.dumps(contract, ensure_ascii=False)}], [])
-            try: payload = json.loads(answer.get("content") or "{}")
-            except json.JSONDecodeError as exc: raise ValueError(f"Skill Node returned invalid JSON: {exc}") from exc
-            node.output = {"kind": "Artifact", "skill_id": node.params.get("skill_id"), "schema": node.params.get("output_schema", {}), "data": payload}
-        elif executor_type == "type_cast":
-            upstream = self._node_input(state, node.id, "value")
-            if not upstream.output: raise ValueError(f"Upstream node {upstream.id} has not run")
-            type_registry = self.data_type_registry()
-            source_type = str(node.params.get("source_type") or "")
-            target_type = str(node.params.get("target_type") or "")
-            type_registry.validate_port_types((source_type, target_type))
-            node.output = copy.deepcopy(upstream.output)
-            node.output["kind"] = target_type
-            node.output["cast"] = {"from": source_type, "to": target_type, "node_id": node.id}
-        elif (spec.executor_ref or "").startswith("recipe:"):
-            raw = self._node_input(state, node.id, "data")
-            if not raw.output:
-                raise ValueError(f"Upstream node {raw.id} has not run")
-            upload_id = str(raw.output.get("upload_id") or "")
-            frame = self._dataframe(upload_id)
-            recipe = node.params.get("recipe") or spec.params.get("recipe")
-            if not recipe:
-                raise ValueError("Recipe-backed tool has no declarative recipe")
-            payload = RecipeEngine().execute(recipe, frame)
-            node.output = {"kind": "Artifact", "recipe_id": recipe.get("recipe_id"), "data": payload}
+        executor = self.executors.resolve(spec.executor_ref)
+        outcome = executor(NodeExecution(runtime=self, state=state, node=node, spec=spec))
+        stopped = False
+        if isinstance(outcome, ExecutionOutcome):
+            node.output = outcome.output
+            stopped = outcome.stop
         else:
-            raise ValueError("No executor registered for this node")
-        node.status = "completed"
+            node.output = outcome
+        node.status = "cancelled" if stopped else "completed"
         node.preview = build_preview(node.output, spec)
-        if node.review_policy.after_run:
+        if node.review_policy.after_run and not stopped:
             node.status = "waiting"
             node.review_state = ReviewState(status="pending")
-        audit("executor.completed", node_id=node.id, result_kind=node.output.get("kind"))
+        audit("executor.completed", node_id=node.id, result_kind=node.output.get("kind"), stopped=stopped)
         return node.output
 
-    def _node_input(self, state: GraphState, node_id: str, port: str) -> Node:
-        edge = next((edge for edge in state.edges if edge.target == node_id and edge.target_port == port), None)
-        if not edge: raise ValueError(f"{node_id} requires an input connected to '{port}'")
-        return node_by_id(state, edge.source)
+    def node_input(self, state: GraphState, node_id: str, port: str) -> Node:
+        """The single upstream node on one port.
+
+        A port declared in ``ToolSpec.multi_input`` may carry several edges, and
+        reading only the first would silently drop the rest, so that misuse is
+        rejected here instead.
+        """
+        edges = [edge for edge in state.edges if edge.target == node_id and edge.target_port == port]
+        if not edges: raise ValueError(f"{node_id} requires an input connected to '{port}'")
+        if len(edges) > 1:
+            raise ValueError(f"{node_id}.{port} carries {len(edges)} edges; use the multi-input accessor")
+        return node_by_id(state, edges[0].source)
+
+    def node_inputs(self, state: GraphState, node_id: str, port: str) -> list[Node]:
+        """Every upstream node on one port, for the multi-input join/aggregate seam."""
+        edges = [edge for edge in state.edges if edge.target == node_id and edge.target_port == port]
+        if not edges: raise ValueError(f"{node_id} requires an input connected to '{port}'")
+        return [node_by_id(state, edge.source) for edge in edges]
 
     def _upload_path(self, upload_id: str) -> Path:
         if upload_id != Path(upload_id).name:
@@ -596,7 +615,7 @@ class WorkspaceRuntime:
             raise ValueError("Unknown upload. Ask the user to upload the file again.")
         return candidate
 
-    def _dataframe(self, upload_id: str) -> pd.DataFrame:
+    def dataset_frame(self, upload_id: str) -> pd.DataFrame:
         path = self._upload_path(upload_id); suffix = path.suffix.lower()
         if suffix in {".csv", ".txt"}: return pd.read_csv(path, sep=None, engine="python")
         if suffix in {".xlsx", ".xls"}: return pd.read_excel(path)

@@ -59,6 +59,10 @@ class DataTypeRegistry:
         """
         if source_type not in self._definitions or target_type not in self._definitions:
             return False
+        # Artifact is the domain-neutral sink contract used by generic control
+        # nodes; any registered domain artifact can satisfy it.
+        if target_type == "Artifact":
+            return "Artifact" in self._linearizations[source_type]
         return source_type in self._linearizations[target_type]
 
     def validate_port_types(self, type_names: Iterable[str]) -> None:

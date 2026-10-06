@@ -8,6 +8,7 @@ from fastapi.testclient import TestClient
 from backend import main
 from backend.main import app
 from backend.workspace_runtime import WorkspaceRuntime
+from tests.reference_composition import workspace as reference_workspace
 
 
 class WorkspaceRuntimeTests(unittest.TestCase):
@@ -31,7 +32,7 @@ class WorkspaceRuntimeTests(unittest.TestCase):
 class ChatContractTests(unittest.TestCase):
     def test_chat_is_the_stable_user_message_interface(self):
         with tempfile.TemporaryDirectory() as directory:
-            runtime = WorkspaceRuntime(Path(directory))
+            runtime = reference_workspace(Path(directory))
             with patch.object(main, "workspace", runtime), patch("backend.main.model_completion", return_value={"role": "assistant", "content": "Ready."}):
                 response = TestClient(app).post("/api/chat", json={
                     "message": "Create an EIS quality-control workflow.",

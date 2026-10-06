@@ -7,6 +7,7 @@ from backend.contracts import Edge, GraphPatch, GraphState, Node, Operation, Too
 from backend.main import app
 from backend.tool_registry import ToolRegistry
 from backend.validator import GraphValidator
+from tests.reference_composition import registry as reference_registry
 
 
 class ToolSpecContractTests(unittest.TestCase):
@@ -19,11 +20,11 @@ class ToolSpecContractTests(unittest.TestCase):
             ToolSpec(tool_id="demo_tool", label="Demo", category="Test", description="Test tool", outputs={"result": "Artifact"}, executor_ref="builtin:demo", provenance={"kind": "generated"})
 
     def test_registry_exposes_versioned_active_tools(self):
-        spec = ToolRegistry().get("eis_basic_qc")
+        spec = reference_registry().get("eis_basic_qc")
         self.assertEqual(spec.version, "1.0.0")
         self.assertEqual(spec.executor_ref, "builtin:eis_basic_qc")
         self.assertEqual(spec.status, "active")
-        self.assertNotIn("human_decision", ToolRegistry().active())
+        self.assertNotIn("human_decision", reference_registry().active())
 
 
 class GraphContractTests(unittest.TestCase):
@@ -147,7 +148,7 @@ class RuntimeIntegrationTests(unittest.TestCase):
         self.assertEqual(read_summary.json()["user_prompt"], "Run basic EIS quality checks")
 
     def test_route_returns_confirmation_when_no_tool_matches(self):
-        response = TestClient(app).post("/api/route", json={"task": {"task_id": "route-unknown", "user_message": "Perform quantum diffraction tomography", "graph_version": 0, "available_input_types": ["TypedTable"]}})
+        response = TestClient(app).post("/api/route", json={"task": {"task_id": "route-unknown", "user_message": "Perform quantum electron tomography", "graph_version": 0, "available_input_types": ["TypedTable"]}})
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.json()["selected"], [])
         self.assertTrue(response.json()["requires_human_confirmation"])

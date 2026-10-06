@@ -7,15 +7,34 @@ from unittest.mock import patch
 from fastapi.testclient import TestClient
 
 from backend import main
-from backend.analysis_recipes import reference_recipe, reference_tool_definition
+from backend.domain_packages.xrd import reference_recipe
 from backend.contracts import Edge, GraphState, Node
 from backend.workspace_runtime import WorkspaceRuntime
+
+
+def reference_tool_definition():
+    recipe = reference_recipe()
+    return {
+        "tool_id": recipe.recipe_id,
+        "version": "1.0.0",
+        "label": "Reference XRD phase identification",
+        "category": "Analysis",
+        "description": "Test-only hidden evaluation oracle.",
+        "inputs": {"data": "RawData"},
+        "outputs": {"artifact": "Artifact"},
+        "params": {"recipe": recipe.model_dump()},
+        "executor_ref": f"recipe:{recipe.recipe_id}",
+        "status": "active",
+        "provenance": {"kind": "custom", "reviewed_by": "test-oracle"},
+        "generated_code_status": "none",
+    }
 from examples.generate_analysis_fixtures import generate_fixture_set
+from tests.reference_composition import workspace as reference_workspace
 
 
 class ToolRecipeLifecycleTests(unittest.TestCase):
     def test_chat_creates_a_draft_recipe_proposal_without_activating_it(self):
-        recipe = reference_recipe("xrd").model_copy(update={
+        recipe = reference_recipe().model_copy(update={
             "recipe_id": "generated_xrd_candidate", "status": "draft",
         }).model_dump()
         reply = {
@@ -34,7 +53,7 @@ class ToolRecipeLifecycleTests(unittest.TestCase):
         final = {"role": "assistant", "content": "A draft is ready for review."}
 
         with tempfile.TemporaryDirectory() as directory:
-            runtime = WorkspaceRuntime(Path(directory))
+            runtime = reference_workspace(Path(directory))
             with patch.object(main, "workspace", runtime), patch.object(
                 main, "model_completion", side_effect=[reply, final]
             ):
@@ -56,7 +75,7 @@ class ToolRecipeLifecycleTests(unittest.TestCase):
             fixture = next(item for item in manifest["fixtures"] if item["fixture_id"] == "xrd_20260930")
             runtime = WorkspaceRuntime(root)
             settings = runtime.read_settings()
-            settings["custom_nodes"] = {"reference_xrd_phase_identification": reference_tool_definition("xrd")}
+            settings["custom_nodes"] = {"reference_xrd_phase_identification": reference_tool_definition()}
             runtime.write_settings(settings)
             content = (root / "fixtures" / fixture["path"]).read_bytes()
             upload = runtime.import_dataset("xrd.csv", content, "text/csv")
@@ -69,7 +88,7 @@ class ToolRecipeLifecycleTests(unittest.TestCase):
 
             analysis = next(node for node in outcome["state"]["nodes"] if node["id"] == "analysis")
             self.assertEqual(analysis["status"], "completed")
-            self.assertEqual(analysis["output"]["data"]["dominant_phase"], "anatase_tio2")
+        self.assertEqual(analysis["output"]["data"]["best_match"], "anatase_tio2")
 
 
 if __name__ == "__main__":

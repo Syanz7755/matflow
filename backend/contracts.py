@@ -12,8 +12,13 @@ NodeStatus = Literal["ready", "running", "completed", "waiting", "error", "cance
 ToolStatus = Literal["draft", "active", "deprecated", "disabled"]
 RiskLevel = Literal["low", "medium", "high"]
 
+CORE_CONTRACT_VERSION = "1.0"
+
+# Platform Core publishes only domain-neutral types. Scientific measurement types
+# (for example EISData or EISQCReport) are contributed by a loaded Domain Package
+# and must never be re-added here.
 DATA_TYPES: tuple[str, ...] = (
-    "RawData", "TypedTable", "EISData", "EISQCReport", "Plot", "Decision", "Artifact"
+    "RawData", "TypedTable", "Plot", "Decision", "Artifact", "QualityReport"
 )
 
 
@@ -77,12 +82,26 @@ class ToolSpec(BaseModel):
     executor_ref: str | None = None
     risk_level: RiskLevel = "low"
     status: ToolStatus = "active"
+    # Some active tools exist only to support demos or system workflows and
+    # should be executable/visible to validation without being route candidates.
+    agent_selectable: bool = True
     provenance: ToolProvenance = Field(default_factory=ToolProvenance)
     parent_tool_id: str | None = None
     parent_version: str | None = None
     preview_spec: PreviewSpec = Field(default_factory=PreviewSpec)
     generated_code_status: Literal["none", "draft", "reviewed"] = "none"
     abstract: bool = False
+    # Input ports that accept more than one incoming edge, which is what a
+    # generic join or aggregate needs. Every other input port keeps the
+    # single-occupancy rule, and an executor that reads such a port must use the
+    # multi-input accessor rather than the single-input one.
+    multi_input: list[str] = Field(default_factory=list)
+    # Ports in this list must have an upstream edge before the graph is runnable.
+    required_inputs: list[str] = Field(default_factory=list)
+    # Tools whose parameter *keys* are user data instead of a fixed vocabulary —
+    # a column mapping, for example — set this so the validator accepts mapping
+    # keys it did not declare itself.
+    open_params: bool = False
 
     @model_validator(mode="after")
     def validate_lifecycle(self):
@@ -92,6 +111,12 @@ class ToolSpec(BaseModel):
             raise ValueError("An active ToolSpec requires executor_ref")
         if self.provenance.kind == "generated" and self.status == "active" and not self.provenance.reviewed_by:
             raise ValueError("A generated ToolSpec requires review before activation")
+        unknown_multi = sorted(set(self.multi_input) - set(self.inputs))
+        if unknown_multi:
+            raise ValueError(f"multi_input names unknown input port(s): {', '.join(unknown_multi)}")
+        unknown_required = sorted(set(self.required_inputs) - set(self.inputs))
+        if unknown_required:
+            raise ValueError(f"required_inputs names unknown input port(s): {', '.join(unknown_required)}")
         return self
 
 

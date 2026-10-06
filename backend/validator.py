@@ -3,8 +3,18 @@ from __future__ import annotations
 
 import copy
 
+from jsonschema import Draft202012Validator
+
 from .contracts import GraphPatch, GraphState, Node, ReviewPolicy
 from .tool_registry import ToolRegistry
+
+
+class GraphValidationError(ValueError):
+    """A precise graph rejection carrying a stable API error category."""
+
+    def __init__(self, code: str, message: str):
+        super().__init__(message)
+        self.code = code
 
 
 def node_by_id(state: GraphState, node_id: str) -> Node:
@@ -26,19 +36,19 @@ class GraphValidator:
             if operation.op == "add_node":
                 node = operation.node
                 if node is None or node.type not in active:
-                    raise ValueError(f"Unknown registry node: {node.type if node else 'missing'}")
+                    raise GraphValidationError("unknown_tool", f"Unknown registry node: {node.type if node else 'missing'}")
                 if any(existing.id == node.id for existing in scratch.nodes):
                     raise ValueError(f"Duplicate node id: {node.id}")
                 invalid = set(node.params) - set(active[node.type].params)
-                if invalid:
-                    raise ValueError(f"Unsupported parameter(s) for {node.type}: {', '.join(sorted(invalid))}")
+                if invalid and not active[node.type].open_params:
+                    raise GraphValidationError("invalid_parameters", f"Unsupported parameter(s) for {node.type}: {', '.join(sorted(invalid))}")
                 scratch.nodes.append(node)
             elif operation.op == "update_node":
                 node = node_by_id(scratch, operation.node_id or "")
                 allowed = active[node.type].params
                 invalid = set(operation.params or {}) - set(allowed)
-                if invalid:
-                    raise ValueError(f"Unsupported parameter(s) for {node.type}: {', '.join(sorted(invalid))}")
+                if invalid and not active[node.type].open_params:
+                    raise GraphValidationError("invalid_parameters", f"Unsupported parameter(s) for {node.type}: {', '.join(sorted(invalid))}")
                 node.params.update(operation.params or {})
                 changes = operation.changes or {}
                 unsupported = set(changes) - {"label", "position", "review_policy"}
@@ -84,7 +94,7 @@ class GraphValidator:
                     raise ValueError("Replacement node must keep the node id and reference an active tool")
                 allowed = active[replacement.type].params
                 invalid = set(replacement.params) - set(allowed)
-                if invalid:
+                if invalid and not active[replacement.type].open_params:
                     raise ValueError(f"Unsupported replacement parameter(s): {', '.join(sorted(invalid))}")
                 scratch.nodes = [replacement if node.id == node_id else node for node in scratch.nodes]
                 scratch.edges = [edge for edge in scratch.edges if edge.source != node_id and edge.target != node_id]
@@ -101,11 +111,24 @@ class GraphValidator:
                 raise ValueError(f"Duplicate node id: {node.id}")
             node_ids.add(node.id)
             if node.type not in active:
-                raise ValueError(f"Unknown registry node: {node.type}")
-            invalid = set(node.params) - set(active[node.type].params)
-            if invalid:
-                raise ValueError(f"Unsupported parameter(s) for {node.type}: {', '.join(sorted(invalid))}")
-            registry.type_registry.resolve_ports(active[node.type], node)
+                raise GraphValidationError("unknown_tool", f"Unknown registry node: {node.type}")
+            spec = active[node.type]
+            invalid = set(node.params) - set(spec.params)
+            if invalid and not active[node.type].open_params:
+                raise GraphValidationError("invalid_parameters", f"Unsupported parameter(s) for {node.type}: {', '.join(sorted(invalid))}")
+            try:
+                Draft202012Validator.check_schema(spec.parameter_schema)
+            except Exception as exc:
+                raise GraphValidationError("invalid_tool_schema", f"Invalid parameter schema for {node.type}: {exc}") from exc
+            errors = sorted(
+                Draft202012Validator(spec.parameter_schema).iter_errors(node.params),
+                key=lambda error: (tuple(str(part) for part in error.absolute_path), error.message),
+            )
+            if errors:
+                error = errors[0]
+                location = ".".join(str(part) for part in error.absolute_path) or "params"
+                raise GraphValidationError("invalid_parameters", f"Invalid parameters for node {node.id} ({node.type}) at {location}: {error.message}")
+            registry.type_registry.resolve_ports(spec, node)
 
         edge_ids: set[str] = set()
         occupied_inputs: set[tuple[str, str]] = set()
@@ -125,10 +148,16 @@ class GraphValidator:
             if not registry.type_registry.can_flow(source_type, target_type):
                 raise ValueError(f"Type mismatch: {source_type} cannot connect to {target_type}")
             input_key = (edge.target, edge.target_port)
-            if input_key in occupied_inputs:
+            if input_key in occupied_inputs and edge.target_port not in active[target.type].multi_input:
                 raise ValueError(f"Input port already connected: {edge.target}.{edge.target_port}")
             occupied_inputs.add(input_key)
             adjacency[edge.source].append(edge.target)
+
+        for node in state.nodes:
+            spec = active[node.type]
+            for port in spec.required_inputs:
+                if (node.id, port) not in occupied_inputs:
+                    raise GraphValidationError("missing_dependency", f"Missing required dependency for node {node.id} ({node.type}): input '{port}' is not connected")
 
         visiting: set[str] = set()
         visited: set[str] = set()

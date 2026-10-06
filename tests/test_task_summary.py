@@ -4,14 +4,14 @@ from pathlib import Path
 
 from backend.contracts import ExecutionError, ExecutionResult, RouterCandidate, RouterDecision, TaskState
 from backend.task_summary import TaskSummaryService
-from backend.tool_registry import ToolRegistry
+from tests.reference_composition import registry as reference_registry
 
 
 class TaskSummaryTests(unittest.TestCase):
     def setUp(self):
         self.tempdir = tempfile.TemporaryDirectory()
         self.service = TaskSummaryService(log_path=Path(self.tempdir.name) / "task_summaries.jsonl")
-        self.registry = ToolRegistry()
+        self.registry = reference_registry()
         self.task = TaskState(
             task_id="summary-eis",
             user_message="请对这份 EIS 数据做基础质检，并报告异常。",

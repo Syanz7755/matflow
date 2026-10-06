@@ -21,17 +21,23 @@ class RecipeStep(BaseModel):
 
     operation: Literal[
         "select_columns", "finite_filter", "sort", "baseline_subtract",
-        "smooth", "find_peaks", "match_reference_peaks", "assign_peak_ranges",
+        "smooth", "find_peaks", "match_reference_values", "assign_peak_ranges",
     ]
     parameters: dict[str, Any] = Field(default_factory=dict)
 
 
 class AnalysisRecipe(BaseModel):
+    """A declarative signal recipe.
+
+    `domain` is an open, package-owned vocabulary: Core validates the shape, and
+    the loaded Domain Packages own which domain names exist and which recipes,
+    column aliases and reference peak sets belong to them.
+    """
     model_config = ConfigDict(extra="forbid")
 
     recipe_id: str = Field(pattern=r"^[a-z][a-z0-9_]*$")
     version: Literal["1.0"] = "1.0"
-    domain: Literal["xrd", "ftir"]
+    domain: str = Field(pattern=r"^[a-z][a-z0-9_]{0,39}$")
     inputs: dict[str, list[str]]
     steps: list[RecipeStep] = Field(min_length=1)
     status: Literal["draft", "reviewed"] = "draft"
@@ -95,9 +101,9 @@ class RecipeEngine:
                     raise ValueError("No peaks satisfy the configured constraints")
                 result["peaks"] = peaks
                 result["main_peak"] = peaks[0]["x"]
-            elif step.operation == "match_reference_peaks":
+            elif step.operation == "match_reference_values":
                 if not peaks:
-                    raise ValueError("match_reference_peaks requires find_peaks first")
+                    raise ValueError("match_reference_values requires find_peaks first")
                 tolerance = float(params.get("tolerance", 0.25))
                 references = params.get("references") or {}
                 scores = {
@@ -105,9 +111,9 @@ class RecipeEngine:
                     for label, targets in references.items()
                 }
                 if not scores:
-                    raise ValueError("match_reference_peaks requires references")
+                    raise ValueError("match_reference_values requires references")
                 winner = max(scores, key=scores.get)
-                result.update({"dominant_phase": winner, "matched_peak_count": scores[winner], "phase_scores": scores})
+                result.update({"best_match": winner, "matched_count": scores[winner], "match_scores": scores})
             elif step.operation == "assign_peak_ranges":
                 if not peaks:
                     raise ValueError("assign_peak_ranges requires find_peaks first")
@@ -167,101 +173,13 @@ def recipe_operation_contracts() -> dict[str, Any]:
         "baseline_subtract": {"quantile": "number from 0 to 0.5"},
         "smooth": {"window_points": "odd integer from 1 to 101"},
         "find_peaks": {"min_height": "number", "min_distance_x": "number in x-axis units", "max_peaks": "integer 1..100"},
-        "match_reference_peaks": {
+        "match_reference_values": {
             "tolerance": "number in x-axis units",
             "references": "non-empty object mapping result label to an embedded numeric peak list; external database names are not executable",
         },
         "assign_peak_ranges": {
             "ranges": "array of {min:number,max:number,label:string}; each range is matched against detected peaks",
         },
-    }
-
-
-def reference_recipe(domain: str) -> AnalysisRecipe:
-    """Return the hidden oracle recipe.  Callers decide whether its ToolSpec is published."""
-    common = [
-        {"operation": "select_columns"},
-        {"operation": "finite_filter"},
-        {"operation": "sort", "parameters": {"ascending": True}},
-        {"operation": "baseline_subtract", "parameters": {"quantile": 0.08}},
-    ]
-    if domain == "xrd":
-        return AnalysisRecipe.model_validate({
-            "recipe_id": "reference_xrd_phase_identification",
-            "domain": "xrd",
-            "status": "reviewed",
-            "inputs": {"x": ["two_theta_deg", "2theta", "two theta"], "y": ["intensity_counts", "intensity"]},
-            "steps": [
-                *common,
-                {"operation": "smooth", "parameters": {"window_points": 7}},
-                {"operation": "find_peaks", "parameters": {"min_height": 35, "min_distance_x": 1.0, "max_peaks": 10}},
-                {"operation": "match_reference_peaks", "parameters": {
-                    "tolerance": 0.28,
-                    "references": {"anatase_tio2": [25.3, 37.8, 48.0, 53.9, 55.1, 62.7]},
-                }},
-            ],
-        })
-    if domain == "ftir":
-        return AnalysisRecipe.model_validate({
-            "recipe_id": "reference_ftir_functional_group_assignment",
-            "domain": "ftir",
-            "status": "reviewed",
-            "inputs": {"x": ["wavenumber_cm-1", "wavenumber", "cm-1"], "y": ["absorbance_au", "absorbance"]},
-            "steps": [
-                *common,
-                {"operation": "smooth", "parameters": {"window_points": 9}},
-                {"operation": "find_peaks", "parameters": {"min_height": 0.08, "min_distance_x": 80, "max_peaks": 8}},
-                {"operation": "assign_peak_ranges", "parameters": {"ranges": [
-                    {"min": 1680, "max": 1740, "label": "carbonyl_candidate"},
-                    {"min": 2850, "max": 3000, "label": "aliphatic_ch_candidate"},
-                    {"min": 1400, "max": 1500, "label": "bending_mode_candidate"},
-                ]}},
-            ],
-        })
-    raise ValueError(f"No reference recipe for domain: {domain}")
-
-
-def peak_extraction_recipe(domain: str) -> AnalysisRecipe:
-    """Return a conservative peak-only recipe when no reviewed reference library exists."""
-    if domain != "xrd":
-        raise ValueError(f"No peak-only recipe for domain: {domain}")
-    return AnalysisRecipe.model_validate({
-        "recipe_id": "reference_xrd_peak_extraction",
-        "domain": "xrd",
-        "status": "reviewed",
-        "inputs": {"x": ["two_theta_deg", "2theta", "two theta"], "y": ["intensity_counts", "intensity"]},
-        "steps": [
-            {"operation": "select_columns"},
-            {"operation": "finite_filter"},
-            {"operation": "sort", "parameters": {"ascending": True}},
-            {"operation": "baseline_subtract", "parameters": {"quantile": 0.08}},
-            {"operation": "smooth", "parameters": {"window_points": 9}},
-            {"operation": "find_peaks", "parameters": {"min_height": 25, "min_distance_x": 0.35, "max_peaks": 20}},
-        ],
-    })
-
-
-def reference_tool_definition(domain: str) -> dict[str, Any]:
-    """Build a registry definition for tests that explicitly publish an oracle."""
-    recipe = reference_recipe(domain)
-    labels = {
-        "xrd": ("Reference XRD phase identification", "Find diffraction peaks and match a declared reference peak set."),
-        "ftir": ("Reference FTIR assignment", "Find infrared absorption peaks and assign conservative range-based candidates."),
-    }
-    label, description = labels[domain]
-    return {
-        "tool_id": recipe.recipe_id,
-        "version": "1.0.0",
-        "label": label,
-        "category": "Analysis",
-        "description": description,
-        "inputs": {"data": "RawData"},
-        "outputs": {"artifact": "Artifact"},
-        "params": {"recipe": recipe.model_dump()},
-        "executor_ref": f"recipe:{recipe.recipe_id}",
-        "status": "active",
-        "provenance": {"kind": "custom", "reviewed_by": "test-oracle"},
-        "generated_code_status": "none",
     }
 
 
@@ -284,7 +202,7 @@ class RecipeEvaluator:
         for path in fixtures:
             try:
                 if path.suffix.lower() == ".xy":
-                    frame = pd.read_csv(path, sep=r"\s+", header=None, names=["two_theta_deg", "intensity_counts"])
+                    frame = pd.read_csv(path, sep=r"\s+", header=None, names=["x", "y"])
                 else:
                     frame = pd.read_csv(path)
                 result = self.engine.execute(parsed, frame)
@@ -336,10 +254,10 @@ class RecipeEvaluator:
             tolerance = float(criteria.get("main_peak_tolerance", 0))
             if actual is None or abs(float(actual) - float(criteria["main_peak"])) > tolerance:
                 failures.append(f"main_peak {actual!r} is outside {criteria['main_peak']} ± {tolerance}")
-        if "dominant_phase" in criteria and result.get("dominant_phase") != criteria["dominant_phase"]:
-            failures.append(f"dominant_phase {result.get('dominant_phase')!r} != {criteria['dominant_phase']!r}")
-        if "minimum_matched_peaks" in criteria and int(result.get("matched_peak_count", 0)) < int(criteria["minimum_matched_peaks"]):
-            failures.append(f"matched_peak_count {result.get('matched_peak_count', 0)} is below {criteria['minimum_matched_peaks']}")
+        if "expected_label" in criteria and result.get("best_match") != criteria["expected_label"]:
+            failures.append(f"best_match {result.get('best_match')!r} != {criteria['expected_label']!r}")
+        if "minimum_matches" in criteria and int(result.get("matched_count", 0)) < int(criteria["minimum_matches"]):
+            failures.append(f"matched_count {result.get('matched_count', 0)} is below {criteria['minimum_matches']}")
         if "required_assignment" in criteria:
             labels = {item.get("label") for item in result.get("assignments", [])}
             if criteria["required_assignment"] not in labels:

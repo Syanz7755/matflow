@@ -5,8 +5,8 @@ from pathlib import Path
 
 from backend.contracts import Edge, GraphState, Node
 from backend.preview import build_preview
-from backend.tool_registry import ToolRegistry
 from backend.workspace_runtime import WorkspaceRuntime
+from tests.reference_composition import registry as reference_registry
 
 
 def safe_revision(messages, tools, **kwargs):
@@ -70,7 +70,7 @@ class NodeEvolutionTests(unittest.TestCase):
             self.assertEqual(continued["state"]["nodes"][0]["status"], "completed")
 
     def test_preview_bounds_untrusted_json(self):
-        spec = ToolRegistry().get("eis_basic_qc")
+        spec = reference_registry().get("eis_basic_qc")
         preview = build_preview({"kind": "EISQCReport", "values": list(range(100))}, spec)
         self.assertEqual(preview["kind"], "json_tree")
         self.assertLess(len(preview["data"]["values"]), 100)

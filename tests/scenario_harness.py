@@ -16,7 +16,7 @@ from typing import Any, Literal
 from pydantic import BaseModel, ConfigDict, Field, ValidationError
 
 from backend.contracts import GraphState
-from backend.workspace_runtime import WorkspaceRuntime
+from tests.reference_composition import workspace as reference_workspace
 
 
 class ServiceAccess(BaseModel):
@@ -168,7 +168,7 @@ class ConfiguredScenarioRunner:
     def _run_workflow(self, case: ScenarioCase) -> dict[str, Any]:
         workflow = case.config.workflow
         runtime_root = self.run_root / re.sub(r"[^a-zA-Z0-9_.-]", "_", case.config.case_id)
-        runtime = WorkspaceRuntime(runtime_root)
+        runtime = reference_workspace(runtime_root)
         active = runtime.registry().active()
         missing = [tool for tool in workflow.get("required_tools", []) if tool not in active]
         if missing:

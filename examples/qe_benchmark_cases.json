@@ -1,0 +1,14 @@
+{
+  "schema_version": "1.0",
+  "scope": "Deterministic QE tool/workflow contract benchmark; execution success means archived-output replay, not a new Slurm calculation.",
+  "cases": [
+    {"id": "qe-01-input", "prompt": "Generate QE pw input for pristine MgO SCF with a 3x3x3 k-point mesh.", "input_types": ["CrystalStructure"], "expected_tool": "qe_pw_input"},
+    {"id": "qe-02-structure", "prompt": "Validate the crystal structure and pseudopotential mapping for MgO SCF.", "input_types": [], "expected_tool": "qe_structure"},
+    {"id": "qe-03-parse", "prompt": "Parse Quantum ESPRESSO output and return the final energy for MgO SCF.", "input_types": ["QEInput", "QEStdout"], "expected_tool": "qe_parse_output"},
+    {"id": "qe-04-structure", "prompt": "Validate a crystal structure and its atomic coordinates for a pristine MgO SCF calculation.", "input_types": [], "expected_tool": "qe_structure"},
+    {"id": "qe-05-convergence", "prompt": "Check QE SCF convergence from the total energy and output for MgO.", "input_types": ["QEInput", "QEStdout"], "expected_tool": "qe_parse_output"},
+    {"id": "qe-06-structure", "prompt": "Build a crystal structure node for MgO before QE SCF input generation.", "input_types": [], "expected_tool": "qe_structure"},
+    {"id": "qe-07-input", "prompt": "Generate QE pw input for MgO SCF using explicit cutoff and k-point parameters.", "input_types": ["CrystalStructure"], "expected_tool": "qe_pw_input"},
+    {"id": "qe-08-result", "prompt": "Extract the Fermi energy and convergence from a completed Quantum ESPRESSO result for pristine MgO SCF.", "input_types": ["QEInput", "QEStdout"], "expected_tool": "qe_parse_output"}
+  ]
+}
