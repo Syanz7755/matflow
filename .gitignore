@@ -43,3 +43,7 @@ data/audit/
 *.log
 .DS_Store
 Thumbs.db
+
+# Local working notes: handoff snapshots stay on the machine that wrote them and are
+# never committed. The long-lived maintainer state lives in docs/project-memory/.
+**/_handoff/
