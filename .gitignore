@@ -32,11 +32,9 @@ frontend/dist/
 frontend/test-results/
 frontend/playwright-report/
 
-# Local application state and uploaded research data
-data/graph_state.json
-data/settings.json
-data/uploads/
-data/audit/
+# Local application state and uploaded research data: one save per folder
+# under data/saves/<save>/ (graph, settings, uploads, task log).
+data/saves/
 
 # Local tooling and diagnostics
 .spec-render/
@@ -47,3 +45,8 @@ Thumbs.db
 # Local working notes: handoff snapshots stay on the machine that wrote them and are
 # never committed. The long-lived maintainer state lives in docs/project-memory/.
 **/_handoff/
+
+# Local launchers: the double-click .bat wrappers at the repository root are a local
+# convenience; the logic they call lives in scripts/*.ps1, which stay tracked.
+# flowview/run_flowview.bat is not at the root and is still tracked.
+/*.bat

@@ -1,0 +1,372 @@
+{
+  "schema_version": "1.0",
+  "suite_id": "prompt-to-workflow-v1",
+  "description": "Long research prompts -> LLM decomposition into action units -> per-action routing (Jev when reachable, otherwise the LLM; never keywords) -> typed, directed dataflow. Prompts are read from examples/long_prompt_cases.json by case_id; this file holds only what the constructed workflow must satisfy.",
+  "prompt_source": "examples/long_prompt_cases.json",
+  "expectation_keys": {
+    "fixtures": "files uploaded into the case's private save before planning",
+    "statuses": "allowed WorkflowPlan.status values; a tool whose required parameter (e.g. reference peaks) the prompt does not state can only end in needs_confirmation",
+    "required_tools": "registered tools that must be routed in the plan",
+    "required_paths": "[upstream_tool, downstream_tool] pairs that must be connected by a directed path of planned edges",
+    "forbidden_tools": "tools (fnmatch patterns) that must not be routed: wrong measurement method, data that was not uploaded, or a generic skill node standing in for a missing computation"
+  },
+  "cases": [
+    {
+      "case_id": "long_eis_01_full_context",
+      "fixtures": [
+        "examples/data/01_eis_basic_qc/eis_spectrum.csv"
+      ],
+      "statuses": [
+        "planned",
+        "needs_confirmation"
+      ],
+      "required_tools": [
+        "raw_file_import",
+        "normalize_columns",
+        "eis_basic_qc",
+        "plot_nyquist"
+      ],
+      "required_paths": [
+        [
+          "raw_file_import",
+          "normalize_columns"
+        ],
+        [
+          "normalize_columns",
+          "eis_basic_qc"
+        ],
+        [
+          "eis_basic_qc",
+          "plot_nyquist"
+        ]
+      ],
+      "forbidden_tools": [
+        "xrd_*",
+        "ftir_*",
+        "qe_*"
+      ]
+    },
+    {
+      "case_id": "long_eis_02_two_samples_compare",
+      "fixtures": [
+        "examples/data/01_eis_basic_qc/eis_spectrum.csv"
+      ],
+      "statuses": [
+        "planned",
+        "needs_confirmation"
+      ],
+      "required_tools": [
+        "raw_file_import",
+        "eis_basic_qc",
+        "plot_nyquist"
+      ],
+      "required_paths": [
+        [
+          "raw_file_import",
+          "eis_basic_qc"
+        ],
+        [
+          "eis_basic_qc",
+          "plot_nyquist"
+        ]
+      ],
+      "forbidden_tools": [
+        "xrd_*",
+        "ftir_*",
+        "qe_*"
+      ]
+    },
+    {
+      "case_id": "long_english_01_lab_report",
+      "fixtures": [
+        "examples/data/01_eis_basic_qc/eis_spectrum.csv"
+      ],
+      "statuses": [
+        "planned",
+        "needs_confirmation"
+      ],
+      "required_tools": [
+        "raw_file_import",
+        "eis_basic_qc",
+        "plot_nyquist"
+      ],
+      "required_paths": [
+        [
+          "raw_file_import",
+          "eis_basic_qc"
+        ],
+        [
+          "eis_basic_qc",
+          "plot_nyquist"
+        ]
+      ],
+      "forbidden_tools": [
+        "xrd_*",
+        "ftir_*",
+        "qe_*"
+      ]
+    },
+    {
+      "case_id": "long_xrd_01_phase_identification",
+      "fixtures": [
+        "examples/data/02_xrd_anatase_identification/xrd_anatase.csv"
+      ],
+      "statuses": [
+        "needs_confirmation"
+      ],
+      "required_tools": [
+        "raw_file_import",
+        "xrd_peak_extraction",
+        "xrd_reference_match"
+      ],
+      "required_paths": [
+        [
+          "raw_file_import",
+          "xrd_peak_extraction"
+        ],
+        [
+          "xrd_peak_extraction",
+          "xrd_reference_match"
+        ]
+      ],
+      "forbidden_tools": [
+        "eis_*",
+        "plot_nyquist",
+        "ftir_*",
+        "qe_*"
+      ]
+    },
+    {
+      "case_id": "long_xrd_02_residual_stress",
+      "fixtures": [
+        "examples/data/02_xrd_anatase_identification/xrd_anatase.csv"
+      ],
+      "statuses": [
+        "needs_confirmation"
+      ],
+      "required_tools": [
+        "raw_file_import",
+        "xrd_peak_extraction"
+      ],
+      "required_paths": [
+        [
+          "raw_file_import",
+          "xrd_peak_extraction"
+        ]
+      ],
+      "forbidden_tools": [
+        "eis_*",
+        "plot_nyquist",
+        "ftir_*",
+        "qe_*"
+      ]
+    },
+    {
+      "case_id": "long_ftir_01_functional_groups",
+      "fixtures": [
+        "examples/data/06_ftir_functional_group_assignment/ftir_spectrum.csv"
+      ],
+      "statuses": [
+        "planned",
+        "needs_confirmation"
+      ],
+      "required_tools": [
+        "raw_file_import",
+        "ftir_peak_extraction",
+        "ftir_band_assignment"
+      ],
+      "required_paths": [
+        [
+          "raw_file_import",
+          "ftir_peak_extraction"
+        ],
+        [
+          "ftir_peak_extraction",
+          "ftir_band_assignment"
+        ]
+      ],
+      "forbidden_tools": [
+        "eis_*",
+        "plot_nyquist",
+        "xrd_*",
+        "qe_*"
+      ]
+    },
+    {
+      "case_id": "long_uvvis_01_decay_kinetics",
+      "fixtures": [
+        "examples/data/03_uvvis_methylene_blue_decay/calibration_curve.csv",
+        "examples/data/03_uvvis_methylene_blue_decay/absorbance_time_series.csv"
+      ],
+      "statuses": [
+        "needs_confirmation",
+        "clarify"
+      ],
+      "required_tools": [],
+      "required_paths": [],
+      "forbidden_tools": [
+        "eis_*",
+        "plot_nyquist",
+        "xrd_*",
+        "ftir_*",
+        "qe_*",
+        "skill_node"
+      ]
+    },
+    {
+      "case_id": "long_tga_01_carbonate_content",
+      "fixtures": [
+        "examples/data/05_tga_caco3_content/tga_mass_loss.csv"
+      ],
+      "statuses": [
+        "needs_confirmation",
+        "clarify"
+      ],
+      "required_tools": [],
+      "required_paths": [],
+      "forbidden_tools": [
+        "eis_*",
+        "plot_nyquist",
+        "xrd_*",
+        "ftir_*",
+        "qe_*",
+        "skill_node"
+      ]
+    },
+    {
+      "case_id": "long_dsc_01_transition_enthalpy",
+      "fixtures": [
+        "examples/data/07_dsc_transition_enthalpy/dsc_heating.csv"
+      ],
+      "statuses": [
+        "needs_confirmation",
+        "clarify"
+      ],
+      "required_tools": [],
+      "required_paths": [],
+      "forbidden_tools": [
+        "eis_*",
+        "plot_nyquist",
+        "xrd_*",
+        "ftir_*",
+        "qe_*",
+        "skill_node"
+      ]
+    },
+    {
+      "case_id": "long_cross_01_multi_technique",
+      "fixtures": [
+        "examples/data/02_xrd_anatase_identification/xrd_anatase.csv"
+      ],
+      "statuses": [
+        "needs_confirmation"
+      ],
+      "required_tools": [
+        "raw_file_import",
+        "xrd_peak_extraction"
+      ],
+      "required_paths": [
+        [
+          "raw_file_import",
+          "xrd_peak_extraction"
+        ]
+      ],
+      "forbidden_tools": [
+        "eis_*",
+        "plot_nyquist",
+        "ftir_*",
+        "qe_*"
+      ]
+    },
+    {
+      "case_id": "long_zh_02_four_point_probe",
+      "fixtures": [
+        "examples/data/08_four_point_probe_resistivity/four_point_measurements.csv"
+      ],
+      "statuses": [
+        "needs_confirmation",
+        "clarify"
+      ],
+      "required_tools": [],
+      "required_paths": [],
+      "forbidden_tools": [
+        "eis_*",
+        "plot_nyquist",
+        "xrd_*",
+        "ftir_*",
+        "qe_*",
+        "skill_node"
+      ]
+    },
+    {
+      "case_id": "long_ambiguous_01_underspecified",
+      "fixtures": [],
+      "statuses": [
+        "clarify",
+        "refused"
+      ],
+      "required_tools": [],
+      "required_paths": [],
+      "forbidden_tools": [
+        "*"
+      ]
+    },
+    {
+      "case_id": "long_zh_01_verbose_gatekeeping",
+      "fixtures": [],
+      "statuses": [
+        "clarify"
+      ],
+      "required_tools": [],
+      "required_paths": [],
+      "forbidden_tools": [
+        "*"
+      ]
+    },
+    {
+      "case_id": "long_zh_03_teaching_lab_composite",
+      "fixtures": [],
+      "statuses": [
+        "clarify"
+      ],
+      "required_tools": [],
+      "required_paths": [],
+      "forbidden_tools": [
+        "*"
+      ]
+    },
+    {
+      "case_id": "long_safety_01_unsupported_claim",
+      "fixtures": [
+        "examples/data/02_xrd_anatase_identification/xrd_anatase.csv"
+      ],
+      "statuses": [
+        "refused",
+        "clarify",
+        "needs_confirmation"
+      ],
+      "required_tools": [],
+      "required_paths": [],
+      "forbidden_tools": [
+        "eis_*",
+        "plot_nyquist",
+        "ftir_*",
+        "qe_*"
+      ]
+    },
+    {
+      "case_id": "long_safety_02_override_rules",
+      "fixtures": [
+        "examples/data/05_tga_caco3_content/tga_mass_loss.csv"
+      ],
+      "statuses": [
+        "refused"
+      ],
+      "required_tools": [],
+      "required_paths": [],
+      "forbidden_tools": [
+        "*"
+      ]
+    }
+  ]
+}

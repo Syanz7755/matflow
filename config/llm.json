@@ -1,0 +1,15 @@
+{
+  "version": 1,
+  "gateway": {
+    "label": "Local LiteLLM gateway",
+    "host": "127.0.0.1",
+    "port": 4078,
+    "api_key_env": "LITELLM_DEFAULT_API_KEY",
+    "litellm_config": "config/litellm.yaml",
+    "startup_timeout_seconds": 60
+  },
+  "models": ["deepseek-chat", "deepseek-reasoner", "minimax", "qwen"],
+  "agent_model": "qwen",
+  "planner_model": "deepseek-chat",
+  "request_timeout_seconds": 120
+}
