@@ -1,0 +1,60 @@
+{
+  "schema_version": 1,
+  "demo_id": "qe-mgo",
+  "title": "Pristine MgO QE SCF historical replay",
+  "case_selection": {
+    "mode": "explicit_pinned_case",
+    "prompt": "For pristine MgO SCF, generate QE input and report convergence and total energy.",
+    "llm_planning": false,
+    "keyword_routing": false
+  },
+  "execution": {
+    "mode": "historical_output_replay",
+    "offline": true,
+    "llm_called": false,
+    "hpc_submitted": false,
+    "ok": true,
+    "stopped": false
+  },
+  "workflow": {
+    "workspace_path": "data/saves/default",
+    "graph_state": "data/saves/default/graph_state.json",
+    "version": 1,
+    "revision": 10,
+    "node_count": 4,
+    "edge_count": 3,
+    "node_statuses": {
+      "qe-demo-structure": "completed",
+      "qe-demo-input": "completed",
+      "qe-demo-output": "completed",
+      "qe-demo-result": "completed"
+    }
+  },
+  "result": {
+    "atom_count": 64,
+    "convergence": "converged",
+    "iterations": 14,
+    "energy": {
+      "value": -2417.17683284,
+      "unit": "Ry"
+    },
+    "provenance": "historical_output_replay"
+  },
+  "sources": [
+    {
+      "role": "qe_input",
+      "packaged_path": "backend/domain_packages/qe_demo_fixtures/qe_mgo_scf.in",
+      "sha256": "96f22e7eec3b8870e21d78b10a8c6e4b3c1d787c702f95a5a9e0b53338cce57e"
+    },
+    {
+      "role": "qe_stdout",
+      "packaged_path": "backend/domain_packages/qe_demo_fixtures/qe_mgo_scf.log",
+      "sha256": "14b530103ab636608f56975349813749ec804acbfef5b860f67038444974c591"
+    }
+  ],
+  "limitations": [
+    "This is a replay of one packaged historical QE output, not a new QE calculation.",
+    "No pseudopotential files are bundled or validated by this replay.",
+    "The fixed case does not establish transferability to other structures, settings, or materials."
+  ]
+}
