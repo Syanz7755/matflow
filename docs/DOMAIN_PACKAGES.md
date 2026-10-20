@@ -132,7 +132,7 @@ workflows while excluding them from natural-language Router candidates.
 ## 6. How to verify
 
 ```powershell
-Set-Location D:\Projects\matflow
+Set-Location <repo>
 .\.venv\Scripts\python.exe -m unittest discover -v
 .\.venv\Scripts\python.exe -m unittest tests.test_domain_packages tests.test_generic_control_nodes -v
 ```

@@ -5,7 +5,7 @@
 Independent adversarial verification, round 5. Verifier: `verifier2`. I did not write any of the code
 under test. Date of run: see the artefact timestamps in `.tmp/verifier2/`.
 
-Environment: Windows, `D:\Projects\matflow`, `.\.venv\Scripts\python.exe` = CPython 3.12.13,
+Environment: Windows, `<repo>`, `.\.venv\Scripts\python.exe` = CPython 3.12.13,
 `flowview 0.1.0`, backend composed from the working tree. Every harness, fixture and output file I
 created lives under `.tmp/verifier2/`; the only tracked file I wrote is this one.
 
@@ -42,7 +42,7 @@ created lives under `.tmp/verifier2/`; the only tracked file I wrote is this one
 Repro (real CLI, argv; the boundary is exact):
 
 ```powershell
-cd D:\Projects\matflow
+cd <repo>
 $p = "eis qc " + ("A" * 3993)   # 4000 characters
 .\.venv\Scripts\python.exe -m flowview flow --prompt $p --format text   # exit 0
 $p = "eis qc " + ("A" * 3994)   # 4001 characters
@@ -371,7 +371,7 @@ Pasteable ASCII repro (no CJK, no encoding traps). Both prompts tokenise to the 
 which matches no registered tool:
 
 ```powershell
-cd D:\Projects\matflow
+cd <repo>
 $a = "zzz " * 700    # 2800 characters
 $b = "zzz " * 1200   # 4800 characters
 .\.venv\Scripts\python.exe -m flowview flow --prompt $a --format text --no-color
@@ -634,7 +634,7 @@ regression suites. Same rules: this file is the only one I wrote; everything els
 ### P1-R3-1 — the dropped-token path degrades the decision, and `break` throws away fitting tokens
 
 ```powershell
-cd D:\Projects\matflow
+cd <repo>
 $p1 = ("b" * 4000) + " eis qc"                 # 4007 chars, tokens {b*4000, eis, qc}
 $p2 = " ".join("tok{0:d4}" -f $_ for $_ in 0..499) + " eis qc"   # 4006 chars, 502 distinct tokens
 ```
@@ -815,7 +815,7 @@ suites. Same rules: this file is the only one I wrote.
 ### P1-R4-1 — the `("b"*4000)+" eis qc"` claim does not reproduce
 
 ```powershell
-cd D:\Projects\matflow
+cd <repo>
 $p = ("b" * 4000) + " eis qc"     # 4007 chars
 .\.venv\Scripts\python.exe -m flowview flow --prompt $p --format json
 ```

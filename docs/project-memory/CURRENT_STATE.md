@@ -1,5 +1,28 @@
 # MatFlow Current State
 
+## Demo acceptance update — 2026-10-20
+
+The 22:00 demo acceptance was resumed at 21:13:54 Beijing time, after the 18:00/20:00/21:00/21:30
+gates had passed, and closed against actual evidence. **It is not fully met**: no freeze tag was
+created. The candidate tree is committed and pushed on `acceptance/2026-10-20-demo`
+(head `2fe225d`, preceded by the reproducibility fix `3ae3ab2`), and the frontend repository is now
+public at https://github.com/Syanz7755/matflow-frontend with default branch `main`.
+Evidence: [acceptance report](../acceptance/2026-10-20/REPORT.zhcn.md),
+[task assignment](../acceptance/2026-10-20/TASK_ASSIGNMENT.zhcn.md) and the four
+[screenshots](../images/README.md).
+
+Verified on Windows: full suite `498 passed, 9 skipped, 393 subtests`; QE MgO replay 3/3 fresh-archive
+runs matching the frozen values; a genuine fresh clone of the public remote with an independent
+`uv sync` environment (demo exit 0, `tests/test_demo.py` 5 passed); review-gate pause/continue
+(7 focused tests) plus the review-gate screenshot. A real reproducibility defect was fixed: line-ending
+normalization changed the frozen QE fixture hash on a fresh clone, so `.gitattributes` now marks the
+fixtures and the recorded A1 run `-text`.
+
+Still open: Ubuntu fresh-clone acceptance, Chinese live model routing, the 10-prompt-per-model online
+matrix, the live model-decision/rule-check view and a recording, and the backend default branch has
+not been fast-forwarded to the candidate. The repository's maintainer absolute paths were sanitized
+out of tracked files on this pass.
+
 ## Portfolio update — 2026-10-19
 
 The current acceptance evidence is [Project status](../PROJECT_STATUS.md),
@@ -21,8 +44,8 @@ MatFlow has been split into two repositories:
 
 | Repository | Current Responsibilities | Must Not Be Responsible For |
 | --- | --- | --- |
-| `D:\Projects\matflow` | Authoritative state, types, Tool Registry, GraphPatch validation, routing, execution, review, audit, uploads, and HTTP API | WebUI, MCP protocol adaptation, or client-side business state |
-| `D:\Projects\matflow-frontend` | React/Vite WebUI, shared API client, MCP bridge, and DSH integration | Directly modifying backend files or duplicating backend business rules |
+| `<repo>` | Authoritative state, types, Tool Registry, GraphPatch validation, routing, execution, review, audit, uploads, and HTTP API | WebUI, MCP protocol adaptation, or client-side business state |
+| `<frontend-repo>` | React/Vite WebUI, shared API client, MCP bridge, and DSH integration | Directly modifying backend files or duplicating backend business rules |
 
 The repositories communicate through the `matflow-http` v1 contract. The backend does not know whether a request originated from WebUI, MCP, DSH, or another client.
 
@@ -80,7 +103,7 @@ The default E2E port 5173 was occupied by another process at the time. All tests
 
 ### 2026-10-02 P0 baseline freeze (backend)
 
-Command: `.\.venv\Scripts\python.exe -m unittest discover` from `D:\Projects\matflow`.
+Command: `.\.venv\Scripts\python.exe -m unittest discover` from `<repo>`.
 
 First reproduction did **not** match the table above: `Ran 100 tests` with **2 failures** in `tests/test_model_service_startup.py`, both caused by a real defect rather than an environment difference. `scripts/start_model_services.ps1` used `Invoke-WebRequest`, whose progress rendering throws `HostException: Win32 internal error "Access is denied" 0x5 occurred while reading the console output buffer` whenever the script runs with captured or redirected output (tests, CI, wrapper launchers). `Test-Healthy` swallowed that exception as "unhealthy", so the authenticated readiness probe against `/v1/models` was never sent and startup always reported "Process exited before its health check passed".
 

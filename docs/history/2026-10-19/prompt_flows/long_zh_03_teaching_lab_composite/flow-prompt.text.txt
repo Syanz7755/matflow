@@ -1,6 +1,6 @@
 MatFlow routing preview (read-only)
 ────────────────────────────────────────────────────────────────────────
-source     : dry-route:D:\Projects\matflow
+source     : dry-route:<repo>
 graph      : none in this document
 phases     : 3
 issues     : 0 error(s), 1 warning(s)
@@ -89,7 +89,7 @@ Issues (2)
 │          │                             │ overwhelmingly CJK:        │                            │
 │          │                             │ lexical matching sees      │                            │
 │          │                             │ almost none of it          │                            │
-│ info     │ route.dry_run               │ This route was computed    │ dry-route:D:\Projects\matf │
+│ info     │ route.dry_run               │ This route was computed    │ dry-route:<projects-root>\matf │
 │          │                             │ read-only: nothing was     │ low                        │
 │          │                             │ persisted to the task      │                            │
 │          │                             │ summary log.               │                            │

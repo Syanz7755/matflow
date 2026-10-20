@@ -1,6 +1,6 @@
 MatFlow routing preview (read-only)
 ────────────────────────────────────────────────────────────────────────
-source     : dry-route:D:\Projects\matflow
+source     : dry-route:<repo>
 graph      : none in this document
 phases     : 3
 issues     : 0 error(s), 0 warning(s)
@@ -89,7 +89,7 @@ Issues (1)
 ┌──────────┬───────────────┬────────────────────────────────┬───────────────────────────────┬──────┐
 │ Severity │ Code          │ Message                        │ Where                         │ Hint │
 ├──────────┼───────────────┼────────────────────────────────┼───────────────────────────────┼──────┤
-│ info     │ route.dry_run │ This route was computed        │ dry-route:D:\Projects\matflow │ -    │
+│ info     │ route.dry_run │ This route was computed        │ dry-route:<repo> │ -    │
 │          │               │ read-only: nothing was         │                               │      │
 │          │               │ persisted to the task summary  │                               │      │
 │          │               │ log.                           │                               │      │

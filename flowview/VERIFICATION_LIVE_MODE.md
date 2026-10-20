@@ -16,7 +16,7 @@ The verifier's report follows verbatim.
 
 # verifier3 — adversarial verification of FlowView live mode (`--http`) + JSON `--out` fix
 
-Repo: `D:\Projects\matflow` · interpreter `.\.venv\Scripts\python.exe` · all scratch artifacts in `.tmp/verifier3/`.
+Repo: `<repo>` · interpreter `.\.venv\Scripts\python.exe` · all scratch artifacts in `.tmp/verifier3/`.
 
 ## Verdict per claim
 

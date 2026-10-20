@@ -11,7 +11,7 @@
 | 项 | 值 |
 |---|---|
 | 操作系统 | Windows 11 x64（本机验收环境） |
-| Python | 3.12.13（`D:\Projects\matflow\.venv`，uv 管理） |
+| Python | 3.12.13（`<repo>\.venv`，uv 管理） |
 | Node / npm | v26.1.0 / 11.13.0 |
 | 后端提交 | `3ae3ab2`（分支 `acceptance/2026-10-20-demo`，已推送到公开远端） |
 | 后端远端 | https://github.com/Syanz7755/matflow |
@@ -25,15 +25,15 @@
 
 | 项目 | 计划要求 | 实际结果 | 判定 |
 |---|---|---|---|
-| 从零安装 | 从 GitHub 克隆配套版本；独立环境；不复制原目录环境/数据 | 在项目外 `D:\Projects\.acceptance\2026-10-20\matflow-clone2` 从公开远端 `--depth 1` 全新克隆 `3ae3ab2`，`uv sync` 建独立环境；`uv run matflow demo qe-mgo` 退出码 0；`uv run pytest tests/test_demo.py -q` → `5 passed` | **Windows 通过**；Linux 未执行 |
+| 从零安装 | 从 GitHub 克隆配套版本；独立环境；不复制原目录环境/数据 | 在项目外 `<acceptance-root>\matflow-clone2` 从公开远端 `--depth 1` 全新克隆 `3ae3ab2`，`uv sync` 建独立环境；`uv run matflow demo qe-mgo` 退出码 0；`uv run pytest tests/test_demo.py -q` → `5 passed` | **Windows 通过**；Linux 未执行 |
 | 原测试 | 两个平台全部原测试；逐项说明跳过；原有两项 QE 回放测试实际通过 | Windows 本机全量：`498 passed, 9 skipped, 393 subtests passed`（97.77 s）。跳过项为 9 项设计内在线/符号链接用例（4 项需显式授权的 Jev/LLM 在线测试、3 项 FlowView 符号链接用例、2 项其它在线场景），未删除、未弱化。QE 聚焦：`21 passed`（`tests/test_demo.py tests/test_qe_package.py tests/test_cli.py`）。Linux 未执行 | **Windows 通过**；Linux 未执行 |
 | 完整前端 | 安装、单测、构建、浏览器 E2E 通过；修复 Windows 专属启动路径 | 本地 `npm test` 退出码 0；子代理完成前端仓库公开、构建、E2E 与 Windows 启动路径修复，细节以 [frontend.md](frontend.md) 为准（该文件由子代理写入；若未生成则该项只按本地 `npm test` 证据计） | **部分完成**（以 frontend.md 与实际 E2E 结果为准） |
 | 自动主线 | 每次新工作区，自动完成 QE 四节点流程；结果与冻结预期一致；连续 3 次 | 3 次均使用新归档目录（`.tmp/acceptance/2026-10-20/qe-run{1,2,3}`），每次 0.66–0.68 s 完成；4 节点/3 边全部 `completed`；`convergence=converged`、`iterations=14`、`energy=-2417.17683284 Ry`、`atom_count=64`，与 `expected.json` 逐字段一致；`llm_called=false`、`hpc_submitted=false`、`offline=true`、`provenance=historical_output_replay`；两个 fixture 的 SHA-256 与 `data-sources.json` 一致 | **通过** |
 | 中文 | 至少一条中文提示词进入真实模型路由并记录实际选择 | 未执行。中文离线用例（`tests/test_cjk_*`、教学实验套件）在 498 项全量测试内通过，但不等于真实模型路由 | **未达（未执行）** |
-| 设计可视化 | 以文字/图例/样式区分模型决策、规则检查、人工审核；标识来自真实执行记录 | 未取得符合要求的界面截图；QE 回放归档内有真实执行记录（`graph_state.json`、`summary.json`），但模型决策/规则/审核的可视化截图未完成 | **未达** |
-| 人工确认 | 暂停时下游未执行，明确确认后才继续；不计作主线干预 | 机制测试证据：`tests/test_api_contract_v11.py -k "review or confirm"` → 5 passed；`tests/test_node_evolution.py -k review` → 2 passed（含 `test_review_after_run_builds_preview_and_blocks_until_continue`、`test_continuing_a_review_runs_the_downstream_nodes`、`test_stopping_a_review_leaves_the_downstream_nodes_alone`）。未取得单独界面演示截图 | **机制通过，演示证据不完整** |
+| 设计可视化 | 以文字/图例/样式区分模型决策、规则检查、人工审核；标识来自真实执行记录 | 已取得真实运行界面截图：四节点 QE 回放的图状态与参数、`Historical output replay · Slurm not submitted` 标签、解析结果、`Parse QE result` 的 **Review/Waiting** 审核面板（见 §5.1 与 [docs/images](../images/README.md)）。**模型决策/规则检查**的在线视图未取得（窗口内未执行真实模型路由），仅有 `Decision record` 入口可见 | **部分通过** |
+| 人工确认 | 暂停时下游未执行，明确确认后才继续；不计作自动主线干预 | 机制测试证据：`tests/test_api_contract_v11.py -k "review or confirm"` → 5 passed；`tests/test_node_evolution.py -k review` → 2 passed（含 `test_review_after_run_builds_preview_and_blocks_until_continue`、`test_continuing_a_review_runs_the_downstream_nodes`、`test_stopping_a_review_leaves_the_downstream_nodes_alone`）。界面证据：[node-review-gate.png](screenshots/node-review-gate.png) 显示审核节点处于 `Waiting`、结果预览仍可见、Continue/Revise/Stop 未确认；未单独录制“确认后下游继续”的连续画面 | **部分通过** |
 | 在线抽测 | 所有可用模型各 10 条，逐条结果/准确率/失败/耗时 | 未执行；无逐条记录，不估造准确率或费用数字 | **未达（未执行）** |
-| 公开交付 | README 安装步骤可照做；截图链接有效；无维护者绝对路径；公开默认分支与交付版本一致 | 后端已推送公开分支 `acceptance/2026-10-20-demo`（`3ae3ab2`）；前端已公开（默认分支 `main`）。跟踪文件中未检出本机绝对路径；`README` 与 `docs/images/README.md` 的截图仍为占位，链接所指数张 PNG 尚不存在；后端默认分支 `main` 仍是旧提交，交付版本位于验收分支 | **部分完成** |
+| 公开交付 | README 安装步骤可照做；截图链接有效；无维护者绝对路径；公开默认分支与交付版本一致 | 后端已推送公开分支 `acceptance/2026-10-20-demo`（`2fe225d`）；前端仓库公开（默认分支 `main`，见 [frontend.md](frontend.md)）。README 的 4 张截图已补齐为真实文件（[docs/images](../images/README.md)），链接有效；跟踪文件中本机绝对路径已清零（历史记录内路径脱敏为占位符）。后端默认分支 `main` 仍是旧提交，交付版本位于验收分支 | **部分完成** |
 
 ## 3. 可复现性阻断项（本次实际发现并修复）
 
@@ -65,7 +65,7 @@ fixture SHA-256 = 14b53010...（与 data-sources.json 一致）
 |---|---|
 | 三次 QE 回放摘要 | [qe-run1-summary.json](qe-run1-summary.json)、[qe-run2-summary.json](qe-run2-summary.json)、[qe-run3-summary.json](qe-run3-summary.json) |
 | 三次回放完整归档（工作区、图状态） | `.tmp/acceptance/2026-10-20/qe-run{1,2,3}/`（本机，不提交） |
-| 全新克隆复验日志 | `D:\Projects\.acceptance\2026-10-20\`（本机，项目外） |
+| 全新克隆复验日志 | `<acceptance-root>\`（本机，项目外） |
 | 前端证据 | [frontend.md](frontend.md)（子代理写入） |
 | 冻结预期与输入来源 | [expected.json](../../examples/cases/A1-qe-mgo/expected.json)、[data-sources.json](../../examples/cases/A1-qe-mgo/data-sources.json) |
 | 任务分配 | [TASK_ASSIGNMENT.zhcn.md](TASK_ASSIGNMENT.zhcn.md) |
@@ -77,13 +77,28 @@ fixture SHA-256 = 14b53010...（与 data-sources.json 一致）
    因此本次没有任何真实模型选择记录可展示。
 3. **在线模型矩阵与界面抽查**：未执行，无逐条结果、准确率、服务失败数或耗时数据；
    按计划不以重试成功覆盖首次失败、不在无用量时估计费用。
-4. **设计可视化与人工确认界面证据**：只有测试级证据（暂停/继续/下游停走）和 QE 回放的
-   真实执行记录，没有“模型决策 / 规则检查 / 人工审核”同屏的截图或录屏。
-5. **截图**：`README` 与前端 `docs/images/` 的截图占位尚未补齐，链接暂不可用。
+4. **设计可视化与人工确认界面证据**：已取得 QE 回放图、结果预览和审核门（Waiting + Continue/Revise/Stop）
+   的截图（见 §5.1），但“模型决策 / 规则检查”的在线视图未捕获，也没有“确认后下游继续”的连续录屏；
+   因此该项只按部分通过计。
+5. **截图**：README 需要的 4 张截图已补齐并链接有效；**未捕获**录屏和在线决策视图。
 6. **交付版本位置**：后端默认分支仍为旧提交，本次候选位于 `acceptance/2026-10-20-demo`；
    未打冻结标签，未做 21:30 之后的“从远端重新克隆复验 + 最终候选”完整闭环。
 7. **测试隔离性（MF-015）**：仓库根目录出现过 20+ 个 `tmp*` 临时目录（非密封测试遗留），
    已在 `.gitignore` 忽略，但测试本身仍依赖工作目录，属于既有未关闭问题。
+8. **依赖告警**：`source-map-js` 高危告警已按补丁级修复到 1.2.2（前端仓库提交见 [frontend.md](frontend.md)，
+   本地 `npm test` 通过）；安全影响判断为构建期依赖，未做批量升级。
+
+## 5.1 界面截图（2026-10-20 实际运行）
+
+截图来自本机运行的后端 + 公开前端仓库，空工作区后点击 **Run MgO QE replay demo**，以及该次运行后的
+Review 门状态。全部标注为历史回放，不表示 LLM 规划或真实 QE/Slurm 运行。
+
+| 画面 | 文件 |
+|---|---|
+| 工作台总览（空工作区，真实连接） | [workbench-overview.png](screenshots/workbench-overview.png) |
+| 四节点 QE 回放图 + 参数/结果 | [qe-replay-graph.png](screenshots/qe-replay-graph.png) |
+| 解析结果与 `Historical output replay · Slurm not submitted` 标签 | [qe-result-preview.png](screenshots/qe-result-preview.png) |
+| 审核门：`Parse QE result` 处于 Waiting，Continue/Revise/Stop 未确认 | [node-review-gate.png](screenshots/node-review-gate.png) |
 
 ## 6. 判定与后续
 

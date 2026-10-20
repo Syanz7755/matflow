@@ -10,6 +10,7 @@ MatFlow is a vibe-research framework for materials-science researchers: research
 
 | Goal | Document |
 | --- | --- |
+| Read the 2026-10-20 demo acceptance result and its known gaps | [Acceptance report (Chinese)](acceptance/2026-10-20/REPORT.zhcn.md), [task assignment](acceptance/2026-10-20/TASK_ASSIGNMENT.zhcn.md) |
 | Review the 2026-10-19 portfolio milestone and remaining work | [Portfolio readiness](PORTFOLIO_READINESS.md) |
 | Prepare a truthful project interview and run the offline QE replay | [Interview preparation (Chinese)](INTERVIEW_PREPARATION.zhcn.md), [A1 replay](../examples/cases/A1-qe-mgo/README.md) |
 | Inspect routing methodology and the current diagnostic run | [Routing evaluation](ROUTING_EVALUATION.md), [Recorded diagnostic](evaluation/README.md) |

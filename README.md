@@ -60,7 +60,7 @@ The former backend `/mcp` endpoint was removed in v1. MCP, DSH, and ChatGPT inte
 
 ## Frontend and MCP bridge
 
-The React workbench and the MCP/DSH bridge live in a separate repository, `matflow-frontend`, which is not public yet. This repository is the authoritative backend and runs standalone: the CLI (`uv run matflow ...`) and the HTTP API at `http://127.0.0.1:8000/api` (OpenAPI at `/docs`) need no UI, Node.js or MCP package.
+The React workbench and the MCP/DSH bridge live in the separate public repository [Syanz7755/matflow-frontend](https://github.com/Syanz7755/matflow-frontend). This repository is the authoritative backend and runs standalone: the CLI (`uv run matflow ...`) and the HTTP API at `http://127.0.0.1:8000/api` (OpenAPI at `/docs`) need no UI, Node.js or MCP package.
 
 Without the UI you can:
 
@@ -75,7 +75,14 @@ and then call the API directly, for example `GET /api/capabilities`, `POST /api/
 
 ### Screenshots
 
-Screenshots are still pending; see the [capture checklist](docs/images/README.md).
+Captured from a running backend + WebUI on 2026-10-20 (empty workspace, then the offline QE replay
+demo). The replay screens are labelled historical: no `pw.x`, Slurm job or LLM planning produced them.
+See the [capture notes](docs/images/README.md).
+
+![Workbench overview](docs/images/workbench-overview.png)
+![Workflow graph](docs/images/workflow-graph.png)
+![Task result](docs/images/task-result.png)
+![Node review gate](docs/images/node-review-gate.png)
 
 ## Prompt -> workflow planning
 

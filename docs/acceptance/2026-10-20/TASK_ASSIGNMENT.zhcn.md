@@ -22,16 +22,16 @@
 | ID | 任务（来自计划） | 负责人 | 写入范围 | 状态 | 证据 |
 |---|---|---|---|---|---|
 | T1 | 发布内容整理：QE `.log` 必需文件、冻结预期、旧报告归档；排除临时目录与凭据 | Lead | `.gitignore`、`backend/domain_packages/qe_demo_fixtures/`、`examples/cases/`、`docs/history/` | 完成 | 提交 `e48d330`；根级 `tmp*/` 已忽略 |
-| T2 | 配置统一：环境变量说明、默认配置无本机路径、密钥不落盘 | Lead | `.env.example`、`config/`、`docs/` | 完成（审计） | 跟踪文件中未检出 `D:\Projects`/`C:\Users`/`/Users/` 绝对路径；`.env` 与 `data/saves/` 被忽略 |
+| T2 | 配置统一：环境变量说明、默认配置无本机路径、密钥不落盘 | Lead | `.env.example`、`config/`、`docs/` | 完成（审计） | 跟踪文件中未检出本机绝对路径（项目盘符/用户目录形式）；历史记录里的本机路径已脱敏为占位符；`.env` 与 `data/saves/` 被忽略 |
 | T3 | 原测试：两平台全部原测试与跳过说明 | Lead | 只读 + `docs/acceptance/` | Windows 完成；Linux 未执行 | `498 passed, 9 skipped, 393 subtests passed`（97.77 s）；QE 聚焦测试 `21 passed` |
-| T4 | 完整前端：安装、单测、构建、浏览器 E2E、Windows 启动路径 | frontend-verifier | `D:\Projects\matflow-frontend`、`docs/acceptance/2026-10-20/frontend.md` | 进行中 | 见 `frontend.md`（子代理收尾后回填） |
+| T4 | 完整前端：安装、单测、构建、浏览器 E2E、Windows 启动路径 | frontend-verifier | `<frontend-repo>`、`docs/acceptance/2026-10-20/frontend.md` | 进行中 | 见 `frontend.md`（子代理收尾后回填） |
 | T5 | 自动主线：新工作区、四节点 QE 回放、连续 3 次成功、结果对冻结预期 | Lead | `docs/acceptance/2026-10-20/` | 完成 | 3 份 `qe-run*-summary.json`；三次均为 4 节点/3 边、14 次迭代、`-2417.17683284 Ry` |
-| T6 | 可复现性：从公开远端全新克隆 + 独立环境安装 + 复验 | Lead | `D:\Projects\.acceptance\`（项目外） | 完成（修复一项阻断） | 克隆 `3ae3ab2` 独立 `uv sync` 后 demo 退出码 0、`tests/test_demo.py` 5 passed；详见报告 §4 |
+| T6 | 可复现性：从公开远端全新克隆 + 独立环境安装 + 复验 | Lead | `<projects-root>\.acceptance\`（项目外） | 完成（修复一项阻断） | 克隆 `3ae3ab2` 独立 `uv sync` 后 demo 退出码 0、`tests/test_demo.py` 5 passed；详见报告 §4 |
 | T7 | 中文在线路由（真实模型选择与记录） | — | — | **未执行** | 需在线模型服务与凭据；恢复时预算不足，未用专用 DeepSeek 密钥 |
 | T8 | 设计可视化（决策/规则/审核区分，真实执行记录） | frontend-verifier | 截图目录 | 部分/未完成 | 见 `frontend.md`；未完成部分列入已知局限 |
 | T9 | 人工确认分支（暂停→下游未执行→确认继续） | Lead | 只读测试证据 | 完成（测试级证据） | `tests/test_api_contract_v11.py -k "review or confirm"` 5 passed；`tests/test_node_evolution.py -k review` 2 passed；未取得界面截图 |
 | T10 | 在线模型矩阵：每模型 10 条逐条记录 | — | — | **未执行** | 依赖在线服务；不估造数字 |
-| T11 | 公开交付：前端仓库公开、配套 SHA、README 可照做、截图链接有效 | frontend-verifier | `D:\Projects\matflow-frontend`、README | 部分完成 | 前端已推送公开仓库（SHA 见 `frontend.md`）；截图未补齐，链接仍为占位 |
+| T11 | 公开交付：前端仓库公开、配套 SHA、README 可照做、截图链接有效 | frontend-verifier | `<frontend-repo>`、README | 部分完成 | 前端已推送公开仓库（SHA 见 `frontend.md`）；截图未补齐，链接仍为占位 |
 | T12 | 验收总报告、已知局限、计划状态更新 | Lead | `docs/acceptance/2026-10-20/REPORT.zhcn.md`、计划 §7 | 完成 | 本目录报告 |
 
 ## 3. 结论口径

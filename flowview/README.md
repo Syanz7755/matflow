@@ -403,15 +403,15 @@ replays one record in full; `--file PATH` reads an explicit log.
 FlowView 0.1.0 doctor
 
 Runtime sources
-  ok   graph state      D:\Projects\matflow\data\graph_state.json
+  ok   graph state      <repo>\data\graph_state.json
        102 bytes
-  ok   task summaries   D:\Projects\matflow\data\audit\task_summaries.jsonl
+  ok   task summaries   <repo>\data\audit\task_summaries.jsonl
        198587 bytes
-  ok   uploads          D:\Projects\matflow\data\uploads
+  ok   uploads          <repo>\data\uploads
        directory with 4 entries
-  ok   settings         D:\Projects\matflow\data\settings.json
+  ok   settings         <repo>\data\settings.json
        9190 bytes
-  ok   backend package  D:\Projects\matflow\backend\workspace_runtime.py
+  ok   backend package  <repo>\backend\workspace_runtime.py
        34804 bytes
 
 Renderers
@@ -427,7 +427,7 @@ Terminal
   isatty    False
   color     auto
 
-Task summary log: D:\Projects\matflow\data\audit\task_summaries.jsonl
+Task summary log: <repo>\data\audit\task_summaries.jsonl
 FlowView 0.1.0: all offline sources are usable.
 ```
 

@@ -2,7 +2,7 @@
 
 Verifier: `verifier` (did not write any of the code under test).
 Deliverable under test: `flowview/` — read-only CLI subproject (CONTRACT.md + README.md + 18 modules + tests).
-Date/environment: repo `D:\Projects\matflow` at commit `696b607` (flowview/ is untracked/new), Windows, PowerShell 7 (`pwsh`).
+Date/environment: repo `<repo>` at commit `696b607` (flowview/ is untracked/new), Windows, PowerShell 7 (`pwsh`).
 
 Interpreters used (both, as instructed):
 

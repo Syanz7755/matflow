@@ -1,15 +1,23 @@
-# Screenshots to capture
+# Screenshots
 
-The root [README](../../README.md) links to the images below. They do not exist yet; the workbench lives in the separate `matflow-frontend` repository, so capture them from a running backend + WebUI (`uv run matflow start --ui webui`). Save PNGs (about 1600 px wide, light theme, no personal data or API keys visible) with exactly these names.
+Captured on **2026-10-20** from a running backend + WebUI (`matflow-backend` + public
+`matflow-frontend`), in a fresh save with an empty workspace. PNGs are 1600 px wide, light theme,
+contain no personal data or API keys. They show the **offline historical QE replay demo**, not LLM
+planning and not a new `pw.x` or Slurm run.
 
-| File | Screen | State to capture |
+| File | Screen | What the frame shows |
 |---|---|---|
-| `workbench-overview.png` | Full workbench window | Empty or freshly reset workspace right after the QE replay demo has finished: prompt/chat area, workflow graph and result area all visible in one frame. |
-| `workflow-graph.png` | Workflow graph view | The four-node QE replay workflow (MgO structure -> `pw.x` input generation -> archived QE output replay -> result parsing) with node states and parameters visible. |
-| `task-result.png` | Result of the finished task | Parsed total energy, Fermi energy and convergence evidence shown, with the "historical replay" label visible. |
+| `workbench-overview.png` | Full workbench window | Empty workspace just after connecting: prompt/task entries, tool registry, empty graph and inspector in one frame. |
+| `workflow-graph.png` | Workflow graph view | The four-node QE replay workflow (MgO structure → `pw.x` input generation → archived QE output replay → result parsing), node states badged, `Historical output replay · Slurm not submitted` label and parsed values in the inspector. |
+| `task-result.png` | Result of the finished task | Progressive preview with `Convergence: converged`, `Total energy: -2417.17683284 Ry`, `Fermi energy`, `SCF iterations: 14` and the source path, under the historical-replay label. |
+| `node-review-gate.png` | Post-run review gate | `Parse QE result` node in `Waiting` with **Review** enabled, the result preview still shown, and the review panel offering **Continue / Revise node / Stop run** — the human-confirmation branch. |
 
-Optional recording: `qe-replay-demo.gif` or `.mp4` (20-40 s, under 10 MB). Start from an empty workspace, click **Run MgO QE replay demo**, show the graph filling in node by node, then the parsed result. Link it from the README only if you capture it.
+Provenance and the full acceptance evidence (commands, expected values, hash checks) are in
+[docs/acceptance/2026-10-20/](../acceptance/2026-10-20/REPORT.zhcn.md).
 
-Suggested demo prompt (the pinned request the demo uses): `For pristine MgO SCF, generate a QE input and report energy and convergence.`
+Missing (planned, not captured): a recording (`qe-replay-demo.gif`/`.mp4`) and a screenshot of the
+live model-decision / rule-check view, because the 2026-10-20 window did not include online routing.
 
-Notes: the demo requires an empty workspace (use a fresh save, e.g. `uv run matflow start --save screenshots`). It is a local historical replay and does not run `pw.x`; keep any caption honest about that.
+The suggested demo prompt (the pinned request the demo uses): `For pristine MgO SCF, generate a QE
+input and report energy and convergence.` The demo requires an empty workspace
+(`uv run matflow start --save screenshots`).

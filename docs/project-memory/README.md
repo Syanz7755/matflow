@@ -1,7 +1,7 @@
 # MatFlow Project Memory Index
 
 **Status date:** 2026-10-02
-**Scope:** The `D:\Projects\matflow` backend repository and the sibling `D:\Projects\matflow-frontend` client repository
+**Scope:** The `<repo>` backend repository and the sibling `<frontend-repo>` client repository
 
 This directory is the navigation layer for MatFlow's current source of truth. It does not replace interface contracts, user manuals, or code. Instead, it answers the first five questions a new maintainer needs to resolve: Which architecture is current? What has been implemented? What remains only a design? Where are the problems? What should happen next?
 

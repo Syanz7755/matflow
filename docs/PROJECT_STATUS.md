@@ -1,18 +1,34 @@
-# Project status — 2026-10-19
+# Project status — 2026-10-20
 
 The backend is a usable local workflow prototype; interview preparation is in progress.
 The current portfolio evidence is the [offline QE replay](../examples/cases/A1-qe-mgo/README.md),
 [routing diagnostic](evaluation/README.md) and [interview preparation guide](INTERVIEW_PREPARATION.zhcn.md).
-All changes in this round remain uncommitted and unpushed.
+
+## Demo acceptance — 2026-10-20
+
+The 22:00 demo acceptance was resumed at 21:13:54 Beijing time and closed against actual
+evidence; it is **not fully met**. The candidate tree is committed on the pushed branch
+`acceptance/2026-10-20-demo` (head `2fe225d`), the frontend repository is now public
+(https://github.com/Syanz7755/matflow-frontend), and no freeze tag was created.
+Evidence: [acceptance report](acceptance/2026-10-20/REPORT.zhcn.md) and
+[task assignment](acceptance/2026-10-20/TASK_ASSIGNMENT.zhcn.md).
+
+Verified in this round: Windows full suite `498 passed, 9 skipped, 393 subtests`; QE MgO replay
+3/3 consecutive fresh-archive runs matching frozen values; a genuine fresh clone of the public
+remote with an independent `uv sync` environment running the demo and its tests; the review-gate
+pause/continue mechanism (7 focused tests). Still open: Ubuntu fresh-clone acceptance, Chinese
+live model routing, the 10-prompt-per-model online matrix, UI screenshots/recording, and a
+separate human-review UI demonstration. A reproducibility defect was found and fixed on the way:
+line-ending normalization broke the frozen QE fixture hash on a fresh clone (commit `3ae3ab2`).
 
 | Area | Current evidence | Remaining boundary |
 |---|---|---|
 | Platform contracts | Typed GraphPatch validation, DAG execution, generic join/aggregate and review/gate tests | Single-user local files; no multi-tenant or public-network security |
 | Domain extension | DomainPackage manifests, loaders, type composition and executor registration | Structural validation is not a trust boundary; limited tool coverage |
 | Model planning | Type-filtered candidates, Jev/LLM selection, no keyword fallback; repeated online smoke on one synthetic request | One request does not establish general accuracy; Jev service was unavailable; expanded on/off evaluation remains open |
-| Offline presentation | Explicit `matflow demo qe-mgo --output <new-directory>`, frozen values, input hashes, recorded run and refusal to overwrite | Pinned historical replay, not LLM planning or a new QE/HPC calculation |
-| Reproducibility | Pytest declared in the locked dev environment; test-only suites/fixtures separated; historical reports archived | Frontend e2e, screenshots and the full EBrick case remain open |
-| Publication | MIT LICENSE is present locally | No commit, frontend repository creation or push performed in this round |
+| Offline presentation | Explicit `matflow demo qe-mgo --output <new-directory>`, frozen values, input hashes, recorded run and refusal to overwrite; 3/3 consecutive runs re-verified on 2026-10-20 | Pinned historical replay, not LLM planning or a new QE/HPC calculation |
+| Reproducibility | Fresh clone of the public remote + independent environment verified on 2026-10-20; pytest declared in the locked dev environment | Ubuntu acceptance, frontend e2e evidence and screenshots remain open |
+| Publication | MIT LICENSE; backend candidate pushed on `acceptance/2026-10-20-demo`; frontend repository public with default branch `main` | Candidate is not on the backend default branch; no freeze tag; screenshots missing |
 
 Use the dated [portfolio milestone record](PORTFOLIO_READINESS.md) for verification
 details and remaining work.

@@ -1,10 +1,10 @@
 flowchart TD
     %% FlowView: runtime phase map, one node per observable step.
     %% title: MatFlow routing preview (read-only)
-    %% source: dry-route:D:\Projects\matflow
+    %% source: dry-route:<repo>
     %% phases: 3; steps: 10
     %% ISSUE WARNING route.prompt_tokens_unusable: The retriever cannot see most of this prompt. -- the prompt is overwhelmingly CJK: lexical matching sees almost none of it [backend/routing.py: _tokens()]
-    %% ISSUE INFO route.dry_run: This route was computed read-only: nothing was persisted to the task summary log. [dry-route:D:\Projects\matflow]
+    %% ISSUE INFO route.dry_run: This route was computed read-only: nothing was persisted to the task summary log. [dry-route:<repo>]
     subgraph pg_prompt["Prompt #40;input#41; #40;prompt#41; #91;waiting#93;"]
         n_prompt_0_user_prompt(["user prompt - 我这一批一共做了两组平行样品，编号 LLZTO-A 和 LLZTO-B，来…<br/>completed"]):::flowview_completed
         n_prompt_1_prompt_size(["prompt size - 466 character#40;s#41;, 27 whitespace-separated token#40;s#41;; avail…<br/>completed"]):::flowview_completed
