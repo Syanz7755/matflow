@@ -9,6 +9,25 @@
 
 **Updated:** 2026-10-07, after removing keyword routing and adding the prompt -> workflow planner.
 
+**Updated:** 2026-10-20, after the demo acceptance pass.
+
+## Demo acceptance update — 2026-10-20
+
+- **MF-021 closed:** after the Domain Package refactor, `normalize_columns` carried domain-neutral
+  `x_column: x / y_column: y` placeholder defaults. A Normalize node added from the Tool library
+  therefore rejected real EIS columns (`Column mapping does not match the uploaded file: ['x', 'y']`)
+  and the editor flow could not run EIS; it was the one failing frontend browser E2E case. Fixed in
+  `f1f057a`: the platform mapping now starts empty (pass-through, still `open_params`), `eis_basic_qc`
+  declares its own `frequency_column / real_column / imag_column` defaults and uses them only when the
+  upstream mapping is empty (upstream mapping keeps precedence), and
+  `tests/test_domain_packages.py` pins the UI-created-node path. Backend `499 passed, 9 skipped,
+  393 subtests`; frontend E2E `7/7`.
+- The frontend repository is public with default branch `main` at `8b37ed3`; its E2E still has no CI
+  job (`.github/workflows/ci.yml` TODO), and GitHub Actions results were not checked.
+- Still open from the acceptance: Ubuntu fresh-clone acceptance, Chinese live model routing, the
+  10-prompt-per-model online matrix, a recording and the live model-decision/rule-check view. See the
+  [acceptance report](../acceptance/2026-10-20/REPORT.zhcn.md).
+
 ## Closed in the P0 boundary pass
 
 | ID | Issue | Closure evidence |

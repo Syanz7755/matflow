@@ -6,13 +6,13 @@ The 22:00 demo acceptance was resumed at 21:13:54 Beijing time, after the 18:00/
 gates had passed, and closed against actual evidence. **It is not fully met**: no freeze tag was
 created. The candidate tree is committed and pushed on `acceptance/2026-10-20-demo`
 (preceded by the reproducibility fix `3ae3ab2`), and the frontend repository is now public at
-https://github.com/Syanz7755/matflow-frontend with default branch `main` at `2ea00ea`.
+https://github.com/Syanz7755/matflow-frontend with default branch `main` at `8b37ed3`.
 Evidence: [acceptance report](../acceptance/2026-10-20/REPORT.zhcn.md),
 [task assignment](../acceptance/2026-10-20/TASK_ASSIGNMENT.zhcn.md),
 [frontend evidence](../acceptance/2026-10-20/frontend.md) and the four
 [screenshots](../images/README.md).
 
-Verified on Windows: full suite `498 passed, 9 skipped, 393 subtests`; QE MgO replay 3/3 fresh-archive
+Verified on Windows: full suite `499 passed, 9 skipped, 393 subtests`; QE MgO replay 3/3 fresh-archive
 runs matching the frozen values; a genuine fresh clone of the public remote with an independent
 `uv sync` environment (demo exit 0, `tests/test_demo.py` 5 passed); review-gate pause/continue
 (7 focused tests) plus the review-gate screenshot. Frontend: `npm test` 16 passed, build succeeded,

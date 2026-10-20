@@ -23,19 +23,19 @@
 |---|---|---|---|---|---|
 | T1 | 发布内容整理：QE `.log` 必需文件、冻结预期、旧报告归档；排除临时目录与凭据 | Lead | `.gitignore`、`backend/domain_packages/qe_demo_fixtures/`、`examples/cases/`、`docs/history/` | 完成 | 提交 `e48d330`；根级 `tmp*/` 已忽略 |
 | T2 | 配置统一：环境变量说明、默认配置无本机路径、密钥不落盘 | Lead | `.env.example`、`config/`、`docs/` | 完成（审计） | 跟踪文件中未检出本机绝对路径（项目盘符/用户目录形式）；历史记录里的本机路径已脱敏为占位符；`.env` 与 `data/saves/` 被忽略 |
-| T3 | 原测试：两平台全部原测试与跳过说明 | Lead | 只读 + `docs/acceptance/` | Windows 完成；Linux 未执行 | `498 passed, 9 skipped, 393 subtests passed`（97.77 s）；QE 聚焦测试 `21 passed` |
-| T4 | 完整前端：安装、单测、构建、浏览器 E2E、Windows 启动路径 | frontend-verifier + Lead 复核 | `<frontend-repo>`、`docs/acceptance/2026-10-20/frontend.md` | 部分完成（E2E 未全过） | 前端公开 `2ea00ea`；`npm test` 16 passed、build 成功、audit 0；E2E 6 passed/1 failed（`research-workbench.spec.mjs:155`，可复现，未修复）；Windows 启动路径已修复 |
+| T3 | 原测试：两平台全部原测试与跳过说明 | Lead | 只读 + `docs/acceptance/` | Windows 完成；Linux 未执行 | `499 passed, 9 skipped, 393 subtests passed`（97.69 s，含新增 1 个回归测试）；QE 聚焦测试 `21 passed` |
+| T4 | 完整前端：安装、单测、构建、浏览器 E2E、Windows 启动路径 | frontend-verifier + Lead 复核 | `<frontend-repo>`、`docs/acceptance/2026-10-20/frontend.md` | 完成 | 前端公开默认分支 `main` = `8b37ed3`；`npm test` 16 passed、build 成功、audit 0；E2E **7/7 passed**（曾失败的用例根因是后端列映射默认值，修复见 `f1f057a`，断言未改）；Windows 启动路径已修复 |
 | T5 | 自动主线：新工作区、四节点 QE 回放、连续 3 次成功、结果对冻结预期 | Lead | `docs/acceptance/2026-10-20/` | 完成 | 3 份 `qe-run*-summary.json`；三次均为 4 节点/3 边、14 次迭代、`-2417.17683284 Ry` |
 | T6 | 可复现性：从公开远端全新克隆 + 独立环境安装 + 复验 | Lead | `<projects-root>\.acceptance\`（项目外） | 完成（修复一项阻断） | 克隆 `3ae3ab2` 独立 `uv sync` 后 demo 退出码 0、`tests/test_demo.py` 5 passed；详见报告 §4 |
 | T7 | 中文在线路由（真实模型选择与记录） | — | — | **未执行** | 需在线模型服务与凭据；恢复时预算不足，未用专用 DeepSeek 密钥 |
 | T8 | 设计可视化（决策/规则/审核区分，真实执行记录） | frontend-verifier + Lead | `docs/images`、`docs/acceptance/2026-10-20/screenshots` | 部分完成 | 4 张真实运行截图（工作台/图/结果/审核门）；模型决策与规则检查在线视图未取得 |
 | T9 | 人工确认分支（暂停→下游未执行→确认继续） | Lead | 只读测试证据 + 截图 | 部分完成 | 7 项机制测试通过（暂停/继续/下游停走）；[node-review-gate.png](screenshots/node-review-gate.png) 显示 Waiting 与未确认的 Continue/Revise/Stop |
 | T10 | 在线模型矩阵：每模型 10 条逐条记录 | — | — | **未执行** | 依赖在线服务；不估造数字 |
-| T11 | 公开交付：前端仓库公开、配套 SHA、README 可照做、截图链接有效 | frontend-verifier + Lead | `<frontend-repo>`、README | 部分完成 | 前端公开且默认分支 `main` = `2ea00ea`；两仓库截图链接有效；后端默认分支仍为旧提交，未打标签 |
+| T11 | 公开交付：前端仓库公开、配套 SHA、README 可照做、截图链接有效 | frontend-verifier + Lead | `<frontend-repo>`、README | 部分完成 | 前端公开且默认分支 `main` = `8b37ed3`；两仓库截图链接检查通过、本机绝对路径 0 处；后端默认分支仍为旧提交，未打标签 |
 | T12 | 验收总报告、已知局限、计划状态更新 | Lead | `docs/acceptance/2026-10-20/REPORT.zhcn.md`、计划 §7 | 完成 | 本目录报告 |
 
 ## 3. 结论口径
 
 - 恢复时已越过全部时间关口，**本日不判定整体达标**；不创建 `demo-2026-10-20` 冻结标签。
 - 按计划第 5 节，未完成项保留为已知局限，不删除失败记录、不把跳过写成通过。
-- 前端若未能完成 E2E/截图，交付口径明确写“前端暂未公开”或“截图未补齐”，不宣称整体通过。
+- 前端 E2E 的失败已定位为后端缺陷并修复复验为 7/7；未完成的 Linux、中文在线、在线矩阵与录屏仍按已知局限记录，不宣称整体通过。
