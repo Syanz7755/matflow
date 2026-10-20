@@ -1,0 +1,142 @@
+{
+  "model_under_test": "deepseek-chat",
+  "prompt": {
+    "id": "cn-eis-qc",
+    "lang": "zh",
+    "label": "canonical Chinese EIS QC",
+    "message": "请对这份电化学阻抗谱数据做基本质控：检查高频段虚部符号是否为负、低频段是否发散，并给出质控结论。",
+    "types": [
+      "EISData"
+    ],
+    "expect": "eis_basic_qc (qc / routed)"
+  },
+  "task_request": {
+    "task_id": "41086af1-aa58-4b70-aae0-af5e59d10b3f",
+    "user_message": "请对这份电化学阻抗谱数据做基本质控：检查高频段虚部符号是否为负、低频段是否发散，并给出质控结论。",
+    "graph_version": 0,
+    "available_input_types": [
+      "EISData"
+    ]
+  },
+  "http_status": 200,
+  "latency_seconds": 4.72,
+  "response": {
+    "decision_id": "3f4f0fe6-9b49-4c11-9e60-7c4e484231c4",
+    "task_id": "41086af1-aa58-4b70-aae0-af5e59d10b3f",
+    "graph_version": 0,
+    "candidates": [
+      {
+        "tool_id": "plot_nyquist",
+        "version": "1.0.0",
+        "score": 0.0,
+        "reasons": [
+          "input ports accept the available data"
+        ]
+      },
+      {
+        "tool_id": "qe_structure",
+        "version": "1.0.0",
+        "score": 0.0,
+        "reasons": [
+          "needs no upstream input"
+        ]
+      },
+      {
+        "tool_id": "raw_file_import",
+        "version": "1.0.0",
+        "score": 0.0,
+        "reasons": [
+          "needs no upstream input"
+        ]
+      }
+    ],
+    "selected": [],
+    "confidence": 1.0,
+    "rationale": "[llm] Jev routing unavailable: <urlopen error [WinError 10061] 由于目标计算机积极拒绝，无法连接。>; the LLM decided instead. No candidate tool performs EIS quality control checks (imaginary sign or low-frequency divergence); plot_nyquist only plots, and others are unrelated.",
+    "requires_human_confirmation": true,
+    "model_decisions": [
+      {
+        "profile": "llm",
+        "model": "deepseek-chat",
+        "selected_tool_id": null,
+        "score": 1.0,
+        "calibrated": false,
+        "evidence": {
+          "rationale": "No candidate tool performs EIS quality control checks (imaginary sign or low-frequency divergence); plot_nyquist only plots, and others are unrelated.",
+          "params": {}
+        }
+      }
+    ],
+    "summary": {
+      "schema_version": "1.0",
+      "task_id": "41086af1-aa58-4b70-aae0-af5e59d10b3f",
+      "trace_id": "efa20f1e03a64d999c2d93d3026c1b83",
+      "status": "waiting_for_confirmation",
+      "user_prompt": "请对这份电化学阻抗谱数据做基本质控：检查高频段虚部符号是否为负、低频段是否发散，并给出质控结论。",
+      "input_context": {
+        "graph_version": 0,
+        "available_input_types": [
+          "EISData"
+        ],
+        "assumptions": []
+      },
+      "decision": {
+        "decision_id": "3f4f0fe6-9b49-4c11-9e60-7c4e484231c4",
+        "candidate_tools": [
+          {
+            "registered_id": "plot_nyquist",
+            "version": "1.0.0",
+            "label": "Plot Nyquist",
+            "category": "Output",
+            "retrieval_score": 0.0,
+            "reasons": [
+              "input ports accept the available data"
+            ]
+          },
+          {
+            "registered_id": "qe_structure",
+            "version": "1.0.0",
+            "label": "Crystal Structure",
+            "category": "QE",
+            "retrieval_score": 0.0,
+            "reasons": [
+              "needs no upstream input"
+            ]
+          },
+          {
+            "registered_id": "raw_file_import",
+            "version": "1.0.0",
+            "label": "Raw File Import",
+            "category": "Input",
+            "retrieval_score": 0.0,
+            "reasons": [
+              "needs no upstream input"
+            ]
+          }
+        ],
+        "selected_tools": [],
+        "confidence": 1.0,
+        "rationale": "[llm] Jev routing unavailable: <urlopen error [WinError 10061] 由于目标计算机积极拒绝，无法连接。>; the LLM decided instead. No candidate tool performs EIS quality control checks (imaginary sign or low-frequency divergence); plot_nyquist only plots, and others are unrelated.",
+        "model_opinions": [
+          {
+            "profile": "llm",
+            "model": "deepseek-chat",
+            "selected_tool_id": null,
+            "score": 1.0,
+            "calibrated": false,
+            "evidence": {
+              "rationale": "No candidate tool performs EIS quality control checks (imaginary sign or low-frequency divergence); plot_nyquist only plots, and others are unrelated.",
+              "params": {}
+            }
+          }
+        ]
+      },
+      "result": null,
+      "error_and_handling": {
+        "error": null,
+        "handling": "No automatic execution. Human confirmation is required before continuing."
+      }
+    }
+  },
+  "attempt": 1
+}

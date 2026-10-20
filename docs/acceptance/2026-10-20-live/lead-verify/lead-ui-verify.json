@@ -1,0 +1,56 @@
+{
+  "ok": true,
+  "log": [
+    {
+      "step": "open",
+      "at": "2026-10-20T14:23:04.164Z",
+      "url": "http://127.0.0.1:5222"
+    },
+    {
+      "step": "upload",
+      "at": "2026-10-20T14:23:04.233Z",
+      "file": "eis_spectrum.csv"
+    },
+    {
+      "step": "graph",
+      "at": "2026-10-20T14:23:05.317Z",
+      "edges": 2,
+      "review": "enabled on EIS node"
+    },
+    {
+      "step": "paused",
+      "at": "2026-10-20T14:23:05.584Z",
+      "qcStatus": "waiting"
+    },
+    {
+      "step": "completed",
+      "at": "2026-10-20T14:23:05.741Z",
+      "preview": "Progressive preview { \"kind\": \"EISQCReport\", \"upload_id\": \"d5c560bfe9044a44b33d24b790e6d75f_eis_spectrum.csv\", \"mapping\": { \"frequency_column\": \"frequency_hz\", \"real_column\": \"z_real_ohm\", \"imag_column\": \"z_imag_ohm\" }, \"rows_valid\": 13, \"rows_retained\": 13, \"min_frequency_hz\": 10, \"pass\": true, \"issues\": [] }"
+    },
+    {
+      "step": "result",
+      "at": "2026-10-20T14:23:05.749Z",
+      "qc": {
+        "kind": "EISQCReport",
+        "upload_id": "d5c560bfe9044a44b33d24b790e6d75f_eis_spectrum.csv",
+        "mapping": {
+          "frequency_column": "frequency_hz",
+          "real_column": "z_real_ohm",
+          "imag_column": "z_imag_ohm"
+        },
+        "rows_valid": 13,
+        "rows_retained": 13,
+        "min_frequency_hz": 10,
+        "pass": true,
+        "issues": []
+      },
+      "plot": null
+    },
+    {
+      "step": "export-import",
+      "at": "2026-10-20T14:23:05.969Z",
+      "file": "local-default.matflow.json"
+    }
+  ],
+  "pageErrors": []
+}

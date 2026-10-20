@@ -1,0 +1,216 @@
+{
+  "model_under_test": "deepseek-chat",
+  "prompt": {
+    "id": "cn-en-mixed",
+    "lang": "zh+en",
+    "label": "mixed Chinese/English request (raw imported table)",
+    "message": "Please 帮我 run 一下 EIS quality check，然后 generate 一个 Nyquist plot。",
+    "types": [
+      "TypedTable"
+    ],
+    "expect": "eis_basic_qc or plot_nyquist (2 candidates -> Jev then LLM)"
+  },
+  "task_request": {
+    "task_id": "eaa7954a-237d-42fd-9c1d-c6385949c649",
+    "user_message": "Please 帮我 run 一下 EIS quality check，然后 generate 一个 Nyquist plot。",
+    "graph_version": 0,
+    "available_input_types": [
+      "TypedTable"
+    ]
+  },
+  "http_status": 200,
+  "latency_seconds": 4.018,
+  "response": {
+    "decision_id": "ae3006da-c0bc-4593-a645-f6e4c70c1af4",
+    "task_id": "eaa7954a-237d-42fd-9c1d-c6385949c649",
+    "graph_version": 0,
+    "candidates": [
+      {
+        "tool_id": "eis_basic_qc",
+        "version": "1.0.0",
+        "score": 0.0,
+        "reasons": [
+          "input ports accept the available data"
+        ]
+      },
+      {
+        "tool_id": "ftir_peak_extraction",
+        "version": "1.0.0",
+        "score": 0.0,
+        "reasons": [
+          "input ports accept the available data"
+        ]
+      },
+      {
+        "tool_id": "qe_structure",
+        "version": "1.0.0",
+        "score": 0.0,
+        "reasons": [
+          "needs no upstream input"
+        ]
+      },
+      {
+        "tool_id": "raw_file_import",
+        "version": "1.0.0",
+        "score": 0.0,
+        "reasons": [
+          "needs no upstream input"
+        ]
+      },
+      {
+        "tool_id": "skill_node",
+        "version": "1.0.0",
+        "score": 0.0,
+        "reasons": [
+          "input ports accept the available data"
+        ]
+      },
+      {
+        "tool_id": "xrd_peak_extraction",
+        "version": "1.0.0",
+        "score": 0.0,
+        "reasons": [
+          "input ports accept the available data"
+        ]
+      }
+    ],
+    "selected": [
+      {
+        "tool_id": "eis_basic_qc",
+        "version": "1.0.0",
+        "score": 0.0,
+        "reasons": [
+          "input ports accept the available data"
+        ]
+      }
+    ],
+    "confidence": 1.0,
+    "rationale": "[llm] Jev routing unavailable: <urlopen error [WinError 10061] 由于目标计算机积极拒绝，无法连接。>; the LLM decided instead. The request asks for EIS quality check and Nyquist plot generation, which matches the EIS Basic Analysis tool's description of Nyquist/Bode quality checks.",
+    "requires_human_confirmation": false,
+    "model_decisions": [
+      {
+        "profile": "llm",
+        "model": "deepseek-chat",
+        "selected_tool_id": "eis_basic_qc",
+        "score": 1.0,
+        "calibrated": false,
+        "evidence": {
+          "rationale": "The request asks for EIS quality check and Nyquist plot generation, which matches the EIS Basic Analysis tool's description of Nyquist/Bode quality checks.",
+          "params": {}
+        }
+      }
+    ],
+    "summary": {
+      "schema_version": "1.0",
+      "task_id": "eaa7954a-237d-42fd-9c1d-c6385949c649",
+      "trace_id": "157e79aca8d947d882fa271da4368d1f",
+      "status": "routed",
+      "user_prompt": "Please 帮我 run 一下 EIS quality check，然后 generate 一个 Nyquist plot。",
+      "input_context": {
+        "graph_version": 0,
+        "available_input_types": [
+          "TypedTable"
+        ],
+        "assumptions": []
+      },
+      "decision": {
+        "decision_id": "ae3006da-c0bc-4593-a645-f6e4c70c1af4",
+        "candidate_tools": [
+          {
+            "registered_id": "eis_basic_qc",
+            "version": "1.0.0",
+            "label": "EIS Basic Analysis",
+            "category": "Analysis",
+            "retrieval_score": 0.0,
+            "reasons": [
+              "input ports accept the available data"
+            ]
+          },
+          {
+            "registered_id": "ftir_peak_extraction",
+            "version": "1.0.0",
+            "label": "FTIR Peak Extraction",
+            "category": "FTIR Analysis",
+            "retrieval_score": 0.0,
+            "reasons": [
+              "input ports accept the available data"
+            ]
+          },
+          {
+            "registered_id": "qe_structure",
+            "version": "1.0.0",
+            "label": "Crystal Structure",
+            "category": "QE",
+            "retrieval_score": 0.0,
+            "reasons": [
+              "needs no upstream input"
+            ]
+          },
+          {
+            "registered_id": "raw_file_import",
+            "version": "1.0.0",
+            "label": "Raw File Import",
+            "category": "Input",
+            "retrieval_score": 0.0,
+            "reasons": [
+              "needs no upstream input"
+            ]
+          },
+          {
+            "registered_id": "skill_node",
+            "version": "1.0.0",
+            "label": "AI Skill Node",
+            "category": "AI",
+            "retrieval_score": 0.0,
+            "reasons": [
+              "input ports accept the available data"
+            ]
+          },
+          {
+            "registered_id": "xrd_peak_extraction",
+            "version": "1.0.0",
+            "label": "XRD Peak Extraction",
+            "category": "XRD Analysis",
+            "retrieval_score": 0.0,
+            "reasons": [
+              "input ports accept the available data"
+            ]
+          }
+        ],
+        "selected_tools": [
+          {
+            "registered_id": "eis_basic_qc",
+            "version": "1.0.0",
+            "label": "EIS Basic Analysis",
+            "category": "Analysis",
+            "retrieval_score": 0.0,
+            "reasons": [
+              "input ports accept the available data"
+            ]
+          }
+        ],
+        "confidence": 1.0,
+        "rationale": "[llm] Jev routing unavailable: <urlopen error [WinError 10061] 由于目标计算机积极拒绝，无法连接。>; the LLM decided instead. The request asks for EIS quality check and Nyquist plot generation, which matches the EIS Basic Analysis tool's description of Nyquist/Bode quality checks.",
+        "model_opinions": [
+          {
+            "profile": "llm",
+            "model": "deepseek-chat",
+            "selected_tool_id": "eis_basic_qc",
+            "score": 1.0,
+            "calibrated": false,
+            "evidence": {
+              "rationale": "The request asks for EIS quality check and Nyquist plot generation, which matches the EIS Basic Analysis tool's description of Nyquist/Bode quality checks.",
+              "params": {}
+            }
+          }
+        ]
+      },
+      "result": null,
+      "error_and_handling": {
+        "error": null,
+        "handling": "No exception. The selected registered tool may proceed to execution."
+      }
+    }
+  },
+  "attempt": 1
+}

@@ -4,26 +4,42 @@ The backend is a usable local workflow prototype; interview preparation is in pr
 The current portfolio evidence is the [offline QE replay](../examples/cases/A1-qe-mgo/README.md),
 [routing diagnostic](evaluation/README.md) and [interview preparation guide](INTERVIEW_PREPARATION.zhcn.md).
 
-## Demo acceptance — 2026-10-20
+## Demo acceptance — 2026-10-20 (two rounds)
 
-The 22:00 demo acceptance was resumed at 21:13:54 Beijing time and closed against actual
-evidence; it is **not fully met** on scope, but the main path is now evidenced. The candidate tree is
-committed on the pushed branch `acceptance/2026-10-20-demo` (head includes the EIS mapping fix
-`f1f057a`), the frontend repository is public
-(https://github.com/Syanz7755/matflow-frontend, default `main` at `8b37ed3`), and no freeze tag was
-created. Evidence: [acceptance report](acceptance/2026-10-20/REPORT.zhcn.md) and
+**Round 1 (offline/reproducibility).** Resumed at 21:13:54 Beijing time. Windows full suite later
+reached `504 passed, 9 skipped, 393 subtests` (round 2 added five harness selection tests). QE MgO
+replay 3/3 consecutive fresh-archive runs matching frozen values; a genuine fresh clone of the public
+remote with an independent `uv sync` environment; review-gate pause/continue; frontend unit tests
+(16), build, browser E2E `7/7`. The candidate is pushed on `acceptance/2026-10-20-demo`; the frontend
+repository is public with default branch `main` (currently `3df9139`); no freeze tag was created.
+Evidence: [round-1 report](acceptance/2026-10-20/REPORT.zhcn.md),
 [task assignment](acceptance/2026-10-20/TASK_ASSIGNMENT.zhcn.md).
 
-Verified in this round: Windows full suite `499 passed, 9 skipped, 393 subtests`; QE MgO replay
-3/3 consecutive fresh-archive runs matching frozen values; a genuine fresh clone of the public
-remote with an independent `uv sync` environment running the demo and its tests; the review-gate
-pause/continue mechanism (7 focused tests) plus its screenshot; frontend unit tests (16), build and
-browser E2E `7/7` after the backend fix. Still open: Ubuntu fresh-clone acceptance, Chinese live
-model routing, the 10-prompt-per-model online matrix, a frontend E2E CI job, recording and the live
-model-decision/rule-check view. Two defects were found and fixed on the way: line-ending
-normalization broke the frozen QE fixture hash on a fresh clone (`3ae3ab2`), and the Domain Package
-refactor left `normalize_columns` with x/y placeholder defaults so editor-created workflows could not
-run EIS (`f1f057a`).
+**Round 2 (online capability and hands-on frontend)**, requested by the user the same night with
+Ubuntu explicitly skipped. [Live report](acceptance/2026-10-20-live/REPORT.zhcn.md) and
+[operator runbook](acceptance/2026-10-20-live/OPERATOR_RUNBOOK.zhcn.md):
+
+- Chinese live routing: 16 real `/api/route` calls (8 Chinese/mixed prompts x deepseek-chat and
+  qwen), no mocks, per-prompt choice/confidence/confirmation/latency recorded; the two models
+  disagree on the safety-bypass prompt.
+- Multi-model 10-prompt matrix: frozen 6 positive / 2 gap / 2 human, 5 Chinese + 5 English. DeepSeek
+  official flash and v4-pro completed 20/20 (10/10 routing labels each). `qwen` degraded to 121.7 s
+  per call in this window and is **not scored**; `minimax` is unavailable (HTTP 403). Both are
+  recorded, not hidden.
+- Frontend functionality and hands-on operation: 17/18 checklist items pass; the one FAIL is that a
+  single edge cannot be deleted through the UI. A real browser run of the EIS quality-control workflow
+  (import -> build -> parameters -> review pause -> continue -> result -> export/import) and the QE
+  replay demo completed, plus an independent Lead rerun.
+- One-command live demo: `scripts/start_demo.ps1` / `scripts/start_demo.bat` starts or reuses both
+  model gateways, the backend and the WebUI; credentials are read from the Windows User environment
+  scope into child processes only.
+- Defects fixed in round 2: the decision panel now shows decision source/model/confidence and treats
+  candidate scores as compatibility rather than accuracy (frontend `3df9139`); the Jev fallback
+  rationale no longer leaks internal urlopen errors (backend `6de8349`).
+- Still open: Ubuntu (skipped by the user), the Jev on-path (port 4079 was not running), product
+  defects D-03/D-05 and the edge-delete FAIL, 120 s timeout visibility, recording and a frontend E2E
+  CI job. The plan is therefore not "fully met" as a whole, while the user-scoped round-2 objectives
+  are evidenced.
 
 | Area | Current evidence | Remaining boundary |
 |---|---|---|

@@ -1,0 +1,196 @@
+{
+  "model_under_test": "qwen",
+  "prompt": {
+    "id": "cn-tga-carbonate",
+    "lang": "zh",
+    "label": "Chinese TGA / carbonate (catalogue gap)",
+    "message": "请分析这份热重分析曲线，计算碳酸钙分解的失重台阶温度区间和活化能。",
+    "types": [
+      "TypedTable"
+    ],
+    "expect": "no TGA tool exists -> gap / human confirmation"
+  },
+  "task_request": {
+    "task_id": "b3e056ed-5a38-4ef7-b5e2-63adf2264fe2",
+    "user_message": "请分析这份热重分析曲线，计算碳酸钙分解的失重台阶温度区间和活化能。",
+    "graph_version": 0,
+    "available_input_types": [
+      "TypedTable"
+    ]
+  },
+  "http_status": 200,
+  "latency_seconds": 5.083,
+  "response": {
+    "decision_id": "005bb6ec-ac27-4a2c-88be-05e6a1bf008e",
+    "task_id": "b3e056ed-5a38-4ef7-b5e2-63adf2264fe2",
+    "graph_version": 0,
+    "candidates": [
+      {
+        "tool_id": "eis_basic_qc",
+        "version": "1.0.0",
+        "score": 0.0,
+        "reasons": [
+          "input ports accept the available data"
+        ]
+      },
+      {
+        "tool_id": "ftir_peak_extraction",
+        "version": "1.0.0",
+        "score": 0.0,
+        "reasons": [
+          "input ports accept the available data"
+        ]
+      },
+      {
+        "tool_id": "qe_structure",
+        "version": "1.0.0",
+        "score": 0.0,
+        "reasons": [
+          "needs no upstream input"
+        ]
+      },
+      {
+        "tool_id": "raw_file_import",
+        "version": "1.0.0",
+        "score": 0.0,
+        "reasons": [
+          "needs no upstream input"
+        ]
+      },
+      {
+        "tool_id": "skill_node",
+        "version": "1.0.0",
+        "score": 0.0,
+        "reasons": [
+          "input ports accept the available data"
+        ]
+      },
+      {
+        "tool_id": "xrd_peak_extraction",
+        "version": "1.0.0",
+        "score": 0.0,
+        "reasons": [
+          "input ports accept the available data"
+        ]
+      }
+    ],
+    "selected": [],
+    "confidence": 0.95,
+    "rationale": "[llm] Jev routing unavailable: <urlopen error [WinError 10061] 由于目标计算机积极拒绝，无法连接。>; the LLM decided instead. The request requires analyzing Thermogravimetric Analysis (TGA) data to calculate weight loss temperature ranges and activation energy, but none of the candidate tools are designed for TGA analysis (candidates cover EIS, FTIR, XRD, Crystal Structure, or generic import/AI skills).",
+    "requires_human_confirmation": true,
+    "model_decisions": [
+      {
+        "profile": "llm",
+        "model": "qwen",
+        "selected_tool_id": null,
+        "score": 0.95,
+        "calibrated": false,
+        "evidence": {
+          "rationale": "The request requires analyzing Thermogravimetric Analysis (TGA) data to calculate weight loss temperature ranges and activation energy, but none of the candidate tools are designed for TGA analysis (candidates cover EIS, FTIR, XRD, Crystal Structure, or generic import/AI skills).",
+          "params": {}
+        }
+      }
+    ],
+    "summary": {
+      "schema_version": "1.0",
+      "task_id": "b3e056ed-5a38-4ef7-b5e2-63adf2264fe2",
+      "trace_id": "e6c71dcf35ac4f3e887808f55d05b285",
+      "status": "waiting_for_confirmation",
+      "user_prompt": "请分析这份热重分析曲线，计算碳酸钙分解的失重台阶温度区间和活化能。",
+      "input_context": {
+        "graph_version": 0,
+        "available_input_types": [
+          "TypedTable"
+        ],
+        "assumptions": []
+      },
+      "decision": {
+        "decision_id": "005bb6ec-ac27-4a2c-88be-05e6a1bf008e",
+        "candidate_tools": [
+          {
+            "registered_id": "eis_basic_qc",
+            "version": "1.0.0",
+            "label": "EIS Basic Analysis",
+            "category": "Analysis",
+            "retrieval_score": 0.0,
+            "reasons": [
+              "input ports accept the available data"
+            ]
+          },
+          {
+            "registered_id": "ftir_peak_extraction",
+            "version": "1.0.0",
+            "label": "FTIR Peak Extraction",
+            "category": "FTIR Analysis",
+            "retrieval_score": 0.0,
+            "reasons": [
+              "input ports accept the available data"
+            ]
+          },
+          {
+            "registered_id": "qe_structure",
+            "version": "1.0.0",
+            "label": "Crystal Structure",
+            "category": "QE",
+            "retrieval_score": 0.0,
+            "reasons": [
+              "needs no upstream input"
+            ]
+          },
+          {
+            "registered_id": "raw_file_import",
+            "version": "1.0.0",
+            "label": "Raw File Import",
+            "category": "Input",
+            "retrieval_score": 0.0,
+            "reasons": [
+              "needs no upstream input"
+            ]
+          },
+          {
+            "registered_id": "skill_node",
+            "version": "1.0.0",
+            "label": "AI Skill Node",
+            "category": "AI",
+            "retrieval_score": 0.0,
+            "reasons": [
+              "input ports accept the available data"
+            ]
+          },
+          {
+            "registered_id": "xrd_peak_extraction",
+            "version": "1.0.0",
+            "label": "XRD Peak Extraction",
+            "category": "XRD Analysis",
+            "retrieval_score": 0.0,
+            "reasons": [
+              "input ports accept the available data"
+            ]
+          }
+        ],
+        "selected_tools": [],
+        "confidence": 0.95,
+        "rationale": "[llm] Jev routing unavailable: <urlopen error [WinError 10061] 由于目标计算机积极拒绝，无法连接。>; the LLM decided instead. The request requires analyzing Thermogravimetric Analysis (TGA) data to calculate weight loss temperature ranges and activation energy, but none of the candidate tools are designed for TGA analysis (candidates cover EIS, FTIR, XRD, Crystal Structure, or generic import/AI skills).",
+        "model_opinions": [
+          {
+            "profile": "llm",
+            "model": "qwen",
+            "selected_tool_id": null,
+            "score": 0.95,
+            "calibrated": false,
+            "evidence": {
+              "rationale": "The request requires analyzing Thermogravimetric Analysis (TGA) data to calculate weight loss temperature ranges and activation energy, but none of the candidate tools are designed for TGA analysis (candidates cover EIS, FTIR, XRD, Crystal Structure, or generic import/AI skills).",
+              "params": {}
+            }
+          }
+        ]
+      },
+      "result": null,
+      "error_and_handling": {
+        "error": null,
+        "handling": "No automatic execution. Human confirmation is required before continuing."
+      }
+    }
+  },
+  "attempt": 1
+}

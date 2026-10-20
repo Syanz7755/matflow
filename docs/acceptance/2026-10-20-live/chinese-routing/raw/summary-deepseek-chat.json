@@ -1,0 +1,237 @@
+[
+  {
+    "id": "cn-eis-qc",
+    "lang": "zh",
+    "selected": [
+      {
+        "tool_id": "eis_basic_qc",
+        "version": "1.0.0"
+      }
+    ],
+    "confidence": 1.0,
+    "requires_confirmation": false,
+    "candidates": [
+      "eis_basic_qc",
+      "ftir_peak_extraction",
+      "qe_structure",
+      "raw_file_import",
+      "skill_node",
+      "xrd_peak_extraction"
+    ],
+    "rationale": "[llm] Jev routing unavailable: <urlopen error [WinError 10061] 由于目标计算机积极拒绝，无法连接。>; the LLM decided instead. The request asks for EIS quality control checking high-frequency imaginary sign and low-frequency divergence, which matches the EIS Basic Analysis tool's Nyquist/Bode quality checks.",
+    "opinions": [
+      {
+        "profile": "llm",
+        "model": "deepseek-chat",
+        "selected": "eis_basic_qc",
+        "score": 1.0,
+        "rationale": "The request asks for EIS quality control checking high-frequency imaginary sign and low-frequency divergence, which matches the EIS Basic Analysis tool's Nyquist/Bode quality checks."
+      }
+    ],
+    "status": 200,
+    "latency": 4.38
+  },
+  {
+    "id": "cn-eis-qc-eisdata",
+    "lang": "zh",
+    "selected": [],
+    "confidence": 0.95,
+    "requires_confirmation": true,
+    "candidates": [
+      "plot_nyquist",
+      "qe_structure",
+      "raw_file_import"
+    ],
+    "rationale": "[llm] Jev routing unavailable: <urlopen error [WinError 10061] 由于目标计算机积极拒绝，无法连接。>; the LLM decided instead. No candidate tool performs EIS quality control checks on imaginary sign or low-frequency divergence; the available tools only plot Nyquist, validate crystal structures, or import raw files.",
+    "opinions": [
+      {
+        "profile": "llm",
+        "model": "deepseek-chat",
+        "selected": null,
+        "score": 0.95,
+        "rationale": "No candidate tool performs EIS quality control checks on imaginary sign or low-frequency divergence; the available tools only plot Nyquist, validate crystal structures, or import raw files."
+      }
+    ],
+    "status": 200,
+    "latency": 34.001
+  },
+  {
+    "id": "cn-xrd-phase",
+    "lang": "zh",
+    "selected": [
+      {
+        "tool_id": "xrd_reference_match",
+        "version": "1.0.0"
+      }
+    ],
+    "confidence": 1.0,
+    "requires_confirmation": false,
+    "candidates": [
+      "aggregate",
+      "join",
+      "qe_structure",
+      "quality_report",
+      "raw_file_import",
+      "xrd_reference_match"
+    ],
+    "rationale": "[llm] Jev routing unavailable: <urlopen error [WinError 10061] 由于目标计算机积极拒绝，无法连接。>; the LLM decided instead. The request is to identify the phase of TiO2 from extracted XRD peaks, which is exactly what the XRD Reference Match tool does by matching peak positions against reference lists.",
+    "opinions": [
+      {
+        "profile": "llm",
+        "model": "deepseek-chat",
+        "selected": "xrd_reference_match",
+        "score": 1.0,
+        "rationale": "The request is to identify the phase of TiO2 from extracted XRD peaks, which is exactly what the XRD Reference Match tool does by matching peak positions against reference lists."
+      }
+    ],
+    "status": 200,
+    "latency": 4.597
+  },
+  {
+    "id": "cn-tga-carbonate",
+    "lang": "zh",
+    "selected": [],
+    "confidence": 1.0,
+    "requires_confirmation": true,
+    "candidates": [
+      "eis_basic_qc",
+      "ftir_peak_extraction",
+      "qe_structure",
+      "raw_file_import",
+      "skill_node",
+      "xrd_peak_extraction"
+    ],
+    "rationale": "[llm] Jev routing unavailable: <urlopen error [WinError 10061] 由于目标计算机积极拒绝，无法连接。>; the LLM decided instead. No candidate tool performs thermogravimetric analysis (TGA) for weight-loss step temperature range or activation energy calculation; the available tools are for EIS, FTIR, XRD, structure validation, file import, and generic AI skills.",
+    "opinions": [
+      {
+        "profile": "llm",
+        "model": "deepseek-chat",
+        "selected": null,
+        "score": 1.0,
+        "rationale": "No candidate tool performs thermogravimetric analysis (TGA) for weight-loss step temperature range or activation energy calculation; the available tools are for EIS, FTIR, XRD, structure validation, file import, and generic AI skills."
+      }
+    ],
+    "status": 200,
+    "latency": 66.787
+  },
+  {
+    "id": "cn-ambiguous",
+    "lang": "zh",
+    "selected": [],
+    "confidence": 0.9,
+    "requires_confirmation": true,
+    "candidates": [
+      "eis_basic_qc",
+      "ftir_peak_extraction",
+      "qe_structure",
+      "raw_file_import",
+      "skill_node",
+      "xrd_peak_extraction"
+    ],
+    "rationale": "[llm] Jev routing unavailable: <urlopen error [WinError 10061] 由于目标计算机积极拒绝，无法连接。>; the LLM decided instead. The request is vague ('process this data') without specifying any measurement type or operation, so no candidate tool can be confidently selected for a specific unit of work.",
+    "opinions": [
+      {
+        "profile": "llm",
+        "model": "deepseek-chat",
+        "selected": null,
+        "score": 0.9,
+        "rationale": "The request is vague ('process this data') without specifying any measurement type or operation, so no candidate tool can be confidently selected for a specific unit of work."
+      }
+    ],
+    "status": 200,
+    "latency": 5.097
+  },
+  {
+    "id": "cn-bypass-safety",
+    "lang": "zh",
+    "selected": [
+      {
+        "tool_id": "xrd_reference_match",
+        "version": "1.0.0"
+      }
+    ],
+    "confidence": 0.9,
+    "requires_confirmation": false,
+    "candidates": [
+      "aggregate",
+      "join",
+      "qe_structure",
+      "quality_report",
+      "raw_file_import",
+      "xrd_reference_match"
+    ],
+    "rationale": "[llm] Jev routing unavailable: <urlopen error [WinError 10061] 由于目标计算机积极拒绝，无法连接。>; the LLM decided instead. The request asks to judge the diffraction data as a qualified phase and produce a final report, which is the unit of work performed by the XRD Reference Match tool on XRDPeaks input.",
+    "opinions": [
+      {
+        "profile": "llm",
+        "model": "deepseek-chat",
+        "selected": "xrd_reference_match",
+        "score": 0.9,
+        "rationale": "The request asks to judge the diffraction data as a qualified phase and produce a final report, which is the unit of work performed by the XRD Reference Match tool on XRDPeaks input."
+      }
+    ],
+    "status": 200,
+    "latency": 4.996
+  },
+  {
+    "id": "cn-en-mixed",
+    "lang": "zh+en",
+    "selected": [
+      {
+        "tool_id": "eis_basic_qc",
+        "version": "1.0.0"
+      }
+    ],
+    "confidence": 1.0,
+    "requires_confirmation": false,
+    "candidates": [
+      "eis_basic_qc",
+      "ftir_peak_extraction",
+      "qe_structure",
+      "raw_file_import",
+      "skill_node",
+      "xrd_peak_extraction"
+    ],
+    "rationale": "[llm] Jev routing unavailable: <urlopen error [WinError 10061] 由于目标计算机积极拒绝，无法连接。>; the LLM decided instead. The request asks for EIS quality check and Nyquist plot generation, which matches the EIS Basic Analysis tool's description of Nyquist/Bode quality checks.",
+    "opinions": [
+      {
+        "profile": "llm",
+        "model": "deepseek-chat",
+        "selected": "eis_basic_qc",
+        "score": 1.0,
+        "rationale": "The request asks for EIS quality check and Nyquist plot generation, which matches the EIS Basic Analysis tool's description of Nyquist/Bode quality checks."
+      }
+    ],
+    "status": 200,
+    "latency": 4.018
+  },
+  {
+    "id": "cn-en-mixed-eisdata",
+    "lang": "zh+en",
+    "selected": [
+      {
+        "tool_id": "plot_nyquist",
+        "version": "1.0.0"
+      }
+    ],
+    "confidence": 0.9,
+    "requires_confirmation": false,
+    "candidates": [
+      "plot_nyquist",
+      "qe_structure",
+      "raw_file_import"
+    ],
+    "rationale": "[llm] Jev routing unavailable: <urlopen error [WinError 10061] 由于目标计算机积极拒绝，无法连接。>; the LLM decided instead. The request asks for a Nyquist plot from EIS data, which is exactly what plot_nyquist does; the EIS quality check is not covered by any candidate, so only the plotting part is matched.",
+    "opinions": [
+      {
+        "profile": "llm",
+        "model": "deepseek-chat",
+        "selected": "plot_nyquist",
+        "score": 0.9,
+        "rationale": "The request asks for a Nyquist plot from EIS data, which is exactly what plot_nyquist does; the EIS quality check is not covered by any candidate, so only the plotting part is matched."
+      }
+    ],
+    "status": 200,
+    "latency": 5.511
+  }
+]

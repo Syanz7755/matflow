@@ -1,0 +1,2144 @@
+{
+  "app": "http://127.0.0.1:5221/",
+  "api": "http://127.0.0.1:8021/api",
+  "steps": [
+    {
+      "at": "2026-10-20T14:29:41.662Z",
+      "message": "disconnect FAILED: edges 2 -> 2"
+    },
+    {
+      "at": "2026-10-20T14:29:57.839Z",
+      "message": "normalize review persisted=true"
+    },
+    {
+      "at": "2026-10-20T14:29:58.025Z",
+      "message": "screenshot 09-stop-run-waiting.png"
+    },
+    {
+      "at": "2026-10-20T14:29:58.026Z",
+      "message": "stop-run gate waiting: normalize=waiting eis=ready eisOutput=null"
+    },
+    {
+      "at": "2026-10-20T14:29:59.626Z",
+      "message": "stop run: normalize=cancelled eis=ready downstreamOutputNull=true"
+    },
+    {
+      "at": "2026-10-20T14:29:59.802Z",
+      "message": "screenshot 07-route-task-dialog.png"
+    },
+    {
+      "at": "2026-10-20T14:29:59.816Z",
+      "message": "route-task panel opened and closed"
+    }
+  ],
+  "states": {
+    "stopRunWaiting": {
+      "graph_id": "local-default",
+      "version": 2,
+      "revision": 15,
+      "updated_at": "2026-10-20T14:29:57+00:00",
+      "nodes": [
+        {
+          "id": "raw_file_import-1",
+          "type": "raw_file_import",
+          "tool_id": "raw_file_import",
+          "tool_version": "1.0.0",
+          "label": "Raw File Import",
+          "params": {
+            "file_name": "measurement.csv",
+            "upload_id": "184e6de9e4a74ace8ada0e33a3e1c7aa_eis_spectrum.csv"
+          },
+          "position": {
+            "x": 80,
+            "y": 80
+          },
+          "status": "completed",
+          "output": {
+            "kind": "RawData",
+            "upload_id": "184e6de9e4a74ace8ada0e33a3e1c7aa_eis_spectrum.csv",
+            "rows": 13,
+            "columns": [
+              "frequency_hz",
+              "z_real_ohm",
+              "z_imag_ohm"
+            ],
+            "preview": [
+              {
+                "frequency_hz": 100000,
+                "z_real_ohm": 5.00001,
+                "z_imag_ohm": -0.01592
+              },
+              {
+                "frequency_hz": 50000,
+                "z_real_ohm": 5.00003,
+                "z_imag_ohm": -0.03183
+              },
+              {
+                "frequency_hz": 20000,
+                "z_real_ohm": 5.00016,
+                "z_imag_ohm": -0.07958
+              },
+              {
+                "frequency_hz": 10000,
+                "z_real_ohm": 5.00063,
+                "z_imag_ohm": -0.15915
+              },
+              {
+                "frequency_hz": 5000,
+                "z_real_ohm": 5.00253,
+                "z_imag_ohm": -0.31829
+              },
+              {
+                "frequency_hz": 2000,
+                "z_real_ohm": 5.01583,
+                "z_imag_ohm": -0.79546
+              },
+              {
+                "frequency_hz": 1000,
+                "z_real_ohm": 5.06323,
+                "z_imag_ohm": -1.58903
+              },
+              {
+                "frequency_hz": 500,
+                "z_real_ohm": 5.25171,
+                "z_imag_ohm": -3.16307
+              }
+            ]
+          },
+          "preview": {
+            "kind": "table",
+            "port": "raw",
+            "rows": [
+              {
+                "frequency_hz": 100000,
+                "z_real_ohm": 5.00001,
+                "z_imag_ohm": -0.01592
+              },
+              {
+                "frequency_hz": 50000,
+                "z_real_ohm": 5.00003,
+                "z_imag_ohm": -0.03183
+              },
+              {
+                "frequency_hz": 20000,
+                "z_real_ohm": 5.00016,
+                "z_imag_ohm": -0.07958
+              },
+              {
+                "frequency_hz": 10000,
+                "z_real_ohm": 5.00063,
+                "z_imag_ohm": -0.15915
+              },
+              {
+                "frequency_hz": 5000,
+                "z_real_ohm": 5.00253,
+                "z_imag_ohm": -0.31829
+              },
+              {
+                "frequency_hz": 2000,
+                "z_real_ohm": 5.01583,
+                "z_imag_ohm": -0.79546
+              },
+              {
+                "frequency_hz": 1000,
+                "z_real_ohm": 5.06323,
+                "z_imag_ohm": -1.58903
+              },
+              {
+                "frequency_hz": 500,
+                "z_real_ohm": 5.25171,
+                "z_imag_ohm": -3.16307
+              }
+            ],
+            "truncated": false
+          },
+          "review_policy": {
+            "after_run": false,
+            "prompt": "Review this result before continuing."
+          },
+          "review_state": {
+            "status": "off",
+            "comment": null
+          }
+        },
+        {
+          "id": "normalize_columns-1",
+          "type": "normalize_columns",
+          "tool_id": "normalize_columns",
+          "tool_version": "1.0.0",
+          "label": "Normalize / Column Mapping",
+          "params": {},
+          "position": {
+            "x": 420,
+            "y": 80
+          },
+          "status": "waiting",
+          "output": {
+            "kind": "TypedTable",
+            "upload_id": "184e6de9e4a74ace8ada0e33a3e1c7aa_eis_spectrum.csv",
+            "mapping": {},
+            "rows": 13
+          },
+          "preview": {
+            "kind": "json_tree",
+            "port": "table",
+            "data": {
+              "kind": "TypedTable",
+              "upload_id": "184e6de9e4a74ace8ada0e33a3e1c7aa_eis_spectrum.csv",
+              "mapping": {},
+              "rows": 13
+            }
+          },
+          "review_policy": {
+            "after_run": true,
+            "prompt": "Review this result before continuing."
+          },
+          "review_state": {
+            "status": "pending",
+            "comment": null
+          }
+        },
+        {
+          "id": "eis_basic_qc-1",
+          "type": "eis_basic_qc",
+          "tool_id": "eis_basic_qc",
+          "tool_version": "1.0.0",
+          "label": "EIS Basic Analysis",
+          "params": {
+            "min_frequency_hz": 10,
+            "fit_model": "None",
+            "frequency_column": "frequency_hz",
+            "real_column": "z_real_ohm",
+            "imag_column": "z_imag_ohm"
+          },
+          "position": {
+            "x": 760,
+            "y": 80
+          },
+          "status": "ready",
+          "output": null,
+          "preview": null,
+          "review_policy": {
+            "after_run": true,
+            "prompt": "Review this result before continuing."
+          },
+          "review_state": {
+            "status": "off",
+            "comment": null
+          }
+        }
+      ],
+      "edges": [
+        {
+          "id": "raw_file_import-1-raw--normalize_columns-1-raw",
+          "source": "raw_file_import-1",
+          "source_port": "raw",
+          "target": "normalize_columns-1",
+          "target_port": "raw"
+        },
+        {
+          "id": "normalize_columns-1-table--eis_basic_qc-1-data",
+          "source": "normalize_columns-1",
+          "source_port": "table",
+          "target": "eis_basic_qc-1",
+          "target_port": "data"
+        }
+      ],
+      "history": [
+        {
+          "version": 1,
+          "patch": {
+            "patch_id": "20a2827c-7a14-4781-a515-41849615d39e",
+            "base_version": 0,
+            "operations": [
+              {
+                "op": "add_node",
+                "node": {
+                  "id": "raw_file_import-1",
+                  "type": "raw_file_import",
+                  "tool_id": "raw_file_import",
+                  "tool_version": "1.0.0",
+                  "label": "Raw File Import",
+                  "params": {
+                    "file_name": "measurement.csv",
+                    "upload_id": "184e6de9e4a74ace8ada0e33a3e1c7aa_eis_spectrum.csv"
+                  },
+                  "position": {
+                    "x": 80,
+                    "y": 80
+                  },
+                  "status": "ready",
+                  "output": null,
+                  "preview": null,
+                  "review_policy": {
+                    "after_run": false,
+                    "prompt": "Review this result before continuing."
+                  },
+                  "review_state": {
+                    "status": "off",
+                    "comment": null
+                  }
+                },
+                "node_id": null,
+                "params": null,
+                "changes": null,
+                "edge": null,
+                "edge_id": null,
+                "replacement_node": null,
+                "reconnect_edges": null,
+                "proposal_id": null
+              },
+              {
+                "op": "add_node",
+                "node": {
+                  "id": "normalize_columns-1",
+                  "type": "normalize_columns",
+                  "tool_id": "normalize_columns",
+                  "tool_version": "1.0.0",
+                  "label": "Normalize / Column Mapping",
+                  "params": {},
+                  "position": {
+                    "x": 420,
+                    "y": 80
+                  },
+                  "status": "ready",
+                  "output": null,
+                  "preview": null,
+                  "review_policy": {
+                    "after_run": false,
+                    "prompt": "Review this result before continuing."
+                  },
+                  "review_state": {
+                    "status": "off",
+                    "comment": null
+                  }
+                },
+                "node_id": null,
+                "params": null,
+                "changes": null,
+                "edge": null,
+                "edge_id": null,
+                "replacement_node": null,
+                "reconnect_edges": null,
+                "proposal_id": null
+              },
+              {
+                "op": "add_node",
+                "node": {
+                  "id": "eis_basic_qc-1",
+                  "type": "eis_basic_qc",
+                  "tool_id": "eis_basic_qc",
+                  "tool_version": "1.0.0",
+                  "label": "EIS Basic Analysis",
+                  "params": {
+                    "min_frequency_hz": 10,
+                    "fit_model": "None",
+                    "frequency_column": "frequency_hz",
+                    "real_column": "z_real_ohm",
+                    "imag_column": "z_imag_ohm"
+                  },
+                  "position": {
+                    "x": 760,
+                    "y": 80
+                  },
+                  "status": "ready",
+                  "output": null,
+                  "preview": null,
+                  "review_policy": {
+                    "after_run": true,
+                    "prompt": "Review this result before continuing."
+                  },
+                  "review_state": {
+                    "status": "off",
+                    "comment": null
+                  }
+                },
+                "node_id": null,
+                "params": null,
+                "changes": null,
+                "edge": null,
+                "edge_id": null,
+                "replacement_node": null,
+                "reconnect_edges": null,
+                "proposal_id": null
+              },
+              {
+                "op": "connect",
+                "node": null,
+                "node_id": null,
+                "params": null,
+                "changes": null,
+                "edge": {
+                  "id": "raw_file_import-1-raw--normalize_columns-1-raw",
+                  "source": "raw_file_import-1",
+                  "source_port": "raw",
+                  "target": "normalize_columns-1",
+                  "target_port": "raw"
+                },
+                "edge_id": null,
+                "replacement_node": null,
+                "reconnect_edges": null,
+                "proposal_id": null
+              },
+              {
+                "op": "connect",
+                "node": null,
+                "node_id": null,
+                "params": null,
+                "changes": null,
+                "edge": {
+                  "id": "normalize_columns-1-table--eis_basic_qc-1-data",
+                  "source": "normalize_columns-1",
+                  "source_port": "table",
+                  "target": "eis_basic_qc-1",
+                  "target_port": "data"
+                },
+                "edge_id": null,
+                "replacement_node": null,
+                "reconnect_edges": null,
+                "proposal_id": null
+              }
+            ],
+            "rationale": "Saved from the MatFlow workflow editor",
+            "requires_human_confirmation": false
+          },
+          "before": {
+            "graph_id": "local-default",
+            "version": 0,
+            "revision": 0,
+            "updated_at": null,
+            "nodes": [],
+            "edges": [],
+            "history": []
+          }
+        },
+        {
+          "version": 2,
+          "patch": {
+            "patch_id": "b64aea7b-4029-4eee-a508-d11a6d5a43d1",
+            "base_version": 1,
+            "operations": [
+              {
+                "op": "update_node",
+                "node": null,
+                "node_id": "normalize_columns-1",
+                "params": null,
+                "changes": {
+                  "review_policy": {
+                    "after_run": true,
+                    "prompt": "Review this result before continuing."
+                  }
+                },
+                "edge": null,
+                "edge_id": null,
+                "replacement_node": null,
+                "reconnect_edges": null,
+                "proposal_id": null
+              }
+            ],
+            "rationale": "Saved from the MatFlow workflow editor",
+            "requires_human_confirmation": false
+          },
+          "before": {
+            "graph_id": "local-default",
+            "version": 1,
+            "revision": 9,
+            "updated_at": "2026-10-20T14:28:48+00:00",
+            "nodes": [
+              {
+                "id": "raw_file_import-1",
+                "type": "raw_file_import",
+                "tool_id": "raw_file_import",
+                "tool_version": "1.0.0",
+                "label": "Raw File Import",
+                "params": {
+                  "file_name": "measurement.csv",
+                  "upload_id": "184e6de9e4a74ace8ada0e33a3e1c7aa_eis_spectrum.csv"
+                },
+                "position": {
+                  "x": 80,
+                  "y": 80
+                },
+                "status": "completed",
+                "output": {
+                  "kind": "RawData",
+                  "upload_id": "184e6de9e4a74ace8ada0e33a3e1c7aa_eis_spectrum.csv",
+                  "rows": 13,
+                  "columns": [
+                    "frequency_hz",
+                    "z_real_ohm",
+                    "z_imag_ohm"
+                  ],
+                  "preview": [
+                    {
+                      "frequency_hz": 100000,
+                      "z_real_ohm": 5.00001,
+                      "z_imag_ohm": -0.01592
+                    },
+                    {
+                      "frequency_hz": 50000,
+                      "z_real_ohm": 5.00003,
+                      "z_imag_ohm": -0.03183
+                    },
+                    {
+                      "frequency_hz": 20000,
+                      "z_real_ohm": 5.00016,
+                      "z_imag_ohm": -0.07958
+                    },
+                    {
+                      "frequency_hz": 10000,
+                      "z_real_ohm": 5.00063,
+                      "z_imag_ohm": -0.15915
+                    },
+                    {
+                      "frequency_hz": 5000,
+                      "z_real_ohm": 5.00253,
+                      "z_imag_ohm": -0.31829
+                    },
+                    {
+                      "frequency_hz": 2000,
+                      "z_real_ohm": 5.01583,
+                      "z_imag_ohm": -0.79546
+                    },
+                    {
+                      "frequency_hz": 1000,
+                      "z_real_ohm": 5.06323,
+                      "z_imag_ohm": -1.58903
+                    },
+                    {
+                      "frequency_hz": 500,
+                      "z_real_ohm": 5.25171,
+                      "z_imag_ohm": -3.16307
+                    }
+                  ]
+                },
+                "preview": {
+                  "kind": "table",
+                  "port": "raw",
+                  "rows": [
+                    {
+                      "frequency_hz": 100000,
+                      "z_real_ohm": 5.00001,
+                      "z_imag_ohm": -0.01592
+                    },
+                    {
+                      "frequency_hz": 50000,
+                      "z_real_ohm": 5.00003,
+                      "z_imag_ohm": -0.03183
+                    },
+                    {
+                      "frequency_hz": 20000,
+                      "z_real_ohm": 5.00016,
+                      "z_imag_ohm": -0.07958
+                    },
+                    {
+                      "frequency_hz": 10000,
+                      "z_real_ohm": 5.00063,
+                      "z_imag_ohm": -0.15915
+                    },
+                    {
+                      "frequency_hz": 5000,
+                      "z_real_ohm": 5.00253,
+                      "z_imag_ohm": -0.31829
+                    },
+                    {
+                      "frequency_hz": 2000,
+                      "z_real_ohm": 5.01583,
+                      "z_imag_ohm": -0.79546
+                    },
+                    {
+                      "frequency_hz": 1000,
+                      "z_real_ohm": 5.06323,
+                      "z_imag_ohm": -1.58903
+                    },
+                    {
+                      "frequency_hz": 500,
+                      "z_real_ohm": 5.25171,
+                      "z_imag_ohm": -3.16307
+                    }
+                  ],
+                  "truncated": false
+                },
+                "review_policy": {
+                  "after_run": false,
+                  "prompt": "Review this result before continuing."
+                },
+                "review_state": {
+                  "status": "off",
+                  "comment": null
+                }
+              },
+              {
+                "id": "normalize_columns-1",
+                "type": "normalize_columns",
+                "tool_id": "normalize_columns",
+                "tool_version": "1.0.0",
+                "label": "Normalize / Column Mapping",
+                "params": {},
+                "position": {
+                  "x": 420,
+                  "y": 80
+                },
+                "status": "completed",
+                "output": {
+                  "kind": "TypedTable",
+                  "upload_id": "184e6de9e4a74ace8ada0e33a3e1c7aa_eis_spectrum.csv",
+                  "mapping": {},
+                  "rows": 13
+                },
+                "preview": {
+                  "kind": "json_tree",
+                  "port": "table",
+                  "data": {
+                    "kind": "TypedTable",
+                    "upload_id": "184e6de9e4a74ace8ada0e33a3e1c7aa_eis_spectrum.csv",
+                    "mapping": {},
+                    "rows": 13
+                  }
+                },
+                "review_policy": {
+                  "after_run": false,
+                  "prompt": "Review this result before continuing."
+                },
+                "review_state": {
+                  "status": "off",
+                  "comment": null
+                }
+              },
+              {
+                "id": "eis_basic_qc-1",
+                "type": "eis_basic_qc",
+                "tool_id": "eis_basic_qc",
+                "tool_version": "1.0.0",
+                "label": "EIS Basic Analysis",
+                "params": {
+                  "min_frequency_hz": 10,
+                  "fit_model": "None",
+                  "frequency_column": "frequency_hz",
+                  "real_column": "z_real_ohm",
+                  "imag_column": "z_imag_ohm"
+                },
+                "position": {
+                  "x": 760,
+                  "y": 80
+                },
+                "status": "completed",
+                "output": {
+                  "kind": "EISQCReport",
+                  "upload_id": "184e6de9e4a74ace8ada0e33a3e1c7aa_eis_spectrum.csv",
+                  "mapping": {
+                    "frequency_column": "frequency_hz",
+                    "real_column": "z_real_ohm",
+                    "imag_column": "z_imag_ohm"
+                  },
+                  "rows_valid": 13,
+                  "rows_retained": 13,
+                  "min_frequency_hz": 10,
+                  "pass": true,
+                  "issues": []
+                },
+                "preview": {
+                  "kind": "json_tree",
+                  "port": "report",
+                  "data": {
+                    "kind": "EISQCReport",
+                    "upload_id": "184e6de9e4a74ace8ada0e33a3e1c7aa_eis_spectrum.csv",
+                    "mapping": {
+                      "frequency_column": "frequency_hz",
+                      "real_column": "z_real_ohm",
+                      "imag_column": "z_imag_ohm"
+                    },
+                    "rows_valid": 13,
+                    "rows_retained": 13,
+                    "min_frequency_hz": 10,
+                    "pass": true,
+                    "issues": []
+                  }
+                },
+                "review_policy": {
+                  "after_run": true,
+                  "prompt": "Review this result before continuing."
+                },
+                "review_state": {
+                  "status": "approved",
+                  "comment": null
+                }
+              }
+            ],
+            "edges": [
+              {
+                "id": "raw_file_import-1-raw--normalize_columns-1-raw",
+                "source": "raw_file_import-1",
+                "source_port": "raw",
+                "target": "normalize_columns-1",
+                "target_port": "raw"
+              },
+              {
+                "id": "normalize_columns-1-table--eis_basic_qc-1-data",
+                "source": "normalize_columns-1",
+                "source_port": "table",
+                "target": "eis_basic_qc-1",
+                "target_port": "data"
+              }
+            ],
+            "history": [
+              {
+                "version": 1,
+                "patch": {
+                  "patch_id": "20a2827c-7a14-4781-a515-41849615d39e",
+                  "base_version": 0,
+                  "operations": [
+                    {
+                      "op": "add_node",
+                      "node": {
+                        "id": "raw_file_import-1",
+                        "type": "raw_file_import",
+                        "tool_id": "raw_file_import",
+                        "tool_version": "1.0.0",
+                        "label": "Raw File Import",
+                        "params": {
+                          "file_name": "measurement.csv",
+                          "upload_id": "184e6de9e4a74ace8ada0e33a3e1c7aa_eis_spectrum.csv"
+                        },
+                        "position": {
+                          "x": 80,
+                          "y": 80
+                        },
+                        "status": "ready",
+                        "output": null,
+                        "preview": null,
+                        "review_policy": {
+                          "after_run": false,
+                          "prompt": "Review this result before continuing."
+                        },
+                        "review_state": {
+                          "status": "off",
+                          "comment": null
+                        }
+                      },
+                      "node_id": null,
+                      "params": null,
+                      "changes": null,
+                      "edge": null,
+                      "edge_id": null,
+                      "replacement_node": null,
+                      "reconnect_edges": null,
+                      "proposal_id": null
+                    },
+                    {
+                      "op": "add_node",
+                      "node": {
+                        "id": "normalize_columns-1",
+                        "type": "normalize_columns",
+                        "tool_id": "normalize_columns",
+                        "tool_version": "1.0.0",
+                        "label": "Normalize / Column Mapping",
+                        "params": {},
+                        "position": {
+                          "x": 420,
+                          "y": 80
+                        },
+                        "status": "ready",
+                        "output": null,
+                        "preview": null,
+                        "review_policy": {
+                          "after_run": false,
+                          "prompt": "Review this result before continuing."
+                        },
+                        "review_state": {
+                          "status": "off",
+                          "comment": null
+                        }
+                      },
+                      "node_id": null,
+                      "params": null,
+                      "changes": null,
+                      "edge": null,
+                      "edge_id": null,
+                      "replacement_node": null,
+                      "reconnect_edges": null,
+                      "proposal_id": null
+                    },
+                    {
+                      "op": "add_node",
+                      "node": {
+                        "id": "eis_basic_qc-1",
+                        "type": "eis_basic_qc",
+                        "tool_id": "eis_basic_qc",
+                        "tool_version": "1.0.0",
+                        "label": "EIS Basic Analysis",
+                        "params": {
+                          "min_frequency_hz": 10,
+                          "fit_model": "None",
+                          "frequency_column": "frequency_hz",
+                          "real_column": "z_real_ohm",
+                          "imag_column": "z_imag_ohm"
+                        },
+                        "position": {
+                          "x": 760,
+                          "y": 80
+                        },
+                        "status": "ready",
+                        "output": null,
+                        "preview": null,
+                        "review_policy": {
+                          "after_run": true,
+                          "prompt": "Review this result before continuing."
+                        },
+                        "review_state": {
+                          "status": "off",
+                          "comment": null
+                        }
+                      },
+                      "node_id": null,
+                      "params": null,
+                      "changes": null,
+                      "edge": null,
+                      "edge_id": null,
+                      "replacement_node": null,
+                      "reconnect_edges": null,
+                      "proposal_id": null
+                    },
+                    {
+                      "op": "connect",
+                      "node": null,
+                      "node_id": null,
+                      "params": null,
+                      "changes": null,
+                      "edge": {
+                        "id": "raw_file_import-1-raw--normalize_columns-1-raw",
+                        "source": "raw_file_import-1",
+                        "source_port": "raw",
+                        "target": "normalize_columns-1",
+                        "target_port": "raw"
+                      },
+                      "edge_id": null,
+                      "replacement_node": null,
+                      "reconnect_edges": null,
+                      "proposal_id": null
+                    },
+                    {
+                      "op": "connect",
+                      "node": null,
+                      "node_id": null,
+                      "params": null,
+                      "changes": null,
+                      "edge": {
+                        "id": "normalize_columns-1-table--eis_basic_qc-1-data",
+                        "source": "normalize_columns-1",
+                        "source_port": "table",
+                        "target": "eis_basic_qc-1",
+                        "target_port": "data"
+                      },
+                      "edge_id": null,
+                      "replacement_node": null,
+                      "reconnect_edges": null,
+                      "proposal_id": null
+                    }
+                  ],
+                  "rationale": "Saved from the MatFlow workflow editor",
+                  "requires_human_confirmation": false
+                },
+                "before": {
+                  "graph_id": "local-default",
+                  "version": 0,
+                  "revision": 0,
+                  "updated_at": null,
+                  "nodes": [],
+                  "edges": [],
+                  "history": []
+                }
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "afterStop": {
+      "graph_id": "local-default",
+      "version": 2,
+      "revision": 16,
+      "updated_at": "2026-10-20T14:29:58+00:00",
+      "nodes": [
+        {
+          "id": "raw_file_import-1",
+          "type": "raw_file_import",
+          "tool_id": "raw_file_import",
+          "tool_version": "1.0.0",
+          "label": "Raw File Import",
+          "params": {
+            "file_name": "measurement.csv",
+            "upload_id": "184e6de9e4a74ace8ada0e33a3e1c7aa_eis_spectrum.csv"
+          },
+          "position": {
+            "x": 80,
+            "y": 80
+          },
+          "status": "completed",
+          "output": {
+            "kind": "RawData",
+            "upload_id": "184e6de9e4a74ace8ada0e33a3e1c7aa_eis_spectrum.csv",
+            "rows": 13,
+            "columns": [
+              "frequency_hz",
+              "z_real_ohm",
+              "z_imag_ohm"
+            ],
+            "preview": [
+              {
+                "frequency_hz": 100000,
+                "z_real_ohm": 5.00001,
+                "z_imag_ohm": -0.01592
+              },
+              {
+                "frequency_hz": 50000,
+                "z_real_ohm": 5.00003,
+                "z_imag_ohm": -0.03183
+              },
+              {
+                "frequency_hz": 20000,
+                "z_real_ohm": 5.00016,
+                "z_imag_ohm": -0.07958
+              },
+              {
+                "frequency_hz": 10000,
+                "z_real_ohm": 5.00063,
+                "z_imag_ohm": -0.15915
+              },
+              {
+                "frequency_hz": 5000,
+                "z_real_ohm": 5.00253,
+                "z_imag_ohm": -0.31829
+              },
+              {
+                "frequency_hz": 2000,
+                "z_real_ohm": 5.01583,
+                "z_imag_ohm": -0.79546
+              },
+              {
+                "frequency_hz": 1000,
+                "z_real_ohm": 5.06323,
+                "z_imag_ohm": -1.58903
+              },
+              {
+                "frequency_hz": 500,
+                "z_real_ohm": 5.25171,
+                "z_imag_ohm": -3.16307
+              }
+            ]
+          },
+          "preview": {
+            "kind": "table",
+            "port": "raw",
+            "rows": [
+              {
+                "frequency_hz": 100000,
+                "z_real_ohm": 5.00001,
+                "z_imag_ohm": -0.01592
+              },
+              {
+                "frequency_hz": 50000,
+                "z_real_ohm": 5.00003,
+                "z_imag_ohm": -0.03183
+              },
+              {
+                "frequency_hz": 20000,
+                "z_real_ohm": 5.00016,
+                "z_imag_ohm": -0.07958
+              },
+              {
+                "frequency_hz": 10000,
+                "z_real_ohm": 5.00063,
+                "z_imag_ohm": -0.15915
+              },
+              {
+                "frequency_hz": 5000,
+                "z_real_ohm": 5.00253,
+                "z_imag_ohm": -0.31829
+              },
+              {
+                "frequency_hz": 2000,
+                "z_real_ohm": 5.01583,
+                "z_imag_ohm": -0.79546
+              },
+              {
+                "frequency_hz": 1000,
+                "z_real_ohm": 5.06323,
+                "z_imag_ohm": -1.58903
+              },
+              {
+                "frequency_hz": 500,
+                "z_real_ohm": 5.25171,
+                "z_imag_ohm": -3.16307
+              }
+            ],
+            "truncated": false
+          },
+          "review_policy": {
+            "after_run": false,
+            "prompt": "Review this result before continuing."
+          },
+          "review_state": {
+            "status": "off",
+            "comment": null
+          }
+        },
+        {
+          "id": "normalize_columns-1",
+          "type": "normalize_columns",
+          "tool_id": "normalize_columns",
+          "tool_version": "1.0.0",
+          "label": "Normalize / Column Mapping",
+          "params": {},
+          "position": {
+            "x": 420,
+            "y": 80
+          },
+          "status": "cancelled",
+          "output": {
+            "kind": "TypedTable",
+            "upload_id": "184e6de9e4a74ace8ada0e33a3e1c7aa_eis_spectrum.csv",
+            "mapping": {},
+            "rows": 13
+          },
+          "preview": {
+            "kind": "json_tree",
+            "port": "table",
+            "data": {
+              "kind": "TypedTable",
+              "upload_id": "184e6de9e4a74ace8ada0e33a3e1c7aa_eis_spectrum.csv",
+              "mapping": {},
+              "rows": 13
+            }
+          },
+          "review_policy": {
+            "after_run": true,
+            "prompt": "Review this result before continuing."
+          },
+          "review_state": {
+            "status": "stopped",
+            "comment": null
+          }
+        },
+        {
+          "id": "eis_basic_qc-1",
+          "type": "eis_basic_qc",
+          "tool_id": "eis_basic_qc",
+          "tool_version": "1.0.0",
+          "label": "EIS Basic Analysis",
+          "params": {
+            "min_frequency_hz": 10,
+            "fit_model": "None",
+            "frequency_column": "frequency_hz",
+            "real_column": "z_real_ohm",
+            "imag_column": "z_imag_ohm"
+          },
+          "position": {
+            "x": 760,
+            "y": 80
+          },
+          "status": "ready",
+          "output": null,
+          "preview": null,
+          "review_policy": {
+            "after_run": true,
+            "prompt": "Review this result before continuing."
+          },
+          "review_state": {
+            "status": "off",
+            "comment": null
+          }
+        }
+      ],
+      "edges": [
+        {
+          "id": "raw_file_import-1-raw--normalize_columns-1-raw",
+          "source": "raw_file_import-1",
+          "source_port": "raw",
+          "target": "normalize_columns-1",
+          "target_port": "raw"
+        },
+        {
+          "id": "normalize_columns-1-table--eis_basic_qc-1-data",
+          "source": "normalize_columns-1",
+          "source_port": "table",
+          "target": "eis_basic_qc-1",
+          "target_port": "data"
+        }
+      ],
+      "history": [
+        {
+          "version": 1,
+          "patch": {
+            "patch_id": "20a2827c-7a14-4781-a515-41849615d39e",
+            "base_version": 0,
+            "operations": [
+              {
+                "op": "add_node",
+                "node": {
+                  "id": "raw_file_import-1",
+                  "type": "raw_file_import",
+                  "tool_id": "raw_file_import",
+                  "tool_version": "1.0.0",
+                  "label": "Raw File Import",
+                  "params": {
+                    "file_name": "measurement.csv",
+                    "upload_id": "184e6de9e4a74ace8ada0e33a3e1c7aa_eis_spectrum.csv"
+                  },
+                  "position": {
+                    "x": 80,
+                    "y": 80
+                  },
+                  "status": "ready",
+                  "output": null,
+                  "preview": null,
+                  "review_policy": {
+                    "after_run": false,
+                    "prompt": "Review this result before continuing."
+                  },
+                  "review_state": {
+                    "status": "off",
+                    "comment": null
+                  }
+                },
+                "node_id": null,
+                "params": null,
+                "changes": null,
+                "edge": null,
+                "edge_id": null,
+                "replacement_node": null,
+                "reconnect_edges": null,
+                "proposal_id": null
+              },
+              {
+                "op": "add_node",
+                "node": {
+                  "id": "normalize_columns-1",
+                  "type": "normalize_columns",
+                  "tool_id": "normalize_columns",
+                  "tool_version": "1.0.0",
+                  "label": "Normalize / Column Mapping",
+                  "params": {},
+                  "position": {
+                    "x": 420,
+                    "y": 80
+                  },
+                  "status": "ready",
+                  "output": null,
+                  "preview": null,
+                  "review_policy": {
+                    "after_run": false,
+                    "prompt": "Review this result before continuing."
+                  },
+                  "review_state": {
+                    "status": "off",
+                    "comment": null
+                  }
+                },
+                "node_id": null,
+                "params": null,
+                "changes": null,
+                "edge": null,
+                "edge_id": null,
+                "replacement_node": null,
+                "reconnect_edges": null,
+                "proposal_id": null
+              },
+              {
+                "op": "add_node",
+                "node": {
+                  "id": "eis_basic_qc-1",
+                  "type": "eis_basic_qc",
+                  "tool_id": "eis_basic_qc",
+                  "tool_version": "1.0.0",
+                  "label": "EIS Basic Analysis",
+                  "params": {
+                    "min_frequency_hz": 10,
+                    "fit_model": "None",
+                    "frequency_column": "frequency_hz",
+                    "real_column": "z_real_ohm",
+                    "imag_column": "z_imag_ohm"
+                  },
+                  "position": {
+                    "x": 760,
+                    "y": 80
+                  },
+                  "status": "ready",
+                  "output": null,
+                  "preview": null,
+                  "review_policy": {
+                    "after_run": true,
+                    "prompt": "Review this result before continuing."
+                  },
+                  "review_state": {
+                    "status": "off",
+                    "comment": null
+                  }
+                },
+                "node_id": null,
+                "params": null,
+                "changes": null,
+                "edge": null,
+                "edge_id": null,
+                "replacement_node": null,
+                "reconnect_edges": null,
+                "proposal_id": null
+              },
+              {
+                "op": "connect",
+                "node": null,
+                "node_id": null,
+                "params": null,
+                "changes": null,
+                "edge": {
+                  "id": "raw_file_import-1-raw--normalize_columns-1-raw",
+                  "source": "raw_file_import-1",
+                  "source_port": "raw",
+                  "target": "normalize_columns-1",
+                  "target_port": "raw"
+                },
+                "edge_id": null,
+                "replacement_node": null,
+                "reconnect_edges": null,
+                "proposal_id": null
+              },
+              {
+                "op": "connect",
+                "node": null,
+                "node_id": null,
+                "params": null,
+                "changes": null,
+                "edge": {
+                  "id": "normalize_columns-1-table--eis_basic_qc-1-data",
+                  "source": "normalize_columns-1",
+                  "source_port": "table",
+                  "target": "eis_basic_qc-1",
+                  "target_port": "data"
+                },
+                "edge_id": null,
+                "replacement_node": null,
+                "reconnect_edges": null,
+                "proposal_id": null
+              }
+            ],
+            "rationale": "Saved from the MatFlow workflow editor",
+            "requires_human_confirmation": false
+          },
+          "before": {
+            "graph_id": "local-default",
+            "version": 0,
+            "revision": 0,
+            "updated_at": null,
+            "nodes": [],
+            "edges": [],
+            "history": []
+          }
+        },
+        {
+          "version": 2,
+          "patch": {
+            "patch_id": "b64aea7b-4029-4eee-a508-d11a6d5a43d1",
+            "base_version": 1,
+            "operations": [
+              {
+                "op": "update_node",
+                "node": null,
+                "node_id": "normalize_columns-1",
+                "params": null,
+                "changes": {
+                  "review_policy": {
+                    "after_run": true,
+                    "prompt": "Review this result before continuing."
+                  }
+                },
+                "edge": null,
+                "edge_id": null,
+                "replacement_node": null,
+                "reconnect_edges": null,
+                "proposal_id": null
+              }
+            ],
+            "rationale": "Saved from the MatFlow workflow editor",
+            "requires_human_confirmation": false
+          },
+          "before": {
+            "graph_id": "local-default",
+            "version": 1,
+            "revision": 9,
+            "updated_at": "2026-10-20T14:28:48+00:00",
+            "nodes": [
+              {
+                "id": "raw_file_import-1",
+                "type": "raw_file_import",
+                "tool_id": "raw_file_import",
+                "tool_version": "1.0.0",
+                "label": "Raw File Import",
+                "params": {
+                  "file_name": "measurement.csv",
+                  "upload_id": "184e6de9e4a74ace8ada0e33a3e1c7aa_eis_spectrum.csv"
+                },
+                "position": {
+                  "x": 80,
+                  "y": 80
+                },
+                "status": "completed",
+                "output": {
+                  "kind": "RawData",
+                  "upload_id": "184e6de9e4a74ace8ada0e33a3e1c7aa_eis_spectrum.csv",
+                  "rows": 13,
+                  "columns": [
+                    "frequency_hz",
+                    "z_real_ohm",
+                    "z_imag_ohm"
+                  ],
+                  "preview": [
+                    {
+                      "frequency_hz": 100000,
+                      "z_real_ohm": 5.00001,
+                      "z_imag_ohm": -0.01592
+                    },
+                    {
+                      "frequency_hz": 50000,
+                      "z_real_ohm": 5.00003,
+                      "z_imag_ohm": -0.03183
+                    },
+                    {
+                      "frequency_hz": 20000,
+                      "z_real_ohm": 5.00016,
+                      "z_imag_ohm": -0.07958
+                    },
+                    {
+                      "frequency_hz": 10000,
+                      "z_real_ohm": 5.00063,
+                      "z_imag_ohm": -0.15915
+                    },
+                    {
+                      "frequency_hz": 5000,
+                      "z_real_ohm": 5.00253,
+                      "z_imag_ohm": -0.31829
+                    },
+                    {
+                      "frequency_hz": 2000,
+                      "z_real_ohm": 5.01583,
+                      "z_imag_ohm": -0.79546
+                    },
+                    {
+                      "frequency_hz": 1000,
+                      "z_real_ohm": 5.06323,
+                      "z_imag_ohm": -1.58903
+                    },
+                    {
+                      "frequency_hz": 500,
+                      "z_real_ohm": 5.25171,
+                      "z_imag_ohm": -3.16307
+                    }
+                  ]
+                },
+                "preview": {
+                  "kind": "table",
+                  "port": "raw",
+                  "rows": [
+                    {
+                      "frequency_hz": 100000,
+                      "z_real_ohm": 5.00001,
+                      "z_imag_ohm": -0.01592
+                    },
+                    {
+                      "frequency_hz": 50000,
+                      "z_real_ohm": 5.00003,
+                      "z_imag_ohm": -0.03183
+                    },
+                    {
+                      "frequency_hz": 20000,
+                      "z_real_ohm": 5.00016,
+                      "z_imag_ohm": -0.07958
+                    },
+                    {
+                      "frequency_hz": 10000,
+                      "z_real_ohm": 5.00063,
+                      "z_imag_ohm": -0.15915
+                    },
+                    {
+                      "frequency_hz": 5000,
+                      "z_real_ohm": 5.00253,
+                      "z_imag_ohm": -0.31829
+                    },
+                    {
+                      "frequency_hz": 2000,
+                      "z_real_ohm": 5.01583,
+                      "z_imag_ohm": -0.79546
+                    },
+                    {
+                      "frequency_hz": 1000,
+                      "z_real_ohm": 5.06323,
+                      "z_imag_ohm": -1.58903
+                    },
+                    {
+                      "frequency_hz": 500,
+                      "z_real_ohm": 5.25171,
+                      "z_imag_ohm": -3.16307
+                    }
+                  ],
+                  "truncated": false
+                },
+                "review_policy": {
+                  "after_run": false,
+                  "prompt": "Review this result before continuing."
+                },
+                "review_state": {
+                  "status": "off",
+                  "comment": null
+                }
+              },
+              {
+                "id": "normalize_columns-1",
+                "type": "normalize_columns",
+                "tool_id": "normalize_columns",
+                "tool_version": "1.0.0",
+                "label": "Normalize / Column Mapping",
+                "params": {},
+                "position": {
+                  "x": 420,
+                  "y": 80
+                },
+                "status": "completed",
+                "output": {
+                  "kind": "TypedTable",
+                  "upload_id": "184e6de9e4a74ace8ada0e33a3e1c7aa_eis_spectrum.csv",
+                  "mapping": {},
+                  "rows": 13
+                },
+                "preview": {
+                  "kind": "json_tree",
+                  "port": "table",
+                  "data": {
+                    "kind": "TypedTable",
+                    "upload_id": "184e6de9e4a74ace8ada0e33a3e1c7aa_eis_spectrum.csv",
+                    "mapping": {},
+                    "rows": 13
+                  }
+                },
+                "review_policy": {
+                  "after_run": false,
+                  "prompt": "Review this result before continuing."
+                },
+                "review_state": {
+                  "status": "off",
+                  "comment": null
+                }
+              },
+              {
+                "id": "eis_basic_qc-1",
+                "type": "eis_basic_qc",
+                "tool_id": "eis_basic_qc",
+                "tool_version": "1.0.0",
+                "label": "EIS Basic Analysis",
+                "params": {
+                  "min_frequency_hz": 10,
+                  "fit_model": "None",
+                  "frequency_column": "frequency_hz",
+                  "real_column": "z_real_ohm",
+                  "imag_column": "z_imag_ohm"
+                },
+                "position": {
+                  "x": 760,
+                  "y": 80
+                },
+                "status": "completed",
+                "output": {
+                  "kind": "EISQCReport",
+                  "upload_id": "184e6de9e4a74ace8ada0e33a3e1c7aa_eis_spectrum.csv",
+                  "mapping": {
+                    "frequency_column": "frequency_hz",
+                    "real_column": "z_real_ohm",
+                    "imag_column": "z_imag_ohm"
+                  },
+                  "rows_valid": 13,
+                  "rows_retained": 13,
+                  "min_frequency_hz": 10,
+                  "pass": true,
+                  "issues": []
+                },
+                "preview": {
+                  "kind": "json_tree",
+                  "port": "report",
+                  "data": {
+                    "kind": "EISQCReport",
+                    "upload_id": "184e6de9e4a74ace8ada0e33a3e1c7aa_eis_spectrum.csv",
+                    "mapping": {
+                      "frequency_column": "frequency_hz",
+                      "real_column": "z_real_ohm",
+                      "imag_column": "z_imag_ohm"
+                    },
+                    "rows_valid": 13,
+                    "rows_retained": 13,
+                    "min_frequency_hz": 10,
+                    "pass": true,
+                    "issues": []
+                  }
+                },
+                "review_policy": {
+                  "after_run": true,
+                  "prompt": "Review this result before continuing."
+                },
+                "review_state": {
+                  "status": "approved",
+                  "comment": null
+                }
+              }
+            ],
+            "edges": [
+              {
+                "id": "raw_file_import-1-raw--normalize_columns-1-raw",
+                "source": "raw_file_import-1",
+                "source_port": "raw",
+                "target": "normalize_columns-1",
+                "target_port": "raw"
+              },
+              {
+                "id": "normalize_columns-1-table--eis_basic_qc-1-data",
+                "source": "normalize_columns-1",
+                "source_port": "table",
+                "target": "eis_basic_qc-1",
+                "target_port": "data"
+              }
+            ],
+            "history": [
+              {
+                "version": 1,
+                "patch": {
+                  "patch_id": "20a2827c-7a14-4781-a515-41849615d39e",
+                  "base_version": 0,
+                  "operations": [
+                    {
+                      "op": "add_node",
+                      "node": {
+                        "id": "raw_file_import-1",
+                        "type": "raw_file_import",
+                        "tool_id": "raw_file_import",
+                        "tool_version": "1.0.0",
+                        "label": "Raw File Import",
+                        "params": {
+                          "file_name": "measurement.csv",
+                          "upload_id": "184e6de9e4a74ace8ada0e33a3e1c7aa_eis_spectrum.csv"
+                        },
+                        "position": {
+                          "x": 80,
+                          "y": 80
+                        },
+                        "status": "ready",
+                        "output": null,
+                        "preview": null,
+                        "review_policy": {
+                          "after_run": false,
+                          "prompt": "Review this result before continuing."
+                        },
+                        "review_state": {
+                          "status": "off",
+                          "comment": null
+                        }
+                      },
+                      "node_id": null,
+                      "params": null,
+                      "changes": null,
+                      "edge": null,
+                      "edge_id": null,
+                      "replacement_node": null,
+                      "reconnect_edges": null,
+                      "proposal_id": null
+                    },
+                    {
+                      "op": "add_node",
+                      "node": {
+                        "id": "normalize_columns-1",
+                        "type": "normalize_columns",
+                        "tool_id": "normalize_columns",
+                        "tool_version": "1.0.0",
+                        "label": "Normalize / Column Mapping",
+                        "params": {},
+                        "position": {
+                          "x": 420,
+                          "y": 80
+                        },
+                        "status": "ready",
+                        "output": null,
+                        "preview": null,
+                        "review_policy": {
+                          "after_run": false,
+                          "prompt": "Review this result before continuing."
+                        },
+                        "review_state": {
+                          "status": "off",
+                          "comment": null
+                        }
+                      },
+                      "node_id": null,
+                      "params": null,
+                      "changes": null,
+                      "edge": null,
+                      "edge_id": null,
+                      "replacement_node": null,
+                      "reconnect_edges": null,
+                      "proposal_id": null
+                    },
+                    {
+                      "op": "add_node",
+                      "node": {
+                        "id": "eis_basic_qc-1",
+                        "type": "eis_basic_qc",
+                        "tool_id": "eis_basic_qc",
+                        "tool_version": "1.0.0",
+                        "label": "EIS Basic Analysis",
+                        "params": {
+                          "min_frequency_hz": 10,
+                          "fit_model": "None",
+                          "frequency_column": "frequency_hz",
+                          "real_column": "z_real_ohm",
+                          "imag_column": "z_imag_ohm"
+                        },
+                        "position": {
+                          "x": 760,
+                          "y": 80
+                        },
+                        "status": "ready",
+                        "output": null,
+                        "preview": null,
+                        "review_policy": {
+                          "after_run": true,
+                          "prompt": "Review this result before continuing."
+                        },
+                        "review_state": {
+                          "status": "off",
+                          "comment": null
+                        }
+                      },
+                      "node_id": null,
+                      "params": null,
+                      "changes": null,
+                      "edge": null,
+                      "edge_id": null,
+                      "replacement_node": null,
+                      "reconnect_edges": null,
+                      "proposal_id": null
+                    },
+                    {
+                      "op": "connect",
+                      "node": null,
+                      "node_id": null,
+                      "params": null,
+                      "changes": null,
+                      "edge": {
+                        "id": "raw_file_import-1-raw--normalize_columns-1-raw",
+                        "source": "raw_file_import-1",
+                        "source_port": "raw",
+                        "target": "normalize_columns-1",
+                        "target_port": "raw"
+                      },
+                      "edge_id": null,
+                      "replacement_node": null,
+                      "reconnect_edges": null,
+                      "proposal_id": null
+                    },
+                    {
+                      "op": "connect",
+                      "node": null,
+                      "node_id": null,
+                      "params": null,
+                      "changes": null,
+                      "edge": {
+                        "id": "normalize_columns-1-table--eis_basic_qc-1-data",
+                        "source": "normalize_columns-1",
+                        "source_port": "table",
+                        "target": "eis_basic_qc-1",
+                        "target_port": "data"
+                      },
+                      "edge_id": null,
+                      "replacement_node": null,
+                      "reconnect_edges": null,
+                      "proposal_id": null
+                    }
+                  ],
+                  "rationale": "Saved from the MatFlow workflow editor",
+                  "requires_human_confirmation": false
+                },
+                "before": {
+                  "graph_id": "local-default",
+                  "version": 0,
+                  "revision": 0,
+                  "updated_at": null,
+                  "nodes": [],
+                  "edges": [],
+                  "history": []
+                }
+              }
+            ]
+          }
+        }
+      ]
+    }
+  },
+  "results": {
+    "startingGraph": {
+      "graph_id": "local-default",
+      "version": 1,
+      "revision": 9,
+      "updated_at": "2026-10-20T14:28:48+00:00",
+      "nodes": [
+        {
+          "id": "raw_file_import-1",
+          "type": "raw_file_import",
+          "tool_id": "raw_file_import",
+          "tool_version": "1.0.0",
+          "label": "Raw File Import",
+          "params": {
+            "file_name": "measurement.csv",
+            "upload_id": "184e6de9e4a74ace8ada0e33a3e1c7aa_eis_spectrum.csv"
+          },
+          "position": {
+            "x": 80,
+            "y": 80
+          },
+          "status": "completed",
+          "output": {
+            "kind": "RawData",
+            "upload_id": "184e6de9e4a74ace8ada0e33a3e1c7aa_eis_spectrum.csv",
+            "rows": 13,
+            "columns": [
+              "frequency_hz",
+              "z_real_ohm",
+              "z_imag_ohm"
+            ],
+            "preview": [
+              {
+                "frequency_hz": 100000,
+                "z_real_ohm": 5.00001,
+                "z_imag_ohm": -0.01592
+              },
+              {
+                "frequency_hz": 50000,
+                "z_real_ohm": 5.00003,
+                "z_imag_ohm": -0.03183
+              },
+              {
+                "frequency_hz": 20000,
+                "z_real_ohm": 5.00016,
+                "z_imag_ohm": -0.07958
+              },
+              {
+                "frequency_hz": 10000,
+                "z_real_ohm": 5.00063,
+                "z_imag_ohm": -0.15915
+              },
+              {
+                "frequency_hz": 5000,
+                "z_real_ohm": 5.00253,
+                "z_imag_ohm": -0.31829
+              },
+              {
+                "frequency_hz": 2000,
+                "z_real_ohm": 5.01583,
+                "z_imag_ohm": -0.79546
+              },
+              {
+                "frequency_hz": 1000,
+                "z_real_ohm": 5.06323,
+                "z_imag_ohm": -1.58903
+              },
+              {
+                "frequency_hz": 500,
+                "z_real_ohm": 5.25171,
+                "z_imag_ohm": -3.16307
+              }
+            ]
+          },
+          "preview": {
+            "kind": "table",
+            "port": "raw",
+            "rows": [
+              {
+                "frequency_hz": 100000,
+                "z_real_ohm": 5.00001,
+                "z_imag_ohm": -0.01592
+              },
+              {
+                "frequency_hz": 50000,
+                "z_real_ohm": 5.00003,
+                "z_imag_ohm": -0.03183
+              },
+              {
+                "frequency_hz": 20000,
+                "z_real_ohm": 5.00016,
+                "z_imag_ohm": -0.07958
+              },
+              {
+                "frequency_hz": 10000,
+                "z_real_ohm": 5.00063,
+                "z_imag_ohm": -0.15915
+              },
+              {
+                "frequency_hz": 5000,
+                "z_real_ohm": 5.00253,
+                "z_imag_ohm": -0.31829
+              },
+              {
+                "frequency_hz": 2000,
+                "z_real_ohm": 5.01583,
+                "z_imag_ohm": -0.79546
+              },
+              {
+                "frequency_hz": 1000,
+                "z_real_ohm": 5.06323,
+                "z_imag_ohm": -1.58903
+              },
+              {
+                "frequency_hz": 500,
+                "z_real_ohm": 5.25171,
+                "z_imag_ohm": -3.16307
+              }
+            ],
+            "truncated": false
+          },
+          "review_policy": {
+            "after_run": false,
+            "prompt": "Review this result before continuing."
+          },
+          "review_state": {
+            "status": "off",
+            "comment": null
+          }
+        },
+        {
+          "id": "normalize_columns-1",
+          "type": "normalize_columns",
+          "tool_id": "normalize_columns",
+          "tool_version": "1.0.0",
+          "label": "Normalize / Column Mapping",
+          "params": {},
+          "position": {
+            "x": 420,
+            "y": 80
+          },
+          "status": "completed",
+          "output": {
+            "kind": "TypedTable",
+            "upload_id": "184e6de9e4a74ace8ada0e33a3e1c7aa_eis_spectrum.csv",
+            "mapping": {},
+            "rows": 13
+          },
+          "preview": {
+            "kind": "json_tree",
+            "port": "table",
+            "data": {
+              "kind": "TypedTable",
+              "upload_id": "184e6de9e4a74ace8ada0e33a3e1c7aa_eis_spectrum.csv",
+              "mapping": {},
+              "rows": 13
+            }
+          },
+          "review_policy": {
+            "after_run": false,
+            "prompt": "Review this result before continuing."
+          },
+          "review_state": {
+            "status": "off",
+            "comment": null
+          }
+        },
+        {
+          "id": "eis_basic_qc-1",
+          "type": "eis_basic_qc",
+          "tool_id": "eis_basic_qc",
+          "tool_version": "1.0.0",
+          "label": "EIS Basic Analysis",
+          "params": {
+            "min_frequency_hz": 10,
+            "fit_model": "None",
+            "frequency_column": "frequency_hz",
+            "real_column": "z_real_ohm",
+            "imag_column": "z_imag_ohm"
+          },
+          "position": {
+            "x": 760,
+            "y": 80
+          },
+          "status": "completed",
+          "output": {
+            "kind": "EISQCReport",
+            "upload_id": "184e6de9e4a74ace8ada0e33a3e1c7aa_eis_spectrum.csv",
+            "mapping": {
+              "frequency_column": "frequency_hz",
+              "real_column": "z_real_ohm",
+              "imag_column": "z_imag_ohm"
+            },
+            "rows_valid": 13,
+            "rows_retained": 13,
+            "min_frequency_hz": 10,
+            "pass": true,
+            "issues": []
+          },
+          "preview": {
+            "kind": "json_tree",
+            "port": "report",
+            "data": {
+              "kind": "EISQCReport",
+              "upload_id": "184e6de9e4a74ace8ada0e33a3e1c7aa_eis_spectrum.csv",
+              "mapping": {
+                "frequency_column": "frequency_hz",
+                "real_column": "z_real_ohm",
+                "imag_column": "z_imag_ohm"
+              },
+              "rows_valid": 13,
+              "rows_retained": 13,
+              "min_frequency_hz": 10,
+              "pass": true,
+              "issues": []
+            }
+          },
+          "review_policy": {
+            "after_run": true,
+            "prompt": "Review this result before continuing."
+          },
+          "review_state": {
+            "status": "approved",
+            "comment": null
+          }
+        }
+      ],
+      "edges": [
+        {
+          "id": "raw_file_import-1-raw--normalize_columns-1-raw",
+          "source": "raw_file_import-1",
+          "source_port": "raw",
+          "target": "normalize_columns-1",
+          "target_port": "raw"
+        },
+        {
+          "id": "normalize_columns-1-table--eis_basic_qc-1-data",
+          "source": "normalize_columns-1",
+          "source_port": "table",
+          "target": "eis_basic_qc-1",
+          "target_port": "data"
+        }
+      ],
+      "history": [
+        {
+          "version": 1,
+          "patch": {
+            "patch_id": "20a2827c-7a14-4781-a515-41849615d39e",
+            "base_version": 0,
+            "operations": [
+              {
+                "op": "add_node",
+                "node": {
+                  "id": "raw_file_import-1",
+                  "type": "raw_file_import",
+                  "tool_id": "raw_file_import",
+                  "tool_version": "1.0.0",
+                  "label": "Raw File Import",
+                  "params": {
+                    "file_name": "measurement.csv",
+                    "upload_id": "184e6de9e4a74ace8ada0e33a3e1c7aa_eis_spectrum.csv"
+                  },
+                  "position": {
+                    "x": 80,
+                    "y": 80
+                  },
+                  "status": "ready",
+                  "output": null,
+                  "preview": null,
+                  "review_policy": {
+                    "after_run": false,
+                    "prompt": "Review this result before continuing."
+                  },
+                  "review_state": {
+                    "status": "off",
+                    "comment": null
+                  }
+                },
+                "node_id": null,
+                "params": null,
+                "changes": null,
+                "edge": null,
+                "edge_id": null,
+                "replacement_node": null,
+                "reconnect_edges": null,
+                "proposal_id": null
+              },
+              {
+                "op": "add_node",
+                "node": {
+                  "id": "normalize_columns-1",
+                  "type": "normalize_columns",
+                  "tool_id": "normalize_columns",
+                  "tool_version": "1.0.0",
+                  "label": "Normalize / Column Mapping",
+                  "params": {},
+                  "position": {
+                    "x": 420,
+                    "y": 80
+                  },
+                  "status": "ready",
+                  "output": null,
+                  "preview": null,
+                  "review_policy": {
+                    "after_run": false,
+                    "prompt": "Review this result before continuing."
+                  },
+                  "review_state": {
+                    "status": "off",
+                    "comment": null
+                  }
+                },
+                "node_id": null,
+                "params": null,
+                "changes": null,
+                "edge": null,
+                "edge_id": null,
+                "replacement_node": null,
+                "reconnect_edges": null,
+                "proposal_id": null
+              },
+              {
+                "op": "add_node",
+                "node": {
+                  "id": "eis_basic_qc-1",
+                  "type": "eis_basic_qc",
+                  "tool_id": "eis_basic_qc",
+                  "tool_version": "1.0.0",
+                  "label": "EIS Basic Analysis",
+                  "params": {
+                    "min_frequency_hz": 10,
+                    "fit_model": "None",
+                    "frequency_column": "frequency_hz",
+                    "real_column": "z_real_ohm",
+                    "imag_column": "z_imag_ohm"
+                  },
+                  "position": {
+                    "x": 760,
+                    "y": 80
+                  },
+                  "status": "ready",
+                  "output": null,
+                  "preview": null,
+                  "review_policy": {
+                    "after_run": true,
+                    "prompt": "Review this result before continuing."
+                  },
+                  "review_state": {
+                    "status": "off",
+                    "comment": null
+                  }
+                },
+                "node_id": null,
+                "params": null,
+                "changes": null,
+                "edge": null,
+                "edge_id": null,
+                "replacement_node": null,
+                "reconnect_edges": null,
+                "proposal_id": null
+              },
+              {
+                "op": "connect",
+                "node": null,
+                "node_id": null,
+                "params": null,
+                "changes": null,
+                "edge": {
+                  "id": "raw_file_import-1-raw--normalize_columns-1-raw",
+                  "source": "raw_file_import-1",
+                  "source_port": "raw",
+                  "target": "normalize_columns-1",
+                  "target_port": "raw"
+                },
+                "edge_id": null,
+                "replacement_node": null,
+                "reconnect_edges": null,
+                "proposal_id": null
+              },
+              {
+                "op": "connect",
+                "node": null,
+                "node_id": null,
+                "params": null,
+                "changes": null,
+                "edge": {
+                  "id": "normalize_columns-1-table--eis_basic_qc-1-data",
+                  "source": "normalize_columns-1",
+                  "source_port": "table",
+                  "target": "eis_basic_qc-1",
+                  "target_port": "data"
+                },
+                "edge_id": null,
+                "replacement_node": null,
+                "reconnect_edges": null,
+                "proposal_id": null
+              }
+            ],
+            "rationale": "Saved from the MatFlow workflow editor",
+            "requires_human_confirmation": false
+          },
+          "before": {
+            "graph_id": "local-default",
+            "version": 0,
+            "revision": 0,
+            "updated_at": null,
+            "nodes": [],
+            "edges": [],
+            "history": []
+          }
+        }
+      ]
+    },
+    "edgeSelectedAfterClick": 0,
+    "disconnect": {
+      "pass": false,
+      "before": 2,
+      "after": 2,
+      "nodesBefore": 3,
+      "error": "TimeoutError: page.waitForFunction: Timeout 8000ms exceeded.",
+      "notice": "Choose a tool to add the first node."
+    },
+    "edgesAfterRestore": 2,
+    "stopRunSaveNotice": "Saved as graph v2.",
+    "normalizeReviewPersisted": true,
+    "stopRunWaiting": {
+      "statusText": "The workflow paused for human review",
+      "normalize": "waiting",
+      "eis": "ready",
+      "eisOutput": null
+    },
+    "stopRun": {
+      "statusText": "Decision submitted: stop",
+      "normalize": "cancelled",
+      "eis": "ready",
+      "eisOutputIsNull": true,
+      "eisPreviewIsNull": true
+    },
+    "routeTaskDialog": {
+      "open": true,
+      "questionField": 1,
+      "inputTypes": [
+        "RawData",
+        "TypedTable",
+        "Plot",
+        "Decision",
+        "Artifact",
+        "QualityReport",
+        "EISData",
+        "EISQCReport",
+        "XRDPeaks",
+        "FTIRPeaks",
+        "CrystalStructure",
+        "QEInput",
+        "QEStdout",
+        "QEResult"
+      ]
+    },
+    "consoleErrors": [
+      "Failed to load resource: the server responded with a status of 409 (Conflict)"
+    ],
+    "pageErrors": []
+  },
+  "error": "page.waitForFunction: Timeout 120000ms exceeded.\n    at waitStatus (<repo>\\.tmp\\live\\ops-checklist.mjs:29:14)\n    at <repo>\\.tmp\\live\\ops-checklist.mjs:143:9"
+}

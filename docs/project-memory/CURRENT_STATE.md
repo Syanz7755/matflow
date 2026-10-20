@@ -3,29 +3,51 @@
 ## Demo acceptance update — 2026-10-20
 
 The 22:00 demo acceptance was resumed at 21:13:54 Beijing time, after the 18:00/20:00/21:00/21:30
-gates had passed, and closed against actual evidence. **It is not fully met**: no freeze tag was
-created. The candidate tree is committed and pushed on `acceptance/2026-10-20-demo`
-(preceded by the reproducibility fix `3ae3ab2`), and the frontend repository is now public at
-https://github.com/Syanz7755/matflow-frontend with default branch `main` at `8b37ed3`.
-Evidence: [acceptance report](../acceptance/2026-10-20/REPORT.zhcn.md),
+gates had passed, and closed against actual evidence. **It is not fully met as a whole**: no freeze tag
+was created. The candidate tree is committed and pushed on `acceptance/2026-10-20-demo`, and the
+frontend repository is public at https://github.com/Syanz7755/matflow-frontend with default branch
+`main` (currently `3df9139`). Evidence: [round-1 report](../acceptance/2026-10-20/REPORT.zhcn.md),
 [task assignment](../acceptance/2026-10-20/TASK_ASSIGNMENT.zhcn.md),
 [frontend evidence](../acceptance/2026-10-20/frontend.md) and the four
 [screenshots](../images/README.md).
 
-Verified on Windows: full suite `499 passed, 9 skipped, 393 subtests`; QE MgO replay 3/3 fresh-archive
-runs matching the frozen values; a genuine fresh clone of the public remote with an independent
-`uv sync` environment (demo exit 0, `tests/test_demo.py` 5 passed); review-gate pause/continue
-(7 focused tests) plus the review-gate screenshot. Frontend: `npm test` 16 passed, build succeeded,
-`npm audit --omit=dev` clean, but browser E2E is 6 passed / 1 failed (the editor run leaves the
-downstream EIS node `Ready` after a review `Continue`); the Windows-only Playwright python path is
-fixed. A real reproducibility defect was fixed: line-ending normalization changed the frozen QE
-fixture hash on a fresh clone, so `.gitattributes` now marks the fixtures and the recorded A1 run
-`-text`.
+Round 1 verified on Windows: full suite later reached `504 passed, 9 skipped, 393 subtests` (round 2
+added five harness tests); QE MgO replay 3/3 fresh-archive runs matching the frozen values; a genuine
+fresh clone of the public remote with an independent `uv sync` environment; review-gate
+pause/continue; frontend unit tests, build and browser E2E 7/7 (the earlier single E2E failure was
+root-caused to the backend `normalize_columns` defaults and fixed in `f1f057a`). A real
+reproducibility defect was fixed: line-ending normalization changed the frozen QE fixture hash on a
+fresh clone, so `.gitattributes` marks the fixtures and the recorded A1 run `-text`.
 
-Still open: the one failing frontend E2E case, Ubuntu fresh-clone acceptance, Chinese live model
-routing, the 10-prompt-per-model online matrix, the live model-decision/rule-check view and a
-recording, and the backend default branch has not been fast-forwarded to the candidate. The
-repository's maintainer absolute paths were sanitized out of tracked files on this pass.
+### Round 2 — live online acceptance (2026-10-20 late night, Ubuntu skipped by the user)
+
+[Live report](../acceptance/2026-10-20-live/REPORT.zhcn.md) and
+[operator runbook](../acceptance/2026-10-20-live/OPERATOR_RUNBOOK.zhcn.md).
+
+- Chinese live routing: 16 real `/api/route` calls (8 Chinese/mixed prompts x deepseek-chat and qwen),
+  no mocks; per-prompt choice, confidence, confirmation state and latency recorded; the two models
+  disagree on the safety-bypass prompt.
+- Multi-model 10-prompt matrix: DeepSeek official `deepseek-official-flash` and
+  `deepseek-official-v4-pro` completed 20/20 records (10/10 routing labels each); SJTU
+  `deepseek-chat` runs as the mandated SJTU arm; `deepseek-reasoner` measured at 402 s per plan and
+  only partially completed (recorded, not extrapolated); `qwen` degraded to 121.7 s per call and is
+  not scored; `minimax` is unavailable (HTTP 403).
+- Frontend functionality/hands-on operation: 17/18 checklist items pass; the one FAIL is that a
+  single edge cannot be deleted through the UI. A real browser run of the EIS quality-control workflow
+  (import, build, parameters, review pause, continue, result, export/import) and the QE replay demo
+  completed, and the Lead reran the same flow on an independent instance.
+- One-command live demo: `scripts/start_demo.ps1` / `scripts/start_demo.bat` starts or reuses both
+  model gateways, the backend and the WebUI; credentials come from the Windows User environment scope
+  into child processes only.
+- Fixed in round 2: decision panel now shows decision source/model/confidence and treats candidate
+  scores as compatibility rather than accuracy (frontend `3df9139`); the Jev fallback rationale no
+  longer leaks internal urlopen errors (backend `6de8349`).
+
+Still open: Ubuntu (skipped by the user), the Jev on-path (port 4079 was not running), recorded
+product defects (`/api/route` has no `refused` state, the EISData type gate, edge deletion, invisible
+120 s timeout), a recording, a frontend E2E CI job, and the backend default branch has not been
+fast-forwarded to the candidate. The repository's maintainer absolute paths were sanitized out of
+tracked files.
 
 ## Portfolio update — 2026-10-19
 

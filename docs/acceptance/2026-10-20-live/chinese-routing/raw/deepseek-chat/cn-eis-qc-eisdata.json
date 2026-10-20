@@ -1,0 +1,142 @@
+{
+  "model_under_test": "deepseek-chat",
+  "prompt": {
+    "id": "cn-eis-qc-eisdata",
+    "lang": "zh",
+    "label": "same Chinese EIS QC but only EISData is available (type gate probe)",
+    "message": "请对这份电化学阻抗谱数据做基本质控：检查高频段虚部符号是否为负、低频段是否发散，并给出质控结论。",
+    "types": [
+      "EISData"
+    ],
+    "expect": "eis_basic_qc is the target; probe whether the type gate hides it"
+  },
+  "task_request": {
+    "task_id": "55562e8f-2c5a-40f1-b85f-eaf9c9166b57",
+    "user_message": "请对这份电化学阻抗谱数据做基本质控：检查高频段虚部符号是否为负、低频段是否发散，并给出质控结论。",
+    "graph_version": 0,
+    "available_input_types": [
+      "EISData"
+    ]
+  },
+  "http_status": 200,
+  "latency_seconds": 34.001,
+  "response": {
+    "decision_id": "30975578-17ac-4629-885a-72a0cecb0055",
+    "task_id": "55562e8f-2c5a-40f1-b85f-eaf9c9166b57",
+    "graph_version": 0,
+    "candidates": [
+      {
+        "tool_id": "plot_nyquist",
+        "version": "1.0.0",
+        "score": 0.0,
+        "reasons": [
+          "input ports accept the available data"
+        ]
+      },
+      {
+        "tool_id": "qe_structure",
+        "version": "1.0.0",
+        "score": 0.0,
+        "reasons": [
+          "needs no upstream input"
+        ]
+      },
+      {
+        "tool_id": "raw_file_import",
+        "version": "1.0.0",
+        "score": 0.0,
+        "reasons": [
+          "needs no upstream input"
+        ]
+      }
+    ],
+    "selected": [],
+    "confidence": 0.95,
+    "rationale": "[llm] Jev routing unavailable: <urlopen error [WinError 10061] 由于目标计算机积极拒绝，无法连接。>; the LLM decided instead. No candidate tool performs EIS quality control checks on imaginary sign or low-frequency divergence; the available tools only plot Nyquist, validate crystal structures, or import raw files.",
+    "requires_human_confirmation": true,
+    "model_decisions": [
+      {
+        "profile": "llm",
+        "model": "deepseek-chat",
+        "selected_tool_id": null,
+        "score": 0.95,
+        "calibrated": false,
+        "evidence": {
+          "rationale": "No candidate tool performs EIS quality control checks on imaginary sign or low-frequency divergence; the available tools only plot Nyquist, validate crystal structures, or import raw files.",
+          "params": {}
+        }
+      }
+    ],
+    "summary": {
+      "schema_version": "1.0",
+      "task_id": "55562e8f-2c5a-40f1-b85f-eaf9c9166b57",
+      "trace_id": "49f47e00f49b46ae82a909a4633fb77e",
+      "status": "waiting_for_confirmation",
+      "user_prompt": "请对这份电化学阻抗谱数据做基本质控：检查高频段虚部符号是否为负、低频段是否发散，并给出质控结论。",
+      "input_context": {
+        "graph_version": 0,
+        "available_input_types": [
+          "EISData"
+        ],
+        "assumptions": []
+      },
+      "decision": {
+        "decision_id": "30975578-17ac-4629-885a-72a0cecb0055",
+        "candidate_tools": [
+          {
+            "registered_id": "plot_nyquist",
+            "version": "1.0.0",
+            "label": "Plot Nyquist",
+            "category": "Output",
+            "retrieval_score": 0.0,
+            "reasons": [
+              "input ports accept the available data"
+            ]
+          },
+          {
+            "registered_id": "qe_structure",
+            "version": "1.0.0",
+            "label": "Crystal Structure",
+            "category": "QE",
+            "retrieval_score": 0.0,
+            "reasons": [
+              "needs no upstream input"
+            ]
+          },
+          {
+            "registered_id": "raw_file_import",
+            "version": "1.0.0",
+            "label": "Raw File Import",
+            "category": "Input",
+            "retrieval_score": 0.0,
+            "reasons": [
+              "needs no upstream input"
+            ]
+          }
+        ],
+        "selected_tools": [],
+        "confidence": 0.95,
+        "rationale": "[llm] Jev routing unavailable: <urlopen error [WinError 10061] 由于目标计算机积极拒绝，无法连接。>; the LLM decided instead. No candidate tool performs EIS quality control checks on imaginary sign or low-frequency divergence; the available tools only plot Nyquist, validate crystal structures, or import raw files.",
+        "model_opinions": [
+          {
+            "profile": "llm",
+            "model": "deepseek-chat",
+            "selected_tool_id": null,
+            "score": 0.95,
+            "calibrated": false,
+            "evidence": {
+              "rationale": "No candidate tool performs EIS quality control checks on imaginary sign or low-frequency divergence; the available tools only plot Nyquist, validate crystal structures, or import raw files.",
+              "params": {}
+            }
+          }
+        ]
+      },
+      "result": null,
+      "error_and_handling": {
+        "error": null,
+        "handling": "No automatic execution. Human confirmation is required before continuing."
+      }
+    }
+  },
+  "attempt": 1
+}

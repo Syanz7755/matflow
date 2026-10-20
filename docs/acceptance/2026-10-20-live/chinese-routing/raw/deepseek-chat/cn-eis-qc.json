@@ -1,0 +1,216 @@
+{
+  "model_under_test": "deepseek-chat",
+  "prompt": {
+    "id": "cn-eis-qc",
+    "lang": "zh",
+    "label": "canonical Chinese EIS QC (raw imported table)",
+    "message": "请对这份电化学阻抗谱数据做基本质控：检查高频段虚部符号是否为负、低频段是否发散，并给出质控结论。",
+    "types": [
+      "TypedTable"
+    ],
+    "expect": "eis_basic_qc (qc / routed)"
+  },
+  "task_request": {
+    "task_id": "6828adea-6522-44d9-8403-5492e27b928d",
+    "user_message": "请对这份电化学阻抗谱数据做基本质控：检查高频段虚部符号是否为负、低频段是否发散，并给出质控结论。",
+    "graph_version": 0,
+    "available_input_types": [
+      "TypedTable"
+    ]
+  },
+  "http_status": 200,
+  "latency_seconds": 4.38,
+  "response": {
+    "decision_id": "dd89dd1f-c4a3-41df-af3d-3c0284cd9326",
+    "task_id": "6828adea-6522-44d9-8403-5492e27b928d",
+    "graph_version": 0,
+    "candidates": [
+      {
+        "tool_id": "eis_basic_qc",
+        "version": "1.0.0",
+        "score": 0.0,
+        "reasons": [
+          "input ports accept the available data"
+        ]
+      },
+      {
+        "tool_id": "ftir_peak_extraction",
+        "version": "1.0.0",
+        "score": 0.0,
+        "reasons": [
+          "input ports accept the available data"
+        ]
+      },
+      {
+        "tool_id": "qe_structure",
+        "version": "1.0.0",
+        "score": 0.0,
+        "reasons": [
+          "needs no upstream input"
+        ]
+      },
+      {
+        "tool_id": "raw_file_import",
+        "version": "1.0.0",
+        "score": 0.0,
+        "reasons": [
+          "needs no upstream input"
+        ]
+      },
+      {
+        "tool_id": "skill_node",
+        "version": "1.0.0",
+        "score": 0.0,
+        "reasons": [
+          "input ports accept the available data"
+        ]
+      },
+      {
+        "tool_id": "xrd_peak_extraction",
+        "version": "1.0.0",
+        "score": 0.0,
+        "reasons": [
+          "input ports accept the available data"
+        ]
+      }
+    ],
+    "selected": [
+      {
+        "tool_id": "eis_basic_qc",
+        "version": "1.0.0",
+        "score": 0.0,
+        "reasons": [
+          "input ports accept the available data"
+        ]
+      }
+    ],
+    "confidence": 1.0,
+    "rationale": "[llm] Jev routing unavailable: <urlopen error [WinError 10061] 由于目标计算机积极拒绝，无法连接。>; the LLM decided instead. The request asks for EIS quality control checking high-frequency imaginary sign and low-frequency divergence, which matches the EIS Basic Analysis tool's Nyquist/Bode quality checks.",
+    "requires_human_confirmation": false,
+    "model_decisions": [
+      {
+        "profile": "llm",
+        "model": "deepseek-chat",
+        "selected_tool_id": "eis_basic_qc",
+        "score": 1.0,
+        "calibrated": false,
+        "evidence": {
+          "rationale": "The request asks for EIS quality control checking high-frequency imaginary sign and low-frequency divergence, which matches the EIS Basic Analysis tool's Nyquist/Bode quality checks.",
+          "params": {}
+        }
+      }
+    ],
+    "summary": {
+      "schema_version": "1.0",
+      "task_id": "6828adea-6522-44d9-8403-5492e27b928d",
+      "trace_id": "95723831ee554f568655825a68941766",
+      "status": "routed",
+      "user_prompt": "请对这份电化学阻抗谱数据做基本质控：检查高频段虚部符号是否为负、低频段是否发散，并给出质控结论。",
+      "input_context": {
+        "graph_version": 0,
+        "available_input_types": [
+          "TypedTable"
+        ],
+        "assumptions": []
+      },
+      "decision": {
+        "decision_id": "dd89dd1f-c4a3-41df-af3d-3c0284cd9326",
+        "candidate_tools": [
+          {
+            "registered_id": "eis_basic_qc",
+            "version": "1.0.0",
+            "label": "EIS Basic Analysis",
+            "category": "Analysis",
+            "retrieval_score": 0.0,
+            "reasons": [
+              "input ports accept the available data"
+            ]
+          },
+          {
+            "registered_id": "ftir_peak_extraction",
+            "version": "1.0.0",
+            "label": "FTIR Peak Extraction",
+            "category": "FTIR Analysis",
+            "retrieval_score": 0.0,
+            "reasons": [
+              "input ports accept the available data"
+            ]
+          },
+          {
+            "registered_id": "qe_structure",
+            "version": "1.0.0",
+            "label": "Crystal Structure",
+            "category": "QE",
+            "retrieval_score": 0.0,
+            "reasons": [
+              "needs no upstream input"
+            ]
+          },
+          {
+            "registered_id": "raw_file_import",
+            "version": "1.0.0",
+            "label": "Raw File Import",
+            "category": "Input",
+            "retrieval_score": 0.0,
+            "reasons": [
+              "needs no upstream input"
+            ]
+          },
+          {
+            "registered_id": "skill_node",
+            "version": "1.0.0",
+            "label": "AI Skill Node",
+            "category": "AI",
+            "retrieval_score": 0.0,
+            "reasons": [
+              "input ports accept the available data"
+            ]
+          },
+          {
+            "registered_id": "xrd_peak_extraction",
+            "version": "1.0.0",
+            "label": "XRD Peak Extraction",
+            "category": "XRD Analysis",
+            "retrieval_score": 0.0,
+            "reasons": [
+              "input ports accept the available data"
+            ]
+          }
+        ],
+        "selected_tools": [
+          {
+            "registered_id": "eis_basic_qc",
+            "version": "1.0.0",
+            "label": "EIS Basic Analysis",
+            "category": "Analysis",
+            "retrieval_score": 0.0,
+            "reasons": [
+              "input ports accept the available data"
+            ]
+          }
+        ],
+        "confidence": 1.0,
+        "rationale": "[llm] Jev routing unavailable: <urlopen error [WinError 10061] 由于目标计算机积极拒绝，无法连接。>; the LLM decided instead. The request asks for EIS quality control checking high-frequency imaginary sign and low-frequency divergence, which matches the EIS Basic Analysis tool's Nyquist/Bode quality checks.",
+        "model_opinions": [
+          {
+            "profile": "llm",
+            "model": "deepseek-chat",
+            "selected_tool_id": "eis_basic_qc",
+            "score": 1.0,
+            "calibrated": false,
+            "evidence": {
+              "rationale": "The request asks for EIS quality control checking high-frequency imaginary sign and low-frequency divergence, which matches the EIS Basic Analysis tool's Nyquist/Bode quality checks.",
+              "params": {}
+            }
+          }
+        ]
+      },
+      "result": null,
+      "error_and_handling": {
+        "error": null,
+        "handling": "No exception. The selected registered tool may proceed to execution."
+      }
+    }
+  },
+  "attempt": 1
+}

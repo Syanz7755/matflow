@@ -1,0 +1,216 @@
+{
+  "model_under_test": "qwen",
+  "prompt": {
+    "id": "cn-en-mixed",
+    "lang": "zh+en",
+    "label": "mixed Chinese/English request (raw imported table)",
+    "message": "Please 帮我 run 一下 EIS quality check，然后 generate 一个 Nyquist plot。",
+    "types": [
+      "TypedTable"
+    ],
+    "expect": "eis_basic_qc or plot_nyquist (2 candidates -> Jev then LLM)"
+  },
+  "task_request": {
+    "task_id": "a936d306-351e-4cf7-a288-02ee6d34cf29",
+    "user_message": "Please 帮我 run 一下 EIS quality check，然后 generate 一个 Nyquist plot。",
+    "graph_version": 0,
+    "available_input_types": [
+      "TypedTable"
+    ]
+  },
+  "http_status": 200,
+  "latency_seconds": 7.661,
+  "response": {
+    "decision_id": "88003ba2-ec68-468d-a23b-acdbb606e56c",
+    "task_id": "a936d306-351e-4cf7-a288-02ee6d34cf29",
+    "graph_version": 0,
+    "candidates": [
+      {
+        "tool_id": "eis_basic_qc",
+        "version": "1.0.0",
+        "score": 0.0,
+        "reasons": [
+          "input ports accept the available data"
+        ]
+      },
+      {
+        "tool_id": "ftir_peak_extraction",
+        "version": "1.0.0",
+        "score": 0.0,
+        "reasons": [
+          "input ports accept the available data"
+        ]
+      },
+      {
+        "tool_id": "qe_structure",
+        "version": "1.0.0",
+        "score": 0.0,
+        "reasons": [
+          "needs no upstream input"
+        ]
+      },
+      {
+        "tool_id": "raw_file_import",
+        "version": "1.0.0",
+        "score": 0.0,
+        "reasons": [
+          "needs no upstream input"
+        ]
+      },
+      {
+        "tool_id": "skill_node",
+        "version": "1.0.0",
+        "score": 0.0,
+        "reasons": [
+          "input ports accept the available data"
+        ]
+      },
+      {
+        "tool_id": "xrd_peak_extraction",
+        "version": "1.0.0",
+        "score": 0.0,
+        "reasons": [
+          "input ports accept the available data"
+        ]
+      }
+    ],
+    "selected": [
+      {
+        "tool_id": "eis_basic_qc",
+        "version": "1.0.0",
+        "score": 0.0,
+        "reasons": [
+          "input ports accept the available data"
+        ]
+      }
+    ],
+    "confidence": 1.0,
+    "rationale": "[llm] Jev routing unavailable: <urlopen error [WinError 10061] 由于目标计算机积极拒绝，无法连接。>; the LLM decided instead. The tool performs EIS quality checks and generates the required Nyquist plot from the input data.",
+    "requires_human_confirmation": false,
+    "model_decisions": [
+      {
+        "profile": "llm",
+        "model": "qwen",
+        "selected_tool_id": "eis_basic_qc",
+        "score": 1.0,
+        "calibrated": false,
+        "evidence": {
+          "rationale": "The tool performs EIS quality checks and generates the required Nyquist plot from the input data.",
+          "params": {}
+        }
+      }
+    ],
+    "summary": {
+      "schema_version": "1.0",
+      "task_id": "a936d306-351e-4cf7-a288-02ee6d34cf29",
+      "trace_id": "09d683626a5d4d019a8267d3835be707",
+      "status": "routed",
+      "user_prompt": "Please 帮我 run 一下 EIS quality check，然后 generate 一个 Nyquist plot。",
+      "input_context": {
+        "graph_version": 0,
+        "available_input_types": [
+          "TypedTable"
+        ],
+        "assumptions": []
+      },
+      "decision": {
+        "decision_id": "88003ba2-ec68-468d-a23b-acdbb606e56c",
+        "candidate_tools": [
+          {
+            "registered_id": "eis_basic_qc",
+            "version": "1.0.0",
+            "label": "EIS Basic Analysis",
+            "category": "Analysis",
+            "retrieval_score": 0.0,
+            "reasons": [
+              "input ports accept the available data"
+            ]
+          },
+          {
+            "registered_id": "ftir_peak_extraction",
+            "version": "1.0.0",
+            "label": "FTIR Peak Extraction",
+            "category": "FTIR Analysis",
+            "retrieval_score": 0.0,
+            "reasons": [
+              "input ports accept the available data"
+            ]
+          },
+          {
+            "registered_id": "qe_structure",
+            "version": "1.0.0",
+            "label": "Crystal Structure",
+            "category": "QE",
+            "retrieval_score": 0.0,
+            "reasons": [
+              "needs no upstream input"
+            ]
+          },
+          {
+            "registered_id": "raw_file_import",
+            "version": "1.0.0",
+            "label": "Raw File Import",
+            "category": "Input",
+            "retrieval_score": 0.0,
+            "reasons": [
+              "needs no upstream input"
+            ]
+          },
+          {
+            "registered_id": "skill_node",
+            "version": "1.0.0",
+            "label": "AI Skill Node",
+            "category": "AI",
+            "retrieval_score": 0.0,
+            "reasons": [
+              "input ports accept the available data"
+            ]
+          },
+          {
+            "registered_id": "xrd_peak_extraction",
+            "version": "1.0.0",
+            "label": "XRD Peak Extraction",
+            "category": "XRD Analysis",
+            "retrieval_score": 0.0,
+            "reasons": [
+              "input ports accept the available data"
+            ]
+          }
+        ],
+        "selected_tools": [
+          {
+            "registered_id": "eis_basic_qc",
+            "version": "1.0.0",
+            "label": "EIS Basic Analysis",
+            "category": "Analysis",
+            "retrieval_score": 0.0,
+            "reasons": [
+              "input ports accept the available data"
+            ]
+          }
+        ],
+        "confidence": 1.0,
+        "rationale": "[llm] Jev routing unavailable: <urlopen error [WinError 10061] 由于目标计算机积极拒绝，无法连接。>; the LLM decided instead. The tool performs EIS quality checks and generates the required Nyquist plot from the input data.",
+        "model_opinions": [
+          {
+            "profile": "llm",
+            "model": "qwen",
+            "selected_tool_id": "eis_basic_qc",
+            "score": 1.0,
+            "calibrated": false,
+            "evidence": {
+              "rationale": "The tool performs EIS quality checks and generates the required Nyquist plot from the input data.",
+              "params": {}
+            }
+          }
+        ]
+      },
+      "result": null,
+      "error_and_handling": {
+        "error": null,
+        "handling": "No exception. The selected registered tool may proceed to execution."
+      }
+    }
+  },
+  "attempt": 1
+}

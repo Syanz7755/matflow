@@ -1,0 +1,398 @@
+{
+  "base": "http://127.0.0.1:5220",
+  "cases": [
+    {
+      "id": "ui-01-eis-qc",
+      "prompt": "请对这份电化学阻抗谱数据做基本质控：检查高频段虚部符号是否为负、低频段是否发散，并给出质控结论。",
+      "type": "TypedTable",
+      "shot": "01-decision-panel.png",
+      "panelText": "02\nDecision record\n\nThe server recorded an auditable routing result for this task.\n\nRouted\nTask ID\n063b3254-41a8-4250-9839-3307994df8b9\nTrace ID\ne5a2a4f2ae974e13b53256e6ee369b95\nGraph version\nv0\nDecision source\nllm\nModel\ndeepseek-chat\nConfidence\n100%\nmodel self-reported, not calibrated\nUser prompt\n\n请对这份电化学阻抗谱数据做基本质控：检查高频段虚部符号是否为负、低频段是否发散，并给出质控结论。\n\nSelected registered tool\nEIS Basic Analysis\neis_basic_qc\nv1.0.0\nCandidate retrieval\neis_basic_qc\ncompatibility 0.00\ninput ports accept the available data\nftir_peak_extraction\ncompatibility 0.00\ninput ports accept the available data\nqe_structure\ncompatibility 0.00\nneeds no upstream input\nraw_file_import\ncompatibility 0.00\nneeds no upstream input\nskill_node\ncompatibility 0.00\ninput ports accept the available data\nxrd_peak_extraction\ncompatibility 0.00\ninput ports accept the available data\nWhy this decision\n\n[llm] Jev routing unavailable: <urlopen error [WinError 10061] 由于目标计算机积极拒绝，无法连接。>; the LLM decided instead. The request asks for basic quality control of electrochemical impedance spectroscopy (EIS) data, checking high-frequency imaginary sign and low-frequency divergence, which matches the EIS Basic Analysis tool's Nyquist/Bode quality checks.\n\nError & handling\n\nNo exception. The selected registered tool may proceed to execution.",
+      "badge": "Routed",
+      "heading": "Decision record",
+      "routeRecord": [
+        {
+          "status": 200,
+          "body": {
+            "decision_id": "3fd4001c-e7b3-4f0d-9598-f3863c3b4e3e",
+            "task_id": "063b3254-41a8-4250-9839-3307994df8b9",
+            "graph_version": 0,
+            "candidates": [
+              {
+                "tool_id": "eis_basic_qc",
+                "version": "1.0.0",
+                "score": 0,
+                "reasons": [
+                  "input ports accept the available data"
+                ]
+              },
+              {
+                "tool_id": "ftir_peak_extraction",
+                "version": "1.0.0",
+                "score": 0,
+                "reasons": [
+                  "input ports accept the available data"
+                ]
+              },
+              {
+                "tool_id": "qe_structure",
+                "version": "1.0.0",
+                "score": 0,
+                "reasons": [
+                  "needs no upstream input"
+                ]
+              },
+              {
+                "tool_id": "raw_file_import",
+                "version": "1.0.0",
+                "score": 0,
+                "reasons": [
+                  "needs no upstream input"
+                ]
+              },
+              {
+                "tool_id": "skill_node",
+                "version": "1.0.0",
+                "score": 0,
+                "reasons": [
+                  "input ports accept the available data"
+                ]
+              },
+              {
+                "tool_id": "xrd_peak_extraction",
+                "version": "1.0.0",
+                "score": 0,
+                "reasons": [
+                  "input ports accept the available data"
+                ]
+              }
+            ],
+            "selected": [
+              {
+                "tool_id": "eis_basic_qc",
+                "version": "1.0.0",
+                "score": 0,
+                "reasons": [
+                  "input ports accept the available data"
+                ]
+              }
+            ],
+            "confidence": 1,
+            "rationale": "[llm] Jev routing unavailable: <urlopen error [WinError 10061] 由于目标计算机积极拒绝，无法连接。>; the LLM decided instead. The request asks for basic quality control of electrochemical impedance spectroscopy (EIS) data, checking high-frequency imaginary sign and low-frequency divergence, which matches the EIS Basic Analysis tool's Nyquist/Bode quality checks.",
+            "requires_human_confirmation": false,
+            "model_decisions": [
+              {
+                "profile": "llm",
+                "model": "deepseek-chat",
+                "selected_tool_id": "eis_basic_qc",
+                "score": 1,
+                "calibrated": false,
+                "evidence": {
+                  "rationale": "The request asks for basic quality control of electrochemical impedance spectroscopy (EIS) data, checking high-frequency imaginary sign and low-frequency divergence, which matches the EIS Basic Analysis tool's Nyquist/Bode quality checks.",
+                  "params": {}
+                }
+              }
+            ],
+            "summary": {
+              "schema_version": "1.0",
+              "task_id": "063b3254-41a8-4250-9839-3307994df8b9",
+              "trace_id": "e5a2a4f2ae974e13b53256e6ee369b95",
+              "status": "routed",
+              "user_prompt": "请对这份电化学阻抗谱数据做基本质控：检查高频段虚部符号是否为负、低频段是否发散，并给出质控结论。",
+              "input_context": {
+                "graph_version": 0,
+                "available_input_types": [
+                  "TypedTable"
+                ],
+                "assumptions": []
+              },
+              "decision": {
+                "decision_id": "3fd4001c-e7b3-4f0d-9598-f3863c3b4e3e",
+                "candidate_tools": [
+                  {
+                    "registered_id": "eis_basic_qc",
+                    "version": "1.0.0",
+                    "label": "EIS Basic Analysis",
+                    "category": "Analysis",
+                    "retrieval_score": 0,
+                    "reasons": [
+                      "input ports accept the available data"
+                    ]
+                  },
+                  {
+                    "registered_id": "ftir_peak_extraction",
+                    "version": "1.0.0",
+                    "label": "FTIR Peak Extraction",
+                    "category": "FTIR Analysis",
+                    "retrieval_score": 0,
+                    "reasons": [
+                      "input ports accept the available data"
+                    ]
+                  },
+                  {
+                    "registered_id": "qe_structure",
+                    "version": "1.0.0",
+                    "label": "Crystal Structure",
+                    "category": "QE",
+                    "retrieval_score": 0,
+                    "reasons": [
+                      "needs no upstream input"
+                    ]
+                  },
+                  {
+                    "registered_id": "raw_file_import",
+                    "version": "1.0.0",
+                    "label": "Raw File Import",
+                    "category": "Input",
+                    "retrieval_score": 0,
+                    "reasons": [
+                      "needs no upstream input"
+                    ]
+                  },
+                  {
+                    "registered_id": "skill_node",
+                    "version": "1.0.0",
+                    "label": "AI Skill Node",
+                    "category": "AI",
+                    "retrieval_score": 0,
+                    "reasons": [
+                      "input ports accept the available data"
+                    ]
+                  },
+                  {
+                    "registered_id": "xrd_peak_extraction",
+                    "version": "1.0.0",
+                    "label": "XRD Peak Extraction",
+                    "category": "XRD Analysis",
+                    "retrieval_score": 0,
+                    "reasons": [
+                      "input ports accept the available data"
+                    ]
+                  }
+                ],
+                "selected_tools": [
+                  {
+                    "registered_id": "eis_basic_qc",
+                    "version": "1.0.0",
+                    "label": "EIS Basic Analysis",
+                    "category": "Analysis",
+                    "retrieval_score": 0,
+                    "reasons": [
+                      "input ports accept the available data"
+                    ]
+                  }
+                ],
+                "confidence": 1,
+                "rationale": "[llm] Jev routing unavailable: <urlopen error [WinError 10061] 由于目标计算机积极拒绝，无法连接。>; the LLM decided instead. The request asks for basic quality control of electrochemical impedance spectroscopy (EIS) data, checking high-frequency imaginary sign and low-frequency divergence, which matches the EIS Basic Analysis tool's Nyquist/Bode quality checks.",
+                "model_opinions": [
+                  {
+                    "profile": "llm",
+                    "model": "deepseek-chat",
+                    "selected_tool_id": "eis_basic_qc",
+                    "score": 1,
+                    "calibrated": false,
+                    "evidence": {
+                      "rationale": "The request asks for basic quality control of electrochemical impedance spectroscopy (EIS) data, checking high-frequency imaginary sign and low-frequency divergence, which matches the EIS Basic Analysis tool's Nyquist/Bode quality checks.",
+                      "params": {}
+                    }
+                  }
+                ]
+              },
+              "result": null,
+              "error_and_handling": {
+                "error": null,
+                "handling": "No exception. The selected registered tool may proceed to execution."
+              }
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "ui-02-tga-gap",
+      "prompt": "请分析这份热重分析曲线，计算碳酸钙分解的失重台阶温度区间和活化能。",
+      "type": "TypedTable",
+      "shot": "02-gap-human-decision.png",
+      "panelText": "02\nDecision record\n\nThe server recorded an auditable routing result for this task.\n\nConfirmation required\nTask ID\nb57fca47-8e11-43f3-93f2-d282e5dd50f0\nTrace ID\n7a6597b98f814c1498ba16fc36adab07\nGraph version\nv0\nDecision source\nllm\nModel\ndeepseek-chat\nConfidence\n100%\nmodel self-reported, not calibrated\nUser prompt\n\n请分析这份热重分析曲线，计算碳酸钙分解的失重台阶温度区间和活化能。\n\nSelected registered tool\n\nNo tool was selected automatically.\n\nCandidate retrieval\neis_basic_qc\ncompatibility 0.00\ninput ports accept the available data\nftir_peak_extraction\ncompatibility 0.00\ninput ports accept the available data\nqe_structure\ncompatibility 0.00\nneeds no upstream input\nraw_file_import\ncompatibility 0.00\nneeds no upstream input\nskill_node\ncompatibility 0.00\ninput ports accept the available data\nxrd_peak_extraction\ncompatibility 0.00\ninput ports accept the available data\nWhy this decision\n\n[llm] Jev routing unavailable: <urlopen error [WinError 10061] 由于目标计算机积极拒绝，无法连接。>; the LLM decided instead. No candidate tool performs thermogravimetric analysis (TGA) for decomposition temperature range or activation energy calculation; the available tools are for EIS, FTIR, XRD, structure validation, file import, and generic AI skills.\n\nHuman review required\n\nNo automatic execution. Human confirmation is required before continuing.",
+      "badge": "Confirmation required",
+      "heading": "Decision record",
+      "routeRecord": [
+        {
+          "status": 200,
+          "body": {
+            "decision_id": "61427fb7-4b1d-471f-9b57-2a8a0066beff",
+            "task_id": "b57fca47-8e11-43f3-93f2-d282e5dd50f0",
+            "graph_version": 0,
+            "candidates": [
+              {
+                "tool_id": "eis_basic_qc",
+                "version": "1.0.0",
+                "score": 0,
+                "reasons": [
+                  "input ports accept the available data"
+                ]
+              },
+              {
+                "tool_id": "ftir_peak_extraction",
+                "version": "1.0.0",
+                "score": 0,
+                "reasons": [
+                  "input ports accept the available data"
+                ]
+              },
+              {
+                "tool_id": "qe_structure",
+                "version": "1.0.0",
+                "score": 0,
+                "reasons": [
+                  "needs no upstream input"
+                ]
+              },
+              {
+                "tool_id": "raw_file_import",
+                "version": "1.0.0",
+                "score": 0,
+                "reasons": [
+                  "needs no upstream input"
+                ]
+              },
+              {
+                "tool_id": "skill_node",
+                "version": "1.0.0",
+                "score": 0,
+                "reasons": [
+                  "input ports accept the available data"
+                ]
+              },
+              {
+                "tool_id": "xrd_peak_extraction",
+                "version": "1.0.0",
+                "score": 0,
+                "reasons": [
+                  "input ports accept the available data"
+                ]
+              }
+            ],
+            "selected": [],
+            "confidence": 1,
+            "rationale": "[llm] Jev routing unavailable: <urlopen error [WinError 10061] 由于目标计算机积极拒绝，无法连接。>; the LLM decided instead. No candidate tool performs thermogravimetric analysis (TGA) for decomposition temperature range or activation energy calculation; the available tools are for EIS, FTIR, XRD, structure validation, file import, and generic AI skills.",
+            "requires_human_confirmation": true,
+            "model_decisions": [
+              {
+                "profile": "llm",
+                "model": "deepseek-chat",
+                "selected_tool_id": null,
+                "score": 1,
+                "calibrated": false,
+                "evidence": {
+                  "rationale": "No candidate tool performs thermogravimetric analysis (TGA) for decomposition temperature range or activation energy calculation; the available tools are for EIS, FTIR, XRD, structure validation, file import, and generic AI skills.",
+                  "params": {}
+                }
+              }
+            ],
+            "summary": {
+              "schema_version": "1.0",
+              "task_id": "b57fca47-8e11-43f3-93f2-d282e5dd50f0",
+              "trace_id": "7a6597b98f814c1498ba16fc36adab07",
+              "status": "waiting_for_confirmation",
+              "user_prompt": "请分析这份热重分析曲线，计算碳酸钙分解的失重台阶温度区间和活化能。",
+              "input_context": {
+                "graph_version": 0,
+                "available_input_types": [
+                  "TypedTable"
+                ],
+                "assumptions": []
+              },
+              "decision": {
+                "decision_id": "61427fb7-4b1d-471f-9b57-2a8a0066beff",
+                "candidate_tools": [
+                  {
+                    "registered_id": "eis_basic_qc",
+                    "version": "1.0.0",
+                    "label": "EIS Basic Analysis",
+                    "category": "Analysis",
+                    "retrieval_score": 0,
+                    "reasons": [
+                      "input ports accept the available data"
+                    ]
+                  },
+                  {
+                    "registered_id": "ftir_peak_extraction",
+                    "version": "1.0.0",
+                    "label": "FTIR Peak Extraction",
+                    "category": "FTIR Analysis",
+                    "retrieval_score": 0,
+                    "reasons": [
+                      "input ports accept the available data"
+                    ]
+                  },
+                  {
+                    "registered_id": "qe_structure",
+                    "version": "1.0.0",
+                    "label": "Crystal Structure",
+                    "category": "QE",
+                    "retrieval_score": 0,
+                    "reasons": [
+                      "needs no upstream input"
+                    ]
+                  },
+                  {
+                    "registered_id": "raw_file_import",
+                    "version": "1.0.0",
+                    "label": "Raw File Import",
+                    "category": "Input",
+                    "retrieval_score": 0,
+                    "reasons": [
+                      "needs no upstream input"
+                    ]
+                  },
+                  {
+                    "registered_id": "skill_node",
+                    "version": "1.0.0",
+                    "label": "AI Skill Node",
+                    "category": "AI",
+                    "retrieval_score": 0,
+                    "reasons": [
+                      "input ports accept the available data"
+                    ]
+                  },
+                  {
+                    "registered_id": "xrd_peak_extraction",
+                    "version": "1.0.0",
+                    "label": "XRD Peak Extraction",
+                    "category": "XRD Analysis",
+                    "retrieval_score": 0,
+                    "reasons": [
+                      "input ports accept the available data"
+                    ]
+                  }
+                ],
+                "selected_tools": [],
+                "confidence": 1,
+                "rationale": "[llm] Jev routing unavailable: <urlopen error [WinError 10061] 由于目标计算机积极拒绝，无法连接。>; the LLM decided instead. No candidate tool performs thermogravimetric analysis (TGA) for decomposition temperature range or activation energy calculation; the available tools are for EIS, FTIR, XRD, structure validation, file import, and generic AI skills.",
+                "model_opinions": [
+                  {
+                    "profile": "llm",
+                    "model": "deepseek-chat",
+                    "selected_tool_id": null,
+                    "score": 1,
+                    "calibrated": false,
+                    "evidence": {
+                      "rationale": "No candidate tool performs thermogravimetric analysis (TGA) for decomposition temperature range or activation energy calculation; the available tools are for EIS, FTIR, XRD, structure validation, file import, and generic AI skills.",
+                      "params": {}
+                    }
+                  }
+                ]
+              },
+              "result": null,
+              "error_and_handling": {
+                "error": null,
+                "handling": "No automatic execution. Human confirmation is required before continuing."
+              }
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "consoleErrors": []
+}

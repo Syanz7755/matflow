@@ -1,0 +1,162 @@
+{
+  "model_under_test": "deepseek-chat",
+  "prompt": {
+    "id": "cn-en-mixed-eisdata",
+    "lang": "zh+en",
+    "label": "same mixed request but only EISData is available (type gate probe)",
+    "message": "Please 帮我 run 一下 EIS quality check，然后 generate 一个 Nyquist plot。",
+    "types": [
+      "EISData"
+    ],
+    "expect": "plot_nyquist only"
+  },
+  "task_request": {
+    "task_id": "cffacb66-551b-454c-ad9d-ba51f3432e34",
+    "user_message": "Please 帮我 run 一下 EIS quality check，然后 generate 一个 Nyquist plot。",
+    "graph_version": 0,
+    "available_input_types": [
+      "EISData"
+    ]
+  },
+  "http_status": 200,
+  "latency_seconds": 5.511,
+  "response": {
+    "decision_id": "2fd46663-4abd-41eb-8a20-90d5e83e925d",
+    "task_id": "cffacb66-551b-454c-ad9d-ba51f3432e34",
+    "graph_version": 0,
+    "candidates": [
+      {
+        "tool_id": "plot_nyquist",
+        "version": "1.0.0",
+        "score": 0.0,
+        "reasons": [
+          "input ports accept the available data"
+        ]
+      },
+      {
+        "tool_id": "qe_structure",
+        "version": "1.0.0",
+        "score": 0.0,
+        "reasons": [
+          "needs no upstream input"
+        ]
+      },
+      {
+        "tool_id": "raw_file_import",
+        "version": "1.0.0",
+        "score": 0.0,
+        "reasons": [
+          "needs no upstream input"
+        ]
+      }
+    ],
+    "selected": [
+      {
+        "tool_id": "plot_nyquist",
+        "version": "1.0.0",
+        "score": 0.0,
+        "reasons": [
+          "input ports accept the available data"
+        ]
+      }
+    ],
+    "confidence": 0.9,
+    "rationale": "[llm] Jev routing unavailable: <urlopen error [WinError 10061] 由于目标计算机积极拒绝，无法连接。>; the LLM decided instead. The request asks for a Nyquist plot from EIS data, which is exactly what plot_nyquist does; the EIS quality check is not covered by any candidate, so only the plotting part is matched.",
+    "requires_human_confirmation": false,
+    "model_decisions": [
+      {
+        "profile": "llm",
+        "model": "deepseek-chat",
+        "selected_tool_id": "plot_nyquist",
+        "score": 0.9,
+        "calibrated": false,
+        "evidence": {
+          "rationale": "The request asks for a Nyquist plot from EIS data, which is exactly what plot_nyquist does; the EIS quality check is not covered by any candidate, so only the plotting part is matched.",
+          "params": {}
+        }
+      }
+    ],
+    "summary": {
+      "schema_version": "1.0",
+      "task_id": "cffacb66-551b-454c-ad9d-ba51f3432e34",
+      "trace_id": "331f364cd8b54155bce8681110bf7ddf",
+      "status": "routed",
+      "user_prompt": "Please 帮我 run 一下 EIS quality check，然后 generate 一个 Nyquist plot。",
+      "input_context": {
+        "graph_version": 0,
+        "available_input_types": [
+          "EISData"
+        ],
+        "assumptions": []
+      },
+      "decision": {
+        "decision_id": "2fd46663-4abd-41eb-8a20-90d5e83e925d",
+        "candidate_tools": [
+          {
+            "registered_id": "plot_nyquist",
+            "version": "1.0.0",
+            "label": "Plot Nyquist",
+            "category": "Output",
+            "retrieval_score": 0.0,
+            "reasons": [
+              "input ports accept the available data"
+            ]
+          },
+          {
+            "registered_id": "qe_structure",
+            "version": "1.0.0",
+            "label": "Crystal Structure",
+            "category": "QE",
+            "retrieval_score": 0.0,
+            "reasons": [
+              "needs no upstream input"
+            ]
+          },
+          {
+            "registered_id": "raw_file_import",
+            "version": "1.0.0",
+            "label": "Raw File Import",
+            "category": "Input",
+            "retrieval_score": 0.0,
+            "reasons": [
+              "needs no upstream input"
+            ]
+          }
+        ],
+        "selected_tools": [
+          {
+            "registered_id": "plot_nyquist",
+            "version": "1.0.0",
+            "label": "Plot Nyquist",
+            "category": "Output",
+            "retrieval_score": 0.0,
+            "reasons": [
+              "input ports accept the available data"
+            ]
+          }
+        ],
+        "confidence": 0.9,
+        "rationale": "[llm] Jev routing unavailable: <urlopen error [WinError 10061] 由于目标计算机积极拒绝，无法连接。>; the LLM decided instead. The request asks for a Nyquist plot from EIS data, which is exactly what plot_nyquist does; the EIS quality check is not covered by any candidate, so only the plotting part is matched.",
+        "model_opinions": [
+          {
+            "profile": "llm",
+            "model": "deepseek-chat",
+            "selected_tool_id": "plot_nyquist",
+            "score": 0.9,
+            "calibrated": false,
+            "evidence": {
+              "rationale": "The request asks for a Nyquist plot from EIS data, which is exactly what plot_nyquist does; the EIS quality check is not covered by any candidate, so only the plotting part is matched.",
+              "params": {}
+            }
+          }
+        ]
+      },
+      "result": null,
+      "error_and_handling": {
+        "error": null,
+        "handling": "No exception. The selected registered tool may proceed to execution."
+      }
+    }
+  },
+  "attempt": 1
+}

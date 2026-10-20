@@ -1,0 +1,142 @@
+{
+  "model_under_test": "deepseek-chat",
+  "prompt": {
+    "id": "cn-en-mixed",
+    "lang": "zh+en",
+    "label": "mixed Chinese/English request",
+    "message": "Please 帮我 run 一下 EIS quality check，然后 generate 一个 Nyquist plot。",
+    "types": [
+      "EISData"
+    ],
+    "expect": "eis_basic_qc or plot_nyquist (2 candidates -> Jev then LLM)"
+  },
+  "task_request": {
+    "task_id": "7c5635ee-1f25-4b07-98aa-dc658db96430",
+    "user_message": "Please 帮我 run 一下 EIS quality check，然后 generate 一个 Nyquist plot。",
+    "graph_version": 0,
+    "available_input_types": [
+      "EISData"
+    ]
+  },
+  "http_status": 200,
+  "latency_seconds": 6.943,
+  "response": {
+    "decision_id": "ba1ef7a6-e65b-415b-8b39-91bc55c1fd79",
+    "task_id": "7c5635ee-1f25-4b07-98aa-dc658db96430",
+    "graph_version": 0,
+    "candidates": [
+      {
+        "tool_id": "plot_nyquist",
+        "version": "1.0.0",
+        "score": 0.0,
+        "reasons": [
+          "input ports accept the available data"
+        ]
+      },
+      {
+        "tool_id": "qe_structure",
+        "version": "1.0.0",
+        "score": 0.0,
+        "reasons": [
+          "needs no upstream input"
+        ]
+      },
+      {
+        "tool_id": "raw_file_import",
+        "version": "1.0.0",
+        "score": 0.0,
+        "reasons": [
+          "needs no upstream input"
+        ]
+      }
+    ],
+    "selected": [],
+    "confidence": 0.95,
+    "rationale": "[llm] Jev routing unavailable: <urlopen error [WinError 10061] 由于目标计算机积极拒绝，无法连接。>; the LLM decided instead. No candidate tool performs EIS quality checking; plot_nyquist only creates the plot but lacks the quality check step, so the combined request cannot be fulfilled by any single tool.",
+    "requires_human_confirmation": true,
+    "model_decisions": [
+      {
+        "profile": "llm",
+        "model": "deepseek-chat",
+        "selected_tool_id": null,
+        "score": 0.95,
+        "calibrated": false,
+        "evidence": {
+          "rationale": "No candidate tool performs EIS quality checking; plot_nyquist only creates the plot but lacks the quality check step, so the combined request cannot be fulfilled by any single tool.",
+          "params": {}
+        }
+      }
+    ],
+    "summary": {
+      "schema_version": "1.0",
+      "task_id": "7c5635ee-1f25-4b07-98aa-dc658db96430",
+      "trace_id": "4265041a5307408895de4508481a8f45",
+      "status": "waiting_for_confirmation",
+      "user_prompt": "Please 帮我 run 一下 EIS quality check，然后 generate 一个 Nyquist plot。",
+      "input_context": {
+        "graph_version": 0,
+        "available_input_types": [
+          "EISData"
+        ],
+        "assumptions": []
+      },
+      "decision": {
+        "decision_id": "ba1ef7a6-e65b-415b-8b39-91bc55c1fd79",
+        "candidate_tools": [
+          {
+            "registered_id": "plot_nyquist",
+            "version": "1.0.0",
+            "label": "Plot Nyquist",
+            "category": "Output",
+            "retrieval_score": 0.0,
+            "reasons": [
+              "input ports accept the available data"
+            ]
+          },
+          {
+            "registered_id": "qe_structure",
+            "version": "1.0.0",
+            "label": "Crystal Structure",
+            "category": "QE",
+            "retrieval_score": 0.0,
+            "reasons": [
+              "needs no upstream input"
+            ]
+          },
+          {
+            "registered_id": "raw_file_import",
+            "version": "1.0.0",
+            "label": "Raw File Import",
+            "category": "Input",
+            "retrieval_score": 0.0,
+            "reasons": [
+              "needs no upstream input"
+            ]
+          }
+        ],
+        "selected_tools": [],
+        "confidence": 0.95,
+        "rationale": "[llm] Jev routing unavailable: <urlopen error [WinError 10061] 由于目标计算机积极拒绝，无法连接。>; the LLM decided instead. No candidate tool performs EIS quality checking; plot_nyquist only creates the plot but lacks the quality check step, so the combined request cannot be fulfilled by any single tool.",
+        "model_opinions": [
+          {
+            "profile": "llm",
+            "model": "deepseek-chat",
+            "selected_tool_id": null,
+            "score": 0.95,
+            "calibrated": false,
+            "evidence": {
+              "rationale": "No candidate tool performs EIS quality checking; plot_nyquist only creates the plot but lacks the quality check step, so the combined request cannot be fulfilled by any single tool.",
+              "params": {}
+            }
+          }
+        ]
+      },
+      "result": null,
+      "error_and_handling": {
+        "error": null,
+        "handling": "No automatic execution. Human confirmation is required before continuing."
+      }
+    }
+  },
+  "attempt": 1
+}

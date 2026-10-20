@@ -136,3 +136,30 @@ QE 回放明确标为历史数据解析，不作为 LLM 规划、实际 QE 计�
   录屏与在线决策视图、后端默认分支前移与冻结标签。
 - 判定：未全部达标（范围项仍缺），按第 5 节保留成果、未打 `demo-2026-10-20` 标签；完整结果与
   已知局限见 [验收报告](acceptance/2026-10-20/REPORT.zhcn.md)。
+
+## 8. 第二轮实施记录（在线能力与前端全程操作）
+
+按用户后续指令（Ubuntu 暂时跳过；中文路由要测、多模型要测、前端功能与前端操作要测；交付一条可全程
+操作跑通的工作流），第二轮执行如下，详细证据见
+[docs/acceptance/2026-10-20-live/REPORT.zhcn.md](acceptance/2026-10-20-live/REPORT.zhcn.md)：
+
+- **中文真实模型路由**：16 条真实 /api/route（8 提示词 × deepseek-chat/qwen），无 mock，逐条
+  记录选择、置信度、确认状态、延迟；两模型对“绕过人工确认”的安全请求给出不同结果。
+- **多模型 10 条抽测**：冻结 10 条（6 已有能力 / 2 能力缺口 / 2 应请求确认，中英各 5），同一组提示词
+  逐模型运行；DeepSeek 官方 flash/v4-pro 完成 20/20，SJTU deepseek-chat/reasoner 按实际条件完成；
+  qwen 因服务时序退化（实测 121.7 s/次）不计分，minimax 上游 403 不可用，均如实记录。
+- **前端功能与前端操作**：18 项操作 17 PASS / 1 FAIL（界面无法断开单条连线）；真实浏览器完整跑通
+  EIS 质检工作流（导入→建图→参数→Review 暂停→Continue→结果→导出/导入）与 QE 一键回放；
+  操作手册 OPERATOR_RUNBOOK.zhcn.md。
+- **一键启动**：新增 scripts/start_demo.ps1 / scripts/start_demo.bat，启动或复用两个模型网关、
+  后端与前端，凭据只从 Windows User 作用域读入子进程；Lead 实测通过。
+- **配置**：新增可选的 DeepSeek 官方网关配置 config/llm-deepseek.json + config/litellm-deepseek.yaml
+  （只保存环境变量名），并在 config/README.md、.env.example、docs/STARTUP_SCRIPTS.md 记录。
+- **修复**：前端 3df9139（决策面板显示 decision source/model/confidence，候选改 compatibility 分数、
+  QE 按钮在非空工作区禁用）；后端 6de8349（Jev 回退 rationale 不再泄漏内部 urlopen 错误）。
+  后端全量 504 passed, 9 skipped, 393 subtests；前端 
+pm test 16 passed、build 成功、E2E 7/7。
+- **未完成/保留**：Ubuntu 按用户指令跳过；Jev 在线路径（4079 未运行）未验收；/api/route 无 refused
+  状态、EISData 类型门、界面无法断开单条连线、120 s 超时不可见等缺陷仍记录为已知局限；录屏与
+  前端 E2E CI 作业未做。
+- **判定**：在用户指定范围内（跳过 Ubuntu）本轮交付成立；完整计划不宣称全部达标，未打标签。

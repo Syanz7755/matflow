@@ -1,0 +1,86 @@
+{
+  "format": "matflow.workflow",
+  "format_version": "1.0",
+  "exported_at": "2026-10-20T14:23:05.775Z",
+  "graph": {
+    "graph_id": "local-default",
+    "nodes": [
+      {
+        "id": "raw_file_import-1",
+        "type": "raw_file_import",
+        "tool_id": "raw_file_import",
+        "tool_version": "1.0.0",
+        "label": "Raw File Import",
+        "params": {
+          "file_name": "measurement.csv",
+          "upload_id": "d5c560bfe9044a44b33d24b790e6d75f_eis_spectrum.csv"
+        },
+        "position": {
+          "x": 80,
+          "y": 80
+        },
+        "status": "ready",
+        "review_policy": {
+          "after_run": false,
+          "prompt": "Review this result before continuing."
+        }
+      },
+      {
+        "id": "normalize_columns-1",
+        "type": "normalize_columns",
+        "tool_id": "normalize_columns",
+        "tool_version": "1.0.0",
+        "label": "Normalize / Column Mapping",
+        "params": {},
+        "position": {
+          "x": 420,
+          "y": 80
+        },
+        "status": "ready",
+        "review_policy": {
+          "after_run": false,
+          "prompt": "Review this result before continuing."
+        }
+      },
+      {
+        "id": "eis_basic_qc-1",
+        "type": "eis_basic_qc",
+        "tool_id": "eis_basic_qc",
+        "tool_version": "1.0.0",
+        "label": "EIS Basic Analysis",
+        "params": {
+          "min_frequency_hz": 10,
+          "fit_model": "None",
+          "frequency_column": "frequency_hz",
+          "real_column": "z_real_ohm",
+          "imag_column": "z_imag_ohm"
+        },
+        "position": {
+          "x": 760,
+          "y": 80
+        },
+        "status": "ready",
+        "review_policy": {
+          "after_run": true,
+          "prompt": "Review this result before continuing."
+        }
+      }
+    ],
+    "edges": [
+      {
+        "id": "raw_file_import-1-raw--normalize_columns-1-raw",
+        "source": "raw_file_import-1",
+        "source_port": "raw",
+        "target": "normalize_columns-1",
+        "target_port": "raw"
+      },
+      {
+        "id": "normalize_columns-1-table--eis_basic_qc-1-data",
+        "source": "normalize_columns-1",
+        "source_port": "table",
+        "target": "eis_basic_qc-1",
+        "target_port": "data"
+      }
+    ]
+  }
+}

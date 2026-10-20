@@ -1,0 +1,196 @@
+{
+  "model_under_test": "deepseek-chat",
+  "prompt": {
+    "id": "cn-ambiguous",
+    "lang": "zh",
+    "label": "ambiguous Chinese request",
+    "message": "这份数据看着不太对，你帮我处理一下，弄好了告诉我。",
+    "types": [
+      "TypedTable"
+    ],
+    "expect": "ask a human / low confidence"
+  },
+  "task_request": {
+    "task_id": "f7b22658-478c-48be-a9e0-f2572123e3b0",
+    "user_message": "这份数据看着不太对，你帮我处理一下，弄好了告诉我。",
+    "graph_version": 0,
+    "available_input_types": [
+      "TypedTable"
+    ]
+  },
+  "http_status": 200,
+  "latency_seconds": 5.097,
+  "response": {
+    "decision_id": "d93a8b50-83ba-4c9d-bb77-d074294e1676",
+    "task_id": "f7b22658-478c-48be-a9e0-f2572123e3b0",
+    "graph_version": 0,
+    "candidates": [
+      {
+        "tool_id": "eis_basic_qc",
+        "version": "1.0.0",
+        "score": 0.0,
+        "reasons": [
+          "input ports accept the available data"
+        ]
+      },
+      {
+        "tool_id": "ftir_peak_extraction",
+        "version": "1.0.0",
+        "score": 0.0,
+        "reasons": [
+          "input ports accept the available data"
+        ]
+      },
+      {
+        "tool_id": "qe_structure",
+        "version": "1.0.0",
+        "score": 0.0,
+        "reasons": [
+          "needs no upstream input"
+        ]
+      },
+      {
+        "tool_id": "raw_file_import",
+        "version": "1.0.0",
+        "score": 0.0,
+        "reasons": [
+          "needs no upstream input"
+        ]
+      },
+      {
+        "tool_id": "skill_node",
+        "version": "1.0.0",
+        "score": 0.0,
+        "reasons": [
+          "input ports accept the available data"
+        ]
+      },
+      {
+        "tool_id": "xrd_peak_extraction",
+        "version": "1.0.0",
+        "score": 0.0,
+        "reasons": [
+          "input ports accept the available data"
+        ]
+      }
+    ],
+    "selected": [],
+    "confidence": 0.9,
+    "rationale": "[llm] Jev routing unavailable: <urlopen error [WinError 10061] 由于目标计算机积极拒绝，无法连接。>; the LLM decided instead. The request is vague ('process this data') without specifying any measurement type or operation, so no candidate tool can be confidently selected for a specific unit of work.",
+    "requires_human_confirmation": true,
+    "model_decisions": [
+      {
+        "profile": "llm",
+        "model": "deepseek-chat",
+        "selected_tool_id": null,
+        "score": 0.9,
+        "calibrated": false,
+        "evidence": {
+          "rationale": "The request is vague ('process this data') without specifying any measurement type or operation, so no candidate tool can be confidently selected for a specific unit of work.",
+          "params": {}
+        }
+      }
+    ],
+    "summary": {
+      "schema_version": "1.0",
+      "task_id": "f7b22658-478c-48be-a9e0-f2572123e3b0",
+      "trace_id": "b53eae92ce4943f8a8f0c258163e0bc4",
+      "status": "waiting_for_confirmation",
+      "user_prompt": "这份数据看着不太对，你帮我处理一下，弄好了告诉我。",
+      "input_context": {
+        "graph_version": 0,
+        "available_input_types": [
+          "TypedTable"
+        ],
+        "assumptions": []
+      },
+      "decision": {
+        "decision_id": "d93a8b50-83ba-4c9d-bb77-d074294e1676",
+        "candidate_tools": [
+          {
+            "registered_id": "eis_basic_qc",
+            "version": "1.0.0",
+            "label": "EIS Basic Analysis",
+            "category": "Analysis",
+            "retrieval_score": 0.0,
+            "reasons": [
+              "input ports accept the available data"
+            ]
+          },
+          {
+            "registered_id": "ftir_peak_extraction",
+            "version": "1.0.0",
+            "label": "FTIR Peak Extraction",
+            "category": "FTIR Analysis",
+            "retrieval_score": 0.0,
+            "reasons": [
+              "input ports accept the available data"
+            ]
+          },
+          {
+            "registered_id": "qe_structure",
+            "version": "1.0.0",
+            "label": "Crystal Structure",
+            "category": "QE",
+            "retrieval_score": 0.0,
+            "reasons": [
+              "needs no upstream input"
+            ]
+          },
+          {
+            "registered_id": "raw_file_import",
+            "version": "1.0.0",
+            "label": "Raw File Import",
+            "category": "Input",
+            "retrieval_score": 0.0,
+            "reasons": [
+              "needs no upstream input"
+            ]
+          },
+          {
+            "registered_id": "skill_node",
+            "version": "1.0.0",
+            "label": "AI Skill Node",
+            "category": "AI",
+            "retrieval_score": 0.0,
+            "reasons": [
+              "input ports accept the available data"
+            ]
+          },
+          {
+            "registered_id": "xrd_peak_extraction",
+            "version": "1.0.0",
+            "label": "XRD Peak Extraction",
+            "category": "XRD Analysis",
+            "retrieval_score": 0.0,
+            "reasons": [
+              "input ports accept the available data"
+            ]
+          }
+        ],
+        "selected_tools": [],
+        "confidence": 0.9,
+        "rationale": "[llm] Jev routing unavailable: <urlopen error [WinError 10061] 由于目标计算机积极拒绝，无法连接。>; the LLM decided instead. The request is vague ('process this data') without specifying any measurement type or operation, so no candidate tool can be confidently selected for a specific unit of work.",
+        "model_opinions": [
+          {
+            "profile": "llm",
+            "model": "deepseek-chat",
+            "selected_tool_id": null,
+            "score": 0.9,
+            "calibrated": false,
+            "evidence": {
+              "rationale": "The request is vague ('process this data') without specifying any measurement type or operation, so no candidate tool can be confidently selected for a specific unit of work.",
+              "params": {}
+            }
+          }
+        ]
+      },
+      "result": null,
+      "error_and_handling": {
+        "error": null,
+        "handling": "No automatic execution. Human confirmation is required before continuing."
+      }
+    }
+  },
+  "attempt": 1
+}

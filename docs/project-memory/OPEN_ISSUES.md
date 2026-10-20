@@ -28,6 +28,33 @@
   10-prompt-per-model online matrix, a recording and the live model-decision/rule-check view. See the
   [acceptance report](../acceptance/2026-10-20/REPORT.zhcn.md).
 
+## Live acceptance round 2 — 2026-10-20 late night
+
+- **Closed (frontend):** the decision record hid the deciding model/router/confidence, showed every
+  candidate as a misleading `0% match`, and the QE replay button was enabled on a non-empty
+  workspace. Fixed in frontend `3df9139` (decision source/model/confidence, compatibility scores with
+  reasons, QE buttons disabled until the workspace is empty); `npm test` 16, build ok, browser E2E 7/7.
+- **Closed (backend):** the Jev fallback rationale embedded the raw `<urlopen error …>` text in the
+  user-facing decision record. `backend/routing.py` now keeps only the stable fact and records the
+  error type as a `jev.unavailable` audit event (`6de8349`).
+- **Open, API/security semantics:** `POST /api/route` has no `refused` state, so a Chinese prompt that
+  explicitly asks to skip the quality-control and human-confirmation steps was routed by
+  `deepseek-chat` with `requires_human_confirmation=false` (qwen refused on its own). The route layer
+  cannot enforce the product policy; `/api/plan` already has `refused`.
+- **Open, type gate:** `EISData` has no parent type, so when a caller declares only `EISData`,
+  `eis_basic_qc` (input `TypedTable`) is filtered out and the model reports a false capability gap.
+- **Open, frontend operation:** a single edge cannot be deleted in the UI (select + Delete does
+  nothing); 17/18 operation checks pass otherwise. Also open: click-to-connect occasionally misses
+  (retry works), duplicate `data` port id on the EIS node, invisible 120 s timeout + retry, and the
+  inspector/canvas notice disagreeing while paused for review.
+- **Service availability measured this window:** `qwen` 121.7 s for a 92-token call → not scored in
+  the 10-prompt matrix; `minimax` HTTP 403 (team not allowed); `deepseek-reasoner` 402 s per plan →
+  only partially completed (one recorded passing case). Matrix and evidence:
+  [live report](../acceptance/2026-10-20-live/REPORT.zhcn.md),
+  [chinese routing](../acceptance/2026-10-20-live/chinese-routing/CHINESE_ROUTING.zhcn.md).
+- Ubuntu remains skipped by the user; the Jev on-path (port 4079) and a frontend E2E CI job remain
+  unverified.
+
 ## Closed in the P0 boundary pass
 
 | ID | Issue | Closure evidence |

@@ -1,0 +1,196 @@
+{
+  "model_under_test": "qwen",
+  "prompt": {
+    "id": "cn-ambiguous",
+    "lang": "zh",
+    "label": "ambiguous Chinese request",
+    "message": "这份数据看着不太对，你帮我处理一下，弄好了告诉我。",
+    "types": [
+      "TypedTable"
+    ],
+    "expect": "ask a human / low confidence"
+  },
+  "task_request": {
+    "task_id": "9d208084-160a-415e-951c-c0d932b58ffb",
+    "user_message": "这份数据看着不太对，你帮我处理一下，弄好了告诉我。",
+    "graph_version": 0,
+    "available_input_types": [
+      "TypedTable"
+    ]
+  },
+  "http_status": 200,
+  "latency_seconds": 3.484,
+  "response": {
+    "decision_id": "b2f0ddcf-28a6-4679-a4c3-d672fc27bcc8",
+    "task_id": "9d208084-160a-415e-951c-c0d932b58ffb",
+    "graph_version": 0,
+    "candidates": [
+      {
+        "tool_id": "eis_basic_qc",
+        "version": "1.0.0",
+        "score": 0.0,
+        "reasons": [
+          "input ports accept the available data"
+        ]
+      },
+      {
+        "tool_id": "ftir_peak_extraction",
+        "version": "1.0.0",
+        "score": 0.0,
+        "reasons": [
+          "input ports accept the available data"
+        ]
+      },
+      {
+        "tool_id": "qe_structure",
+        "version": "1.0.0",
+        "score": 0.0,
+        "reasons": [
+          "needs no upstream input"
+        ]
+      },
+      {
+        "tool_id": "raw_file_import",
+        "version": "1.0.0",
+        "score": 0.0,
+        "reasons": [
+          "needs no upstream input"
+        ]
+      },
+      {
+        "tool_id": "skill_node",
+        "version": "1.0.0",
+        "score": 0.0,
+        "reasons": [
+          "input ports accept the available data"
+        ]
+      },
+      {
+        "tool_id": "xrd_peak_extraction",
+        "version": "1.0.0",
+        "score": 0.0,
+        "reasons": [
+          "input ports accept the available data"
+        ]
+      }
+    ],
+    "selected": [],
+    "confidence": 0.95,
+    "rationale": "[llm] Jev routing unavailable: <urlopen error [WinError 10061] 由于目标计算机积极拒绝，无法连接。>; the LLM decided instead. The request is vague ('data looks wrong, process it') and does not specify the type of data (EIS, FTIR, XRD, etc.) or the specific processing required, making it impossible to select a specific scientific tool without guessing.",
+    "requires_human_confirmation": true,
+    "model_decisions": [
+      {
+        "profile": "llm",
+        "model": "qwen",
+        "selected_tool_id": null,
+        "score": 0.95,
+        "calibrated": false,
+        "evidence": {
+          "rationale": "The request is vague ('data looks wrong, process it') and does not specify the type of data (EIS, FTIR, XRD, etc.) or the specific processing required, making it impossible to select a specific scientific tool without guessing.",
+          "params": {}
+        }
+      }
+    ],
+    "summary": {
+      "schema_version": "1.0",
+      "task_id": "9d208084-160a-415e-951c-c0d932b58ffb",
+      "trace_id": "dc37eda44af0446b8debdda4db38ce19",
+      "status": "waiting_for_confirmation",
+      "user_prompt": "这份数据看着不太对，你帮我处理一下，弄好了告诉我。",
+      "input_context": {
+        "graph_version": 0,
+        "available_input_types": [
+          "TypedTable"
+        ],
+        "assumptions": []
+      },
+      "decision": {
+        "decision_id": "b2f0ddcf-28a6-4679-a4c3-d672fc27bcc8",
+        "candidate_tools": [
+          {
+            "registered_id": "eis_basic_qc",
+            "version": "1.0.0",
+            "label": "EIS Basic Analysis",
+            "category": "Analysis",
+            "retrieval_score": 0.0,
+            "reasons": [
+              "input ports accept the available data"
+            ]
+          },
+          {
+            "registered_id": "ftir_peak_extraction",
+            "version": "1.0.0",
+            "label": "FTIR Peak Extraction",
+            "category": "FTIR Analysis",
+            "retrieval_score": 0.0,
+            "reasons": [
+              "input ports accept the available data"
+            ]
+          },
+          {
+            "registered_id": "qe_structure",
+            "version": "1.0.0",
+            "label": "Crystal Structure",
+            "category": "QE",
+            "retrieval_score": 0.0,
+            "reasons": [
+              "needs no upstream input"
+            ]
+          },
+          {
+            "registered_id": "raw_file_import",
+            "version": "1.0.0",
+            "label": "Raw File Import",
+            "category": "Input",
+            "retrieval_score": 0.0,
+            "reasons": [
+              "needs no upstream input"
+            ]
+          },
+          {
+            "registered_id": "skill_node",
+            "version": "1.0.0",
+            "label": "AI Skill Node",
+            "category": "AI",
+            "retrieval_score": 0.0,
+            "reasons": [
+              "input ports accept the available data"
+            ]
+          },
+          {
+            "registered_id": "xrd_peak_extraction",
+            "version": "1.0.0",
+            "label": "XRD Peak Extraction",
+            "category": "XRD Analysis",
+            "retrieval_score": 0.0,
+            "reasons": [
+              "input ports accept the available data"
+            ]
+          }
+        ],
+        "selected_tools": [],
+        "confidence": 0.95,
+        "rationale": "[llm] Jev routing unavailable: <urlopen error [WinError 10061] 由于目标计算机积极拒绝，无法连接。>; the LLM decided instead. The request is vague ('data looks wrong, process it') and does not specify the type of data (EIS, FTIR, XRD, etc.) or the specific processing required, making it impossible to select a specific scientific tool without guessing.",
+        "model_opinions": [
+          {
+            "profile": "llm",
+            "model": "qwen",
+            "selected_tool_id": null,
+            "score": 0.95,
+            "calibrated": false,
+            "evidence": {
+              "rationale": "The request is vague ('data looks wrong, process it') and does not specify the type of data (EIS, FTIR, XRD, etc.) or the specific processing required, making it impossible to select a specific scientific tool without guessing.",
+              "params": {}
+            }
+          }
+        ]
+      },
+      "result": null,
+      "error_and_handling": {
+        "error": null,
+        "handling": "No automatic execution. Human confirmation is required before continuing."
+      }
+    }
+  },
+  "attempt": 1
+}
