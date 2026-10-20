@@ -951,6 +951,10 @@ def resolve_data_root(value: str) -> tuple[Path | None, str | None]:
     A self-referential symlink or junction makes ``Path.resolve()`` raise ``RuntimeError``, which
     would otherwise escape as an unexpected internal error, so the caller gets a message instead.
     """
+    from .loader import is_symlink_loop
+
+    if is_symlink_loop(value):
+        return None, "--data-root could not be resolved (symlink loop); the path is a symlink loop."
     try:
         return Path(value).expanduser().resolve(), None
     except RuntimeError as exc:

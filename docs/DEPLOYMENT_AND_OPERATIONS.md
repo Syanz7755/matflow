@@ -1,13 +1,19 @@
-# 部署与运维
+# Deployment and operations
 
-MatFlow v1 面向本机可信环境，不提供账号、TLS 或多租户隔离。需要远程部署时，应在外部增加认证、TLS 与网络访问控制。
+MatFlow v1 targets a trusted local environment and provides no accounts, TLS or multi-tenant isolation. For remote deployment, add authentication, TLS and network access control in front of it.
 
-## 进程拓扑
+## Process topology
 
-- 后端：`127.0.0.1:8000`，持有工作区状态并提供 `/api/*`。
-- WebUI：`127.0.0.1:5173`，由 `matflow start --ui webui` 按前端 manifest 启动。
-- MCP bridge：`127.0.0.1:8001/mcp`，在 `matflow-frontend` 独立启动。
+- Backend: `127.0.0.1:8000`, holds the workspace state and serves `/api/*`.
+- WebUI: `127.0.0.1:5173`, started by `matflow start --ui webui` from the frontend manifest.
+- MCP bridge: `127.0.0.1:8001/mcp`, started separately in `matflow-frontend`.
+- LLM gateway: LiteLLM on `127.0.0.1:4078` (`config/llm.json`), started or reused by `start_llm.bat`; required for AI planning and routing.
+- Jev decision gateway: `127.0.0.1:4079`, optional; when it is unreachable, tools are routed by the LLM. `start_model_services.bat` starts both gateways.
 
-受管启动器先等待后端能力接口可用，再启动 WebUI并等待页面健康检查。WebUI 异常退出、启动失败或 Ctrl+C 会清理整组受管进程。额外可信来源可通过 `MATFLOW_CORS_ORIGINS` 追加。
+The managed launcher waits for the backend capabilities endpoint to become available, then starts the WebUI and waits for its page health check. An abnormal WebUI exit, a failed startup or Ctrl+C cleans up the whole managed process group. Additional trusted origins can be appended through `MATFLOW_CORS_ORIGINS`.
 
-能力接口返回 `api_contract.name = matflow-http` 与 `api_contract.version = 1.0`。后端不需要 Node、npm 或 Python MCP 包即可独立运行。前端操作请在 `matflow-frontend` 仓库执行。
+## Data layout
+
+Each save is one folder, `data/saves/<name>/`, holding `graph_state.json`, `settings.json`, `uploads/` and `audit/task_summaries.jsonl`. The active save is `MATFLOW_DATA_ROOT` (an explicit folder) if set, else `data/saves/$MATFLOW_SAVE`, else `data/saves/default`. Back up or move a workspace by copying its folder. API keys are never stored in a save; they are read from environment variables.
+
+The capabilities endpoint returns `api_contract.name = matflow-http` and `api_contract.version = 1.0`. The backend runs standalone without Node, npm or a Python MCP package. Run frontend operations in the `matflow-frontend` repository.

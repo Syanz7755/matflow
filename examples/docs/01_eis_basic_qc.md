@@ -1,24 +1,24 @@
-# 01 · EIS 基础质控与 Nyquist 图
+# 01 · EIS basic quality control and Nyquist plot
 
-## 目的
+## Purpose
 
-验证从阻抗 CSV 导入、列映射、EIS 质控和 Nyquist 绘图的最小闭环。
+Verify the minimal closed loop from impedance CSV import through column mapping, EIS quality control and Nyquist plotting.
 
-## 输入
+## Input
 
-`examples/data/01_eis_basic_qc/eis_spectrum.csv`。必需列为 `frequency_hz`、`z_real_ohm` 和 `z_imag_ohm`；频率单位为 Hz，阻抗单位为 Ω。
+`examples/data/01_eis_basic_qc/eis_spectrum.csv`. The required columns are `frequency_hz`, `z_real_ohm` and `z_imag_ohm`; frequency is in Hz and impedance in Ω.
 
-## 操作提示
+## Suggested prompt
 
-提交：`对这组 EIS 数据做基础质量检查并绘制 Nyquist 图。`
+Submit: `Run basic quality checks on this EIS dataset and generate a Nyquist plot.` (the multilingual suite also submits the Chinese equivalent).
 
-## 预期结果
+## Expected result
 
-- 路由应选中 `eis_basic_qc`，并在其后连接 `plot_nyquist`（或由用户确认该绘图步骤）。
-- 13 个数据点均为有限数值，频率全为正数。
-- 高频端的实部阻抗约为 5.0 Ω（允许 ±0.2 Ω）。
-- UI 应展示结构化质控结果、图节点状态与 trace ID；不得把虚部正负号静默改写。
+- The route should select `eis_basic_qc` and then connect `plot_nyquist` (or the user confirms that plotting step).
+- All 13 data points are finite numbers and every frequency is positive.
+- The real part of the impedance at the high-frequency end is about 5.0 Ω (tolerance ±0.2 Ω).
+- The UI should show the structured quality-control result, the graph node states and the trace ID; the sign of the imaginary part must not be silently rewritten.
 
-## 边界
+## Boundary
 
-这是一个理想化的 `R(RC)` 合成谱，不用于等效电路拟合真实性验证。
+This is an idealized synthetic `R(RC)` spectrum and must not be used to validate equivalent-circuit fit authenticity.

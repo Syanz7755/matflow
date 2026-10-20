@@ -1,0 +1,44 @@
+MatFlow backend runtime flow (blueprint) — phase 7: Persistence and audit
+────────────────────────────────────────────────────────────────────────
+source     : flowview phase blueprint
+graph      : none in this document
+phases     : 1
+issues     : 0 error(s), 0 warning(s)
+meta       : stage_index=7, stage_name=persist, stage_title=Persistence and audit, modes=stages
+
+Phases (1)
+  [1] Persistence and audit (persist)  [pending]
+      1. summary appended  [pending]
+          detail     : Blueprint (described, not observed): backend/task_summary.py:
+                       TaskSummaryService._append() writes one JSON line with recorded_at to
+                       config/observability.json task_summaries.jsonl_path (data/audit/task_summaries.jsonl);
+                       a disabled config writes nothing
+      2. audit events emitted  [pending]
+          detail     : Blueprint (described, not observed): backend/observability.py: audit() emits JSON lines
+                       carrying trace_id for chat.received, tool.called, router.decided, patch.received,
+                       patch.applied, executor.started, executor.completed, executor.failed,
+                       node_review.submitted
+      3. summary endpoint  [pending]
+          detail     : Blueprint (described, not observed): backend/main.py: GET /api/task-summaries/{task_id}
+                       -> WorkspaceRuntime.task_summary() -> TaskSummaryService.get() returns the LAST
+                       matching record, or HTTP 404 when the task has never been recorded
+      4. failed outcome recorded  [pending]
+          detail     : Blueprint (described, not observed): backend/task_summary.py: record_execution() with
+                       execution.status == 'failed' sets status='failed' and error_and_handling={'error':
+                       {'code': 'execution_failed', 'message': ..., 'retryable': true}, 'handling': 'Execution
+                       stopped safely. ...'}
+
+Status legend
+  ready      : declared, never run
+  running    : execution in progress
+  completed  : finished successfully
+  waiting    : paused for a human decision
+  error      : stopped with an error
+  cancelled  : stopped by a gate or reviewer
+  unknown    : source did not say (never treated as success)
+  step-only statuses:
+    pending    : not started yet
+    skipped    : skipped by a gate or policy
+
+Issues (0)
+  No FlowView findings: the source looked consistent.

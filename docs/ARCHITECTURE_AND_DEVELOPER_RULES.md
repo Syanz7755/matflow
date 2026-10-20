@@ -1,29 +1,35 @@
-# 架构与开发规则
+# Architecture and developer rules
 
-设计动机、完整模块图、运行流程和当前能力边界见[设计理念与实现架构](DESIGN_AND_ARCHITECTURE.md)；阶段完成度见[项目阶段完成度评估](PROJECT_STATUS.md)。领域术语以根目录 `CONTEXT.md` 为准。
+For the design motivation, the complete module diagram, the runtime flows and the current capability boundaries see [design and architecture](DESIGN_AND_ARCHITECTURE.md); for stage completeness see [project status](PROJECT_STATUS.md). Domain vocabulary follows the root `CONTEXT.md`.
 
-## 权威边界
+## Authority boundary
 
-`matflow` 后端是状态、校验、路由、执行、审计和持久化的唯一权威。所有客户端只能通过版本化 HTTP API 操作工作区，不得直接导入后端 Python 对象、访问 `data/` 或编辑状态文件。
+The `matflow` backend is the only authority for state, validation, routing, execution, audit and persistence. Every client may operate on the workspace only through the versioned HTTP API; no client may import backend Python objects, access `data/` or edit state files directly.
 
-唯一例外是随仓只读诊断工具 `flowview/`（见 `../flowview/README.md`）：它不是工作区客户端，按设计直接读取 `data/`、`config/` 的只读镜像与 `backend/` 源码，以便在后端不可用时仍能打印流程。它不写入任何状态、不进入 wheel、不得被后端逻辑反向依赖，其内部契约冻结在 `../flowview/CONTRACT.md`；联网只走显式的 `--http [URL]`，离线仍是默认。
+The single exception is the in-repo read-only diagnostic tool `flowview/` (see `../flowview/README.md`): it is not a workspace client and by design reads the read-only mirrors of `data/` and `config/` plus the `backend/` sources, so that it can still print the flow when the backend is unavailable. It writes no state, is excluded from the wheel, must never be depended on by backend logic, and its internal contract is frozen in `../flowview/CONTRACT.md`; network access happens only through the explicit `--http [URL]`, and offline remains the default.
 
-`matflow-frontend` 是独立 npm workspace，包含 WebUI、共享 API client、MCP bridge 和 DSH 集成。两仓可以独立发布补丁与次版本，通过 `matflow-http` 契约主版本保持兼容。
+`matflow-frontend` is a separate npm workspace containing the WebUI, the shared API client, the MCP bridge and the DSH integration. The two repositories can publish patches and minor versions independently and stay compatible through the `matflow-http` contract major version.
 
-## 能力归属规则
+## Capability ownership rules
 
-- Platform Core 只定义领域无关的 Workflow、类型注册、Tool 生命周期、执行、审核和审计机制。
-- 实验方法相关的数据类型、Tool、Recipe 和执行器属于 Domain Package；具体样品、目录、实验条件和预期结果属于 Reference Case。
-- 新案例不得通过修改核心类型常量或在核心执行器增加领域名称分支来接入；若扩展点不足，应先补充通用扩展机制。
-- 测试和文档中的案例必须标注所属层级，不能用单个案例的完成度代表平台完成度。
+- Platform Core defines only domain-neutral Workflow, type registration, Tool lifecycle, execution, review and audit mechanisms.
+- Measurement-method data types, Tools, Recipes and executors belong to a Domain Package; concrete samples, catalogues, experimental conditions and expected results belong to a Reference Case.
+- A new case must not be integrated by changing core type constants or by adding a domain-name branch to a core executor; if an extension point is missing, add a generic extension mechanism first.
+- Cases in tests and documentation must state which layer they belong to; the completeness of a single case must not stand in for platform completeness.
 
-## 写入与客户端规则
+## Writing and client rules
 
-- GraphPatch 验证使用 `POST /api/patch/validate`，不写状态；应用必须在服务器锁内完成校验和原子写入。
-- 过期版本稳定返回 HTTP 409 与 `graph_version_conflict`。
-- 上传、节点审核、人工决策、数据类型变更与执行均经后端接口。
-- 客户端启动时读取 `/api/capabilities` 并拒绝不兼容的契约主版本。
-- MCP bridge 负责远程文件 HTTPS、重定向、私网地址与 25 MB 限制，随后调用后端上传接口。
-- 新 UI 必须在根目录提供 `matflow-ui.json`；启动命令是参数数组，不通过 shell 执行。
+- GraphPatch validation uses `POST /api/patch/validate` and writes no state; applying a patch must complete validation and the atomic write inside the server lock.
+- A stale version returns HTTP 409 with `graph_version_conflict` deterministically.
+- Uploads, node review, human decisions, data type changes and execution all go through backend interfaces.
+- A client reads `/api/capabilities` at startup and rejects an incompatible contract major version.
+- The MCP bridge handles HTTPS remote files, redirects, private-network addresses and the 25 MB limit, then calls the backend upload interface.
+- A new UI must provide `matflow-ui.json` in the repository root; the start command is an argument array and is not executed through a shell.
 
-后端提交前运行 `uv run python -m unittest discover -v`（该发现范围同时覆盖 `tests/` 与随仓工具 `flowview/tests/`，当前合计 385 项）；前端提交前运行 `npm test` 与 `npm run build`。跨仓变更还应运行 WebUI E2E 与 MCP smoke test。
+Before committing to the backend run `uv run python -m unittest discover -v` (that discovery scope covers both `tests/` and the in-repo tool `flowview/tests/`, 426 tests in total today); before committing to the frontend run `npm test` and `npm run build`. Cross-repository changes should also run the WebUI E2E and the MCP smoke test.
+
+## Documentation language convention
+
+- Except for documentation, every file uses English only: code, comments, configuration, scripts, interface copy, and all text other than test data.
+- Documentation is English by default and lives in the plain `.md` file; the Chinese version is retained as a sibling `*.zhcn.md` file, and the two must be kept in sync.
+- Chinese prompts that tests and examples use as input are test data, not documentation, and stay Chinese by design so the Chinese interaction path keeps its coverage.

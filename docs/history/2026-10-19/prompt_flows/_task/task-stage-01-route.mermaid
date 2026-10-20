@@ -1,0 +1,19 @@
+flowchart TD
+    %% FlowView: runtime phase map, one node per observable step.
+    %% title: Recorded task — stage 1: Route
+    %% source: task summary route-eis
+    %% phases: 1; steps: 3
+    subgraph pg_route["Route #40;route#41; #91;completed#93;"]
+        n_route_0_prompt_recorded(["prompt recorded - user prompt: #quot;Run basic EIS quality checks#quot;<br/>completed"]):::flowview_completed
+        n_route_1_candidates_considered(["candidates considered - 1 candidate tool#40;s#41; considered: eis_basic_qc<br/>completed"]):::flowview_completed
+        n_route_2_selected_eis_basic_qc(["selected eis_basic_qc - confidence 1.00; human confirmation required: n…<br/>completed"]):::flowview_completed
+    end
+    classDef flowview_ready fill:#e8f1fb,stroke:#3b6ea5,color:#102a43;
+    classDef flowview_running fill:#fff4d6,stroke:#a5761b,color:#3d2c00;
+    classDef flowview_completed fill:#e3f6e8,stroke:#2f7d43,color:#0f3319;
+    classDef flowview_waiting fill:#fdf1dc,stroke:#a5761b,color:#3d2c00;
+    classDef flowview_error fill:#fbe3e3,stroke:#a32020,color:#4a0f0f;
+    classDef flowview_cancelled fill:#f0e8f8,stroke:#6b4b9a,color:#2a1040;
+    classDef flowview_unknown fill:#eceff3,stroke:#8792a2,color:#2b3038;
+    classDef flowview_pending fill:#f3f4f6,stroke:#8792a2,color:#2b3038;
+    classDef flowview_skipped fill:#f0e8f8,stroke:#6b4b9a,color:#2a1040;

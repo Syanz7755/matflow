@@ -12,14 +12,19 @@ from typing import Any
 
 from .contracts import ExecutionResult, RegisteredToolReference, RouterCandidate, RouterDecision, TaskLogSummary, TaskState
 from .observability import current_trace_id
+from .saves import resolve_data_root
 from .tool_registry import ToolRegistry
 
 ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_CONFIG_PATH = ROOT / "config" / "observability.json"
 
 
-def _load_log_path(config_path: Path = DEFAULT_CONFIG_PATH) -> Path | None:
-    """Read the tracked logging configuration; disabled means no persistence."""
+def _load_log_path(config_path: Path = DEFAULT_CONFIG_PATH, *, data_root: Path | None = None) -> Path | None:
+    """Read the tracked logging configuration; disabled means no persistence.
+
+    ``jsonl_path`` is relative to the open save folder, so every save keeps its
+    own task history.
+    """
     if not config_path.exists():
         return None
     config = json.loads(config_path.read_text(encoding="utf-8"))
@@ -29,9 +34,10 @@ def _load_log_path(config_path: Path = DEFAULT_CONFIG_PATH) -> Path | None:
     location = summaries.get("jsonl_path")
     if not isinstance(location, str) or not location:
         raise ValueError("observability.task_summaries.jsonl_path must be a non-empty string")
-    path = (ROOT / location).resolve()
-    if ROOT not in path.parents:
-        raise ValueError("task summary log path must stay inside the MatFlow project")
+    base = (data_root or resolve_data_root()).resolve()
+    path = (base / location).resolve()
+    if base not in path.parents:
+        raise ValueError("task summary log path must stay inside the save folder")
     return path
 
 
@@ -56,8 +62,8 @@ def _bounded(value: Any, limit: int = 5000) -> Any:
 class TaskSummaryService:
     """Deep module for route/execute summary snapshots at one stable seam."""
 
-    def __init__(self, log_path: Path | None = None):
-        self._log_path = log_path if log_path is not None else _load_log_path()
+    def __init__(self, log_path: Path | None = None, *, data_root: Path | None = None):
+        self._log_path = log_path if log_path is not None else _load_log_path(data_root=data_root)
 
     def record_routing(self, task: TaskState, decision: RouterDecision, registry: ToolRegistry) -> TaskLogSummary:
         selected = [_tool_reference(registry, candidate) for candidate in decision.selected]

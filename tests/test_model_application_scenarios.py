@@ -11,7 +11,7 @@ from backend.tool_registry import ToolRegistry
 
 
 ROOT = Path(__file__).parents[1]
-SUITE_PATH = ROOT / "examples" / "teaching_lab_prompt_suite.json"
+SUITE_PATH = ROOT / "tests" / "suites" / "teaching_lab_prompt_suite.json"
 
 
 def load_suite():
@@ -57,7 +57,7 @@ class ModelApplicationScenarioTests(unittest.TestCase):
         cls.registry = application_registry(cls.suite)
 
     def test_scenarios_use_existing_fixtures_and_external_expected_results(self):
-        expected_path = ROOT / "examples" / "teaching_lab_expected_results.json"
+        expected_path = ROOT / "tests" / "suites" / "teaching_lab_expected_results.json"
         expected = json.loads(expected_path.read_text(encoding="utf-8"))["known_results"]
 
         for scenario in self.suite["scenarios"]:

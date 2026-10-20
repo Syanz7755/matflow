@@ -1,0 +1,195 @@
+{
+  "flowview_schema": "1.0",
+  "document": {
+    "title": "MatFlow routing preview (read-only)",
+    "source": "dry-route:D:\\Projects\\matflow",
+    "graph": null,
+    "trace": null,
+    "phases": [
+      {
+        "name": "prompt",
+        "title": "Prompt (input)",
+        "steps": [
+          {
+            "name": "user prompt",
+            "status": "completed",
+            "detail": "\u3010\u80cc\u666f\u3011\u6211\u5728\u505a\u836f\u7269\u6d3b\u6027\u6210\u5206\u7684\u6676\u578b\u7b5b\u9009\uff0c\u624b\u4e0a\u8fd9\u4e2a\u5316\u5408\u7269\u5df2\u7ecf\u786e\u8ba4\u5b58\u5728\u4e24\u79cd\u6676\u578b\uff0c\u6676\u578b I \u662f\u539f\u6599\uff0c\u6676\u578b II \u662f\u91cd\u7ed3\u6676\u5f97\u5230\u7684\uff0c\u6211\u60f3\u7528\u5dee\u793a\u626b\u63cf\u91cf\u70ed\u6cd5\u786e\u8ba4\u4e24\u8005\u7684\u7194\u70b9\u548c\u7194\u878d\u7113\u5dee\u5f02\uff0c\u987a\u4fbf\u770b\u770b\u6709\u6ca1\u6709\u73bb\u7483\u5316\u8f6c\u53d8\u3002\n\u3010\u5b9e\u9a8c\u53c2\u6570\u3011\u4eea\u5668 Mettler Toledo DSC 3\uff0c\u94dd\u5236\u5bc6\u5c01\u5769\u57da\uff0c\u6837\u54c1\u91cf 4.2 mg\uff0c\u7b2c\u4e00\u6b21\u5347\u6e29\u4ece 25 \u5230 250 \u00b0C\uff0c\u901f\u7387 10 \u00b0C/min\uff0c\u6c2e\u6c14\u4fdd\u62a4 50 mL/min\uff0c\u968f\u540e\u4ee5 10 \u00b0C/min \u964d\u5230 -20 \u00b0C\uff0c\u518d\u7b2c\u4e8c\u6b21\u5347\u6e29\u5230 250 \u00b0C \u4ee5\u6d88\u9664\u70ed\u5386\u53f2\u3002\u672c\u6b21\u63d0\u4f9b\u7684\u6570\u636e\u53ea\u5305\u542b\u7b2c\u4e00\u6b21\u5347\u6e29\u66f2\u7ebf\uff0c\u4e24\u5217\uff1atemperature_C \u548c heat_flow_mW\uff0c\u5176\u4e2d\u5438\u70ed\u5cf0\u671d\u4e0b\u4e3a\u8d1f\u503c\u3002\n\u3010\u6570\u636e\u8bf4\u660e\u3011\u57fa\u7ebf\u4e0a\u6709\u4e00\u4e2a\u7f13\u6162\u7684\u6f02\u79fb\uff0c\u7194\u878d\u5cf0\u5927\u7ea6\u5728 180 \u00b0C \u9644\u8fd1\uff0c\u5cf0\u5f62\u4e0d\u5bf9\u79f0\uff0c\u53ef\u80fd\u6709\u7194\u878d\u91cd\u7ed3\u6676\u3002\u6837\u54c1\u5728 100 \u00b0C \u9644\u8fd1\u6709\u4e00\u4e2a\u5f88\u5c0f\u7684\u53f0\u9636\uff0c\u53ef\u80fd\u662f\u6b8b\u7559\u6eb6\u5242\u6216\u8005\u73bb\u7483\u5316\u8f6c\u53d8\uff0c\u4e5f\u53ef\u80fd\u662f\u6c34\u5206\u3002\n\u3010\u8bf7\u6c42\u30111) \u786e\u5b9a\u4e3b\u8981\u70ed\u4e8b\u4ef6\u7684\u6e29\u5ea6\uff1a\u8d77\u59cb\u70b9\u3001\u5cf0\u503c\u548c\u7ed3\u675f\u70b9\uff0c\u5206\u522b\u8bf4\u660e\u4f60\u7528\u54ea\u79cd\u7ea6\u5b9a\u30022) \u8ba1\u7b97\u7194\u878d\u7113\uff0c\u5355\u4f4d J/g\uff0c\u5e76\u8bf4\u660e\u79ef\u5206\u533a\u95f4\u7684\u9009\u6cd5\u5bf9\u7ed3\u679c\u7684\u5f71\u54cd\u30023) \u5224\u65ad 100 \u00b0C \u9644\u8fd1\u7684\u53f0\u9636\u66f4\u50cf\u73bb\u7483\u5316\u8f6c\u53d8\u8fd8\u662f\u8131\u6c34\uff0c\u9700\u8981\u4ec0\u4e48\u989d\u5916\u8bc1\u636e\u624d\u80fd\u533a\u5206\u30024) \u660e\u786e\u8bf4\u660e\uff1a\u4ec5\u51ed\u7b2c\u4e00\u6b21\u5347\u6e29\u66f2\u7ebf\u80fd\u5426\u6bd4\u8f83\u4e24\u79cd\u6676\u578b\u7684\u7a33\u5b9a\u6027\uff0c\u4e3a\u4ec0\u4e48\u9700\u8981\u7b2c\u4e8c\u6b21\u5347\u6e29\u6216\u53d8\u6e29\u5faa\u73af\u3002",
+            "error": null,
+            "node_id": null,
+            "tools": []
+          },
+          {
+            "name": "prompt size",
+            "status": "completed",
+            "detail": "558 character(s), 46 whitespace-separated token(s); available input types: RawData, TypedTable",
+            "error": null,
+            "node_id": null,
+            "tools": []
+          },
+          {
+            "name": "retriever tokenisation",
+            "status": "completed",
+            "detail": "backend/routing.py _tokens() keeps the distinct [a-z0-9]+ runs longer than one character. The 558-character prompt yields 42 occurrence(s) / 18 distinct token(s) and 351 CJK character(s); the router was given 18 distinct token(s) (42 occurrence(s), 351 CJK character(s)) [verbatim]",
+            "error": null,
+            "node_id": null,
+            "tools": []
+          }
+        ],
+        "error": null
+      },
+      {
+        "name": "candidates",
+        "title": "Candidates",
+        "steps": [
+          {
+            "name": "ebrick_case05_import (candidate)",
+            "status": "pending",
+            "detail": "candidate only, nothing executed; score 0.25; version 1.0.0; reasons: matches: temperature",
+            "error": null,
+            "node_id": null,
+            "tools": [
+              "ebrick_case05_import"
+            ]
+          }
+        ],
+        "error": null
+      },
+      {
+        "name": "decision",
+        "title": "Decision",
+        "steps": [
+          {
+            "name": "selected ebrick_case05_import",
+            "status": "waiting",
+            "detail": "confidence 0.25; human confirmation required: yes; rationale: Selected EBrick Case 05 CSV Import from 1 compatible candidate(s).",
+            "error": null,
+            "node_id": null,
+            "tools": [
+              "ebrick_case05_import"
+            ]
+          },
+          {
+            "name": "dry run guarantee",
+            "status": "completed",
+            "detail": "DecisionRouter() ran without the JEV/model router: record_routing() was not called and no graph, settings or summary file was written",
+            "error": null,
+            "node_id": null,
+            "tools": []
+          }
+        ],
+        "error": null
+      }
+    ],
+    "issues": [
+      {
+        "severity": "info",
+        "code": "route.dry_run",
+        "message": "This route was computed read-only: nothing was persisted to the task summary log.",
+        "where": "dry-route:D:\\Projects\\matflow",
+        "hint": null,
+        "detail": null
+      }
+    ],
+    "meta": {
+      "mode": "dry-run",
+      "graph_version": "0",
+      "candidates": "1",
+      "confirmation": "yes",
+      "prompt_characters": "558",
+      "prompt": "\u3010\u80cc\u666f\u3011\u6211\u5728\u505a\u836f\u7269\u6d3b\u6027\u6210\u5206\u7684\u6676\u578b\u7b5b\u9009\uff0c\u624b\u4e0a\u8fd9\u4e2a\u5316\u5408\u7269\u5df2\u7ecf\u786e\u8ba4\u5b58\u5728\u4e24\u79cd\u6676\u578b\uff0c\u6676\u578b I \u662f\u539f\u6599\uff0c\u6676\u578b II \u662f\u91cd\u7ed3\u6676\u5f97\u5230\u7684\uff0c\u6211\u60f3\u7528\u5dee\u793a\u626b\u63cf\u91cf\u70ed\u6cd5\u786e\u8ba4\u4e24\u8005\u7684\u7194\u70b9\u548c\u7194\u878d\u7113\u5dee\u5f02\uff0c\u987a\u4fbf\u770b\u770b\u6709\u6ca1\u6709\u73bb\u7483\u5316\u8f6c\u53d8\u3002\n\u3010\u5b9e\u9a8c\u53c2\u6570\u3011\u4eea\u5668 Mettler Toledo DSC 3\uff0c\u94dd\u5236\u5bc6\u5c01\u5769\u57da\uff0c\u6837\u54c1\u91cf 4.2 mg\uff0c\u7b2c\u4e00\u6b21\u5347\u6e29\u4ece 25 \u5230 250 \u00b0C\uff0c\u901f\u7387 10 \u00b0C/min\uff0c\u6c2e\u6c14\u4fdd\u62a4 50 mL/min\uff0c\u968f\u540e\u4ee5 10 \u00b0C/min \u964d\u5230 -20 \u00b0C\uff0c\u518d\u7b2c\u4e8c\u6b21\u5347\u6e29\u5230 250 \u00b0C \u4ee5\u6d88\u9664\u70ed\u5386\u53f2\u3002\u672c\u6b21\u63d0\u4f9b\u7684\u6570\u636e\u53ea\u5305\u542b\u7b2c\u4e00\u6b21\u5347\u6e29\u66f2\u7ebf\uff0c\u4e24\u5217\uff1atemperature_C \u548c heat_flow_mW\uff0c\u5176\u4e2d\u5438\u70ed\u5cf0\u671d\u4e0b\u4e3a\u8d1f\u503c\u3002\n\u3010\u6570\u636e\u8bf4\u660e\u3011\u57fa\u7ebf\u4e0a\u6709\u4e00\u4e2a\u7f13\u6162\u7684\u6f02\u79fb\uff0c\u7194\u878d\u5cf0\u5927\u7ea6\u5728 180 \u00b0C \u9644\u8fd1\uff0c\u5cf0\u5f62\u4e0d\u5bf9\u79f0\uff0c\u53ef\u80fd\u6709\u7194\u878d\u91cd\u7ed3\u6676\u3002\u6837\u54c1\u5728 100 \u00b0C \u9644\u8fd1\u6709\u4e00\u4e2a\u5f88\u5c0f\u7684\u53f0\u9636\uff0c\u53ef\u80fd\u662f\u6b8b\u7559\u6eb6\u5242\u6216\u8005\u73bb\u7483\u5316\u8f6c\u53d8\uff0c\u4e5f\u53ef\u80fd\u662f\u6c34\u5206\u3002\n\u3010\u8bf7\u6c42\u30111) \u786e\u5b9a\u4e3b\u8981\u70ed\u4e8b\u4ef6\u7684\u6e29\u5ea6\uff1a\u8d77\u59cb\u70b9\u3001\u5cf0\u503c\u548c\u7ed3\u675f\u70b9\uff0c\u5206\u522b\u8bf4\u660e\u4f60\u7528\u54ea\u79cd\u7ea6\u5b9a\u30022) \u8ba1\u7b97\u7194\u878d\u7113\uff0c\u5355\u4f4d J/g\uff0c\u5e76\u8bf4\u660e\u79ef\u5206\u533a\u95f4\u7684\u9009\u6cd5\u5bf9\u7ed3\u679c\u7684\u5f71\u54cd\u30023) \u5224\u65ad 100 \u00b0C \u9644\u8fd1\u7684\u53f0\u9636\u66f4\u50cf\u73bb\u7483\u5316\u8f6c\u53d8\u8fd8\u662f\u8131\u6c34\uff0c\u9700\u8981\u4ec0\u4e48\u989d\u5916\u8bc1\u636e\u624d\u80fd\u533a\u5206\u30024) \u660e\u786e\u8bf4\u660e\uff1a\u4ec5\u51ed\u7b2c\u4e00\u6b21\u5347\u6e29\u66f2\u7ebf\u80fd\u5426\u6bd4\u8f83\u4e24\u79cd\u6676\u578b\u7684\u7a33\u5b9a\u6027\uff0c\u4e3a\u4ec0\u4e48\u9700\u8981\u7b2c\u4e8c\u6b21\u5347\u6e29\u6216\u53d8\u6e29\u5faa\u73af\u3002",
+      "retriever_tokens": "18",
+      "routing_tokens": "18",
+      "retriever_tokens_dropped": "0",
+      "cjk_characters": "351",
+      "routing_preview": "verbatim",
+      "modes": "dry-run"
+    },
+    "truncated": []
+  },
+  "phases": [
+    {
+      "name": "prompt",
+      "title": "Prompt (input)",
+      "steps": [
+        {
+          "name": "user prompt",
+          "status": "completed",
+          "detail": "\u3010\u80cc\u666f\u3011\u6211\u5728\u505a\u836f\u7269\u6d3b\u6027\u6210\u5206\u7684\u6676\u578b\u7b5b\u9009\uff0c\u624b\u4e0a\u8fd9\u4e2a\u5316\u5408\u7269\u5df2\u7ecf\u786e\u8ba4\u5b58\u5728\u4e24\u79cd\u6676\u578b\uff0c\u6676\u578b I \u662f\u539f\u6599\uff0c\u6676\u578b II \u662f\u91cd\u7ed3\u6676\u5f97\u5230\u7684\uff0c\u6211\u60f3\u7528\u5dee\u793a\u626b\u63cf\u91cf\u70ed\u6cd5\u786e\u8ba4\u4e24\u8005\u7684\u7194\u70b9\u548c\u7194\u878d\u7113\u5dee\u5f02\uff0c\u987a\u4fbf\u770b\u770b\u6709\u6ca1\u6709\u73bb\u7483\u5316\u8f6c\u53d8\u3002\n\u3010\u5b9e\u9a8c\u53c2\u6570\u3011\u4eea\u5668 Mettler Toledo DSC 3\uff0c\u94dd\u5236\u5bc6\u5c01\u5769\u57da\uff0c\u6837\u54c1\u91cf 4.2 mg\uff0c\u7b2c\u4e00\u6b21\u5347\u6e29\u4ece 25 \u5230 250 \u00b0C\uff0c\u901f\u7387 10 \u00b0C/min\uff0c\u6c2e\u6c14\u4fdd\u62a4 50 mL/min\uff0c\u968f\u540e\u4ee5 10 \u00b0C/min \u964d\u5230 -20 \u00b0C\uff0c\u518d\u7b2c\u4e8c\u6b21\u5347\u6e29\u5230 250 \u00b0C \u4ee5\u6d88\u9664\u70ed\u5386\u53f2\u3002\u672c\u6b21\u63d0\u4f9b\u7684\u6570\u636e\u53ea\u5305\u542b\u7b2c\u4e00\u6b21\u5347\u6e29\u66f2\u7ebf\uff0c\u4e24\u5217\uff1atemperature_C \u548c heat_flow_mW\uff0c\u5176\u4e2d\u5438\u70ed\u5cf0\u671d\u4e0b\u4e3a\u8d1f\u503c\u3002\n\u3010\u6570\u636e\u8bf4\u660e\u3011\u57fa\u7ebf\u4e0a\u6709\u4e00\u4e2a\u7f13\u6162\u7684\u6f02\u79fb\uff0c\u7194\u878d\u5cf0\u5927\u7ea6\u5728 180 \u00b0C \u9644\u8fd1\uff0c\u5cf0\u5f62\u4e0d\u5bf9\u79f0\uff0c\u53ef\u80fd\u6709\u7194\u878d\u91cd\u7ed3\u6676\u3002\u6837\u54c1\u5728 100 \u00b0C \u9644\u8fd1\u6709\u4e00\u4e2a\u5f88\u5c0f\u7684\u53f0\u9636\uff0c\u53ef\u80fd\u662f\u6b8b\u7559\u6eb6\u5242\u6216\u8005\u73bb\u7483\u5316\u8f6c\u53d8\uff0c\u4e5f\u53ef\u80fd\u662f\u6c34\u5206\u3002\n\u3010\u8bf7\u6c42\u30111) \u786e\u5b9a\u4e3b\u8981\u70ed\u4e8b\u4ef6\u7684\u6e29\u5ea6\uff1a\u8d77\u59cb\u70b9\u3001\u5cf0\u503c\u548c\u7ed3\u675f\u70b9\uff0c\u5206\u522b\u8bf4\u660e\u4f60\u7528\u54ea\u79cd\u7ea6\u5b9a\u30022) \u8ba1\u7b97\u7194\u878d\u7113\uff0c\u5355\u4f4d J/g\uff0c\u5e76\u8bf4\u660e\u79ef\u5206\u533a\u95f4\u7684\u9009\u6cd5\u5bf9\u7ed3\u679c\u7684\u5f71\u54cd\u30023) \u5224\u65ad 100 \u00b0C \u9644\u8fd1\u7684\u53f0\u9636\u66f4\u50cf\u73bb\u7483\u5316\u8f6c\u53d8\u8fd8\u662f\u8131\u6c34\uff0c\u9700\u8981\u4ec0\u4e48\u989d\u5916\u8bc1\u636e\u624d\u80fd\u533a\u5206\u30024) \u660e\u786e\u8bf4\u660e\uff1a\u4ec5\u51ed\u7b2c\u4e00\u6b21\u5347\u6e29\u66f2\u7ebf\u80fd\u5426\u6bd4\u8f83\u4e24\u79cd\u6676\u578b\u7684\u7a33\u5b9a\u6027\uff0c\u4e3a\u4ec0\u4e48\u9700\u8981\u7b2c\u4e8c\u6b21\u5347\u6e29\u6216\u53d8\u6e29\u5faa\u73af\u3002",
+          "error": null,
+          "node_id": null,
+          "tools": []
+        },
+        {
+          "name": "prompt size",
+          "status": "completed",
+          "detail": "558 character(s), 46 whitespace-separated token(s); available input types: RawData, TypedTable",
+          "error": null,
+          "node_id": null,
+          "tools": []
+        },
+        {
+          "name": "retriever tokenisation",
+          "status": "completed",
+          "detail": "backend/routing.py _tokens() keeps the distinct [a-z0-9]+ runs longer than one character. The 558-character prompt yields 42 occurrence(s) / 18 distinct token(s) and 351 CJK character(s); the router was given 18 distinct token(s) (42 occurrence(s), 351 CJK character(s)) [verbatim]",
+          "error": null,
+          "node_id": null,
+          "tools": []
+        }
+      ],
+      "error": null
+    },
+    {
+      "name": "candidates",
+      "title": "Candidates",
+      "steps": [
+        {
+          "name": "ebrick_case05_import (candidate)",
+          "status": "pending",
+          "detail": "candidate only, nothing executed; score 0.25; version 1.0.0; reasons: matches: temperature",
+          "error": null,
+          "node_id": null,
+          "tools": [
+            "ebrick_case05_import"
+          ]
+        }
+      ],
+      "error": null
+    },
+    {
+      "name": "decision",
+      "title": "Decision",
+      "steps": [
+        {
+          "name": "selected ebrick_case05_import",
+          "status": "waiting",
+          "detail": "confidence 0.25; human confirmation required: yes; rationale: Selected EBrick Case 05 CSV Import from 1 compatible candidate(s).",
+          "error": null,
+          "node_id": null,
+          "tools": [
+            "ebrick_case05_import"
+          ]
+        },
+        {
+          "name": "dry run guarantee",
+          "status": "completed",
+          "detail": "DecisionRouter() ran without the JEV/model router: record_routing() was not called and no graph, settings or summary file was written",
+          "error": null,
+          "node_id": null,
+          "tools": []
+        }
+      ],
+      "error": null
+    }
+  ],
+  "issues": [
+    {
+      "severity": "info",
+      "code": "route.dry_run",
+      "message": "This route was computed read-only: nothing was persisted to the task summary log.",
+      "where": "dry-route:D:\\Projects\\matflow",
+      "hint": null,
+      "detail": null
+    }
+  ],
+  "exit_code_hint": 0
+}

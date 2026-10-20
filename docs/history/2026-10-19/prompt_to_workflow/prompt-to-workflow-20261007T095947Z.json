@@ -1,0 +1,509 @@
+{
+  "suite_id": "prompt-to-workflow-v1",
+  "results": [
+    {
+      "case_id": "long_eis_01_full_context",
+      "verdict": "passed",
+      "problems": [],
+      "status": "planned",
+      "elapsed_seconds": 31.1,
+      "llm_calls": 5,
+      "routers": [
+        "llm"
+      ],
+      "workflow": [
+        {
+          "id": "a1",
+          "goal": "Import the uploaded EIS spectrum CSV file",
+          "depends_on": [],
+          "status": "routed",
+          "tool_id": "raw_file_import",
+          "router": "llm",
+          "confidence": 1.0
+        },
+        {
+          "id": "a2",
+          "goal": "Map the frequency_hz, z_real_ohm, and z_imag_ohm columns to typed columns",
+          "depends_on": [
+            "a1"
+          ],
+          "status": "routed",
+          "tool_id": "normalize_columns",
+          "router": "llm",
+          "confidence": 1.0
+        },
+        {
+          "id": "a3",
+          "goal": "Perform EIS basic quality checks and generate EIS data and QC report",
+          "depends_on": [
+            "a2"
+          ],
+          "status": "routed",
+          "tool_id": "eis_basic_qc",
+          "router": "llm",
+          "confidence": 1.0
+        },
+        {
+          "id": "a4",
+          "goal": "Generate Nyquist plot with negative imaginary axis and annotate high-frequency intercept",
+          "depends_on": [
+            "a3"
+          ],
+          "status": "routed",
+          "tool_id": "plot_nyquist",
+          "router": "llm",
+          "confidence": 0.9
+        }
+      ],
+      "edges": [
+        "a1-raw_file_import.raw -> a2-normalize_columns.raw",
+        "a2-normalize_columns.table -> a3-eis_basic_qc.data",
+        "a3-eis_basic_qc.data -> a4-plot_nyquist.data"
+      ],
+      "issues": [],
+      "question": "",
+      "reason": ""
+    }
+  ],
+  "plans": [
+    {
+      "plan_id": "52f1719b76cc",
+      "task_id": "long_eis_01_full_context",
+      "status": "planned",
+      "request": "【实验背景】这是一份室温下用辰华 CHI760E 电化学工作站测得的交流阻抗数据，样品是 10 wt% 的 Li7La3Zr2O12 陶瓷片，两面溅射金电极，测试前在 60 °C 真空烘箱中干燥 12 小时。测量参数为：频率范围 1 MHz 到 0.1 Hz，交流振幅 10 mV，直流偏置 0 V，每个十倍频程采集 10 个点，共记录 61 个频点。\n【数据说明】导出的 CSV 文件包含三列：第一列 frequency_Hz 是频率，单位赫兹，按从高到低排列；第二列 Z_real_ohm 是阻抗实部；第三列 Z_imag_ohm 是阻抗虚部，负值表示容性响应。原始文件里还有仪器自动写入的表头注释行和一行空行，如果解析出问题请告诉我具体是第几行。\n【我需要你做的事情】1) 先对这份阻抗谱做基础质量检查：确认频点是否单调、有没有重复频率、有没有明显的异常点或负的实部，以及高频端是否收敛到纯电阻行为。2) 根据有效数据点生成 Nyquist 图，横轴用阻抗实部，纵轴用负的虚部，两个轴的单位都保持欧姆，图上需要标注高频截距的大致数值。3) 如果质检发现数据不合格，请直接指出是哪几个频点有问题、可能的物理原因是什么，不要跳过问题直接出图。\n【约束】请只使用已经注册的工具来完成，不要自己发明新的分析方法；如果某个必需的能力当前不存在，请说明缺失的具体能力，并把待人工确认的部分列出来。",
+      "question": "",
+      "reason": "",
+      "actions": [
+        {
+          "id": "a1",
+          "goal": "Import the uploaded EIS spectrum CSV file",
+          "depends_on": [],
+          "input_files": [
+            "eis_spectrum.csv"
+          ],
+          "parameters": {},
+          "status": "routed",
+          "tool_id": "raw_file_import",
+          "node_id": "a1-raw_file_import",
+          "router": "llm",
+          "confidence": 1.0,
+          "requires_confirmation": false,
+          "rationale": "Jev routing unavailable: <urlopen error [WinError 10061] 由于目标计算机积极拒绝，无法连接。>; the LLM decided instead. The request is to import the uploaded EIS spectrum CSV file, which matches the raw_file_import tool's purpose.",
+          "candidates": [
+            "qe_structure",
+            "raw_file_import"
+          ],
+          "model_decisions": [
+            {
+              "profile": "llm",
+              "model": "deepseek-chat",
+              "selected_tool_id": "raw_file_import",
+              "score": 1.0,
+              "calibrated": false,
+              "evidence": {
+                "rationale": "The request is to import the uploaded EIS spectrum CSV file, which matches the raw_file_import tool's purpose.",
+                "params": {
+                  "file_name": "eis_spectrum.csv"
+                }
+              }
+            }
+          ],
+          "params": {
+            "file_name": "eis_spectrum.csv",
+            "upload_id": "375476f5801f47adb59714f742908adb_eis_spectrum.csv"
+          },
+          "ignored_params": []
+        },
+        {
+          "id": "a2",
+          "goal": "Map the frequency_hz, z_real_ohm, and z_imag_ohm columns to typed columns",
+          "depends_on": [
+            "a1"
+          ],
+          "input_files": [],
+          "parameters": {
+            "frequency_column": "frequency_hz",
+            "real_column": "z_real_ohm",
+            "imag_column": "z_imag_ohm"
+          },
+          "status": "routed",
+          "tool_id": "normalize_columns",
+          "node_id": "a2-normalize_columns",
+          "router": "llm",
+          "confidence": 1.0,
+          "requires_confirmation": false,
+          "rationale": "The request explicitly asks to map the three named columns to typed columns, which matches the normalize_columns tool's purpose.",
+          "candidates": [
+            "normalize_columns"
+          ],
+          "model_decisions": [
+            {
+              "profile": "llm",
+              "model": "deepseek-chat",
+              "selected_tool_id": "normalize_columns",
+              "score": 1.0,
+              "calibrated": false,
+              "evidence": {
+                "rationale": "The request explicitly asks to map the three named columns to typed columns, which matches the normalize_columns tool's purpose.",
+                "params": {
+                  "frequency_column": "frequency_hz",
+                  "real_column": "z_real_ohm",
+                  "imag_column": "z_imag_ohm"
+                }
+              }
+            }
+          ],
+          "params": {
+            "frequency_column": "frequency_hz",
+            "real_column": "z_real_ohm",
+            "imag_column": "z_imag_ohm"
+          },
+          "ignored_params": []
+        },
+        {
+          "id": "a3",
+          "goal": "Perform EIS basic quality checks and generate EIS data and QC report",
+          "depends_on": [
+            "a2"
+          ],
+          "input_files": [],
+          "parameters": {},
+          "status": "routed",
+          "tool_id": "eis_basic_qc",
+          "node_id": "a3-eis_basic_qc",
+          "router": "llm",
+          "confidence": 1.0,
+          "requires_confirmation": false,
+          "rationale": "Jev routing unavailable: <urlopen error [WinError 10061] 由于目标计算机积极拒绝，无法连接。>; the LLM decided instead. The request explicitly asks for EIS basic quality checks and generation of EIS data and QC report, which matches the eis_basic_qc tool's description and outputs.",
+          "candidates": [
+            "eis_basic_qc",
+            "ftir_peak_extraction",
+            "skill_node",
+            "xrd_peak_extraction"
+          ],
+          "model_decisions": [
+            {
+              "profile": "llm",
+              "model": "deepseek-chat",
+              "selected_tool_id": "eis_basic_qc",
+              "score": 1.0,
+              "calibrated": false,
+              "evidence": {
+                "rationale": "The request explicitly asks for EIS basic quality checks and generation of EIS data and QC report, which matches the eis_basic_qc tool's description and outputs.",
+                "params": {}
+              }
+            }
+          ],
+          "params": {
+            "min_frequency_hz": 10,
+            "fit_model": "None"
+          },
+          "ignored_params": []
+        },
+        {
+          "id": "a4",
+          "goal": "Generate Nyquist plot with negative imaginary axis and annotate high-frequency intercept",
+          "depends_on": [
+            "a3"
+          ],
+          "input_files": [],
+          "parameters": {
+            "x_axis": "z_real_ohm",
+            "y_axis": "-z_imag_ohm",
+            "annotate_high_frequency_intercept": true
+          },
+          "status": "routed",
+          "tool_id": "plot_nyquist",
+          "node_id": "a4-plot_nyquist",
+          "router": "llm",
+          "confidence": 0.9,
+          "requires_confirmation": false,
+          "rationale": "Jev routing unavailable: <urlopen error [WinError 10061] 由于目标计算机积极拒绝，无法连接。>; the LLM decided instead. The request asks to generate a Nyquist plot with negative imaginary axis and annotate high-frequency intercept, which matches the plot_nyquist tool's capability.",
+          "candidates": [
+            "aggregate",
+            "conditional_gate",
+            "join",
+            "plot_nyquist",
+            "quality_report"
+          ],
+          "model_decisions": [
+            {
+              "profile": "llm",
+              "model": "deepseek-chat",
+              "selected_tool_id": "plot_nyquist",
+              "score": 0.9,
+              "calibrated": false,
+              "evidence": {
+                "rationale": "The request asks to generate a Nyquist plot with negative imaginary axis and annotate high-frequency intercept, which matches the plot_nyquist tool's capability.",
+                "params": {}
+              }
+            }
+          ],
+          "params": {
+            "title": "Nyquist plot"
+          },
+          "ignored_params": [
+            "annotate_high_frequency_intercept",
+            "x_axis",
+            "y_axis"
+          ]
+        }
+      ],
+      "edges": [
+        {
+          "source_action": "a1",
+          "target_action": "a2",
+          "edge": {
+            "id": "e-a1-raw_file_import-raw-a2-normalize_columns-raw",
+            "source": "a1-raw_file_import",
+            "source_port": "raw",
+            "target": "a2-normalize_columns",
+            "target_port": "raw"
+          },
+          "issue": null
+        },
+        {
+          "source_action": "a2",
+          "target_action": "a3",
+          "edge": {
+            "id": "e-a2-normalize_columns-table-a3-eis_basic_qc-data",
+            "source": "a2-normalize_columns",
+            "source_port": "table",
+            "target": "a3-eis_basic_qc",
+            "target_port": "data"
+          },
+          "issue": null
+        },
+        {
+          "source_action": "a3",
+          "target_action": "a4",
+          "edge": {
+            "id": "e-a3-eis_basic_qc-data-a4-plot_nyquist-data",
+            "source": "a3-eis_basic_qc",
+            "source_port": "data",
+            "target": "a4-plot_nyquist",
+            "target_port": "data"
+          },
+          "issue": null
+        }
+      ],
+      "issues": [],
+      "patch": {
+        "patch_id": "020dd4b3-b6ae-4ec5-96c7-9e86d3ee7e70",
+        "base_version": 0,
+        "operations": [
+          {
+            "op": "add_node",
+            "node": {
+              "id": "a1-raw_file_import",
+              "type": "raw_file_import",
+              "tool_id": "raw_file_import",
+              "tool_version": "1.0.0",
+              "label": "Import the uploaded EIS spectrum CSV file",
+              "params": {
+                "file_name": "eis_spectrum.csv",
+                "upload_id": "375476f5801f47adb59714f742908adb_eis_spectrum.csv"
+              },
+              "position": {
+                "x": 80.0,
+                "y": 80.0
+              },
+              "status": "ready",
+              "output": null,
+              "preview": null,
+              "review_policy": {
+                "after_run": false,
+                "prompt": "Review this result before continuing."
+              },
+              "review_state": {
+                "status": "off",
+                "comment": null
+              }
+            },
+            "node_id": null,
+            "params": null,
+            "changes": null,
+            "edge": null,
+            "edge_id": null,
+            "replacement_node": null,
+            "reconnect_edges": null,
+            "proposal_id": null
+          },
+          {
+            "op": "add_node",
+            "node": {
+              "id": "a2-normalize_columns",
+              "type": "normalize_columns",
+              "tool_id": "normalize_columns",
+              "tool_version": "1.0.0",
+              "label": "Map the frequency_hz, z_real_ohm, and z_imag_ohm columns to typed columns",
+              "params": {
+                "frequency_column": "frequency_hz",
+                "real_column": "z_real_ohm",
+                "imag_column": "z_imag_ohm"
+              },
+              "position": {
+                "x": 360.0,
+                "y": 80.0
+              },
+              "status": "ready",
+              "output": null,
+              "preview": null,
+              "review_policy": {
+                "after_run": false,
+                "prompt": "Review this result before continuing."
+              },
+              "review_state": {
+                "status": "off",
+                "comment": null
+              }
+            },
+            "node_id": null,
+            "params": null,
+            "changes": null,
+            "edge": null,
+            "edge_id": null,
+            "replacement_node": null,
+            "reconnect_edges": null,
+            "proposal_id": null
+          },
+          {
+            "op": "add_node",
+            "node": {
+              "id": "a3-eis_basic_qc",
+              "type": "eis_basic_qc",
+              "tool_id": "eis_basic_qc",
+              "tool_version": "1.0.0",
+              "label": "Perform EIS basic quality checks and generate EIS data and QC report",
+              "params": {
+                "min_frequency_hz": 10,
+                "fit_model": "None"
+              },
+              "position": {
+                "x": 640.0,
+                "y": 80.0
+              },
+              "status": "ready",
+              "output": null,
+              "preview": null,
+              "review_policy": {
+                "after_run": false,
+                "prompt": "Review this result before continuing."
+              },
+              "review_state": {
+                "status": "off",
+                "comment": null
+              }
+            },
+            "node_id": null,
+            "params": null,
+            "changes": null,
+            "edge": null,
+            "edge_id": null,
+            "replacement_node": null,
+            "reconnect_edges": null,
+            "proposal_id": null
+          },
+          {
+            "op": "add_node",
+            "node": {
+              "id": "a4-plot_nyquist",
+              "type": "plot_nyquist",
+              "tool_id": "plot_nyquist",
+              "tool_version": "1.0.0",
+              "label": "Generate Nyquist plot with negative imaginary axis and annotate high-frequency intercept",
+              "params": {
+                "title": "Nyquist plot"
+              },
+              "position": {
+                "x": 920.0,
+                "y": 80.0
+              },
+              "status": "ready",
+              "output": null,
+              "preview": null,
+              "review_policy": {
+                "after_run": false,
+                "prompt": "Review this result before continuing."
+              },
+              "review_state": {
+                "status": "off",
+                "comment": null
+              }
+            },
+            "node_id": null,
+            "params": null,
+            "changes": null,
+            "edge": null,
+            "edge_id": null,
+            "replacement_node": null,
+            "reconnect_edges": null,
+            "proposal_id": null
+          },
+          {
+            "op": "connect",
+            "node": null,
+            "node_id": null,
+            "params": null,
+            "changes": null,
+            "edge": {
+              "id": "e-a1-raw_file_import-raw-a2-normalize_columns-raw",
+              "source": "a1-raw_file_import",
+              "source_port": "raw",
+              "target": "a2-normalize_columns",
+              "target_port": "raw"
+            },
+            "edge_id": null,
+            "replacement_node": null,
+            "reconnect_edges": null,
+            "proposal_id": null
+          },
+          {
+            "op": "connect",
+            "node": null,
+            "node_id": null,
+            "params": null,
+            "changes": null,
+            "edge": {
+              "id": "e-a2-normalize_columns-table-a3-eis_basic_qc-data",
+              "source": "a2-normalize_columns",
+              "source_port": "table",
+              "target": "a3-eis_basic_qc",
+              "target_port": "data"
+            },
+            "edge_id": null,
+            "replacement_node": null,
+            "reconnect_edges": null,
+            "proposal_id": null
+          },
+          {
+            "op": "connect",
+            "node": null,
+            "node_id": null,
+            "params": null,
+            "changes": null,
+            "edge": {
+              "id": "e-a3-eis_basic_qc-data-a4-plot_nyquist-data",
+              "source": "a3-eis_basic_qc",
+              "source_port": "data",
+              "target": "a4-plot_nyquist",
+              "target_port": "data"
+            },
+            "edge_id": null,
+            "replacement_node": null,
+            "reconnect_edges": null,
+            "proposal_id": null
+          }
+        ],
+        "rationale": "Workflow planned from the request of task long_eis_01_full_context.",
+        "requires_human_confirmation": false
+      },
+      "patch_valid": true,
+      "validation_error": null,
+      "applied": false,
+      "graph_version": null,
+      "llm_calls": 5,
+      "elapsed_seconds": 31.1
+    }
+  ]
+}

@@ -1,0 +1,29 @@
+flowchart TD
+    %% FlowView: runtime phase map, one node per observable step.
+    %% title: MatFlow routing preview (read-only)
+    %% source: dry-route:D:\Projects\matflow
+    %% phases: 3; steps: 6
+    %% ISSUE INFO route.dry_run: This route was computed read-only: nothing was persisted to the task summary log. [dry-route:D:\Projects\matflow]
+    subgraph pg_prompt["Prompt #40;input#41; #40;prompt#41; #91;completed#93;"]
+        n_prompt_0_user_prompt(["user prompt - 【样品信息】这是我用 KBr 压片法制备的聚合物薄膜样品，样品…<br/>completed"]):::flowview_completed
+        n_prompt_1_prompt_size(["prompt size - 636 character#40;s#41;, 48 whitespace-separated token#40;s#41;; avail…<br/>completed"]):::flowview_completed
+        n_prompt_2_retriever_tokenisation(["retriever tokenisation - backend/routing.py _tokens#40;#41; keeps the distinc…<br/>completed"]):::flowview_completed
+    end
+    subgraph pg_candidates["Candidates #40;candidates#41; #91;pending#93;"]
+        n_candidates_0_no_candidate_retrieved[("no candidate retrieved - CandidateRetriever found no active compatible …<br/>unknown")]:::flowview_unknown
+    end
+    n_prompt_2_retriever_tokenisation --> n_candidates_0_no_candidate_retrieved
+    subgraph pg_decision["Decision #40;decision#41; #91;waiting#93;"]
+        n_decision_0_no_tool_selected{"no tool selected - confidence 0.00; human confirmation required: yes; r…<br/>waiting"}:::flowview_waiting
+        n_decision_1_dry_run_guarantee(["dry run guarantee - DecisionRouter#40;#41; ran without the JEV/model router: …<br/>completed"]):::flowview_completed
+    end
+    n_candidates_0_no_candidate_retrieved --> n_decision_0_no_tool_selected
+    classDef flowview_ready fill:#e8f1fb,stroke:#3b6ea5,color:#102a43;
+    classDef flowview_running fill:#fff4d6,stroke:#a5761b,color:#3d2c00;
+    classDef flowview_completed fill:#e3f6e8,stroke:#2f7d43,color:#0f3319;
+    classDef flowview_waiting fill:#fdf1dc,stroke:#a5761b,color:#3d2c00;
+    classDef flowview_error fill:#fbe3e3,stroke:#a32020,color:#4a0f0f;
+    classDef flowview_cancelled fill:#f0e8f8,stroke:#6b4b9a,color:#2a1040;
+    classDef flowview_unknown fill:#eceff3,stroke:#8792a2,color:#2b3038;
+    classDef flowview_pending fill:#f3f4f6,stroke:#8792a2,color:#2b3038;
+    classDef flowview_skipped fill:#f0e8f8,stroke:#6b4b9a,color:#2a1040;

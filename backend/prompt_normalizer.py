@@ -72,10 +72,14 @@ def load_config(
     timeout_seconds: float = 90.0,
 ) -> NormalizerConfig:
     load_local_env(root / ".env")
-    settings_path = root / "data" / "settings.json"
-    settings: dict[str, Any] = {}
+    from .llm_config import load_llm_config
+    from .saves import SETTINGS_FILE, resolve_data_root
+
+    llm = load_llm_config()
+    settings: dict[str, Any] = {"base_url": llm.base_url, "model": llm.agent_model, "api_key_env": llm.gateway.api_key_env}
+    settings_path = resolve_data_root(root) / SETTINGS_FILE
     if settings_path.exists():
-        settings = json.loads(settings_path.read_text(encoding="utf-8")).get("agent", {})
+        settings.update(json.loads(settings_path.read_text(encoding="utf-8")).get("agent", {}))
     resolved_base_url = (base_url or settings.get("base_url") or "").rstrip("/")
     resolved_model = model or settings.get("model") or ""
     resolved_key_env = api_key_env or settings.get("api_key_env") or "MATFLOW_API_KEY"

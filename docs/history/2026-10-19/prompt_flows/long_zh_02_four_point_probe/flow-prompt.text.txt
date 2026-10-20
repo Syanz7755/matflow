@@ -1,0 +1,103 @@
+MatFlow routing preview (read-only)
+────────────────────────────────────────────────────────────────────────
+source     : dry-route:D:\Projects\matflow
+graph      : none in this document
+phases     : 3
+issues     : 0 error(s), 1 warning(s)
+meta       : mode=dry-run, graph_version=0, candidates=2, confirmation=yes, prompt_characters=627,
+             prompt=【测量目的】我需要用四探针法测一块半导体薄膜的方块电阻和电阻率，薄膜是磁控溅射生
+             长的 ITO，厚度大约 180 nm，长在玻璃衬底上，样品尺寸 10 mm × 10 mm。
+             【测量设置】用的是直线四探针，探针间距 1.0 mm，针尖半径大约 40
+             微米，压力调到刚好接触。电流源是 Keithley 2400，在 1 号针和 4 号针之间注入电流，用
+             2182A 纳伏表测 2 号和 3 号针之间的电压，电流从 1 微安到 1
+             毫安取了十个点，每个点正反两个方向各测一次以消除热电势。 【数据说明】导出的 CSV
+             有五列：current_A 是注入电流，voltage_V 是测量电压，probe_spacing_mm
+             是探针间距，thickness_nm 是膜厚，position
+             是样品上的测量位置编号。我在样品中心和四个角附近各测了一组，一共五组，想看看均匀性。
+             【需要你做的】1)
+             先做基础质检：判断电流和电压是否线性相关、有没有接触不良导致的跳点、正反方向测量是否一
+             致。2) 计算方块电阻
+             Rsh，单位欧姆每方，并说明你用的是哪一个几何修正因子，因为薄膜厚度远小于探针间距。3)
+             换算成电阻率，单位欧姆厘米，并说明膜厚测量误差 5% 对结果的影响有多大。4)
+             汇总五个位置的结果，判断薄膜的均匀性是否满足一般器件要求，并说明你判断所用的阈值是从哪
+             里来的。
+             【约束】如果我没有提供衬底类型或者是否需要考虑绝缘衬底修正，请直接问我，不要默认选一个
+             。, retriever_tokens=17, routing_tokens=17, ... (+4 more)
+
+Phases (3)
+  [1] Prompt (input) (prompt)  [waiting]
+      1. user prompt  [completed]
+          detail     : 【测量目的】我需要用四探针法测一块半导体薄膜的方块电阻和电阻率，薄膜是磁控溅
+                       射生长的 ITO，厚度大约 180 nm，长在玻璃衬底上，样品尺寸 10 mm × 10 mm。
+                       【测量设置】用的是直线四探针，探针间距 1.0 mm，针尖半径大约 40
+                       微米，压力调到刚好接触。电流源是 Keithley 2400，在 1 号针和 4
+                       号针之间注入电流，用 2182A 纳伏表测 2 号和 3 号针之间的电压，电流从 1 微安到
+                       1 毫安取了十个点，每个点正反两个方向各测一次以消除热电势。 【数据说明】导出的
+                       CSV 有五列：current_A 是注入电流，voltage_V 是测量电压，probe_spacing_mm
+                       是探针间距，thickness_nm 是膜厚，position
+                       是样品上的测量位置编号。我在样品中心和四个角附近各测了一组，一共五组，想看看
+                       均匀性。 【需要你做的】1)
+                       先做基础质检：判断电流和电压是否线性相关、有没有接触不良导致的跳点、正反方向
+                       测量是否一致。2) 计算方块电阻
+                       Rsh，单位欧姆每方，并说明你用的是哪一个几何修正因子，因为薄膜厚度远小于探针间
+                       距。3) 换算成电阻率，单位欧姆厘米，并说明膜厚测量误差 5%
+                       对结果的影响有多大。4)
+                       汇总五个位置的结果，判断薄膜的均匀性是否满足一般器件要求，并说明你判断所用的
+                       阈值是从哪里来的。
+                       【约束】如果我没有提供衬底类型或者是否需要考虑绝缘衬底修正，请直接问我，不要
+                       默认选一个。
+      2. prompt size  [completed]
+          detail     : 627 character(s), 47 whitespace-separated token(s); available input types:
+                       RawData, TypedTable
+      3. retriever tokenisation  [waiting]
+          detail     : backend/routing.py _tokens() keeps the distinct [a-z0-9]+ runs longer than
+                       one character. The 627-character prompt yields 37 occurrence(s) / 17 distinct
+                       token(s) and 414 CJK character(s); the router was given 17 distinct token(s)
+                       (37 occurrence(s), 414 CJK character(s)) [verbatim] -- the prompt is
+                       overwhelmingly CJK: lexical matching sees almost none of it
+  [2] Candidates (candidates)  [pending]
+      1. ebrick_case05_import (candidate)  [pending]
+          detail     : candidate only, nothing executed; score 0.25; version 1.0.0; reasons:
+                       matches: csv
+          tools      : ebrick_case05_import
+      2. raw_file_import (candidate)  [pending]
+          detail     : candidate only, nothing executed; score 0.25; version 1.0.0; reasons:
+                       matches: csv
+          tools      : raw_file_import
+  [3] Decision (decision)  [waiting]
+      1. selected ebrick_case05_import  [waiting]
+          detail     : confidence 0.25; human confirmation required: yes; rationale: Selected EBrick
+                       Case 05 CSV Import from 2 compatible candidate(s).
+          tools      : ebrick_case05_import
+      2. dry run guarantee  [completed]
+          detail     : DecisionRouter() ran without the JEV/model router: record_routing() was not
+                       called and no graph, settings or summary file was written
+
+Status legend
+  ready      : declared, never run
+  running    : execution in progress
+  completed  : finished successfully
+  waiting    : paused for a human decision
+  error      : stopped with an error
+  cancelled  : stopped by a gate or reviewer
+  unknown    : source did not say (never treated as success)
+  step-only statuses:
+    pending    : not started yet
+    skipped    : skipped by a gate or policy
+
+Issues (2)
+┌──────────┬─────────────────────────────┬────────────────────────────┬────────────────────────────┐
+│ Severity │ Code                        │ Message                    │ Where                      │
+├──────────┼─────────────────────────────┼────────────────────────────┼────────────────────────────┤
+│ warning  │ route.prompt_tokens_unusabl │ The retriever cannot see   │ backend/routing.py:        │
+│          │ e                           │ most of this prompt. --    │ _tokens()                  │
+│          │                             │ the prompt is              │                            │
+│          │                             │ overwhelmingly CJK:        │                            │
+│          │                             │ lexical matching sees      │                            │
+│          │                             │ almost none of it          │                            │
+│ info     │ route.dry_run               │ This route was computed    │ dry-route:D:\Projects\matf │
+│          │                             │ read-only: nothing was     │ low                        │
+│          │                             │ persisted to the task      │                            │
+│          │                             │ summary log.               │                            │
+└──────────┴─────────────────────────────┴────────────────────────────┴────────────────────────────┘
+note: dropped column(s) to fit width 100: Hint

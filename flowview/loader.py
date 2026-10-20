@@ -623,12 +623,46 @@ def build_graph_document(graph: FlowGraph, *, title: str | None = None) -> FlowD
     )
 
 
+def is_symlink_loop(path: Path | str) -> bool:
+    """True when ``path`` is a symlink/junction chain that never reaches a real target.
+
+    ``Path.resolve()`` only raises ``RuntimeError`` for a loop on some Python versions; on Windows
+    and on Python 3.13+ it returns the unresolved path instead, so the loop would be misreported as
+    a missing file. Following the links by hand gives the same answer everywhere.
+    """
+    import os
+
+    current = os.fspath(Path(path).expanduser())
+    seen: set[str] = set()
+    for _ in range(64):
+        key = os.path.normcase(os.path.abspath(current))
+        if key in seen:
+            return True
+        seen.add(key)
+        try:
+            if not os.path.islink(current):
+                return False
+            target = os.readlink(current)
+        except (OSError, ValueError):
+            return False
+        current = target if os.path.isabs(target) else os.path.join(os.path.dirname(current), target)
+    return True
+
+
 def resolve_path(path: Path | str) -> tuple[Path | None, FlowIssue | None]:
     """Resolve a user-supplied path, turning a symlink loop or bad path into an issue.
 
     ``Path.resolve()`` can raise ``RuntimeError`` for a self-referential symlink and ``OSError``
     for a malformed path, both of which would otherwise escape as a traceback.
     """
+    if is_symlink_loop(path):
+        return None, FlowIssue(
+            severity="error",
+            code="path.symlink_loop",
+            message=f"Cannot resolve {path}: the path is a symlink loop.",
+            where=str(path),
+            hint="Replace the self-referential symlink or junction with a real file, then retry.",
+        )
     try:
         return Path(path).expanduser().resolve(), None
     except RuntimeError as exc:

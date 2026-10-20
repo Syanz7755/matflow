@@ -1,0 +1,27 @@
+flowchart TD
+    %% FlowView: runtime phase map, one node per observable step.
+    %% title: task route-eis
+    %% source: task summary route-eis
+    %% phases: 3; steps: 5
+    subgraph pg_route["Route #40;route#41; #91;completed#93;"]
+        n_route_0_prompt_recorded(["prompt recorded - user prompt: #quot;Run basic EIS quality checks#quot;<br/>completed"]):::flowview_completed
+        n_route_1_candidates_considered(["candidates considered - 1 candidate tool#40;s#41; considered: eis_basic_qc<br/>completed"]):::flowview_completed
+        n_route_2_selected_eis_basic_qc(["selected eis_basic_qc - confidence 1.00; human confirmation required: n…<br/>completed"]):::flowview_completed
+    end
+    subgraph pg_execute["Execute #40;execute#41; #91;pending#93;"]
+        n_execute_0_no_execution_recorded["no execution recorded - the record carries result: null, so no tool out…<br/>pending"]:::flowview_pending
+    end
+    n_route_2_selected_eis_basic_qc --> n_execute_0_no_execution_recorded
+    subgraph pg_outcome["Outcome #40;outcome#41; #91;pending#93;"]
+        n_outcome_0_outcome__routed["outcome: routed - handling: No exception. The selected registered tool …<br/>pending"]:::flowview_pending
+    end
+    n_execute_0_no_execution_recorded --> n_outcome_0_outcome__routed
+    classDef flowview_ready fill:#e8f1fb,stroke:#3b6ea5,color:#102a43;
+    classDef flowview_running fill:#fff4d6,stroke:#a5761b,color:#3d2c00;
+    classDef flowview_completed fill:#e3f6e8,stroke:#2f7d43,color:#0f3319;
+    classDef flowview_waiting fill:#fdf1dc,stroke:#a5761b,color:#3d2c00;
+    classDef flowview_error fill:#fbe3e3,stroke:#a32020,color:#4a0f0f;
+    classDef flowview_cancelled fill:#f0e8f8,stroke:#6b4b9a,color:#2a1040;
+    classDef flowview_unknown fill:#eceff3,stroke:#8792a2,color:#2b3038;
+    classDef flowview_pending fill:#f3f4f6,stroke:#8792a2,color:#2b3038;
+    classDef flowview_skipped fill:#f0e8f8,stroke:#6b4b9a,color:#2a1040;

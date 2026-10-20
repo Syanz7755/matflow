@@ -25,6 +25,17 @@ if ($config.version -ne 1 -or -not $config.services) {
     throw 'model_services.json must declare version 1 and at least one service.'
 }
 
+function Import-UserVariable([string]$Name) {
+    # A variable set with setx is invisible to shells opened before it; pull it
+    # from the User/Machine scope into this process without displaying it.
+    if ([Environment]::GetEnvironmentVariable($Name, 'Process')) { return $true }
+    foreach ($scope in 'User', 'Machine') {
+        $value = [Environment]::GetEnvironmentVariable($Name, $scope)
+        if ($value) { [Environment]::SetEnvironmentVariable($Name, $value, 'Process'); return $true }
+    }
+    return $false
+}
+
 function Resolve-ServicePath([string]$PathValue) {
     if ([IO.Path]::IsPathRooted($PathValue)) { return $PathValue }
     return Join-Path $projectRoot $PathValue
@@ -45,6 +56,7 @@ function Test-ServiceReady($Service) {
     $headers = @{}
     if ($Service.PSObject.Properties.Name.Contains('readiness_api_key_env')) {
         $credentialName = [string]$Service.readiness_api_key_env
+        [void](Import-UserVariable $credentialName)
         $credential = [Environment]::GetEnvironmentVariable($credentialName)
         if (-not $credential) { return $false }
         $headers.Authorization = "Bearer $credential"
@@ -74,7 +86,7 @@ function Assert-ServiceConfig($Service) {
         throw "[$($Service.id)] powershell.exe was not found on PATH."
     }
     foreach ($environmentName in @($Service.required_environment)) {
-        if (-not $ValidateOnly -and -not [Environment]::GetEnvironmentVariable([string]$environmentName)) {
+        if (-not $ValidateOnly -and -not (Import-UserVariable ([string]$environmentName))) {
             throw "[$($Service.id)] Required environment variable '$environmentName' is unavailable in this session."
         }
     }

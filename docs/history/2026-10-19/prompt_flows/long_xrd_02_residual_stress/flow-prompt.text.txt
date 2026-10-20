@@ -1,0 +1,127 @@
+MatFlow routing preview (read-only)
+────────────────────────────────────────────────────────────────────────
+source     : dry-route:D:\Projects\matflow
+graph      : none in this document
+phases     : 3
+issues     : 0 error(s), 0 warning(s)
+meta       : mode=dry-run, graph_version=0, candidates=9, confirmation=no, prompt_characters=1553,
+             prompt=Context: this pattern was collected on a thin-film TiO2 sample grown by atomic
+             layer deposition on a Si (100) substrate, 120 nm nominal thickness, measured on a
+             Bruker D8 Discover in parallel-beam geometry with a Gobel mirror, Cu Kalpha radiation
+             at 1.5406 Angstrom, generator 40 kV / 40 mA. The scan covers 2theta from 15 to 75
+             degrees with a 0.02 degree step and 1 second per step; the sample was spun during
+             measurement to average out any texture, and no monochromator was used on the diffracted
+             beam, so Kalpha2 is present. Data layout: the CSV has two columns, two_theta_deg and
+             intensity_counts. The first few rows include the raw header the instrument writes, and
+             the intensity baseline drifts slightly upward across the scan because of sample
+             fluorescence. What I need, in this order: (1) extract the diffraction peaks and report
+             the 2theta position, relative intensity and full width at half maximum for each peak
+             you consider real; (2) tell me which phase or phases are present and state the criteria
+             you used, i.e. which peaks are diagnostic and which ones would falsify the assignment;
+             (3) comment on whether the peak widths are consistent with a nanocrystalline film, and
+             be explicit that this is an inference rather than a measurement. Constraints: stay
+             within the registered tools; do not invent a peak-fitting method that is not available.
+             If a required capability is missing, name the capability precisely and list the
+             parameters a human must confirm before anything is executed. Do not silently guess the
+             wavelength or the zero offset., retriever_tokens=174, routing_tokens=174, ... (+4 more)
+
+Phases (3)
+  [1] Prompt (input) (prompt)  [completed]
+      1. user prompt  [completed]
+          detail     : Context: this pattern was collected on a thin-film TiO2 sample grown by
+                       atomic layer deposition on a Si (100) substrate, 120 nm nominal thickness,
+                       measured on a Bruker D8 Discover in parallel-beam geometry with a Gobel
+                       mirror, Cu Kalpha radiation at 1.5406 Angstrom, generator 40 kV / 40 mA. The
+                       scan covers 2theta from 15 to 75 degrees with a 0.02 degree step and 1 second
+                       per step; the sample was spun during measurement to average out any texture,
+                       and no monochromator was used on the diffracted beam, so Kalpha2 is present.
+                       Data layout: the CSV has two columns, two_theta_deg and intensity_counts. The
+                       first few rows include the raw header the instrument writes, and the
+                       intensity baseline drifts slightly upward across the scan because of sample
+                       fluorescence. What I need, in this order: (1) extract the diffraction peaks
+                       and report the 2theta position, relative intensity and full width at half
+                       maximum for each peak you consider real; (2) tell me which phase or phases
+                       are present and state the criteria you used, i.e. which peaks are diagnostic
+                       and which ones would falsify the assignment; (3) comment on whether the peak
+                       widths are consistent with a nanocrystalline film, and be explicit that this
+                       is an inference rather than a measurement. Constraints: stay within the
+                       registered tools; do not invent a peak-fitting method that is not available.
+                       If a required capability is missing, name the capability precisely and list
+                       the parameters a human must confirm before anything is executed. Do not
+                       silently guess the wavelength or the zero offset.
+      2. prompt size  [completed]
+          detail     : 1553 character(s), 257 whitespace-separated token(s); available input types:
+                       RawData, TypedTable
+      3. retriever tokenisation  [completed]
+          detail     : backend/routing.py _tokens() keeps the distinct [a-z0-9]+ runs longer than
+                       one character. The 1553-character prompt yields 265 occurrence(s) / 174
+                       distinct token(s) and 0 CJK character(s); the router was given 174 distinct
+                       token(s) (265 occurrence(s), 0 CJK character(s)) [verbatim]
+  [2] Candidates (candidates)  [pending]
+      1. ebrick_cp_g_qc (candidate)  [pending]
+          detail     : candidate only, nothing executed; score 1.00; version 1.0.0; reasons:
+                       matches: an, in, is, not, rows, this; input ports are compatible
+          tools      : ebrick_cp_g_qc
+      2. normalize_columns (candidate)  [pending]
+          detail     : candidate only, nothing executed; score 1.00; version 1.0.0; reasons:
+                       matches: any, are, be, columns, data, each, in, must, name, so, the; input
+                       ports are compatible
+          tools      : normalize_columns
+      3. raw_file_import (candidate)  [pending]
+          detail     : candidate only, nothing executed; score 1.00; version 1.0.0; reasons:
+                       matches: csv, data, or, raw
+          tools      : raw_file_import
+      4. ebrick_case05_import (candidate)  [pending]
+          detail     : candidate only, nothing executed; score 0.75; version 1.0.0; reasons:
+                       matches: and, csv, the
+          tools      : ebrick_case05_import
+      5. raw_file_import_raw_file_import_1_f29b82 (candidate)  [pending]
+          detail     : candidate only, nothing executed; score 0.75; version 1.0.0; reasons:
+                       matches: raw, the, with
+          tools      : raw_file_import_raw_file_import_1_f29b82
+      6. type_cast (candidate)  [pending]
+          detail     : candidate only, nothing executed; score 0.75; version 1.0.0; reasons:
+                       matches: and, are, per; input ports are compatible
+          tools      : type_cast
+      7. ebrick_cp_g_normalize (candidate)  [pending]
+          detail     : candidate only, nothing executed; score 0.50; version 1.0.0; reasons:
+                       matches: and, columns; input ports are compatible
+          tools      : ebrick_cp_g_normalize
+      8. skill_node (candidate)  [pending]
+          detail     : candidate only, nothing executed; score 0.50; version 1.0.0; reasons:
+                       matches: and, data; input ports are compatible
+          tools      : skill_node
+      9. eis_basic_qc (candidate)  [pending]
+          detail     : candidate only, nothing executed; score 0.25; version 1.0.0; reasons:
+                       matches: and; input ports are compatible
+          tools      : eis_basic_qc
+  [3] Decision (decision)  [completed]
+      1. selected ebrick_cp_g_qc  [completed]
+          detail     : confidence 1.00; human confirmation required: no; rationale: Selected EBrick
+                       Cp-G Threshold QC from 9 compatible candidate(s).
+          tools      : ebrick_cp_g_qc
+      2. dry run guarantee  [completed]
+          detail     : DecisionRouter() ran without the JEV/model router: record_routing() was not
+                       called and no graph, settings or summary file was written
+
+Status legend
+  ready      : declared, never run
+  running    : execution in progress
+  completed  : finished successfully
+  waiting    : paused for a human decision
+  error      : stopped with an error
+  cancelled  : stopped by a gate or reviewer
+  unknown    : source did not say (never treated as success)
+  step-only statuses:
+    pending    : not started yet
+    skipped    : skipped by a gate or policy
+
+Issues (1)
+┌──────────┬───────────────┬────────────────────────────────┬───────────────────────────────┬──────┐
+│ Severity │ Code          │ Message                        │ Where                         │ Hint │
+├──────────┼───────────────┼────────────────────────────────┼───────────────────────────────┼──────┤
+│ info     │ route.dry_run │ This route was computed        │ dry-route:D:\Projects\matflow │ -    │
+│          │               │ read-only: nothing was         │                               │      │
+│          │               │ persisted to the task summary  │                               │      │
+│          │               │ log.                           │                               │      │
+└──────────┴───────────────┴────────────────────────────────┴───────────────────────────────┴──────┘

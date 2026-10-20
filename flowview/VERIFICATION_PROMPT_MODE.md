@@ -1,3 +1,5 @@
+> **Historical record (superseded 2026-10).** This log verifies the earlier `[a-z0-9]+` lexical retriever and the token diagnostics built around it. `backend/routing.py` is now a type filter without lexical scoring, and `flowview/backend_adapter.py` no longer tokenises prompts; every `_tokens` / `[a-z0-9]+` / `route.prompt_tokens_unusable` statement below describes the removed behaviour.
+
 # Verification — `flowview flow --prompt`, `dry_route` prompt phase, and `flowview/tools/`
 
 Independent adversarial verification, round 5. Verifier: `verifier2`. I did not write any of the code
@@ -84,7 +86,7 @@ and `cli.prompt_flow_document`'s docstring ("work on a long request").
 What would falsify my conclusion: a >4000-character prompt that renders the 3-phase dry-run
 document, or a failure document whose title/hint name the length limit instead of backend
 unavailability. If `doctor` also failed, the hint would be apt. Mitigating fact: the largest shipped
-suite prompt is 2124 characters, so `examples/long_prompt_cases.json` never reaches the limit.
+suite prompt is 2124 characters, so `tests/suites/long_prompt_cases.json` never reaches the limit.
 
 Note: the failure is graceful (no traceback, valid JSON, documented exit 3). It is a wrong printed
 diagnosis, not a crash or data loss.
@@ -248,7 +250,7 @@ under 32 767) and that is P0-1.
 
 ### 5. Batch tool
 
-`run_prompt_cases --suite examples/long_prompt_cases.json --out .tmp/verifier2/out{1,2}`: exit 0 both
+`run_prompt_cases --suite tests/suites/long_prompt_cases.json --out .tmp/verifier2/out{1,2}`: exit 0 both
 times, 16/16 cases, 11 487 characters. File set: all 67 per-case files present, plus `INDEX.md`,
 `PROMPTS.md`, `run-report.json`, 17 `_stages/` files and 7 `_task/` files (94 total).
 16/16 `flow-prompt.json.txt` parse; 16/16 mermaid files have a diagram keyword, zero ANSI, zero raw
@@ -261,7 +263,7 @@ ANSI, NUL, tab, CJK-only, an empty prompt and a 4007-character prompt) also ran 
 traceback; every mermaid label escaped `"` → `#quot;` and newlines → `<br/>`, and no ANSI leaked.
 
 Caveat: the `_task/` section, `INDEX.md` and `run-report.json` depend on the newest record in
-`data/audit/task_summaries.jsonl`. The shipped `examples/reports/prompt_flows/` differs from a fresh
+`data/audit/task_summaries.jsonl`. The archived `docs/history/2026-10-19/prompt_flows/` differs from a fresh
 run in exactly those 8 files because the chosen record's random `trace_id` changed when the log grew
 during this session; the per-case flows and `_stages/` output are identical. So determinism holds for
 a fixed `data/` snapshot, not across log writes. I did not regenerate the shipped directory (it is not
@@ -314,8 +316,8 @@ suite itself is hermetic.
 4. **The `_task/` section's exact content against the shipped report**, because the summary log is a
    moving target appended to by other agents' test runs during this session. Determinism is verified
    for a fixed log snapshot only.
-5. **The batch tool's default `--out examples/reports/prompt_flows`**, which I deliberately never
-   wrote to; all batch runs used `.tmp/verifier2/`.
+5. **The batch tool's former examples-report default**, which I deliberately never wrote to; all
+   batch runs used `.tmp/verifier2/`. The current default is `.tmp/prompt_flows`.
 6. **Visual rendering on a real console** (mojibake, box drawing, colour) — all captures were UTF-8
    pipes, not a terminal.
 

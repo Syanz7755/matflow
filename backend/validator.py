@@ -6,6 +6,7 @@ import copy
 from jsonschema import Draft202012Validator
 
 from .contracts import GraphPatch, GraphState, Node, ReviewPolicy
+from .errors import GraphVersionConflict
 from .tool_registry import ToolRegistry
 
 
@@ -29,7 +30,10 @@ class GraphValidator:
 
     def validate(self, state: GraphState, patch: GraphPatch, registry: ToolRegistry) -> None:
         if patch.base_version != state.version:
-            raise ValueError(f"Version conflict: patch is based on v{patch.base_version}, current graph is v{state.version}")
+            raise GraphVersionConflict(
+                f"Version conflict: patch is based on v{patch.base_version}, current graph is v{state.version}",
+                details={"current_version": state.version},
+            )
         scratch = copy.deepcopy(state)
         active = registry.active()
         for operation in patch.operations:

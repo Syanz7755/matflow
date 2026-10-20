@@ -1,27 +1,45 @@
-# MatFlow 入门
+# Getting started with MatFlow
 
-MatFlow v1 的 Python 仓库只负责工作区状态、校验、执行、审计和 HTTP API。WebUI、MCP bridge 与 DSH 集成位于同级 `matflow-frontend` 仓库。
+The MatFlow v1 Python repository owns only the workspace state, validation, execution, audit and HTTP API. The WebUI, the MCP bridge and the DSH integration live in the sibling `matflow-frontend` repository.
 
-## 安装与启动
+## Install and start
 
 ```powershell
 uv sync
 uv run matflow start --ui none
 ```
 
-后端默认监听 `http://127.0.0.1:8000`，能力接口为 `http://127.0.0.1:8000/api/capabilities`。
+The backend listens on `http://127.0.0.1:8000` by default; the capabilities endpoint is `http://127.0.0.1:8000/api/capabilities`.
 
-若同级目录存在 `../matflow-frontend`，可以启动受管 WebUI：
+If `../matflow-frontend` exists as a sibling directory, you can start the managed WebUI:
 
 ```powershell
 uv run matflow start --ui webui
 ```
 
-也可用 `--ui-path` 或 `MATFLOW_WEBUI_DIR` 指定前端仓库。未写 `--ui` 时，交互终端会显示选择菜单；非交互环境默认只启动后端。`uv run matflow serve` 是 `start --ui none` 的兼容别名。
+You can also point at a frontend repository with `--ui-path` or `MATFLOW_WEBUI_DIR`. With no `--ui`, an interactive terminal shows a selection menu and a non-interactive environment starts the backend only. `uv run matflow serve` is a compatibility alias for `start --ui none`.
 
-## MCP 与 DSH
+## LLM gateway and saves
 
-在 `matflow-frontend` 中运行：
+AI planning (`POST /api/plan`, `/api/chat`, `/api/route`) needs the LLM gateway described in `config/llm.json` (LiteLLM on `127.0.0.1:4078`, caller key in `LITELLM_DEFAULT_API_KEY`):
+
+```powershell
+.\start_llm.bat            # reuse a ready gateway or start one
+.\start_llm.bat -CheckOnly # only report readiness
+```
+
+The deterministic workflow path works without it. Workspace data lives in one folder per save, `data/saves/<name>/`; `default` is used unless you pick another:
+
+```powershell
+uv run matflow saves
+uv run matflow start --ui none --save my-experiment
+```
+
+See [`config/README.md`](../config/README.md) for the gateway and routing configuration.
+
+## MCP and DSH
+
+Run this in `matflow-frontend`:
 
 ```powershell
 npm install
@@ -29,6 +47,6 @@ npm run mcp
 npm run configure:dsh
 ```
 
-MCP bridge 默认位于 `http://127.0.0.1:8001/mcp`，并通过 HTTP API 访问后端。后端自身不再提供 `/mcp`。
+The MCP bridge listens on `http://127.0.0.1:8001/mcp` by default and reaches the backend through the HTTP API. The backend itself no longer serves `/mcp`.
 
-参见 [启动说明](STARTUP_SCRIPTS.md)、[HTTP API 契约](BACKEND_API_CONTRACT.md) 与 [架构规则](ARCHITECTURE_AND_DEVELOPER_RULES.md)。
+See the [startup guide](STARTUP_SCRIPTS.md), the [HTTP API contract](BACKEND_API_CONTRACT.md) and the [architecture rules](ARCHITECTURE_AND_DEVELOPER_RULES.md).

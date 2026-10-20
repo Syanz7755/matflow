@@ -12,10 +12,10 @@ import os
 import tempfile
 import threading
 import uuid
+from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Callable, Iterable
 
-import numpy as np
 import pandas as pd
 
 from .contracts import (
@@ -38,12 +38,16 @@ from .domain_packages import (
     compose_type_registry,
     load_domain_packages,
 )
+from .errors import ConflictError, NotFoundError
 from .executors import ExecutionOutcome, ExecutorRegistry, NodeExecution, ToolExecutionError
 from .jev_routing import JevDecisionRouter
+from .llm_config import load_llm_config
 from .observability import audit, current_trace_id
 from .node_evolution import build_revision_proposal, reconnect_edges
 from .preview import build_preview
-from .routing import DecisionRouter
+from .planner import WorkflowPlanner
+from .routing import DecisionRouter, LLMToolSelector, ToolSelector, with_retry
+from .saves import SETTINGS_FILE, STATE_FILE, UPLOADS_DIR, resolve_data_root
 from .task_summary import TaskSummaryService
 from .tool_registry import ToolRegistry
 from .validator import GraphValidator, node_by_id
@@ -51,32 +55,51 @@ from .validator import GraphValidator, node_by_id
 ROOT = Path(__file__).resolve().parents[1]
 MAX_UPLOAD_BYTES = 25 * 1024 * 1024
 ALLOWED_UPLOAD_SUFFIXES = {
-    ".csv", ".txt", ".xlsx", ".xls", ".json", ".png", ".jpg", ".jpeg", ".tif", ".tiff"
+    ".csv", ".txt", ".md", ".xlsx", ".xls", ".json", ".png", ".jpg", ".jpeg", ".tif", ".tiff"
+}
+#: Media type served for a stored dataset. Derived from the validated suffix,
+#: never from the client-supplied content type.
+CONTENT_TYPES = {
+    ".csv": "text/csv",
+    ".txt": "text/plain; charset=utf-8",
+    ".json": "application/json",
+    ".xlsx": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+    ".xls": "application/vnd.ms-excel",
+    ".png": "image/png",
+    ".jpg": "image/jpeg",
+    ".jpeg": "image/jpeg",
+    ".tif": "image/tiff",
+    ".tiff": "image/tiff",
 }
 
 
 def default_settings() -> dict[str, Any]:
+    # The gateway itself is described once, in config/llm.json; a save only
+    # overrides it when someone changes the agent settings for that save.
+    llm = load_llm_config()
     return {
         "agent": {
             "provider": "openai_compatible",
-            "base_url": "http://127.0.0.1:4000/v1",
-            "model": "qwen",
-            "api_key_env": "MATFLOW_LITELLM_API_KEY",
+            "base_url": llm.base_url,
+            "model": llm.agent_model,
+            "api_key_env": llm.gateway.api_key_env,
             "temperature": 0.2,
             "system_prompt": "Respect the runtime skills. Use tools to inspect files and execute work; never invent observations.",
             "max_tool_rounds": 8,
         },
-        "runtime_skills": {"enabled": []},
+        # The shipped application enables one runtime skill by default; a workspace
+        # rooted elsewhere simply has no such file and contributes none.
+        "runtime_skills": {"enabled": ["matflow_agent_runtime.md"]},
         "custom_nodes": {},
         "custom_data_types": {},
         "revision_proposals": {},
         "tool_recipe_proposals": {},
         "model_providers": {
             "local_litellm": {
-                "label": "Local LiteLLM gateway",
-                "base_url": "http://127.0.0.1:4000/v1",
-                "api_key_env": "MATFLOW_LITELLM_API_KEY",
-                "models": ["deepseek-chat", "deepseek-reasoner", "minimax", "glm", "qwen"],
+                "label": llm.gateway.label,
+                "base_url": llm.base_url,
+                "api_key_env": llm.gateway.api_key_env,
+                "models": list(llm.models),
             }
         },
         "features": {
@@ -85,6 +108,19 @@ def default_settings() -> dict[str, Any]:
             "tool_manager_build": False,
         },
     }
+
+
+def _json_records(frame: pd.DataFrame) -> list[dict[str, Any]]:
+    """Dataset rows that are guaranteed to be JSON-serialisable.
+
+    ``DataFrame.to_dict`` can hand back numpy scalars (``np.int64``), which the
+    JSON encoder rejects.  Round-tripping through pandas' own JSON writer emits
+    native Python scalars for every column dtype, NaN as ``null`` and timestamps
+    as ISO-8601 strings.
+    """
+    if frame.empty:
+        return []
+    return json.loads(frame.to_json(orient="records", date_format="iso"))
 
 
 class WorkspaceRuntime:
@@ -101,14 +137,16 @@ class WorkspaceRuntime:
         executors: ExecutorRegistry | None = None,
     ):
         self.root = root.resolve()
-        data_root = Path(os.getenv("MATFLOW_DATA_ROOT", str(self.root / "data"))).resolve()
-        self.state_file = data_root / "graph_state.json"
-        self.settings_file = data_root / "settings.json"
-        self.upload_dir = data_root / "uploads"
+        # One save, one folder: graph, settings, uploads and the task log of
+        # this workspace all live under data_root (see backend/saves.py).
+        self.data_root = resolve_data_root(self.root)
+        self.state_file = self.data_root / STATE_FILE
+        self.settings_file = self.data_root / SETTINGS_FILE
+        self.upload_dir = self.data_root / UPLOADS_DIR
         self.runtime_skills_dir = self.root / "runtime_skills"
         self.preview_spec_file = self.root / "docs" / "NODE_PREVIEW_SPEC.md"
         self._model_complete = model_complete
-        self._summaries = summary_service or TaskSummaryService()
+        self._summaries = summary_service or TaskSummaryService(data_root=self.data_root)
         self._write_lock = threading.RLock()
         # A workspace composes the Domain Packages it wants. Loading none leaves
         # Platform Core domain-neutral, which is the default.
@@ -121,9 +159,20 @@ class WorkspaceRuntime:
             return GraphState()
         return GraphState.model_validate_json(self.state_file.read_text(encoding="utf-8"))
 
-    def write_state(self, state: GraphState) -> None:
+    def write_state(self, state: GraphState, *, advance_revision: bool = True) -> GraphState:
+        """Persist the workspace and advance its monotonic revision.
+
+        ``version`` counts applied GraphPatches; ``revision`` advances on every
+        persisted write, so a client can detect that node outputs or review
+        states moved even though the graph structure did not.  Returns the state
+        that was written, so callers never hand back a stale revision.
+        """
+        if advance_revision:
+            state.revision += 1
+            state.updated_at = datetime.now(timezone.utc).isoformat(timespec="seconds")
         with self._write_lock:
             self._atomic_write(self.state_file, state.model_dump_json(indent=2))
+        return state
 
     def read_settings(self) -> dict[str, Any]:
         defaults = default_settings()
@@ -155,6 +204,29 @@ class WorkspaceRuntime:
         if self._model_complete is None:
             raise ValueError("This node execution requires a configured model adapter")
         return self._model_complete(messages, tools)
+
+    def text_completion(self, messages: list[dict[str, Any]], *, model: str | None = None) -> str:
+        """One plain-text LLM answer, on ``model`` when a configured provider serves it."""
+        if self._model_complete is None:
+            raise ValueError("No LLM adapter is configured for this workspace")
+        kwargs: dict[str, Any] = {}
+        if model:
+            providers = self.read_settings().get("model_providers", {})
+            provider_id = next((pid for pid, item in providers.items() if model in item.get("models", [])), None)
+            if provider_id:
+                kwargs = {"provider_id": provider_id, "model": model}
+        reply = self._model_complete(messages, [], **kwargs)
+        content = reply.get("content") if isinstance(reply, dict) else None
+        if not isinstance(content, str) or not content.strip():
+            raise ValueError("The LLM returned no text")
+        return content
+
+    def llm_tool_selector(self) -> LLMToolSelector | None:
+        """The LLM half of tool routing; ``None`` when no model adapter is configured."""
+        if self._model_complete is None:
+            return None
+        model = load_llm_config().planner_model
+        return LLMToolSelector(with_retry(lambda messages: self.text_completion(messages, model=model)), model=model)
 
     def registry(self) -> ToolRegistry:
         settings = self.read_settings()
@@ -290,13 +362,13 @@ class WorkspaceRuntime:
 
     def get_revision_proposal(self, proposal_id: str) -> dict[str, Any]:
         proposal = self.revision_proposals().get(proposal_id)
-        if proposal is None: raise ValueError("Unknown node revision proposal")
+        if proposal is None: raise NotFoundError("Unknown node revision proposal")
         return proposal
 
     def review_revision_code(self, proposal_id: str, approved: bool) -> dict[str, Any]:
         settings = self.read_settings()
         proposal = settings.get("revision_proposals", {}).get(proposal_id)
-        if proposal is None: raise ValueError("Unknown node revision proposal")
+        if proposal is None: raise NotFoundError("Unknown node revision proposal")
         proposal["code_reviewed"] = bool(approved)
         proposal["status"] = "code_reviewed" if approved else "rejected"
         self.write_settings(settings)
@@ -306,12 +378,17 @@ class WorkspaceRuntime:
         with self._write_lock:
             settings = self.read_settings()
             proposal = settings.get("revision_proposals", {}).get(proposal_id)
-            if proposal is None: raise ValueError("Unknown node revision proposal")
-            if proposal["status"] not in {"proposed", "code_reviewed"}: raise ValueError("This proposal is no longer applicable")
+            if proposal is None: raise NotFoundError("Unknown node revision proposal")
+            if proposal["status"] not in {"proposed", "code_reviewed"}: raise ConflictError("This proposal is no longer applicable")
             if proposal.get("requires_code_review"):
                 raise ValueError("This proposal changes executable behavior and cannot be activated until a reviewed executor is installed")
             state = self.read_state()
-            if state.version != proposal["base_graph_version"]: raise ValueError("Graph changed after this proposal was created; generate a new proposal")
+            if state.version != proposal["base_graph_version"]:
+                raise ConflictError(
+                    "Graph changed after this proposal was created; generate a new proposal",
+                    code="graph_version_conflict",
+                    details={"current_version": state.version},
+                )
             old_node = node_by_id(state, proposal["node_id"])
             proposed_payload = copy.deepcopy(proposal["proposed_tool"])
             proposed_payload.update({"status": "active", "provenance": {"kind": "generated", "reviewed_by": "local-user"}, "generated_code_status": "none"})
@@ -400,18 +477,57 @@ class WorkspaceRuntime:
         }
         try:
             frame = self.dataset_frame(upload_id)
+            if path.suffix.lower() == ".txt" and frame.empty:
+                raise ValueError("a text file without data rows is prose, not a table")
             result.update({
                 "kind": "table",
                 "rows": len(frame),
                 "columns": [{"name": str(name), "dtype": str(dtype)} for name, dtype in frame.dtypes.items()],
-                "preview": frame.head(8).replace({np.nan: None}).to_dict(orient="records"),
+                "preview": _json_records(frame.head(8)),
             })
         except ValueError:
-            result["kind"] = "binary"
+            text = self._read_text(path) if path.suffix.lower() in {".txt", ".md"} else None
+            if text is None:
+                result["kind"] = "binary"
+            else:
+                result.update({"kind": "text", "characters": len(text), "preview": text[:2000]})
         except Exception as exc:
             result.update({"kind": "unreadable", "error": str(exc)})
         audit("tool.inspect_upload", upload_id=upload_id, kind=result["kind"])
         return result
+
+    @staticmethod
+    def _read_text(path: Path) -> str | None:
+        """The file as text when it is valid UTF-8 (BOM tolerated), otherwise None."""
+        try:
+            return path.read_bytes().decode("utf-8-sig")
+        except UnicodeDecodeError:
+            return None
+
+    def is_inspectable(self, inspected: dict[str, Any]) -> bool:
+        """Whether an inspected dataset is a readable artifact.
+
+        ``binary`` is a legitimate answer for an image; ``unreadable`` means the
+        backend could not parse a file whose suffix promised it could.
+        """
+        return inspected.get("kind") != "unreadable"
+
+    def dataset_file(self, upload_id: str) -> dict[str, Any]:
+        """Resolve one stored dataset for byte delivery, without parsing it.
+
+        Returns the resolved path, the media type derived from the validated
+        suffix, the byte size and a strong ETag.  ``_upload_path`` rejects
+        traversal, so the returned path is always inside the upload directory.
+        """
+        path = self._upload_path(upload_id)
+        stat = path.stat()
+        return {
+            "path": path,
+            "name": path.name.split("_", 1)[-1],
+            "media_type": CONTENT_TYPES.get(path.suffix.lower(), "application/octet-stream"),
+            "size": stat.st_size,
+            "etag": f'"mf-{stat.st_mtime_ns:x}-{stat.st_size:x}"',
+        }
 
     def list_datasets(self) -> list[dict[str, Any]]:
         if not self.upload_dir.exists():
@@ -460,10 +576,41 @@ class WorkspaceRuntime:
 
     def route_task(self, task: TaskState) -> dict[str, Any]:
         registry = self.registry()
-        decision = DecisionRouter(jev_router=JevDecisionRouter()).decide(task, registry)
+        decision = DecisionRouter(jev_router=JevDecisionRouter(), llm=self.llm_tool_selector()).decide(task, registry)
         summary = self._summaries.record_routing(task, decision, registry)
         audit("router.decided", task_id=task.task_id, graph_version=task.graph_version, selected=[c.tool_id for c in decision.selected], confidence=decision.confidence, requires_human_confirmation=decision.requires_human_confirmation)
         return decision.model_dump() | {"summary": summary.model_dump()}
+
+    def plan_workflow(self, request: str, *, task_id: str, uploads: list[dict[str, Any]] | None = None, apply: bool = False) -> dict[str, Any]:
+        """Prompt -> typed workflow: LLM decomposition, model routing, typed dataflow.
+
+        ``uploads`` are ``{"upload_id", "name"}`` references to files already in
+        this save. The planned patch is applied only when the plan is complete
+        and ``apply`` is set; otherwise it is returned for human review.
+        """
+        if self._model_complete is None:
+            raise ValueError("Workflow planning requires a configured LLM adapter")
+        context = []
+        for item in uploads or []:
+            inspected = self.inspect_dataset(str(item["upload_id"]))
+            context.append({
+                "upload_id": inspected["upload_id"],
+                "name": str(item.get("name") or inspected["name"]),
+                "kind": inspected["kind"],
+                "columns": [column["name"] for column in inspected.get("columns", [])],
+                "rows": inspected.get("rows"),
+            })
+        model = load_llm_config().planner_model
+        planner = WorkflowPlanner(
+            self.registry(),
+            with_retry(lambda messages: self.text_completion(messages, model=model)),
+            ToolSelector(JevDecisionRouter(), self.llm_tool_selector()),
+        )
+        plan = planner.plan(request, task_id=task_id, uploads=context, state=self.read_state(), validate=self.validate_graph_patch)
+        if apply and plan.status == "planned" and plan.patch is not None:
+            plan.graph_version = self.apply_graph_patch(plan.patch).version
+            plan.applied = True
+        return plan.model_dump()
 
     def task_summary(self, task_id: str) -> dict[str, Any] | None:
         summary = self._summaries.get(task_id)
@@ -472,7 +619,22 @@ class WorkspaceRuntime:
     def execute_node(self, node_id: str, task_id: str | None = None) -> dict[str, Any]:
         with self._write_lock:
             state = self.read_state()
-            node = node_by_id(state, node_id)
+            node = next((item for item in state.nodes if item.id == node_id), None)
+            if node is None:
+                raise NotFoundError(f"Unknown node: {node_id}", details={"node_id": node_id})
+            if node.status == "running":
+                raise ConflictError(
+                    f"Node {node_id} is already running",
+                    code="node_already_running",
+                    details={"node_id": node_id, "revision": state.revision},
+                )
+            # Persist the in-flight state before executing: a second client must
+            # see a running node rather than a stale completed one, and the
+            # revision must advance even if the process dies mid-execution.
+            node.status = "running"
+            node.output = None
+            node.preview = None
+            self.write_state(state)
             try:
                 output = self._run_node(state, node)
                 self.write_state(state)
@@ -506,6 +668,13 @@ class WorkspaceRuntime:
                 raise
 
     def execute_workflow(self, *, restart: bool = False) -> dict[str, Any]:
+        """Run every runnable node in dependency order.
+
+        The ``ok`` flag is the authoritative success signal: an HTTP layer, an
+        agent bridge and a CLI must all be able to tell a failed run from a
+        completed one without inspecting individual ``results`` entries, and a
+        deliberate stop (a failing gate, a review pause) is not a failure.
+        """
         results: list[dict[str, Any]] = []
         GraphValidator().validate_state(self.read_state(), self.registry())
         if restart:
@@ -517,10 +686,21 @@ class WorkspaceRuntime:
                     item.preview = None
                     item.review_state = ReviewState()
                 self.write_state(state)
+
+        def outcome(state: GraphState, stopped: bool = False) -> dict[str, Any]:
+            failed = [item for item in results if "error" in item]
+            return {
+                "state": state.model_dump(),
+                "results": results,
+                "ok": not failed,
+                "stopped": stopped,
+                "errors": failed,
+            }
+
         while True:
             state = self.read_state()
             if any(item.status == "cancelled" for item in state.nodes):
-                return {"state": state.model_dump(), "results": results, "stopped": True}
+                return outcome(state, stopped=True)
             pending = [item for item in state.nodes if item.status not in {"completed", "waiting", "cancelled"}]
             node = next((item for item in pending if all(
                 node_by_id(state, edge.source).status == "completed"
@@ -528,23 +708,25 @@ class WorkspaceRuntime:
             )), None)
             if node is None:
                 if pending and not any(item.status == "waiting" for item in state.nodes):
-                    results.append({"error": "No runnable node remains; an upstream node is incomplete or waiting."})
-                return {"state": state.model_dump(), "results": results}
+                    results.append({"error": "No runnable node remains; an upstream node is incomplete or waiting.", "error_code": "workflow_stalled"})
+                return outcome(state)
             try:
-                outcome = self.execute_node(node.id)
-                results.append({"node_id": node.id, "result": outcome["result"]})
-                if outcome["execution"]["status"] == "waiting":
-                    return {"state": outcome["state"], "results": results}
+                outcome_payload = self.execute_node(node.id)
+                results.append({"node_id": node.id, "result": outcome_payload["result"]})
+                if outcome_payload["execution"]["status"] == "waiting":
+                    return outcome(GraphState.model_validate(outcome_payload["state"]))
             except ValueError as exc:
                 results.append({"node_id": node.id, "error": str(exc), "error_code": getattr(exc, "code", "execution_failed")})
-                return {"state": self.read_state().model_dump(), "results": results}
+                return outcome(self.read_state())
 
     def submit_node_review(self, node_id: str, decision: str, comment: str | None = None) -> dict[str, Any]:
         with self._write_lock:
             state = self.read_state()
-            node = node_by_id(state, node_id)
+            node = next((item for item in state.nodes if item.id == node_id), None)
+            if node is None:
+                raise NotFoundError(f"Unknown node: {node_id}", details={"node_id": node_id})
             if node.status != "waiting" or node.review_state.status != "pending":
-                raise ValueError("The node is not waiting for review")
+                raise ConflictError("The node is not waiting for review", details={"node_id": node_id, "status": node.status})
             if decision not in {"continue", "revise", "stop"}:
                 raise ValueError("Decision must be continue, revise, or stop")
             node.review_state = ReviewState(status="approved" if decision == "continue" else "stopped", comment=comment)
@@ -552,10 +734,16 @@ class WorkspaceRuntime:
             elif decision == "stop": node.status = "cancelled"
             self.write_state(state)
             audit("node_review.submitted", node_id=node_id, decision=decision)
-            result = {"state": state.model_dump(), "decision": decision, "results": []}
+            result = {"state": state.model_dump(), "decision": decision, "results": [], "ok": True}
         if decision == "continue":
             continued = self.execute_workflow()
-            result.update({"state": continued["state"], "results": continued.get("results", [])})
+            result.update({
+                "state": continued["state"],
+                "results": continued.get("results", []),
+                "ok": continued.get("ok", True),
+                "errors": continued.get("errors", []),
+                "stopped": continued.get("stopped", False),
+            })
         return result
 
     def submit_human_decision(self, node_id: str, decision: str) -> dict[str, Any]:
@@ -609,10 +797,10 @@ class WorkspaceRuntime:
 
     def _upload_path(self, upload_id: str) -> Path:
         if upload_id != Path(upload_id).name:
-            raise ValueError("Unknown upload. Ask the user to upload the file again.")
+            raise NotFoundError("Unknown upload. Ask the user to upload the file again.", details={"upload_id": upload_id})
         candidate = self.upload_dir / upload_id
         if not candidate.is_file():
-            raise ValueError("Unknown upload. Ask the user to upload the file again.")
+            raise NotFoundError("Unknown upload. Ask the user to upload the file again.", details={"upload_id": upload_id})
         return candidate
 
     def dataset_frame(self, upload_id: str) -> pd.DataFrame:

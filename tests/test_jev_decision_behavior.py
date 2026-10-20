@@ -3,11 +3,11 @@ import unittest
 from pydantic import ValidationError
 
 from backend.contracts import RouterCandidate, TaskState
-from backend.jev_routing import JevConfig, JevDecisionRouter
+from backend.jev_routing import JevConfig, JevDecisionRouter, JevUnavailableError
 from backend.tool_registry import ToolRegistry
 
 
-def router_config(*, strategy="consensus", threshold=0.7, fallback=True):
+def router_config(*, strategy="consensus", threshold=0.7, fallback="llm"):
     profiles = {
         "calibrated": {
             "kind": "jev_laya",
@@ -27,13 +27,13 @@ def router_config(*, strategy="consensus", threshold=0.7, fallback=True):
             "strategy": strategy,
             "profiles": list(profiles),
             "minimum_calibrated_confidence": threshold,
-            "fallback_to_lexical": fallback,
+            "fallback": fallback,
         },
         "profiles": profiles,
     }
 
 
-def configured_router(transport, *, strategy="consensus", threshold=0.7, fallback=True):
+def configured_router(transport, *, strategy="consensus", threshold=0.7, fallback="llm"):
     config = JevConfig.model_validate(router_config(
         strategy=strategy, threshold=threshold, fallback=fallback
     ))
@@ -121,12 +121,10 @@ class JevDecisionBehaviorTests(unittest.TestCase):
             choice = selected_id if profile.kind == "jev_laya" else None
             return self.response_for(profile, choice)
 
-        selected, _, confirmation, _, _ = configured_router(transport).decide(
-            self.task, self.candidates, self.registry
-        )
-
-        self.assertIsNone(selected)
-        self.assertTrue(confirmation)
+        # A profile that answers outside the protocol gives no opinion, so the
+        # consensus cannot form; the selector then asks the LLM or a human.
+        with self.assertRaises(JevUnavailableError):
+            configured_router(transport).decide(self.task, self.candidates, self.registry)
 
     def test_low_calibrated_confidence_blocks_automatic_routing(self):
         threshold = 0.63
@@ -158,17 +156,22 @@ class JevDecisionBehaviorTests(unittest.TestCase):
         self.assertTrue(confirmation)
         self.assertIn("valid candidate", rationale.lower())
 
-    def test_transport_failure_uses_configured_safe_fallback(self):
+    def test_transport_failure_is_reported_instead_of_guessed(self):
         def transport(profile, body, timeout_seconds):
             raise OSError("gateway unavailable")
 
-        selected, _, confirmation, _, rationale = configured_router(transport).decide(
-            self.task, self.candidates, self.registry
-        )
+        # The caller (ToolSelector) decides between the LLM and a human; the
+        # Jev adapter itself never invents a choice or falls back to keywords.
+        with self.assertRaisesRegex(JevUnavailableError, "gateway unavailable"):
+            configured_router(transport).decide(self.task, self.candidates, self.registry)
 
-        self.assertIsNone(selected)
-        self.assertTrue(confirmation)
-        self.assertIn("fallback", rationale.lower())
+    def test_lexical_fallback_configuration_is_rejected(self):
+        config = router_config()
+        del config["router"]["fallback"]
+        config["router"]["fallback_to_lexical"] = True
+
+        with self.assertRaisesRegex(ValidationError, "keyword routing is disabled"):
+            JevConfig.model_validate(config)
 
     def test_disabled_or_single_candidate_routing_does_not_contact_gateway(self):
         calls = []

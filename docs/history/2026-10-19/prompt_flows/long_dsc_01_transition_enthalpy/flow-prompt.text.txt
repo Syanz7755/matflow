@@ -1,0 +1,85 @@
+MatFlow routing preview (read-only)
+────────────────────────────────────────────────────────────────────────
+source     : dry-route:D:\Projects\matflow
+graph      : none in this document
+phases     : 3
+issues     : 0 error(s), 0 warning(s)
+meta       : mode=dry-run, graph_version=0, candidates=1, confirmation=yes, prompt_characters=558,
+             prompt=【背景】我在做药物活性成分的晶型筛选，手上这个化合物已经确认存在两种晶型，晶型 I
+             是原料，晶型 II
+             是重结晶得到的，我想用差示扫描量热法确认两者的熔点和熔融焓差异，顺便看看有没有玻璃化转
+             变。 【实验参数】仪器 Mettler Toledo DSC 3，铝制密封坩埚，样品量 4.2 mg，第一次升温从
+             25 到 250 °C，速率 10 °C/min，氮气保护 50 mL/min，随后以 10 °C/min 降到 -20
+             °C，再第二次升温到 250 °C
+             以消除热历史。本次提供的数据只包含第一次升温曲线，两列：temperature_C 和
+             heat_flow_mW，其中吸热峰朝下为负值。 【数据说明】基线上有一个缓慢的漂移，熔融峰大约在
+             180 °C 附近，峰形不对称，可能有熔融重结晶。样品在 100 °C
+             附近有一个很小的台阶，可能是残留溶剂或者玻璃化转变，也可能是水分。 【请求】1)
+             确定主要热事件的温度：起始点、峰值和结束点，分别说明你用哪种约定。2) 计算熔融焓，单位
+             J/g，并说明积分区间的选法对结果的影响。3) 判断 100 °C
+             附近的台阶更像玻璃化转变还是脱水，需要什么额外证据才能区分。4)
+             明确说明：仅凭第一次升温曲线能否比较两种晶型的稳定性，为什么需要第二次升温或变温循环。,
+             retriever_tokens=18, routing_tokens=18, ... (+4 more)
+
+Phases (3)
+  [1] Prompt (input) (prompt)  [completed]
+      1. user prompt  [completed]
+          detail     : 【背景】我在做药物活性成分的晶型筛选，手上这个化合物已经确认存在两种晶型，晶
+                       型 I 是原料，晶型 II
+                       是重结晶得到的，我想用差示扫描量热法确认两者的熔点和熔融焓差异，顺便看看有没
+                       有玻璃化转变。 【实验参数】仪器 Mettler Toledo DSC 3，铝制密封坩埚，样品量
+                       4.2 mg，第一次升温从 25 到 250 °C，速率 10 °C/min，氮气保护 50 mL/min，随后以
+                       10 °C/min 降到 -20 °C，再第二次升温到 250 °C
+                       以消除热历史。本次提供的数据只包含第一次升温曲线，两列：temperature_C 和
+                       heat_flow_mW，其中吸热峰朝下为负值。
+                       【数据说明】基线上有一个缓慢的漂移，熔融峰大约在 180 °C
+                       附近，峰形不对称，可能有熔融重结晶。样品在 100 °C
+                       附近有一个很小的台阶，可能是残留溶剂或者玻璃化转变，也可能是水分。 【请求】1)
+                       确定主要热事件的温度：起始点、峰值和结束点，分别说明你用哪种约定。2)
+                       计算熔融焓，单位 J/g，并说明积分区间的选法对结果的影响。3) 判断 100 °C
+                       附近的台阶更像玻璃化转变还是脱水，需要什么额外证据才能区分。4)
+                       明确说明：仅凭第一次升温曲线能否比较两种晶型的稳定性，为什么需要第二次升温或
+                       变温循环。
+      2. prompt size  [completed]
+          detail     : 558 character(s), 46 whitespace-separated token(s); available input types:
+                       RawData, TypedTable
+      3. retriever tokenisation  [completed]
+          detail     : backend/routing.py _tokens() keeps the distinct [a-z0-9]+ runs longer than
+                       one character. The 558-character prompt yields 42 occurrence(s) / 18 distinct
+                       token(s) and 351 CJK character(s); the router was given 18 distinct token(s)
+                       (42 occurrence(s), 351 CJK character(s)) [verbatim]
+  [2] Candidates (candidates)  [pending]
+      1. ebrick_case05_import (candidate)  [pending]
+          detail     : candidate only, nothing executed; score 0.25; version 1.0.0; reasons:
+                       matches: temperature
+          tools      : ebrick_case05_import
+  [3] Decision (decision)  [waiting]
+      1. selected ebrick_case05_import  [waiting]
+          detail     : confidence 0.25; human confirmation required: yes; rationale: Selected EBrick
+                       Case 05 CSV Import from 1 compatible candidate(s).
+          tools      : ebrick_case05_import
+      2. dry run guarantee  [completed]
+          detail     : DecisionRouter() ran without the JEV/model router: record_routing() was not
+                       called and no graph, settings or summary file was written
+
+Status legend
+  ready      : declared, never run
+  running    : execution in progress
+  completed  : finished successfully
+  waiting    : paused for a human decision
+  error      : stopped with an error
+  cancelled  : stopped by a gate or reviewer
+  unknown    : source did not say (never treated as success)
+  step-only statuses:
+    pending    : not started yet
+    skipped    : skipped by a gate or policy
+
+Issues (1)
+┌──────────┬───────────────┬────────────────────────────────┬───────────────────────────────┬──────┐
+│ Severity │ Code          │ Message                        │ Where                         │ Hint │
+├──────────┼───────────────┼────────────────────────────────┼───────────────────────────────┼──────┤
+│ info     │ route.dry_run │ This route was computed        │ dry-route:D:\Projects\matflow │ -    │
+│          │               │ read-only: nothing was         │                               │      │
+│          │               │ persisted to the task summary  │                               │      │
+│          │               │ log.                           │                               │      │
+└──────────┴───────────────┴────────────────────────────────┴───────────────────────────────┴──────┘

@@ -1,0 +1,1 @@
+For pristine MgO SCF, generate QE input and report convergence and total energy.

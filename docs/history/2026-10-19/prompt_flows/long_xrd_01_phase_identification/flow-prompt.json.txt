@@ -1,0 +1,187 @@
+{
+  "flowview_schema": "1.0",
+  "document": {
+    "title": "MatFlow routing preview (read-only)",
+    "source": "dry-route:D:\\Projects\\matflow",
+    "graph": null,
+    "trace": null,
+    "phases": [
+      {
+        "name": "prompt",
+        "title": "Prompt (input)",
+        "steps": [
+          {
+            "name": "user prompt",
+            "status": "completed",
+            "detail": "\u3010\u6837\u54c1\u4e0e\u5236\u6837\u3011\u6837\u54c1\u4e3a\u5b9e\u9a8c\u5ba4\u81ea\u5236\u7684 TiO2 \u7c89\u4f53\uff0c\u5236\u5907\u65b9\u6cd5\u662f\u949b\u9178\u56db\u4e01\u916f\u6c34\u89e3\u540e 80 \u00b0C \u5e72\u71e5\uff0c\u672a\u505a\u8fdb\u4e00\u6b65\u7145\u70e7\uff0c\u53d6\u7ea6 0.5 g \u7814\u78e8 10 \u5206\u949f\u540e\u538b\u5728\u73bb\u7483\u6837\u54c1\u69fd\u91cc\uff0c\u8868\u9762\u7528\u8f7d\u73bb\u7247\u538b\u5e73\uff0c\u6837\u54c1\u539a\u5ea6\u7ea6 1 mm\u3002\n\u3010\u4eea\u5668\u4e0e\u626b\u63cf\u53c2\u6570\u3011Bruker D8 Advance\uff0cCu K\u03b1 \u8f90\u5c04\uff0c\u6ce2\u957f 1.5406 \u00c5\uff0c\u5de5\u4f5c\u7535\u538b 40 kV\uff0c\u7535\u6d41 40 mA\uff0c\u626b\u63cf\u8303\u56f4 2\u03b8 = 10\u00b0 \u5230 80\u00b0\uff0c\u6b65\u957f 0.02\u00b0\uff0c\u6bcf\u6b65\u505c\u7559 0.5 s\uff0c\u91c7\u7528\u8fde\u7eed\u626b\u63cf\u6a21\u5f0f\u3002\u6d4b\u8bd5\u73af\u5883\u4e3a\u5ba4\u6e29\u5927\u6c14\uff0c\u6ca1\u6709\u505a\u4f4e\u80cc\u666f\u6837\u54c1\u53f0\u3002\n\u3010\u6570\u636e\u8bf4\u660e\u3011\u5bfc\u51fa\u7684\u4e24\u5217\u6570\u636e\u662f two_theta_deg \u548c intensity_counts\uff0c\u5df2\u7ecf\u6263\u9664\u4e86\u4eea\u5668\u672c\u5e95\uff0c\u4f46\u6ca1\u6709\u505a\u5e73\u6ed1\u548c K\u03b12 \u5265\u79bb\u3002\u6570\u636e\u91cc\u5728 20\u00b0 \u5230 30\u00b0 \u4e4b\u95f4\u6709\u4e00\u4e2a\u5f88\u5bbd\u7684\u9f13\u5305\uff0c\u53ef\u80fd\u662f\u65e0\u5b9a\u5f62\u76f8\u6216\u8005\u73bb\u7483\u6837\u54c1\u69fd\u7684\u8d21\u732e\uff0c\u9700\u8981\u4f60\u5728\u5224\u65ad\u65f6\u6743\u8861\u3002\n\u3010\u8bf7\u6c42\u30111) \u5bf9\u8fd9\u4efd\u56fe\u8c31\u505a\u5cf0\u4f4d\u63d0\u53d6\uff0c\u62a5\u544a\u6bcf\u4e2a\u5cf0\u7684 2\u03b8 \u4f4d\u7f6e\u3001\u76f8\u5bf9\u5f3a\u5ea6\u548c\u534a\u9ad8\u5bbd\u30022) \u5224\u65ad\u4e3b\u8981\u6676\u76f8\u662f\u9510\u949b\u77ff\u8fd8\u662f\u91d1\u7ea2\u77f3\uff0c\u6216\u8005\u4e24\u8005\u5171\u5b58\uff0c\u5e76\u7ed9\u51fa\u4f60\u7684\u5224\u636e\uff0c\u7279\u522b\u662f\u7528\u5230\u54ea\u4e9b\u7279\u5f81\u5cf0\u3001\u54ea\u4e9b\u5cf0\u662f\u7528\u6765\u533a\u5206\u4e24\u8005\u7684\u30023) \u660e\u786e\u5199\u51fa\uff1a\u4ec5\u51ed\u8fd9\u4efd\u6570\u636e\u80fd\u5f97\u51fa\u4ec0\u4e48\u7ed3\u8bba\u3001\u4e0d\u80fd\u5f97\u51fa\u4ec0\u4e48\u7ed3\u8bba\uff0c\u4f8b\u5982\u80fd\u5426\u5b9a\u91cf\u4e24\u76f8\u6bd4\u4f8b\u3001\u80fd\u5426\u5224\u65ad\u6676\u7c92\u5c3a\u5bf8\u3002\n\u3010\u8fb9\u754c\u3011\u5982\u679c\u5f53\u524d\u5de5\u4f5c\u533a\u6ca1\u6709\u53ef\u7528\u7684 XRD \u5206\u6790\u5de5\u5177\uff0c\u8bf7\u4e0d\u8981\u7528\u7ecf\u9a8c\u89c4\u5219\u4ee3\u66ff\u8ba1\u7b97\uff0c\u800c\u662f\u76f4\u63a5\u544a\u8bc9\u6211\u7f3a\u5c11\u4ec0\u4e48\u80fd\u529b\uff0c\u4ee5\u53ca\u9700\u8981\u4eba\u5de5\u786e\u8ba4\u54ea\u4e9b\u53c2\u6570\u3002",
+            "error": null,
+            "node_id": null,
+            "tools": []
+          },
+          {
+            "name": "prompt size",
+            "status": "completed",
+            "detail": "585 character(s), 51 whitespace-separated token(s); available input types: RawData, TypedTable",
+            "error": null,
+            "node_id": null,
+            "tools": []
+          },
+          {
+            "name": "retriever tokenisation",
+            "status": "completed",
+            "detail": "backend/routing.py _tokens() keeps the distinct [a-z0-9]+ runs longer than one character. The 585-character prompt yields 42 occurrence(s) / 21 distinct token(s) and 367 CJK character(s); the router was given 21 distinct token(s) (42 occurrence(s), 367 CJK character(s)) [verbatim]",
+            "error": null,
+            "node_id": null,
+            "tools": []
+          }
+        ],
+        "error": null
+      },
+      {
+        "name": "candidates",
+        "title": "Candidates",
+        "steps": [
+          {
+            "name": "no candidate retrieved",
+            "status": "unknown",
+            "detail": "CandidateRetriever found no active compatible tool for this prompt",
+            "error": null,
+            "node_id": null,
+            "tools": []
+          }
+        ],
+        "error": null
+      },
+      {
+        "name": "decision",
+        "title": "Decision",
+        "steps": [
+          {
+            "name": "no tool selected",
+            "status": "waiting",
+            "detail": "confidence 0.00; human confirmation required: yes; rationale: No active compatible tool matched the request.",
+            "error": null,
+            "node_id": null,
+            "tools": []
+          },
+          {
+            "name": "dry run guarantee",
+            "status": "completed",
+            "detail": "DecisionRouter() ran without the JEV/model router: record_routing() was not called and no graph, settings or summary file was written",
+            "error": null,
+            "node_id": null,
+            "tools": []
+          }
+        ],
+        "error": null
+      }
+    ],
+    "issues": [
+      {
+        "severity": "info",
+        "code": "route.dry_run",
+        "message": "This route was computed read-only: nothing was persisted to the task summary log.",
+        "where": "dry-route:D:\\Projects\\matflow",
+        "hint": null,
+        "detail": null
+      }
+    ],
+    "meta": {
+      "mode": "dry-run",
+      "graph_version": "0",
+      "candidates": "0",
+      "confirmation": "yes",
+      "prompt_characters": "585",
+      "prompt": "\u3010\u6837\u54c1\u4e0e\u5236\u6837\u3011\u6837\u54c1\u4e3a\u5b9e\u9a8c\u5ba4\u81ea\u5236\u7684 TiO2 \u7c89\u4f53\uff0c\u5236\u5907\u65b9\u6cd5\u662f\u949b\u9178\u56db\u4e01\u916f\u6c34\u89e3\u540e 80 \u00b0C \u5e72\u71e5\uff0c\u672a\u505a\u8fdb\u4e00\u6b65\u7145\u70e7\uff0c\u53d6\u7ea6 0.5 g \u7814\u78e8 10 \u5206\u949f\u540e\u538b\u5728\u73bb\u7483\u6837\u54c1\u69fd\u91cc\uff0c\u8868\u9762\u7528\u8f7d\u73bb\u7247\u538b\u5e73\uff0c\u6837\u54c1\u539a\u5ea6\u7ea6 1 mm\u3002\n\u3010\u4eea\u5668\u4e0e\u626b\u63cf\u53c2\u6570\u3011Bruker D8 Advance\uff0cCu K\u03b1 \u8f90\u5c04\uff0c\u6ce2\u957f 1.5406 \u00c5\uff0c\u5de5\u4f5c\u7535\u538b 40 kV\uff0c\u7535\u6d41 40 mA\uff0c\u626b\u63cf\u8303\u56f4 2\u03b8 = 10\u00b0 \u5230 80\u00b0\uff0c\u6b65\u957f 0.02\u00b0\uff0c\u6bcf\u6b65\u505c\u7559 0.5 s\uff0c\u91c7\u7528\u8fde\u7eed\u626b\u63cf\u6a21\u5f0f\u3002\u6d4b\u8bd5\u73af\u5883\u4e3a\u5ba4\u6e29\u5927\u6c14\uff0c\u6ca1\u6709\u505a\u4f4e\u80cc\u666f\u6837\u54c1\u53f0\u3002\n\u3010\u6570\u636e\u8bf4\u660e\u3011\u5bfc\u51fa\u7684\u4e24\u5217\u6570\u636e\u662f two_theta_deg \u548c intensity_counts\uff0c\u5df2\u7ecf\u6263\u9664\u4e86\u4eea\u5668\u672c\u5e95\uff0c\u4f46\u6ca1\u6709\u505a\u5e73\u6ed1\u548c K\u03b12 \u5265\u79bb\u3002\u6570\u636e\u91cc\u5728 20\u00b0 \u5230 30\u00b0 \u4e4b\u95f4\u6709\u4e00\u4e2a\u5f88\u5bbd\u7684\u9f13\u5305\uff0c\u53ef\u80fd\u662f\u65e0\u5b9a\u5f62\u76f8\u6216\u8005\u73bb\u7483\u6837\u54c1\u69fd\u7684\u8d21\u732e\uff0c\u9700\u8981\u4f60\u5728\u5224\u65ad\u65f6\u6743\u8861\u3002\n\u3010\u8bf7\u6c42\u30111) \u5bf9\u8fd9\u4efd\u56fe\u8c31\u505a\u5cf0\u4f4d\u63d0\u53d6\uff0c\u62a5\u544a\u6bcf\u4e2a\u5cf0\u7684 2\u03b8 \u4f4d\u7f6e\u3001\u76f8\u5bf9\u5f3a\u5ea6\u548c\u534a\u9ad8\u5bbd\u30022) \u5224\u65ad\u4e3b\u8981\u6676\u76f8\u662f\u9510\u949b\u77ff\u8fd8\u662f\u91d1\u7ea2\u77f3\uff0c\u6216\u8005\u4e24\u8005\u5171\u5b58\uff0c\u5e76\u7ed9\u51fa\u4f60\u7684\u5224\u636e\uff0c\u7279\u522b\u662f\u7528\u5230\u54ea\u4e9b\u7279\u5f81\u5cf0\u3001\u54ea\u4e9b\u5cf0\u662f\u7528\u6765\u533a\u5206\u4e24\u8005\u7684\u30023) \u660e\u786e\u5199\u51fa\uff1a\u4ec5\u51ed\u8fd9\u4efd\u6570\u636e\u80fd\u5f97\u51fa\u4ec0\u4e48\u7ed3\u8bba\u3001\u4e0d\u80fd\u5f97\u51fa\u4ec0\u4e48\u7ed3\u8bba\uff0c\u4f8b\u5982\u80fd\u5426\u5b9a\u91cf\u4e24\u76f8\u6bd4\u4f8b\u3001\u80fd\u5426\u5224\u65ad\u6676\u7c92\u5c3a\u5bf8\u3002\n\u3010\u8fb9\u754c\u3011\u5982\u679c\u5f53\u524d\u5de5\u4f5c\u533a\u6ca1\u6709\u53ef\u7528\u7684 XRD \u5206\u6790\u5de5\u5177\uff0c\u8bf7\u4e0d\u8981\u7528\u7ecf\u9a8c\u89c4\u5219\u4ee3\u66ff\u8ba1\u7b97\uff0c\u800c\u662f\u76f4\u63a5\u544a\u8bc9\u6211\u7f3a\u5c11\u4ec0\u4e48\u80fd\u529b\uff0c\u4ee5\u53ca\u9700\u8981\u4eba\u5de5\u786e\u8ba4\u54ea\u4e9b\u53c2\u6570\u3002",
+      "retriever_tokens": "21",
+      "routing_tokens": "21",
+      "retriever_tokens_dropped": "0",
+      "cjk_characters": "367",
+      "routing_preview": "verbatim",
+      "modes": "dry-run"
+    },
+    "truncated": []
+  },
+  "phases": [
+    {
+      "name": "prompt",
+      "title": "Prompt (input)",
+      "steps": [
+        {
+          "name": "user prompt",
+          "status": "completed",
+          "detail": "\u3010\u6837\u54c1\u4e0e\u5236\u6837\u3011\u6837\u54c1\u4e3a\u5b9e\u9a8c\u5ba4\u81ea\u5236\u7684 TiO2 \u7c89\u4f53\uff0c\u5236\u5907\u65b9\u6cd5\u662f\u949b\u9178\u56db\u4e01\u916f\u6c34\u89e3\u540e 80 \u00b0C \u5e72\u71e5\uff0c\u672a\u505a\u8fdb\u4e00\u6b65\u7145\u70e7\uff0c\u53d6\u7ea6 0.5 g \u7814\u78e8 10 \u5206\u949f\u540e\u538b\u5728\u73bb\u7483\u6837\u54c1\u69fd\u91cc\uff0c\u8868\u9762\u7528\u8f7d\u73bb\u7247\u538b\u5e73\uff0c\u6837\u54c1\u539a\u5ea6\u7ea6 1 mm\u3002\n\u3010\u4eea\u5668\u4e0e\u626b\u63cf\u53c2\u6570\u3011Bruker D8 Advance\uff0cCu K\u03b1 \u8f90\u5c04\uff0c\u6ce2\u957f 1.5406 \u00c5\uff0c\u5de5\u4f5c\u7535\u538b 40 kV\uff0c\u7535\u6d41 40 mA\uff0c\u626b\u63cf\u8303\u56f4 2\u03b8 = 10\u00b0 \u5230 80\u00b0\uff0c\u6b65\u957f 0.02\u00b0\uff0c\u6bcf\u6b65\u505c\u7559 0.5 s\uff0c\u91c7\u7528\u8fde\u7eed\u626b\u63cf\u6a21\u5f0f\u3002\u6d4b\u8bd5\u73af\u5883\u4e3a\u5ba4\u6e29\u5927\u6c14\uff0c\u6ca1\u6709\u505a\u4f4e\u80cc\u666f\u6837\u54c1\u53f0\u3002\n\u3010\u6570\u636e\u8bf4\u660e\u3011\u5bfc\u51fa\u7684\u4e24\u5217\u6570\u636e\u662f two_theta_deg \u548c intensity_counts\uff0c\u5df2\u7ecf\u6263\u9664\u4e86\u4eea\u5668\u672c\u5e95\uff0c\u4f46\u6ca1\u6709\u505a\u5e73\u6ed1\u548c K\u03b12 \u5265\u79bb\u3002\u6570\u636e\u91cc\u5728 20\u00b0 \u5230 30\u00b0 \u4e4b\u95f4\u6709\u4e00\u4e2a\u5f88\u5bbd\u7684\u9f13\u5305\uff0c\u53ef\u80fd\u662f\u65e0\u5b9a\u5f62\u76f8\u6216\u8005\u73bb\u7483\u6837\u54c1\u69fd\u7684\u8d21\u732e\uff0c\u9700\u8981\u4f60\u5728\u5224\u65ad\u65f6\u6743\u8861\u3002\n\u3010\u8bf7\u6c42\u30111) \u5bf9\u8fd9\u4efd\u56fe\u8c31\u505a\u5cf0\u4f4d\u63d0\u53d6\uff0c\u62a5\u544a\u6bcf\u4e2a\u5cf0\u7684 2\u03b8 \u4f4d\u7f6e\u3001\u76f8\u5bf9\u5f3a\u5ea6\u548c\u534a\u9ad8\u5bbd\u30022) \u5224\u65ad\u4e3b\u8981\u6676\u76f8\u662f\u9510\u949b\u77ff\u8fd8\u662f\u91d1\u7ea2\u77f3\uff0c\u6216\u8005\u4e24\u8005\u5171\u5b58\uff0c\u5e76\u7ed9\u51fa\u4f60\u7684\u5224\u636e\uff0c\u7279\u522b\u662f\u7528\u5230\u54ea\u4e9b\u7279\u5f81\u5cf0\u3001\u54ea\u4e9b\u5cf0\u662f\u7528\u6765\u533a\u5206\u4e24\u8005\u7684\u30023) \u660e\u786e\u5199\u51fa\uff1a\u4ec5\u51ed\u8fd9\u4efd\u6570\u636e\u80fd\u5f97\u51fa\u4ec0\u4e48\u7ed3\u8bba\u3001\u4e0d\u80fd\u5f97\u51fa\u4ec0\u4e48\u7ed3\u8bba\uff0c\u4f8b\u5982\u80fd\u5426\u5b9a\u91cf\u4e24\u76f8\u6bd4\u4f8b\u3001\u80fd\u5426\u5224\u65ad\u6676\u7c92\u5c3a\u5bf8\u3002\n\u3010\u8fb9\u754c\u3011\u5982\u679c\u5f53\u524d\u5de5\u4f5c\u533a\u6ca1\u6709\u53ef\u7528\u7684 XRD \u5206\u6790\u5de5\u5177\uff0c\u8bf7\u4e0d\u8981\u7528\u7ecf\u9a8c\u89c4\u5219\u4ee3\u66ff\u8ba1\u7b97\uff0c\u800c\u662f\u76f4\u63a5\u544a\u8bc9\u6211\u7f3a\u5c11\u4ec0\u4e48\u80fd\u529b\uff0c\u4ee5\u53ca\u9700\u8981\u4eba\u5de5\u786e\u8ba4\u54ea\u4e9b\u53c2\u6570\u3002",
+          "error": null,
+          "node_id": null,
+          "tools": []
+        },
+        {
+          "name": "prompt size",
+          "status": "completed",
+          "detail": "585 character(s), 51 whitespace-separated token(s); available input types: RawData, TypedTable",
+          "error": null,
+          "node_id": null,
+          "tools": []
+        },
+        {
+          "name": "retriever tokenisation",
+          "status": "completed",
+          "detail": "backend/routing.py _tokens() keeps the distinct [a-z0-9]+ runs longer than one character. The 585-character prompt yields 42 occurrence(s) / 21 distinct token(s) and 367 CJK character(s); the router was given 21 distinct token(s) (42 occurrence(s), 367 CJK character(s)) [verbatim]",
+          "error": null,
+          "node_id": null,
+          "tools": []
+        }
+      ],
+      "error": null
+    },
+    {
+      "name": "candidates",
+      "title": "Candidates",
+      "steps": [
+        {
+          "name": "no candidate retrieved",
+          "status": "unknown",
+          "detail": "CandidateRetriever found no active compatible tool for this prompt",
+          "error": null,
+          "node_id": null,
+          "tools": []
+        }
+      ],
+      "error": null
+    },
+    {
+      "name": "decision",
+      "title": "Decision",
+      "steps": [
+        {
+          "name": "no tool selected",
+          "status": "waiting",
+          "detail": "confidence 0.00; human confirmation required: yes; rationale: No active compatible tool matched the request.",
+          "error": null,
+          "node_id": null,
+          "tools": []
+        },
+        {
+          "name": "dry run guarantee",
+          "status": "completed",
+          "detail": "DecisionRouter() ran without the JEV/model router: record_routing() was not called and no graph, settings or summary file was written",
+          "error": null,
+          "node_id": null,
+          "tools": []
+        }
+      ],
+      "error": null
+    }
+  ],
+  "issues": [
+    {
+      "severity": "info",
+      "code": "route.dry_run",
+      "message": "This route was computed read-only: nothing was persisted to the task summary log.",
+      "where": "dry-route:D:\\Projects\\matflow",
+      "hint": null,
+      "detail": null
+    }
+  ],
+  "exit_code_hint": 0
+}

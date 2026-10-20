@@ -1,0 +1,113 @@
+MatFlow routing preview (read-only)
+────────────────────────────────────────────────────────────────────────
+source     : dry-route:D:\Projects\matflow
+graph      : none in this document
+phases     : 3
+issues     : 0 error(s), 1 warning(s)
+meta       : mode=dry-run, graph_version=0, candidates=5, confirmation=yes, prompt_characters=595,
+             prompt=【实验背景】这是一份室温下用辰华 CHI760E 电化学工作站测得的交流阻抗数据，样品是
+             10 wt% 的 Li7La3Zr2O12 陶瓷片，两面溅射金电极，测试前在 60 °C 真空烘箱中干燥 12
+             小时。测量参数为：频率范围 1 MHz 到 0.1 Hz，交流振幅 10 mV，直流偏置 0
+             V，每个十倍频程采集 10 个点，共记录 61 个频点。 【数据说明】导出的 CSV
+             文件包含三列：第一列 frequency_Hz 是频率，单位赫兹，按从高到低排列；第二列 Z_real_ohm
+             是阻抗实部；第三列 Z_imag_ohm
+             是阻抗虚部，负值表示容性响应。原始文件里还有仪器自动写入的表头注释行和一行空行，如果解
+             析出问题请告诉我具体是第几行。 【我需要你做的事情】1)
+             先对这份阻抗谱做基础质量检查：确认频点是否单调、有没有重复频率、有没有明显的异常点或负
+             的实部，以及高频端是否收敛到纯电阻行为。2) 根据有效数据点生成 Nyquist
+             图，横轴用阻抗实部，纵轴用负的虚部，两个轴的单位都保持欧姆，图上需要标注高频截距的大致
+             数值。3)
+             如果质检发现数据不合格，请直接指出是哪几个频点有问题、可能的物理原因是什么，不要跳过问
+             题直接出图。
+             【约束】请只使用已经注册的工具来完成，不要自己发明新的分析方法；如果某个必需的能力当前
+             不存在，请说明缺失的具体能力，并把待人工确认的部分列出来。, retriever_tokens=16,
+             routing_tokens=16, ... (+4 more)
+
+Phases (3)
+  [1] Prompt (input) (prompt)  [waiting]
+      1. user prompt  [completed]
+          detail     : 【实验背景】这是一份室温下用辰华 CHI760E
+                       电化学工作站测得的交流阻抗数据，样品是 10 wt% 的 Li7La3Zr2O12
+                       陶瓷片，两面溅射金电极，测试前在 60 °C 真空烘箱中干燥 12
+                       小时。测量参数为：频率范围 1 MHz 到 0.1 Hz，交流振幅 10 mV，直流偏置 0
+                       V，每个十倍频程采集 10 个点，共记录 61 个频点。 【数据说明】导出的 CSV
+                       文件包含三列：第一列 frequency_Hz 是频率，单位赫兹，按从高到低排列；第二列
+                       Z_real_ohm 是阻抗实部；第三列 Z_imag_ohm
+                       是阻抗虚部，负值表示容性响应。原始文件里还有仪器自动写入的表头注释行和一行空
+                       行，如果解析出问题请告诉我具体是第几行。 【我需要你做的事情】1)
+                       先对这份阻抗谱做基础质量检查：确认频点是否单调、有没有重复频率、有没有明显的
+                       异常点或负的实部，以及高频端是否收敛到纯电阻行为。2) 根据有效数据点生成
+                       Nyquist
+                       图，横轴用阻抗实部，纵轴用负的虚部，两个轴的单位都保持欧姆，图上需要标注高频
+                       截距的大致数值。3)
+                       如果质检发现数据不合格，请直接指出是哪几个频点有问题、可能的物理原因是什么，
+                       不要跳过问题直接出图。
+                       【约束】请只使用已经注册的工具来完成，不要自己发明新的分析方法；如果某个必需
+                       的能力当前不存在，请说明缺失的具体能力，并把待人工确认的部分列出来。
+      2. prompt size  [completed]
+          detail     : 595 character(s), 42 whitespace-separated token(s); available input types:
+                       RawData, TypedTable
+      3. retriever tokenisation  [waiting]
+          detail     : backend/routing.py _tokens() keeps the distinct [a-z0-9]+ runs longer than
+                       one character. The 595-character prompt yields 31 occurrence(s) / 16 distinct
+                       token(s) and 411 CJK character(s); the router was given 16 distinct token(s)
+                       (31 occurrence(s), 411 CJK character(s)) [verbatim] -- the prompt is
+                       overwhelmingly CJK: lexical matching sees almost none of it
+  [2] Candidates (candidates)  [pending]
+      1. ebrick_case05_import (candidate)  [pending]
+          detail     : candidate only, nothing executed; score 0.50; version 1.0.0; reasons:
+                       matches: csv, frequency
+          tools      : ebrick_case05_import
+      2. ebrick_cp_g_normalize (candidate)  [pending]
+          detail     : candidate only, nothing executed; score 0.50; version 1.0.0; reasons:
+                       matches: frequency, hz; input ports are compatible
+          tools      : ebrick_cp_g_normalize
+      3. ebrick_cp_g_qc (candidate)  [pending]
+          detail     : candidate only, nothing executed; score 0.25; version 1.0.0; reasons:
+                       matches: frequency; input ports are compatible
+          tools      : ebrick_cp_g_qc
+      4. eis_basic_qc (candidate)  [pending]
+          detail     : candidate only, nothing executed; score 0.25; version 1.0.0; reasons:
+                       matches: nyquist; input ports are compatible
+          tools      : eis_basic_qc
+      5. raw_file_import (candidate)  [pending]
+          detail     : candidate only, nothing executed; score 0.25; version 1.0.0; reasons:
+                       matches: csv
+          tools      : raw_file_import
+  [3] Decision (decision)  [waiting]
+      1. selected ebrick_case05_import  [waiting]
+          detail     : confidence 0.50; human confirmation required: yes; rationale: Selected EBrick
+                       Case 05 CSV Import from 5 compatible candidate(s).
+          tools      : ebrick_case05_import
+      2. dry run guarantee  [completed]
+          detail     : DecisionRouter() ran without the JEV/model router: record_routing() was not
+                       called and no graph, settings or summary file was written
+
+Status legend
+  ready      : declared, never run
+  running    : execution in progress
+  completed  : finished successfully
+  waiting    : paused for a human decision
+  error      : stopped with an error
+  cancelled  : stopped by a gate or reviewer
+  unknown    : source did not say (never treated as success)
+  step-only statuses:
+    pending    : not started yet
+    skipped    : skipped by a gate or policy
+
+Issues (2)
+┌──────────┬─────────────────────────────┬────────────────────────────┬────────────────────────────┐
+│ Severity │ Code                        │ Message                    │ Where                      │
+├──────────┼─────────────────────────────┼────────────────────────────┼────────────────────────────┤
+│ warning  │ route.prompt_tokens_unusabl │ The retriever cannot see   │ backend/routing.py:        │
+│          │ e                           │ most of this prompt. --    │ _tokens()                  │
+│          │                             │ the prompt is              │                            │
+│          │                             │ overwhelmingly CJK:        │                            │
+│          │                             │ lexical matching sees      │                            │
+│          │                             │ almost none of it          │                            │
+│ info     │ route.dry_run               │ This route was computed    │ dry-route:D:\Projects\matf │
+│          │                             │ read-only: nothing was     │ low                        │
+│          │                             │ persisted to the task      │                            │
+│          │                             │ summary log.               │                            │
+└──────────┴─────────────────────────────┴────────────────────────────┴────────────────────────────┘
+note: dropped column(s) to fit width 100: Hint

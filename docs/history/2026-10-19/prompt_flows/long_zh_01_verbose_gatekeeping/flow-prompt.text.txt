@@ -1,0 +1,107 @@
+MatFlow routing preview (read-only)
+────────────────────────────────────────────────────────────────────────
+source     : dry-route:D:\Projects\matflow
+graph      : none in this document
+phases     : 3
+issues     : 0 error(s), 1 warning(s)
+meta       : mode=dry-run, graph_version=0, candidates=3, confirmation=yes, prompt_characters=665,
+             prompt=【先说明我的情况】我是材料学院研一的学生，第一次独立做电化学测试，很多地方不确定
+             ，所以想把我知道的都写下来，麻烦你帮我判断下一步该怎么做。如果我问得不清楚，请直接告诉
+             我缺哪一条信息，不要自己替我做决定。
+             【样品】我的样品是水热法合成的二氧化锰，洗涤到中性后 80 °C 干燥 12 小时，取 80 mg 和 10
+             mg 乙炔黑、10 mg PVDF 混合，加 NMP 调成浆料，涂在碳布上，涂覆面积 1
+             cm2，干燥后活性物质负载量大约 2 mg/cm2。对电极是铂片，参比电极是饱和甘汞电极，电解液是
+             1 M 硫酸钠。
+             【测试】我先做了循环伏安，然后做了恒流充放电，最后想做交流阻抗。阻抗谱是在开路电位下测
+             的，频率从 100 kHz 到 0.01 Hz，振幅 5 mV。仪器是上海辰华的，型号我记不清了，可能是 660
+             或者 760。测试时室温没有精确控制，大概 22 到 25 °C。
+             【数据】我上传的表格不知道是哪一次导出的，可能是恒流充放电，也可能是阻抗谱。文件的表头
+             是仪器默认生成的英文列名，我看到有 time 和 voltage 两列，也可能有 frequency
+             那一列，但我打开的时候只扫了一眼。我知道这个描述很含糊，可是我确实不确定，因为我把好几
+             个文件放在同一个文件夹里了。 【想得到的结论】我想知道：1) 我的二氧化锰比电容是多少；2)
+             电荷转移电阻有多大；3)
+             能不能判断是赝电容行为还是电池型行为。如果数据不够，请告诉我需要重新测什么。
+             【提醒】如果我的描述里有自相矛盾的地方，请你指出是哪一处矛盾。谢谢！,
+             retriever_tokens=19, routing_tokens=19, ... (+4 more)
+
+Phases (3)
+  [1] Prompt (input) (prompt)  [waiting]
+      1. user prompt  [completed]
+          detail     : 【先说明我的情况】我是材料学院研一的学生，第一次独立做电化学测试，很多地方不
+                       确定，所以想把我知道的都写下来，麻烦你帮我判断下一步该怎么做。如果我问得不清
+                       楚，请直接告诉我缺哪一条信息，不要自己替我做决定。
+                       【样品】我的样品是水热法合成的二氧化锰，洗涤到中性后 80 °C 干燥 12 小时，取
+                       80 mg 和 10 mg 乙炔黑、10 mg PVDF 混合，加 NMP 调成浆料，涂在碳布上，涂覆面积
+                       1 cm2，干燥后活性物质负载量大约 2
+                       mg/cm2。对电极是铂片，参比电极是饱和甘汞电极，电解液是 1 M 硫酸钠。
+                       【测试】我先做了循环伏安，然后做了恒流充放电，最后想做交流阻抗。阻抗谱是在开
+                       路电位下测的，频率从 100 kHz 到 0.01 Hz，振幅 5
+                       mV。仪器是上海辰华的，型号我记不清了，可能是 660 或者
+                       760。测试时室温没有精确控制，大概 22 到 25 °C。
+                       【数据】我上传的表格不知道是哪一次导出的，可能是恒流充放电，也可能是阻抗谱。
+                       文件的表头是仪器默认生成的英文列名，我看到有 time 和 voltage 两列，也可能有
+                       frequency
+                       那一列，但我打开的时候只扫了一眼。我知道这个描述很含糊，可是我确实不确定，因
+                       为我把好几个文件放在同一个文件夹里了。 【想得到的结论】我想知道：1)
+                       我的二氧化锰比电容是多少；2) 电荷转移电阻有多大；3)
+                       能不能判断是赝电容行为还是电池型行为。如果数据不够，请告诉我需要重新测什么。
+                       【提醒】如果我的描述里有自相矛盾的地方，请你指出是哪一处矛盾。谢谢！
+      2. prompt size  [completed]
+          detail     : 665 character(s), 52 whitespace-separated token(s); available input types:
+                       RawData, TypedTable
+      3. retriever tokenisation  [waiting]
+          detail     : backend/routing.py _tokens() keeps the distinct [a-z0-9]+ runs longer than
+                       one character. The 665-character prompt yields 36 occurrence(s) / 19 distinct
+                       token(s) and 462 CJK character(s); the router was given 19 distinct token(s)
+                       (36 occurrence(s), 462 CJK character(s)) [verbatim] -- the prompt is
+                       overwhelmingly CJK: lexical matching sees almost none of it
+  [2] Candidates (candidates)  [pending]
+      1. ebrick_cp_g_normalize (candidate)  [pending]
+          detail     : candidate only, nothing executed; score 0.50; version 1.0.0; reasons:
+                       matches: frequency, hz; input ports are compatible
+          tools      : ebrick_cp_g_normalize
+      2. ebrick_case05_import (candidate)  [pending]
+          detail     : candidate only, nothing executed; score 0.25; version 1.0.0; reasons:
+                       matches: frequency
+          tools      : ebrick_case05_import
+      3. ebrick_cp_g_qc (candidate)  [pending]
+          detail     : candidate only, nothing executed; score 0.25; version 1.0.0; reasons:
+                       matches: frequency; input ports are compatible
+          tools      : ebrick_cp_g_qc
+  [3] Decision (decision)  [waiting]
+      1. selected ebrick_cp_g_normalize  [waiting]
+          detail     : confidence 0.50; human confirmation required: yes; rationale: Selected EBrick
+                       Cp-G Column Normalization from 3 compatible candidate(s).
+          tools      : ebrick_cp_g_normalize
+      2. dry run guarantee  [completed]
+          detail     : DecisionRouter() ran without the JEV/model router: record_routing() was not
+                       called and no graph, settings or summary file was written
+
+Status legend
+  ready      : declared, never run
+  running    : execution in progress
+  completed  : finished successfully
+  waiting    : paused for a human decision
+  error      : stopped with an error
+  cancelled  : stopped by a gate or reviewer
+  unknown    : source did not say (never treated as success)
+  step-only statuses:
+    pending    : not started yet
+    skipped    : skipped by a gate or policy
+
+Issues (2)
+┌──────────┬─────────────────────────────┬────────────────────────────┬────────────────────────────┐
+│ Severity │ Code                        │ Message                    │ Where                      │
+├──────────┼─────────────────────────────┼────────────────────────────┼────────────────────────────┤
+│ warning  │ route.prompt_tokens_unusabl │ The retriever cannot see   │ backend/routing.py:        │
+│          │ e                           │ most of this prompt. --    │ _tokens()                  │
+│          │                             │ the prompt is              │                            │
+│          │                             │ overwhelmingly CJK:        │                            │
+│          │                             │ lexical matching sees      │                            │
+│          │                             │ almost none of it          │                            │
+│ info     │ route.dry_run               │ This route was computed    │ dry-route:D:\Projects\matf │
+│          │                             │ read-only: nothing was     │ low                        │
+│          │                             │ persisted to the task      │                            │
+│          │                             │ summary log.               │                            │
+└──────────┴─────────────────────────────┴────────────────────────────┴────────────────────────────┘
+note: dropped column(s) to fit width 100: Hint

@@ -255,20 +255,16 @@ Phases (3)
 ```
 
 Prompts longer than the backend's 4000-character `TaskState.user_message` limit are still rendered
-in full, but routing uses a **preview** that keeps the Latin fragments the tokeniser can see. The
-flow says so (`route.prompt_shortened_for_routing`, and `routing used a N-character preview` in the
+in full, but routing receives only the first 4000 characters. The flow says so
+(`route.prompt_shortened_for_routing`, and `routing consumed the first N characters` in the
 `prompt size` step) instead of pretending the whole request reached the router.
 
-> **A finding this mode makes visible.** `backend/routing.py` tokenises prompts with
-> `re.findall(r"[a-z0-9]+")` and keeps the resulting **set**, so **CJK characters produce no tokens
-> at all**. A long Chinese request is therefore nearly invisible to lexical retrieval and whatever
-> Latin fragments it contains (file names, column headers, units) decide the route — a
-> 595-character EIS request can land on `ebrick_case05_import`. When that happens the flow says so
-> explicitly: the `retriever tokenisation` step turns amber and an issue code
-> `route.prompt_tokens_unusable` explains the counts (occurrences, distinct tokens, CJK characters).
-> This is a backend routing limitation that the printer reports faithfully; it is not a printer
-> defect. Adding one English keyword to the request, or using the JEV/model router, is the
-> workaround.
+> **Language does not matter to the candidate set.** The backend never routes by keywords:
+> `CandidateRetriever` keeps every active tool whose input ports accept the available data types,
+> and the choice among them is made by Jev or the configured LLM. A Chinese prompt and its English
+> equivalent therefore produce the identical candidate list; the offline preview runs no model and
+> selects nothing. Earlier versions tokenised with `[a-z0-9]+`, which made CJK prompts nearly
+> invisible; that code path and its warning were removed together with lexical scoring.
 
 #### `--http` — read the flow from a running backend
 
@@ -492,7 +488,7 @@ English message and, where known, a `where` and a concrete `hint`. The vocabular
 | Trace | `trace.missing_file`, `trace.is_directory`, `trace.unreadable`, `trace.permission_denied`, `trace.undecodable`, `trace.too_large`, `trace.empty_file`, `trace.no_document`, `trace.no_documents`, `trace.invalid_json`, `trace.bad_jsonl_line`, `trace.bad_line`, `trace.empty_input`, `trace.invalid_event`, `trace.unknown_payload`, `trace.unknown_status`, `trace.missing_status`, `trace.event_without_tool`, `trace.event_missing_ok`, `trace.no_events`, `trace.chat_error` |
 | Task summaries | `task.no_summary_log`, `task.not_found`, `task.empty_file`, `task.unparsable_line`, `task.invalid_json`, `task.too_large`, `task.undecodable`, `task.unreadable`, `task.empty_payload`, `task.missing_status`, `task.unknown_status`, `task.failed`, `task.missing_decision`, `task.unknown_execution_status`, `task.multiple_records` |
 | Filters and focus | `filter.applied` (info: how many nodes a filter hid), `filter.unknown_status` (warning: a `--status` value outside the vocabulary), `focus.unknown_node` |
-| Optional backend adapter | `backend.schema_failed`, `backend.route_failed`, `route.dry_run`, `route.empty_prompt`, `route.prompt_shortened_for_routing`, `route.prompt_tokens_unusable`, `route.unknown_input_type`, `graph.unreachable`, `graph.http_error` |
+| Optional backend adapter | `backend.schema_failed`, `backend.route_failed`, `route.dry_run`, `route.empty_prompt`, `route.prompt_shortened_for_routing`, `route.unknown_input_type`, `graph.unreachable`, `graph.http_error` |
 | Live HTTP mode (`--http`) | `http.live`, `http.unreachable`, `http.contract_mismatch`, `http.capabilities.invalid_url`, `http.unserialisable_request`, `http.state` + `http.capabilities` + `http.task_summary` + `http.route` × `http_error` / `unreachable` / `invalid_json` / `request_failed`, `http.state_missing`, `http.task_summary_not_an_object`, `http.graph_version_unknown`, `http.unknown_input_type`, `http.prompt_truncated_for_backend`, `http.route_payload_invalid`, `http.empty_prompt`, `http.route_recorded`, `http.model_router_used` |
 
 Exit-code examples:
@@ -666,11 +662,11 @@ browsed:
 
 ```powershell
 .\.venv\Scripts\python.exe -m flowview.tools.run_prompt_cases `
-  --suite examples/long_prompt_cases.json `
-  --out   examples/reports/prompt_flows
+  --suite tests/suites/long_prompt_cases.json `
+  --out   .tmp/prompt_flows
 ```
 
-The shipped suite is `examples/long_prompt_cases.json`: 16 deliberately long prompts (389–2124
+The shipped suite is `tests/suites/long_prompt_cases.json`: 16 deliberately long prompts (389–2124
 characters, ~11.5k characters in total) covering EIS, XRD, FTIR, UV-Vis, TGA, DSC, four-point
 probe, a cross-technique request, two under-specified requests and two prompts that try to talk the
 runtime out of its safety rules. Each case carries `expected_route`, `route_expectation_note`,

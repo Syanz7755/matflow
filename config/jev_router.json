@@ -3,10 +3,13 @@
   "router": {
     "enabled": true,
     "strategy": "consensus",
-    "profiles": ["laya", "semantic"],
+    "profiles": [
+      "laya",
+      "semantic"
+    ],
     "timeout_seconds": 45,
     "minimum_calibrated_confidence": 0.7,
-    "fallback_to_lexical": true
+    "fallback": "llm"
   },
   "profiles": {
     "laya": {

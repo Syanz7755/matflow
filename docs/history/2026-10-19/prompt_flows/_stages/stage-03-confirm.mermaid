@@ -1,0 +1,19 @@
+flowchart TD
+    %% FlowView: runtime phase map, one node per observable step.
+    %% title: MatFlow backend runtime flow (blueprint) — phase 3: Human-confirmation gate
+    %% source: flowview phase blueprint
+    %% phases: 1; steps: 3
+    subgraph pg_confirm["Human-confirmation gate #40;confirm#41; #91;pending#93;"]
+        n_confirm_0_confirmation_evaluated["confirmation evaluated - Blueprint #40;described, not observed#41;: backend/r…<br/>pending"]:::flowview_pending
+        n_confirm_1_conversation_pauses["conversation pauses - Blueprint #40;described, not observed#41;: backend/main…<br/>pending"]:::flowview_pending
+        n_confirm_2_human_confirms["human confirms - Blueprint #40;described, not observed#41;: the client accept…<br/>pending"]:::flowview_pending
+    end
+    classDef flowview_ready fill:#e8f1fb,stroke:#3b6ea5,color:#102a43;
+    classDef flowview_running fill:#fff4d6,stroke:#a5761b,color:#3d2c00;
+    classDef flowview_completed fill:#e3f6e8,stroke:#2f7d43,color:#0f3319;
+    classDef flowview_waiting fill:#fdf1dc,stroke:#a5761b,color:#3d2c00;
+    classDef flowview_error fill:#fbe3e3,stroke:#a32020,color:#4a0f0f;
+    classDef flowview_cancelled fill:#f0e8f8,stroke:#6b4b9a,color:#2a1040;
+    classDef flowview_unknown fill:#eceff3,stroke:#8792a2,color:#2b3038;
+    classDef flowview_pending fill:#f3f4f6,stroke:#8792a2,color:#2b3038;
+    classDef flowview_skipped fill:#f0e8f8,stroke:#6b4b9a,color:#2a1040;

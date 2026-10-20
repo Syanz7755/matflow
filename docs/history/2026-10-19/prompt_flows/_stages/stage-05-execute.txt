@@ -1,0 +1,56 @@
+MatFlow backend runtime flow (blueprint) — phase 5: Execution (DAG scheduling, executor seam, preview)
+────────────────────────────────────────────────────────────────────────
+source     : flowview phase blueprint
+graph      : none in this document
+phases     : 1
+issues     : 0 error(s), 0 warning(s)
+meta       : stage_index=5, stage_name=execute, stage_title=Execution (DAG scheduling, executor seam,
+             preview), modes=stages
+
+Phases (1)
+  [1] Execution (DAG scheduling, executor seam, preview) (execute)  [pending]
+      1. workflow scheduled  [pending]
+          detail     : Blueprint (described, not observed): backend/main.py: POST /api/workflow/execute ->
+                       WorkspaceRuntime.execute_workflow(restart=False): loops over nodes whose upstream edges
+                       are 'completed' (DAG scheduling), stops on a 'waiting' or 'cancelled' node;
+                       restart=True first resets every node to 'ready'
+      2. node executed  [pending]
+          detail     : Blueprint (described, not observed): backend/workspace_runtime.py:
+                       execute_node(node_id) -> _run_node(): node.status='running', audit('executor.started'),
+                       registry().get(tool_id) spec, executor resolved from ExecutorRegistry
+                       (backend/executors.py seam -> backend/builtin_executors.py),
+                       executor(NodeExecution(...))
+      3. preview built  [pending]
+          detail     : Blueprint (described, not observed): backend/workspace_runtime.py: _run_node() ->
+                       backend/preview.py: build_preview(node.output, spec) per spec.preview_spec;
+                       node.status='completed' unless the executor returned ExecutionOutcome(stop=True) ->
+                       'cancelled'
+      4. single node endpoint  [pending]
+          detail     : Blueprint (described, not observed): backend/main.py: POST /api/execute ->
+                       WorkspaceRuntime.execute_node(node_id, task_id); the agent tool 'run_workflow' instead
+                       calls execute_workflow()
+      5. execution recorded  [pending]
+          detail     : Blueprint (described, not observed): backend/workspace_runtime.py: execute_node() ->
+                       TaskSummaryService.record_execution() with ExecutionResult(node_id, tool_id,
+                       tool_version, status, output, output_schema_valid, trace_id);
+                       audit('executor.completed')
+      6. executor failure path  [pending]
+          detail     : Blueprint (described, not observed): backend/workspace_runtime.py: execute_node()
+                       except ValueError -> node.status='error', node.output={'error': str(exc)},
+                       write_state(), audit('executor.failed'), ExecutionResult(status='failed', error=
+                       ExecutionError(code='execution_failed', retryable=True)); the endpoint returns 422
+
+Status legend
+  ready      : declared, never run
+  running    : execution in progress
+  completed  : finished successfully
+  waiting    : paused for a human decision
+  error      : stopped with an error
+  cancelled  : stopped by a gate or reviewer
+  unknown    : source did not say (never treated as success)
+  step-only statuses:
+    pending    : not started yet
+    skipped    : skipped by a gate or policy
+
+Issues (0)
+  No FlowView findings: the source looked consistent.

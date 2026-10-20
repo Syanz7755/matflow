@@ -1,34 +1,41 @@
-# 本地 Jev Router 配置
+# MatFlow model configuration
 
-## 双模型启动
+## LLM gateway (`llm.json`, `litellm.yaml`)
 
-双击项目根目录的 `start_model_services.bat`，会按 `model_services.json` 启动两个模型网关：`litellm_gateway`（`online_api` 模式，读取 `litellm.yaml`）与 `jev_decision_gateway`（`local` 模式）。该启动器不显示或保存任何密钥；只检查 LiteLLM 所需环境变量的名称。
+`llm.json` is the one non-secret description of the LLM gateway: host, port, the **name** of the environment variable that holds the caller key, the served models, the agent model and the planner model. The backend and the launcher both read it, so they cannot disagree.
 
-`start_matflow.bat` 会先运行该双模型启动器，再打开 MatFlow。已在运行的健康网关会被复用，不会重复占用端口。可用以下命令只校验进程配置而不启动模型：
+```powershell
+start_llm.bat              # reuse a gateway that accepts the key, or start LiteLLM
+start_llm.bat -CheckOnly   # only report whether the gateway is ready
+start_llm.bat -Port 4080   # use another port for this run
+```
+
+`start_llm.bat` (alias: `start_litellm.bat`) checks `GET /health/readiness`, then `GET /v1/models` with the key from `gateway.api_key_env` (default `LITELLM_DEFAULT_API_KEY`). A healthy gateway that accepts the key is reused; a gateway that rejects it is reported, never replaced. Otherwise LiteLLM is started from `litellm.yaml` (project `.venv`, then `litellm` on `PATH`, then `uv run`; `MATFLOW_LITELLM_EXE` overrides). Variables set with `setx` are picked up even in shells opened before them. No credential value is ever printed.
+
+`litellm.yaml` only declares the upstream models; every key in it is an `os.environ/...` reference. `glm` is not served at the moment because the current SJTU team key is refused for it (HTTP 403); re-add it in both files once access is granted. `MATFLOW_LLM_CONFIG` points the backend at another `llm.json`.
+
+## Starting all model services
+
+`start_model_services.bat` starts every enabled service in `model_services.json`: `litellm_gateway` (`online_api`, port 4078) and `jev_decision_gateway` (`local`, port 4079). `start_matflow.bat` runs it before opening MatFlow; healthy gateways are reused. To validate the process configuration without starting anything:
 
 ```powershell
 powershell -NoProfile -ExecutionPolicy Bypass -File scripts\start_model_services.ps1 -ValidateOnly
 ```
 
-`jev_router.json` 是 MatFlow 路由层的非机密运行配置。它将 Laya 与 Sematic（网关模型标识为 `semantic`）接入候选工具选择；两者是结构化决策模型，不用于聊天生成。
+## Tool routing: Jev, then the LLM — never keywords
 
-配置路径可用 `MATFLOW_JEV_ROUTER_CONFIG` 环境变量覆盖，便于不同机器或部署环境使用各自的 JSON 文件。配置中不允许放 API key；当前本地网关也不需要 API key。
+`jev_router.json` wires Laya and Sematic (gateway model id `semantic`) into tool selection; both are structured decision models, not chat models. `MATFLOW_JEV_ROUTER_CONFIG` overrides the path. No API key belongs in this file.
 
-`router.strategy` 支持：
+Candidates are every agent-selectable tool whose input ports accept the available data — a type filter, with no keyword score. The decision is made by a model:
 
-- `consensus`：Laya 与 Sematic 都选择同一候选时自动采用；分歧时保留模型证据并请求人工确认。
-- `laya` 或 `semantic`：只使用指定配置档。
+1. Jev, when `router.enabled` is true and there are at least two candidates. `router.strategy` is `consensus` (Laya and Sematic must agree) or `laya` / `semantic` (one profile).
+2. The configured LLM, when Jev is unreachable (`router.fallback: "llm"`, the default) or when Jev disagrees or is below `minimum_calibrated_confidence` (the LLM breaks the tie and a human still confirms).
+3. A human, when `router.fallback` is `"none"`, or when no model is available at all.
 
-如果网关不可用且 `fallback_to_lexical` 为 `true`，MatFlow 会降级到可审计的词法候选排序，并要求人工确认；不会无提示地伪造模型选择。
+`fallback_to_lexical` is rejected: keyword matching is disabled everywhere. `minimum_calibrated_confidence` applies only to Laya's calibrated confidence; Sematic's score is a conditional rating between the submitted candidates.
 
-`minimum_calibrated_confidence` 只应用于 Laya 的校准置信度。即使两模型选中同一工具，低于这个门槛仍会转为人工确认；Sematic 的分数是声明候选之间的条件评分，不能当作校准置信度。
+## Task summary log
 
-为检查当前网关，请访问 `/health` 和 `/v1/models`。端点、模型标识和超时均只从此配置读取，业务代码中不嵌入这些值。
+`observability.json` configures the user-readable JSONL task-summary log. `jsonl_path` is relative to the open save folder (`data/saves/<save>/audit/task_summaries.jsonl`), so every save keeps its own history. Each summary keeps the original `user_prompt` and records the input context, candidate tools, model opinions, final selection, execution result, and error handling. Every tool reference carries a human-facing `label` and a stable `registered_id` / `version`. The `data/saves/` folder is Git-ignored.
 
-## 任务摘要日志
-
-`observability.json` 配置用户可读的任务摘要 JSONL 日志。每一条摘要始终保留原始 `user_prompt`，并依次记录输入上下文、候选工具、模型意见、最终选择、执行结果，以及错误与安全处理方式。
-
-所有工具证据同时包含面向人的 `label` 和稳定的 `registered_id` / `version`；因此 UI 不需要从中文或英文说明中反推实际注册工具。默认文件写到 `data/audit/task_summaries.jsonl`，该目录已被 Git 忽略，避免研究任务内容或用户 prompt 被提交到远端。
-
-路由接口 `/api/route` 在既有路由字段外增加 `summary`；后续执行请求可携带同一个 `task_id`，将执行结果合并进该任务摘要。`GET /api/task-summaries/{task_id}` 返回该任务最近的完整摘要。
+`/api/route` adds `summary` to its response; a later execution request may carry the same `task_id` to merge its result into that summary. `GET /api/task-summaries/{task_id}` returns the latest complete summary for that task.

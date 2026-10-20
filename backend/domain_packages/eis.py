@@ -13,6 +13,7 @@ import pandas as pd
 
 from ..contracts import DataTypeDefinition, ToolSpec
 from ..executors import ExecutorRegistry, NodeExecution
+from ..tool_registry import parameter_schema_for
 from . import DomainPackage, DomainPackageManifest
 
 MANIFEST = DomainPackageManifest(
@@ -50,7 +51,11 @@ EIS_TOOL_SPECS: dict[str, ToolSpec] = {
         inputs={"data": "TypedTable"},
         outputs={"report": "EISQCReport", "data": "EISData"},
         params={"min_frequency_hz": 10, "fit_model": "None"},
-        description="Nyquist/Bode quality checks and a typed EIS output.",
+        parameter_schema=parameter_schema_for({"min_frequency_hz": 10, "fit_model": "None"}),
+        description=(
+            "Nyquist/Bode quality checks and a typed EIS output. Reads the upstream column "
+            "mapping keys frequency_column, real_column and imag_column (each naming a column of the file)."
+        ),
         executor_ref="builtin:eis_basic_qc",
         preview_spec={"outputs": {"report": {"renderer": "json_tree"}, "data": {"renderer": "json_tree"}}},
     ),
@@ -61,7 +66,8 @@ EIS_TOOL_SPECS: dict[str, ToolSpec] = {
         inputs={"data": "EISData"},
         outputs={"plot": "Plot"},
         params={"title": "Nyquist plot"},
-        description="Create a standard Nyquist plot.",
+        parameter_schema=parameter_schema_for({"title": "Nyquist plot"}),
+        description="Create a standard Nyquist plot from EIS data (uses its real_column and imag_column mapping).",
         executor_ref="builtin:plot_nyquist",
         preview_spec={"outputs": {"plot": {"renderer": "json_tree"}}},
     ),

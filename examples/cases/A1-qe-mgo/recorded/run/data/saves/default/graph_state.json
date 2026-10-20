@@ -1,0 +1,2470 @@
+{
+  "graph_id": "local-default",
+  "version": 1,
+  "revision": 10,
+  "updated_at": "2026-10-19T08:46:21+00:00",
+  "nodes": [
+    {
+      "id": "qe-demo-structure",
+      "type": "qe_structure",
+      "tool_id": "qe_structure",
+      "tool_version": "1.0.0",
+      "label": "MgO structure",
+      "params": {
+        "cell": [
+          [
+            8.424,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            8.424,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            8.424
+          ]
+        ],
+        "cell_unit": "angstrom",
+        "positions": [
+          {
+            "element": "Mg",
+            "coordinates": [
+              0.0,
+              0.0,
+              0.0
+            ]
+          },
+          {
+            "element": "Mg",
+            "coordinates": [
+              0.0,
+              0.25,
+              0.25
+            ]
+          },
+          {
+            "element": "Mg",
+            "coordinates": [
+              0.25,
+              0.0,
+              0.25
+            ]
+          },
+          {
+            "element": "Mg",
+            "coordinates": [
+              0.25,
+              0.25,
+              0.0
+            ]
+          },
+          {
+            "element": "O",
+            "coordinates": [
+              0.25,
+              0.0,
+              0.0
+            ]
+          },
+          {
+            "element": "O",
+            "coordinates": [
+              0.0,
+              0.25,
+              0.0
+            ]
+          },
+          {
+            "element": "O",
+            "coordinates": [
+              0.0,
+              0.0,
+              0.25
+            ]
+          },
+          {
+            "element": "O",
+            "coordinates": [
+              0.25,
+              0.25,
+              0.25
+            ]
+          },
+          {
+            "element": "Mg",
+            "coordinates": [
+              0.0,
+              0.0,
+              0.5
+            ]
+          },
+          {
+            "element": "Mg",
+            "coordinates": [
+              0.0,
+              0.25,
+              0.75
+            ]
+          },
+          {
+            "element": "Mg",
+            "coordinates": [
+              0.25,
+              0.0,
+              0.75
+            ]
+          },
+          {
+            "element": "Mg",
+            "coordinates": [
+              0.25,
+              0.25,
+              0.5
+            ]
+          },
+          {
+            "element": "O",
+            "coordinates": [
+              0.25,
+              0.0,
+              0.5
+            ]
+          },
+          {
+            "element": "O",
+            "coordinates": [
+              0.0,
+              0.25,
+              0.5
+            ]
+          },
+          {
+            "element": "O",
+            "coordinates": [
+              0.0,
+              0.0,
+              0.75
+            ]
+          },
+          {
+            "element": "O",
+            "coordinates": [
+              0.25,
+              0.25,
+              0.75
+            ]
+          },
+          {
+            "element": "Mg",
+            "coordinates": [
+              0.0,
+              0.5,
+              0.0
+            ]
+          },
+          {
+            "element": "Mg",
+            "coordinates": [
+              0.0,
+              0.75,
+              0.25
+            ]
+          },
+          {
+            "element": "Mg",
+            "coordinates": [
+              0.25,
+              0.5,
+              0.25
+            ]
+          },
+          {
+            "element": "Mg",
+            "coordinates": [
+              0.25,
+              0.75,
+              0.0
+            ]
+          },
+          {
+            "element": "O",
+            "coordinates": [
+              0.25,
+              0.5,
+              0.0
+            ]
+          },
+          {
+            "element": "O",
+            "coordinates": [
+              0.0,
+              0.75,
+              0.0
+            ]
+          },
+          {
+            "element": "O",
+            "coordinates": [
+              0.0,
+              0.5,
+              0.25
+            ]
+          },
+          {
+            "element": "O",
+            "coordinates": [
+              0.25,
+              0.75,
+              0.25
+            ]
+          },
+          {
+            "element": "Mg",
+            "coordinates": [
+              0.0,
+              0.5,
+              0.5
+            ]
+          },
+          {
+            "element": "Mg",
+            "coordinates": [
+              0.0,
+              0.75,
+              0.75
+            ]
+          },
+          {
+            "element": "Mg",
+            "coordinates": [
+              0.25,
+              0.5,
+              0.75
+            ]
+          },
+          {
+            "element": "Mg",
+            "coordinates": [
+              0.25,
+              0.75,
+              0.5
+            ]
+          },
+          {
+            "element": "O",
+            "coordinates": [
+              0.25,
+              0.5,
+              0.5
+            ]
+          },
+          {
+            "element": "O",
+            "coordinates": [
+              0.0,
+              0.75,
+              0.5
+            ]
+          },
+          {
+            "element": "O",
+            "coordinates": [
+              0.0,
+              0.5,
+              0.75
+            ]
+          },
+          {
+            "element": "O",
+            "coordinates": [
+              0.25,
+              0.75,
+              0.75
+            ]
+          },
+          {
+            "element": "Mg",
+            "coordinates": [
+              0.5,
+              0.0,
+              0.0
+            ]
+          },
+          {
+            "element": "Mg",
+            "coordinates": [
+              0.5,
+              0.25,
+              0.25
+            ]
+          },
+          {
+            "element": "Mg",
+            "coordinates": [
+              0.75,
+              0.0,
+              0.25
+            ]
+          },
+          {
+            "element": "Mg",
+            "coordinates": [
+              0.75,
+              0.25,
+              0.0
+            ]
+          },
+          {
+            "element": "O",
+            "coordinates": [
+              0.75,
+              0.0,
+              0.0
+            ]
+          },
+          {
+            "element": "O",
+            "coordinates": [
+              0.5,
+              0.25,
+              0.0
+            ]
+          },
+          {
+            "element": "O",
+            "coordinates": [
+              0.5,
+              0.0,
+              0.25
+            ]
+          },
+          {
+            "element": "O",
+            "coordinates": [
+              0.75,
+              0.25,
+              0.25
+            ]
+          },
+          {
+            "element": "Mg",
+            "coordinates": [
+              0.5,
+              0.0,
+              0.5
+            ]
+          },
+          {
+            "element": "Mg",
+            "coordinates": [
+              0.5,
+              0.25,
+              0.75
+            ]
+          },
+          {
+            "element": "Mg",
+            "coordinates": [
+              0.75,
+              0.0,
+              0.75
+            ]
+          },
+          {
+            "element": "Mg",
+            "coordinates": [
+              0.75,
+              0.25,
+              0.5
+            ]
+          },
+          {
+            "element": "O",
+            "coordinates": [
+              0.75,
+              0.0,
+              0.5
+            ]
+          },
+          {
+            "element": "O",
+            "coordinates": [
+              0.5,
+              0.25,
+              0.5
+            ]
+          },
+          {
+            "element": "O",
+            "coordinates": [
+              0.5,
+              0.0,
+              0.75
+            ]
+          },
+          {
+            "element": "O",
+            "coordinates": [
+              0.75,
+              0.25,
+              0.75
+            ]
+          },
+          {
+            "element": "Mg",
+            "coordinates": [
+              0.5,
+              0.5,
+              0.0
+            ]
+          },
+          {
+            "element": "Mg",
+            "coordinates": [
+              0.5,
+              0.75,
+              0.25
+            ]
+          },
+          {
+            "element": "Mg",
+            "coordinates": [
+              0.75,
+              0.5,
+              0.25
+            ]
+          },
+          {
+            "element": "Mg",
+            "coordinates": [
+              0.75,
+              0.75,
+              0.0
+            ]
+          },
+          {
+            "element": "O",
+            "coordinates": [
+              0.75,
+              0.5,
+              0.0
+            ]
+          },
+          {
+            "element": "O",
+            "coordinates": [
+              0.5,
+              0.75,
+              0.0
+            ]
+          },
+          {
+            "element": "O",
+            "coordinates": [
+              0.5,
+              0.5,
+              0.25
+            ]
+          },
+          {
+            "element": "O",
+            "coordinates": [
+              0.75,
+              0.75,
+              0.25
+            ]
+          },
+          {
+            "element": "Mg",
+            "coordinates": [
+              0.5,
+              0.5,
+              0.5
+            ]
+          },
+          {
+            "element": "Mg",
+            "coordinates": [
+              0.5,
+              0.75,
+              0.75
+            ]
+          },
+          {
+            "element": "Mg",
+            "coordinates": [
+              0.75,
+              0.5,
+              0.75
+            ]
+          },
+          {
+            "element": "Mg",
+            "coordinates": [
+              0.75,
+              0.75,
+              0.5
+            ]
+          },
+          {
+            "element": "O",
+            "coordinates": [
+              0.75,
+              0.5,
+              0.5
+            ]
+          },
+          {
+            "element": "O",
+            "coordinates": [
+              0.5,
+              0.75,
+              0.5
+            ]
+          },
+          {
+            "element": "O",
+            "coordinates": [
+              0.5,
+              0.5,
+              0.75
+            ]
+          },
+          {
+            "element": "O",
+            "coordinates": [
+              0.75,
+              0.75,
+              0.75
+            ]
+          }
+        ],
+        "position_unit": "crystal",
+        "pseudopotentials": {
+          "Mg": "Mg.pbe-n-kjpaw_psl.0.3.0.UPF",
+          "O": "O.pbe-n-kjpaw_psl.0.1.UPF"
+        }
+      },
+      "position": {
+        "x": 80.0,
+        "y": 150.0
+      },
+      "status": "completed",
+      "output": {
+        "kind": "CrystalStructure",
+        "cell": [
+          [
+            8.424,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            8.424,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            8.424
+          ]
+        ],
+        "cell_unit": "angstrom",
+        "positions": [
+          {
+            "element": "Mg",
+            "coordinates": [
+              0.0,
+              0.0,
+              0.0
+            ]
+          },
+          {
+            "element": "Mg",
+            "coordinates": [
+              0.0,
+              0.25,
+              0.25
+            ]
+          },
+          {
+            "element": "Mg",
+            "coordinates": [
+              0.25,
+              0.0,
+              0.25
+            ]
+          },
+          {
+            "element": "Mg",
+            "coordinates": [
+              0.25,
+              0.25,
+              0.0
+            ]
+          },
+          {
+            "element": "O",
+            "coordinates": [
+              0.25,
+              0.0,
+              0.0
+            ]
+          },
+          {
+            "element": "O",
+            "coordinates": [
+              0.0,
+              0.25,
+              0.0
+            ]
+          },
+          {
+            "element": "O",
+            "coordinates": [
+              0.0,
+              0.0,
+              0.25
+            ]
+          },
+          {
+            "element": "O",
+            "coordinates": [
+              0.25,
+              0.25,
+              0.25
+            ]
+          },
+          {
+            "element": "Mg",
+            "coordinates": [
+              0.0,
+              0.0,
+              0.5
+            ]
+          },
+          {
+            "element": "Mg",
+            "coordinates": [
+              0.0,
+              0.25,
+              0.75
+            ]
+          },
+          {
+            "element": "Mg",
+            "coordinates": [
+              0.25,
+              0.0,
+              0.75
+            ]
+          },
+          {
+            "element": "Mg",
+            "coordinates": [
+              0.25,
+              0.25,
+              0.5
+            ]
+          },
+          {
+            "element": "O",
+            "coordinates": [
+              0.25,
+              0.0,
+              0.5
+            ]
+          },
+          {
+            "element": "O",
+            "coordinates": [
+              0.0,
+              0.25,
+              0.5
+            ]
+          },
+          {
+            "element": "O",
+            "coordinates": [
+              0.0,
+              0.0,
+              0.75
+            ]
+          },
+          {
+            "element": "O",
+            "coordinates": [
+              0.25,
+              0.25,
+              0.75
+            ]
+          },
+          {
+            "element": "Mg",
+            "coordinates": [
+              0.0,
+              0.5,
+              0.0
+            ]
+          },
+          {
+            "element": "Mg",
+            "coordinates": [
+              0.0,
+              0.75,
+              0.25
+            ]
+          },
+          {
+            "element": "Mg",
+            "coordinates": [
+              0.25,
+              0.5,
+              0.25
+            ]
+          },
+          {
+            "element": "Mg",
+            "coordinates": [
+              0.25,
+              0.75,
+              0.0
+            ]
+          },
+          {
+            "element": "O",
+            "coordinates": [
+              0.25,
+              0.5,
+              0.0
+            ]
+          },
+          {
+            "element": "O",
+            "coordinates": [
+              0.0,
+              0.75,
+              0.0
+            ]
+          },
+          {
+            "element": "O",
+            "coordinates": [
+              0.0,
+              0.5,
+              0.25
+            ]
+          },
+          {
+            "element": "O",
+            "coordinates": [
+              0.25,
+              0.75,
+              0.25
+            ]
+          },
+          {
+            "element": "Mg",
+            "coordinates": [
+              0.0,
+              0.5,
+              0.5
+            ]
+          },
+          {
+            "element": "Mg",
+            "coordinates": [
+              0.0,
+              0.75,
+              0.75
+            ]
+          },
+          {
+            "element": "Mg",
+            "coordinates": [
+              0.25,
+              0.5,
+              0.75
+            ]
+          },
+          {
+            "element": "Mg",
+            "coordinates": [
+              0.25,
+              0.75,
+              0.5
+            ]
+          },
+          {
+            "element": "O",
+            "coordinates": [
+              0.25,
+              0.5,
+              0.5
+            ]
+          },
+          {
+            "element": "O",
+            "coordinates": [
+              0.0,
+              0.75,
+              0.5
+            ]
+          },
+          {
+            "element": "O",
+            "coordinates": [
+              0.0,
+              0.5,
+              0.75
+            ]
+          },
+          {
+            "element": "O",
+            "coordinates": [
+              0.25,
+              0.75,
+              0.75
+            ]
+          },
+          {
+            "element": "Mg",
+            "coordinates": [
+              0.5,
+              0.0,
+              0.0
+            ]
+          },
+          {
+            "element": "Mg",
+            "coordinates": [
+              0.5,
+              0.25,
+              0.25
+            ]
+          },
+          {
+            "element": "Mg",
+            "coordinates": [
+              0.75,
+              0.0,
+              0.25
+            ]
+          },
+          {
+            "element": "Mg",
+            "coordinates": [
+              0.75,
+              0.25,
+              0.0
+            ]
+          },
+          {
+            "element": "O",
+            "coordinates": [
+              0.75,
+              0.0,
+              0.0
+            ]
+          },
+          {
+            "element": "O",
+            "coordinates": [
+              0.5,
+              0.25,
+              0.0
+            ]
+          },
+          {
+            "element": "O",
+            "coordinates": [
+              0.5,
+              0.0,
+              0.25
+            ]
+          },
+          {
+            "element": "O",
+            "coordinates": [
+              0.75,
+              0.25,
+              0.25
+            ]
+          },
+          {
+            "element": "Mg",
+            "coordinates": [
+              0.5,
+              0.0,
+              0.5
+            ]
+          },
+          {
+            "element": "Mg",
+            "coordinates": [
+              0.5,
+              0.25,
+              0.75
+            ]
+          },
+          {
+            "element": "Mg",
+            "coordinates": [
+              0.75,
+              0.0,
+              0.75
+            ]
+          },
+          {
+            "element": "Mg",
+            "coordinates": [
+              0.75,
+              0.25,
+              0.5
+            ]
+          },
+          {
+            "element": "O",
+            "coordinates": [
+              0.75,
+              0.0,
+              0.5
+            ]
+          },
+          {
+            "element": "O",
+            "coordinates": [
+              0.5,
+              0.25,
+              0.5
+            ]
+          },
+          {
+            "element": "O",
+            "coordinates": [
+              0.5,
+              0.0,
+              0.75
+            ]
+          },
+          {
+            "element": "O",
+            "coordinates": [
+              0.75,
+              0.25,
+              0.75
+            ]
+          },
+          {
+            "element": "Mg",
+            "coordinates": [
+              0.5,
+              0.5,
+              0.0
+            ]
+          },
+          {
+            "element": "Mg",
+            "coordinates": [
+              0.5,
+              0.75,
+              0.25
+            ]
+          },
+          {
+            "element": "Mg",
+            "coordinates": [
+              0.75,
+              0.5,
+              0.25
+            ]
+          },
+          {
+            "element": "Mg",
+            "coordinates": [
+              0.75,
+              0.75,
+              0.0
+            ]
+          },
+          {
+            "element": "O",
+            "coordinates": [
+              0.75,
+              0.5,
+              0.0
+            ]
+          },
+          {
+            "element": "O",
+            "coordinates": [
+              0.5,
+              0.75,
+              0.0
+            ]
+          },
+          {
+            "element": "O",
+            "coordinates": [
+              0.5,
+              0.5,
+              0.25
+            ]
+          },
+          {
+            "element": "O",
+            "coordinates": [
+              0.75,
+              0.75,
+              0.25
+            ]
+          },
+          {
+            "element": "Mg",
+            "coordinates": [
+              0.5,
+              0.5,
+              0.5
+            ]
+          },
+          {
+            "element": "Mg",
+            "coordinates": [
+              0.5,
+              0.75,
+              0.75
+            ]
+          },
+          {
+            "element": "Mg",
+            "coordinates": [
+              0.75,
+              0.5,
+              0.75
+            ]
+          },
+          {
+            "element": "Mg",
+            "coordinates": [
+              0.75,
+              0.75,
+              0.5
+            ]
+          },
+          {
+            "element": "O",
+            "coordinates": [
+              0.75,
+              0.5,
+              0.5
+            ]
+          },
+          {
+            "element": "O",
+            "coordinates": [
+              0.5,
+              0.75,
+              0.5
+            ]
+          },
+          {
+            "element": "O",
+            "coordinates": [
+              0.5,
+              0.5,
+              0.75
+            ]
+          },
+          {
+            "element": "O",
+            "coordinates": [
+              0.75,
+              0.75,
+              0.75
+            ]
+          }
+        ],
+        "position_unit": "crystal",
+        "pseudopotentials": {
+          "Mg": "Mg.pbe-n-kjpaw_psl.0.3.0.UPF",
+          "O": "O.pbe-n-kjpaw_psl.0.1.UPF"
+        },
+        "composition": {
+          "Mg": 32,
+          "O": 32
+        }
+      },
+      "preview": {
+        "kind": "json_tree",
+        "port": "structure",
+        "data": {
+          "kind": "CrystalStructure",
+          "cell": [
+            [
+              8.424,
+              0.0,
+              0.0
+            ],
+            [
+              0.0,
+              8.424,
+              0.0
+            ],
+            [
+              0.0,
+              0.0,
+              8.424
+            ]
+          ],
+          "cell_unit": "angstrom",
+          "positions": [
+            {
+              "element": "Mg",
+              "coordinates": [
+                0.0,
+                0.0,
+                0.0
+              ]
+            },
+            {
+              "element": "Mg",
+              "coordinates": [
+                0.0,
+                0.25,
+                0.25
+              ]
+            },
+            {
+              "element": "Mg",
+              "coordinates": [
+                0.25,
+                0.0,
+                0.25
+              ]
+            },
+            {
+              "element": "Mg",
+              "coordinates": [
+                0.25,
+                0.25,
+                0.0
+              ]
+            },
+            {
+              "element": "O",
+              "coordinates": [
+                0.25,
+                0.0,
+                0.0
+              ]
+            },
+            {
+              "element": "O",
+              "coordinates": [
+                0.0,
+                0.25,
+                0.0
+              ]
+            },
+            {
+              "element": "O",
+              "coordinates": [
+                0.0,
+                0.0,
+                0.25
+              ]
+            },
+            {
+              "element": "O",
+              "coordinates": [
+                0.25,
+                0.25,
+                0.25
+              ]
+            },
+            {
+              "element": "Mg",
+              "coordinates": [
+                0.0,
+                0.0,
+                0.5
+              ]
+            },
+            {
+              "element": "Mg",
+              "coordinates": [
+                0.0,
+                0.25,
+                0.75
+              ]
+            },
+            {
+              "element": "Mg",
+              "coordinates": [
+                0.25,
+                0.0,
+                0.75
+              ]
+            },
+            {
+              "element": "Mg",
+              "coordinates": [
+                0.25,
+                0.25,
+                0.5
+              ]
+            },
+            {
+              "element": "O",
+              "coordinates": [
+                0.25,
+                0.0,
+                0.5
+              ]
+            },
+            {
+              "element": "O",
+              "coordinates": [
+                0.0,
+                0.25,
+                0.5
+              ]
+            },
+            {
+              "element": "O",
+              "coordinates": [
+                0.0,
+                0.0,
+                0.75
+              ]
+            },
+            {
+              "element": "O",
+              "coordinates": [
+                0.25,
+                0.25,
+                0.75
+              ]
+            },
+            {
+              "element": "Mg",
+              "coordinates": [
+                0.0,
+                0.5,
+                0.0
+              ]
+            },
+            {
+              "element": "Mg",
+              "coordinates": [
+                0.0,
+                0.75,
+                0.25
+              ]
+            },
+            {
+              "element": "Mg",
+              "coordinates": [
+                0.25,
+                0.5,
+                0.25
+              ]
+            },
+            {
+              "element": "Mg",
+              "coordinates": [
+                0.25,
+                0.75,
+                0.0
+              ]
+            },
+            {
+              "element": "O",
+              "coordinates": [
+                0.25,
+                0.5,
+                0.0
+              ]
+            },
+            {
+              "element": "O",
+              "coordinates": [
+                0.0,
+                0.75,
+                0.0
+              ]
+            },
+            {
+              "element": "O",
+              "coordinates": [
+                0.0,
+                0.5,
+                0.25
+              ]
+            },
+            {
+              "element": "O",
+              "coordinates": [
+                0.25,
+                0.75,
+                0.25
+              ]
+            },
+            {
+              "element": "Mg",
+              "coordinates": [
+                0.0,
+                0.5,
+                0.5
+              ]
+            },
+            {
+              "element": "Mg",
+              "coordinates": [
+                0.0,
+                0.75,
+                0.75
+              ]
+            },
+            {
+              "element": "Mg",
+              "coordinates": [
+                0.25,
+                0.5,
+                0.75
+              ]
+            },
+            {
+              "element": "Mg",
+              "coordinates": [
+                0.25,
+                0.75,
+                0.5
+              ]
+            },
+            {
+              "element": "O",
+              "coordinates": [
+                0.25,
+                0.5,
+                0.5
+              ]
+            },
+            {
+              "element": "O",
+              "coordinates": [
+                0.0,
+                0.75,
+                0.5
+              ]
+            },
+            {
+              "element": "O",
+              "coordinates": [
+                0.0,
+                0.5,
+                0.75
+              ]
+            },
+            {
+              "element": "O",
+              "coordinates": [
+                0.25,
+                0.75,
+                0.75
+              ]
+            },
+            {
+              "element": "Mg",
+              "coordinates": [
+                0.5,
+                0.0,
+                0.0
+              ]
+            },
+            {
+              "element": "Mg",
+              "coordinates": [
+                0.5,
+                0.25,
+                0.25
+              ]
+            },
+            {
+              "element": "Mg",
+              "coordinates": [
+                0.75,
+                0.0,
+                0.25
+              ]
+            },
+            {
+              "element": "Mg",
+              "coordinates": [
+                0.75,
+                0.25,
+                0.0
+              ]
+            },
+            {
+              "element": "O",
+              "coordinates": [
+                0.75,
+                0.0,
+                0.0
+              ]
+            },
+            {
+              "element": "O",
+              "coordinates": [
+                0.5,
+                0.25,
+                0.0
+              ]
+            },
+            {
+              "element": "O",
+              "coordinates": [
+                0.5,
+                0.0,
+                0.25
+              ]
+            },
+            {
+              "element": "O",
+              "coordinates": [
+                0.75,
+                0.25,
+                0.25
+              ]
+            },
+            "… 24 more items"
+          ],
+          "position_unit": "crystal",
+          "pseudopotentials": {
+            "Mg": "Mg.pbe-n-kjpaw_psl.0.3.0.UPF",
+            "O": "O.pbe-n-kjpaw_psl.0.1.UPF"
+          },
+          "composition": {
+            "Mg": 32,
+            "O": 32
+          }
+        }
+      },
+      "review_policy": {
+        "after_run": false,
+        "prompt": "Review this result before continuing."
+      },
+      "review_state": {
+        "status": "off",
+        "comment": null
+      }
+    },
+    {
+      "id": "qe-demo-input",
+      "type": "qe_pw_input",
+      "tool_id": "qe_pw_input",
+      "tool_version": "1.0.0",
+      "label": "Generate QE SCF input",
+      "params": {
+        "calculation": "scf",
+        "ecutwfc_ry": 50.0,
+        "ecutrho_ry": 400.0,
+        "k_points": [
+          3,
+          3,
+          3,
+          0,
+          0,
+          0
+        ],
+        "conv_thr": 1e-8,
+        "prefix": "matflow_mgo_demo",
+        "pseudo_dir": "./pseudo",
+        "outdir": "./tmp",
+        "occupations": "smearing",
+        "smearing": "mv",
+        "degauss_ry": 0.01,
+        "nspin": 2,
+        "mixing_beta": 0.3
+      },
+      "position": {
+        "x": 360.0,
+        "y": 90.0
+      },
+      "status": "completed",
+      "output": {
+        "kind": "QEInput",
+        "input_text": "&CONTROL\n  calculation = 'scf'\n  prefix = 'matflow_mgo_demo'\n  pseudo_dir = './pseudo'\n  outdir = './tmp'\n  tprnfor = .true.\n  tstress = .true.\n/\n&SYSTEM\n  ibrav = 0\n  nat = 64\n  ntyp = 2\n  ecutwfc = 50\n  ecutrho = 400\n  occupations = 'smearing'\n  nspin = 2\n  input_dft = 'PBE'\n  smearing = 'mv'\n  degauss = 0.01\n/\n&ELECTRONS\n  conv_thr = 1e-08\n  mixing_beta = 0.3\n/\nCELL_PARAMETERS angstrom\n  8.424 0 0\n  0 8.424 0\n  0 0 8.424\nATOMIC_SPECIES\n  Mg  24.305 Mg.pbe-n-kjpaw_psl.0.3.0.UPF\n  O   15.999 O.pbe-n-kjpaw_psl.0.1.UPF\nATOMIC_POSITIONS crystal\nMg  0 0 0\nMg  0 0.25 0.25\nMg  0.25 0 0.25\nMg  0.25 0.25 0\nO   0.25 0 0\nO   0 0.25 0\nO   0 0 0.25\nO   0.25 0.25 0.25\nMg  0 0 0.5\nMg  0 0.25 0.75\nMg  0.25 0 0.75\nMg  0.25 0.25 0.5\nO   0.25 0 0.5\nO   0 0.25 0.5\nO   0 0 0.75\nO   0.25 0.25 0.75\nMg  0 0.5 0\nMg  0 0.75 0.25\nMg  0.25 0.5 0.25\nMg  0.25 0.75 0\nO   0.25 0.5 0\nO   0 0.75 0\nO   0 0.5 0.25\nO   0.25 0.75 0.25\nMg  0 0.5 0.5\nMg  0 0.75 0.75\nMg  0.25 0.5 0.75\nMg  0.25 0.75 0.5\nO   0.25 0.5 0.5\nO   0 0.75 0.5\nO   0 0.5 0.75\nO   0.25 0.75 0.75\nMg  0.5 0 0\nMg  0.5 0.25 0.25\nMg  0.75 0 0.25\nMg  0.75 0.25 0\nO   0.75 0 0\nO   0.5 0.25 0\nO   0.5 0 0.25\nO   0.75 0.25 0.25\nMg  0.5 0 0.5\nMg  0.5 0.25 0.75\nMg  0.75 0 0.75\nMg  0.75 0.25 0.5\nO   0.75 0 0.5\nO   0.5 0.25 0.5\nO   0.5 0 0.75\nO   0.75 0.25 0.75\nMg  0.5 0.5 0\nMg  0.5 0.75 0.25\nMg  0.75 0.5 0.25\nMg  0.75 0.75 0\nO   0.75 0.5 0\nO   0.5 0.75 0\nO   0.5 0.5 0.25\nO   0.75 0.75 0.25\nMg  0.5 0.5 0.5\nMg  0.5 0.75 0.75\nMg  0.75 0.5 0.75\nMg  0.75 0.75 0.5\nO   0.75 0.5 0.5\nO   0.5 0.75 0.5\nO   0.5 0.5 0.75\nO   0.75 0.75 0.75\nK_POINTS automatic\n  3 3 3 0 0 0\n",
+        "prefix": "matflow_mgo_demo",
+        "atom_count": 64,
+        "composition": {
+          "Mg": 32,
+          "O": 32
+        },
+        "parameters": {
+          "calculation": "scf",
+          "ecutwfc_ry": 50.0,
+          "ecutrho_ry": 400.0,
+          "k_points": [
+            3,
+            3,
+            3,
+            0,
+            0,
+            0
+          ],
+          "conv_thr": 1e-8,
+          "prefix": "matflow_mgo_demo",
+          "pseudo_dir": "./pseudo",
+          "outdir": "./tmp",
+          "occupations": "smearing",
+          "smearing": "mv",
+          "degauss_ry": 0.01,
+          "nspin": 2,
+          "mixing_beta": 0.3
+        }
+      },
+      "preview": {
+        "kind": "json_tree",
+        "port": "input",
+        "data": {
+          "kind": "QEInput",
+          "input_text": "&CONTROL\n  calculation = 'scf'\n  prefix = 'matflow_mgo_demo'\n  pseudo_dir = './pseudo'\n  outdir = './tmp'\n  tprnfor = .true.\n  tstress = .true.\n/\n&SYSTEM\n  ibrav = 0\n  nat = 64\n  ntyp = 2\n  ecutwfc = 50\n  ecutrho = 400\n  occupations = 'smearing'\n  nspin = 2\n  input_dft = 'PBE'\n  smearing = 'mv'\n  degauss = 0.01\n/\n&ELECTRONS\n  conv_thr = 1e-08\n  mixing_beta = 0.3\n/\nCELL_PARAMETERS angstrom\n  8.424 0 0\n  0 8.424 0\n  0 0 8.424\nATOMIC_SPECIES\n  Mg  24.305 Mg.pbe-n-kjpaw_psl.0.3.0.UPF\n  O   15.999 O.pbe-n-kjpaw_psl.0.1.UPF\nATOMIC_POSITIONS crystal\nMg  0 0 0\nMg  0 0.25 0.25\nMg  0.25 0 0.25\nMg  0.25 0.25 0\nO   0.25 0 0\nO   0 0.25 0\nO   0 0 0.25\nO   0.25 0.25 0.25\nMg  0 0 0.5\nMg  0 0.25 0.75\nMg  0.25 0 0.75\nMg  0.25 0.25 0.5\nO   0.25 0 0.5\nO   0 0.25 0.5\nO   0 0 0.75\nO   0.25 0.25 0.75\nMg  0 0.5 0\nMg  0 0.75 0.25\nMg  0.25 0.5 0.25\nMg  0.25 0.75 0\nO   0.25 0.5 0\nO   0 0.75 0\nO   0 0.5 0.25\nO   0.25 0.75 0.25\nMg  0 0.5 0.5\nMg  0 0.75 0.75\nMg  0.25 0.5 0.75\nMg  0.25 0.75 0.5\nO   0.25 0.5 0.5\nO   0 0.75 0.5\nO   0 0.5 0.75\nO   0.25 0.75 0.75\nMg  0.5 0 0\nMg  0.5 0.25 0.25\nMg  0.75 0 0.25\nMg  0.75 0.25 0\nO   0.75 0 0\nO   0.5 0.25 0\nO   0.5 0 0.25\nO   0.75 0.25 0.25\nMg  0.5 0 0.5\nMg  0.5 0.25 0.75\nMg  0.75 0 0.75\nMg  0.75 0.25 0.5\nO   0.75 0 0.5\nO   0.5 0.25 0.5\nO   0.5 0 0.75\nO   0.75 0.25 0.75\nMg  0.5 0.5 0\nMg  0.5 0.75 0.25\nMg  0.75 0.5 0.25\nMg  0.75 0.75 0\nO   0.75 0.5 0\nO   0.5 0.75 0\nO   0.5 0.5 0.25\nO   0.75 0.75 0.25\nMg  0.5 0.5 0.5\nMg  0.5 0.75 0.75\nMg  0.75 0.5 0.75\nMg  0.75 0.75 0.5\nO   0.75 0.5 0.5\nO   0.5 0.75 0.5\nO   0.5 0.5 0.75\nO   0.75 0.75 0.75\nK_POINTS automatic\n  3 3 3 0 0 0\n",
+          "prefix": "matflow_mgo_demo",
+          "atom_count": 64,
+          "composition": {
+            "Mg": 32,
+            "O": 32
+          },
+          "parameters": {
+            "calculation": "scf",
+            "ecutwfc_ry": 50.0,
+            "ecutrho_ry": 400.0,
+            "k_points": [
+              3,
+              3,
+              3,
+              0,
+              0,
+              0
+            ],
+            "conv_thr": 1e-8,
+            "prefix": "matflow_mgo_demo",
+            "pseudo_dir": "./pseudo",
+            "outdir": "./tmp",
+            "occupations": "smearing",
+            "smearing": "mv",
+            "degauss_ry": 0.01,
+            "nspin": 2,
+            "mixing_beta": 0.3
+          }
+        }
+      },
+      "review_policy": {
+        "after_run": false,
+        "prompt": "Review this result before continuing."
+      },
+      "review_state": {
+        "status": "off",
+        "comment": null
+      }
+    },
+    {
+      "id": "qe-demo-output",
+      "type": "qe_replay_stdout",
+      "tool_id": "qe_replay_stdout",
+      "tool_version": "1.0.0",
+      "label": "Archived output replay",
+      "params": {
+        "fixture_id": "mgo-scf-reference"
+      },
+      "position": {
+        "x": 360.0,
+        "y": 270.0
+      },
+      "status": "completed",
+      "output": {
+        "kind": "QEStdout",
+        "text": "!    total energy              =   -2417.17683284 Ry\nthe Fermi energy is     9.7133 ev\nconvergence has been achieved in  14 iterations\nJOB DONE",
+        "source": "archived_qe_output",
+        "source_path": "qe72_wave1_manual/results/kcheck/scf333.log"
+      },
+      "preview": {
+        "kind": "json_tree",
+        "port": "stdout",
+        "data": {
+          "kind": "QEStdout",
+          "text": "!    total energy              =   -2417.17683284 Ry\nthe Fermi energy is     9.7133 ev\nconvergence has been achieved in  14 iterations\nJOB DONE",
+          "source": "archived_qe_output",
+          "source_path": "qe72_wave1_manual/results/kcheck/scf333.log"
+        }
+      },
+      "review_policy": {
+        "after_run": false,
+        "prompt": "Review this result before continuing."
+      },
+      "review_state": {
+        "status": "off",
+        "comment": null
+      }
+    },
+    {
+      "id": "qe-demo-result",
+      "type": "qe_parse_output",
+      "tool_id": "qe_parse_output",
+      "tool_version": "1.0.0",
+      "label": "Parse QE result",
+      "params": {},
+      "position": {
+        "x": 650.0,
+        "y": 180.0
+      },
+      "status": "completed",
+      "output": {
+        "kind": "QEResult",
+        "convergence": "converged",
+        "iterations": 14,
+        "energy": {
+          "value": -2417.17683284,
+          "unit": "Ry"
+        },
+        "fermi_energy": {
+          "value": 9.7133,
+          "unit": "eV"
+        },
+        "source": "archived_qe_output",
+        "source_path": "qe72_wave1_manual/results/kcheck/scf333.log",
+        "provenance": "historical_output_replay"
+      },
+      "preview": {
+        "kind": "json_tree",
+        "port": "result",
+        "data": {
+          "kind": "QEResult",
+          "convergence": "converged",
+          "iterations": 14,
+          "energy": {
+            "value": -2417.17683284,
+            "unit": "Ry"
+          },
+          "fermi_energy": {
+            "value": 9.7133,
+            "unit": "eV"
+          },
+          "source": "archived_qe_output",
+          "source_path": "qe72_wave1_manual/results/kcheck/scf333.log",
+          "provenance": "historical_output_replay"
+        }
+      },
+      "review_policy": {
+        "after_run": false,
+        "prompt": "Review this result before continuing."
+      },
+      "review_state": {
+        "status": "off",
+        "comment": null
+      }
+    }
+  ],
+  "edges": [
+    {
+      "id": "qe-demo-e1",
+      "source": "qe-demo-structure",
+      "source_port": "structure",
+      "target": "qe-demo-input",
+      "target_port": "structure"
+    },
+    {
+      "id": "qe-demo-e2",
+      "source": "qe-demo-input",
+      "source_port": "input",
+      "target": "qe-demo-result",
+      "target_port": "input"
+    },
+    {
+      "id": "qe-demo-e3",
+      "source": "qe-demo-output",
+      "source_port": "stdout",
+      "target": "qe-demo-result",
+      "target_port": "stdout"
+    }
+  ],
+  "history": [
+    {
+      "version": 1,
+      "patch": {
+        "patch_id": "593b1743-15e3-4695-b21f-e35e35f95abe",
+        "base_version": 0,
+        "operations": [
+          {
+            "op": "add_node",
+            "node": {
+              "id": "qe-demo-structure",
+              "type": "qe_structure",
+              "tool_id": "qe_structure",
+              "tool_version": "1.0.0",
+              "label": "MgO structure",
+              "params": {
+                "cell": [
+                  [
+                    8.424,
+                    0.0,
+                    0.0
+                  ],
+                  [
+                    0.0,
+                    8.424,
+                    0.0
+                  ],
+                  [
+                    0.0,
+                    0.0,
+                    8.424
+                  ]
+                ],
+                "cell_unit": "angstrom",
+                "positions": [
+                  {
+                    "element": "Mg",
+                    "coordinates": [
+                      0.0,
+                      0.0,
+                      0.0
+                    ]
+                  },
+                  {
+                    "element": "Mg",
+                    "coordinates": [
+                      0.0,
+                      0.25,
+                      0.25
+                    ]
+                  },
+                  {
+                    "element": "Mg",
+                    "coordinates": [
+                      0.25,
+                      0.0,
+                      0.25
+                    ]
+                  },
+                  {
+                    "element": "Mg",
+                    "coordinates": [
+                      0.25,
+                      0.25,
+                      0.0
+                    ]
+                  },
+                  {
+                    "element": "O",
+                    "coordinates": [
+                      0.25,
+                      0.0,
+                      0.0
+                    ]
+                  },
+                  {
+                    "element": "O",
+                    "coordinates": [
+                      0.0,
+                      0.25,
+                      0.0
+                    ]
+                  },
+                  {
+                    "element": "O",
+                    "coordinates": [
+                      0.0,
+                      0.0,
+                      0.25
+                    ]
+                  },
+                  {
+                    "element": "O",
+                    "coordinates": [
+                      0.25,
+                      0.25,
+                      0.25
+                    ]
+                  },
+                  {
+                    "element": "Mg",
+                    "coordinates": [
+                      0.0,
+                      0.0,
+                      0.5
+                    ]
+                  },
+                  {
+                    "element": "Mg",
+                    "coordinates": [
+                      0.0,
+                      0.25,
+                      0.75
+                    ]
+                  },
+                  {
+                    "element": "Mg",
+                    "coordinates": [
+                      0.25,
+                      0.0,
+                      0.75
+                    ]
+                  },
+                  {
+                    "element": "Mg",
+                    "coordinates": [
+                      0.25,
+                      0.25,
+                      0.5
+                    ]
+                  },
+                  {
+                    "element": "O",
+                    "coordinates": [
+                      0.25,
+                      0.0,
+                      0.5
+                    ]
+                  },
+                  {
+                    "element": "O",
+                    "coordinates": [
+                      0.0,
+                      0.25,
+                      0.5
+                    ]
+                  },
+                  {
+                    "element": "O",
+                    "coordinates": [
+                      0.0,
+                      0.0,
+                      0.75
+                    ]
+                  },
+                  {
+                    "element": "O",
+                    "coordinates": [
+                      0.25,
+                      0.25,
+                      0.75
+                    ]
+                  },
+                  {
+                    "element": "Mg",
+                    "coordinates": [
+                      0.0,
+                      0.5,
+                      0.0
+                    ]
+                  },
+                  {
+                    "element": "Mg",
+                    "coordinates": [
+                      0.0,
+                      0.75,
+                      0.25
+                    ]
+                  },
+                  {
+                    "element": "Mg",
+                    "coordinates": [
+                      0.25,
+                      0.5,
+                      0.25
+                    ]
+                  },
+                  {
+                    "element": "Mg",
+                    "coordinates": [
+                      0.25,
+                      0.75,
+                      0.0
+                    ]
+                  },
+                  {
+                    "element": "O",
+                    "coordinates": [
+                      0.25,
+                      0.5,
+                      0.0
+                    ]
+                  },
+                  {
+                    "element": "O",
+                    "coordinates": [
+                      0.0,
+                      0.75,
+                      0.0
+                    ]
+                  },
+                  {
+                    "element": "O",
+                    "coordinates": [
+                      0.0,
+                      0.5,
+                      0.25
+                    ]
+                  },
+                  {
+                    "element": "O",
+                    "coordinates": [
+                      0.25,
+                      0.75,
+                      0.25
+                    ]
+                  },
+                  {
+                    "element": "Mg",
+                    "coordinates": [
+                      0.0,
+                      0.5,
+                      0.5
+                    ]
+                  },
+                  {
+                    "element": "Mg",
+                    "coordinates": [
+                      0.0,
+                      0.75,
+                      0.75
+                    ]
+                  },
+                  {
+                    "element": "Mg",
+                    "coordinates": [
+                      0.25,
+                      0.5,
+                      0.75
+                    ]
+                  },
+                  {
+                    "element": "Mg",
+                    "coordinates": [
+                      0.25,
+                      0.75,
+                      0.5
+                    ]
+                  },
+                  {
+                    "element": "O",
+                    "coordinates": [
+                      0.25,
+                      0.5,
+                      0.5
+                    ]
+                  },
+                  {
+                    "element": "O",
+                    "coordinates": [
+                      0.0,
+                      0.75,
+                      0.5
+                    ]
+                  },
+                  {
+                    "element": "O",
+                    "coordinates": [
+                      0.0,
+                      0.5,
+                      0.75
+                    ]
+                  },
+                  {
+                    "element": "O",
+                    "coordinates": [
+                      0.25,
+                      0.75,
+                      0.75
+                    ]
+                  },
+                  {
+                    "element": "Mg",
+                    "coordinates": [
+                      0.5,
+                      0.0,
+                      0.0
+                    ]
+                  },
+                  {
+                    "element": "Mg",
+                    "coordinates": [
+                      0.5,
+                      0.25,
+                      0.25
+                    ]
+                  },
+                  {
+                    "element": "Mg",
+                    "coordinates": [
+                      0.75,
+                      0.0,
+                      0.25
+                    ]
+                  },
+                  {
+                    "element": "Mg",
+                    "coordinates": [
+                      0.75,
+                      0.25,
+                      0.0
+                    ]
+                  },
+                  {
+                    "element": "O",
+                    "coordinates": [
+                      0.75,
+                      0.0,
+                      0.0
+                    ]
+                  },
+                  {
+                    "element": "O",
+                    "coordinates": [
+                      0.5,
+                      0.25,
+                      0.0
+                    ]
+                  },
+                  {
+                    "element": "O",
+                    "coordinates": [
+                      0.5,
+                      0.0,
+                      0.25
+                    ]
+                  },
+                  {
+                    "element": "O",
+                    "coordinates": [
+                      0.75,
+                      0.25,
+                      0.25
+                    ]
+                  },
+                  {
+                    "element": "Mg",
+                    "coordinates": [
+                      0.5,
+                      0.0,
+                      0.5
+                    ]
+                  },
+                  {
+                    "element": "Mg",
+                    "coordinates": [
+                      0.5,
+                      0.25,
+                      0.75
+                    ]
+                  },
+                  {
+                    "element": "Mg",
+                    "coordinates": [
+                      0.75,
+                      0.0,
+                      0.75
+                    ]
+                  },
+                  {
+                    "element": "Mg",
+                    "coordinates": [
+                      0.75,
+                      0.25,
+                      0.5
+                    ]
+                  },
+                  {
+                    "element": "O",
+                    "coordinates": [
+                      0.75,
+                      0.0,
+                      0.5
+                    ]
+                  },
+                  {
+                    "element": "O",
+                    "coordinates": [
+                      0.5,
+                      0.25,
+                      0.5
+                    ]
+                  },
+                  {
+                    "element": "O",
+                    "coordinates": [
+                      0.5,
+                      0.0,
+                      0.75
+                    ]
+                  },
+                  {
+                    "element": "O",
+                    "coordinates": [
+                      0.75,
+                      0.25,
+                      0.75
+                    ]
+                  },
+                  {
+                    "element": "Mg",
+                    "coordinates": [
+                      0.5,
+                      0.5,
+                      0.0
+                    ]
+                  },
+                  {
+                    "element": "Mg",
+                    "coordinates": [
+                      0.5,
+                      0.75,
+                      0.25
+                    ]
+                  },
+                  {
+                    "element": "Mg",
+                    "coordinates": [
+                      0.75,
+                      0.5,
+                      0.25
+                    ]
+                  },
+                  {
+                    "element": "Mg",
+                    "coordinates": [
+                      0.75,
+                      0.75,
+                      0.0
+                    ]
+                  },
+                  {
+                    "element": "O",
+                    "coordinates": [
+                      0.75,
+                      0.5,
+                      0.0
+                    ]
+                  },
+                  {
+                    "element": "O",
+                    "coordinates": [
+                      0.5,
+                      0.75,
+                      0.0
+                    ]
+                  },
+                  {
+                    "element": "O",
+                    "coordinates": [
+                      0.5,
+                      0.5,
+                      0.25
+                    ]
+                  },
+                  {
+                    "element": "O",
+                    "coordinates": [
+                      0.75,
+                      0.75,
+                      0.25
+                    ]
+                  },
+                  {
+                    "element": "Mg",
+                    "coordinates": [
+                      0.5,
+                      0.5,
+                      0.5
+                    ]
+                  },
+                  {
+                    "element": "Mg",
+                    "coordinates": [
+                      0.5,
+                      0.75,
+                      0.75
+                    ]
+                  },
+                  {
+                    "element": "Mg",
+                    "coordinates": [
+                      0.75,
+                      0.5,
+                      0.75
+                    ]
+                  },
+                  {
+                    "element": "Mg",
+                    "coordinates": [
+                      0.75,
+                      0.75,
+                      0.5
+                    ]
+                  },
+                  {
+                    "element": "O",
+                    "coordinates": [
+                      0.75,
+                      0.5,
+                      0.5
+                    ]
+                  },
+                  {
+                    "element": "O",
+                    "coordinates": [
+                      0.5,
+                      0.75,
+                      0.5
+                    ]
+                  },
+                  {
+                    "element": "O",
+                    "coordinates": [
+                      0.5,
+                      0.5,
+                      0.75
+                    ]
+                  },
+                  {
+                    "element": "O",
+                    "coordinates": [
+                      0.75,
+                      0.75,
+                      0.75
+                    ]
+                  }
+                ],
+                "position_unit": "crystal",
+                "pseudopotentials": {
+                  "Mg": "Mg.pbe-n-kjpaw_psl.0.3.0.UPF",
+                  "O": "O.pbe-n-kjpaw_psl.0.1.UPF"
+                }
+              },
+              "position": {
+                "x": 80.0,
+                "y": 150.0
+              },
+              "status": "ready",
+              "output": null,
+              "preview": null,
+              "review_policy": {
+                "after_run": false,
+                "prompt": "Review this result before continuing."
+              },
+              "review_state": {
+                "status": "off",
+                "comment": null
+              }
+            },
+            "node_id": null,
+            "params": null,
+            "changes": null,
+            "edge": null,
+            "edge_id": null,
+            "replacement_node": null,
+            "reconnect_edges": null,
+            "proposal_id": null
+          },
+          {
+            "op": "add_node",
+            "node": {
+              "id": "qe-demo-input",
+              "type": "qe_pw_input",
+              "tool_id": "qe_pw_input",
+              "tool_version": "1.0.0",
+              "label": "Generate QE SCF input",
+              "params": {
+                "calculation": "scf",
+                "ecutwfc_ry": 50.0,
+                "ecutrho_ry": 400.0,
+                "k_points": [
+                  3,
+                  3,
+                  3,
+                  0,
+                  0,
+                  0
+                ],
+                "conv_thr": 1e-8,
+                "prefix": "matflow_mgo_demo",
+                "pseudo_dir": "./pseudo",
+                "outdir": "./tmp",
+                "occupations": "smearing",
+                "smearing": "mv",
+                "degauss_ry": 0.01,
+                "nspin": 2,
+                "mixing_beta": 0.3
+              },
+              "position": {
+                "x": 360.0,
+                "y": 90.0
+              },
+              "status": "ready",
+              "output": null,
+              "preview": null,
+              "review_policy": {
+                "after_run": false,
+                "prompt": "Review this result before continuing."
+              },
+              "review_state": {
+                "status": "off",
+                "comment": null
+              }
+            },
+            "node_id": null,
+            "params": null,
+            "changes": null,
+            "edge": null,
+            "edge_id": null,
+            "replacement_node": null,
+            "reconnect_edges": null,
+            "proposal_id": null
+          },
+          {
+            "op": "add_node",
+            "node": {
+              "id": "qe-demo-output",
+              "type": "qe_replay_stdout",
+              "tool_id": "qe_replay_stdout",
+              "tool_version": "1.0.0",
+              "label": "Archived output replay",
+              "params": {
+                "fixture_id": "mgo-scf-reference"
+              },
+              "position": {
+                "x": 360.0,
+                "y": 270.0
+              },
+              "status": "ready",
+              "output": null,
+              "preview": null,
+              "review_policy": {
+                "after_run": false,
+                "prompt": "Review this result before continuing."
+              },
+              "review_state": {
+                "status": "off",
+                "comment": null
+              }
+            },
+            "node_id": null,
+            "params": null,
+            "changes": null,
+            "edge": null,
+            "edge_id": null,
+            "replacement_node": null,
+            "reconnect_edges": null,
+            "proposal_id": null
+          },
+          {
+            "op": "add_node",
+            "node": {
+              "id": "qe-demo-result",
+              "type": "qe_parse_output",
+              "tool_id": "qe_parse_output",
+              "tool_version": "1.0.0",
+              "label": "Parse QE result",
+              "params": {},
+              "position": {
+                "x": 650.0,
+                "y": 180.0
+              },
+              "status": "ready",
+              "output": null,
+              "preview": null,
+              "review_policy": {
+                "after_run": false,
+                "prompt": "Review this result before continuing."
+              },
+              "review_state": {
+                "status": "off",
+                "comment": null
+              }
+            },
+            "node_id": null,
+            "params": null,
+            "changes": null,
+            "edge": null,
+            "edge_id": null,
+            "replacement_node": null,
+            "reconnect_edges": null,
+            "proposal_id": null
+          },
+          {
+            "op": "connect",
+            "node": null,
+            "node_id": null,
+            "params": null,
+            "changes": null,
+            "edge": {
+              "id": "qe-demo-e1",
+              "source": "qe-demo-structure",
+              "source_port": "structure",
+              "target": "qe-demo-input",
+              "target_port": "structure"
+            },
+            "edge_id": null,
+            "replacement_node": null,
+            "reconnect_edges": null,
+            "proposal_id": null
+          },
+          {
+            "op": "connect",
+            "node": null,
+            "node_id": null,
+            "params": null,
+            "changes": null,
+            "edge": {
+              "id": "qe-demo-e2",
+              "source": "qe-demo-input",
+              "source_port": "input",
+              "target": "qe-demo-result",
+              "target_port": "input"
+            },
+            "edge_id": null,
+            "replacement_node": null,
+            "reconnect_edges": null,
+            "proposal_id": null
+          },
+          {
+            "op": "connect",
+            "node": null,
+            "node_id": null,
+            "params": null,
+            "changes": null,
+            "edge": {
+              "id": "qe-demo-e3",
+              "source": "qe-demo-output",
+              "source_port": "stdout",
+              "target": "qe-demo-result",
+              "target_port": "stdout"
+            },
+            "edge_id": null,
+            "replacement_node": null,
+            "reconnect_edges": null,
+            "proposal_id": null
+          }
+        ],
+        "rationale": "Local QE replay workflow generated from research request: For pristine MgO SCF, generate QE input and report convergence and total energy.",
+        "requires_human_confirmation": false
+      },
+      "before": {
+        "graph_id": "local-default",
+        "version": 0,
+        "revision": 0,
+        "updated_at": null,
+        "nodes": [],
+        "edges": [],
+        "history": []
+      }
+    }
+  ]
+}

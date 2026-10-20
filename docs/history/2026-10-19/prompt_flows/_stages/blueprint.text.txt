@@ -1,0 +1,165 @@
+MatFlow backend runtime flow (blueprint)
+────────────────────────────────────────────────────────────────────────
+source     : flowview phase blueprint
+graph      : none in this document
+phases     : 7
+issues     : 0 error(s), 0 warning(s)
+meta       : mode=blueprint, phases=7, steps=28, modes=blueprint
+
+Phases (7)
+  [1] Request and trace correlation (request)  [pending]
+      1. request accepted  [pending]
+          detail     : Blueprint (described, not observed): backend/main.py: chat() -> audit('chat.received')
+                       then TaskState(user_message, graph_version=workspace.read_state().version,
+                       available_input_types)
+      2. trace id assigned  [pending]
+          detail     : Blueprint (described, not observed): backend/main.py: trace_request() HTTP middleware
+                       reads X-Trace-ID or generates uuid4().hex, calls backend/observability.py:
+                       set_trace_id() and echoes X-Trace-ID; current_trace_id() stamps every later audit
+                       record and task summary
+      3. input inspected  [pending]
+          detail     : Blueprint (described, not observed): backend/main.py: run_agent_tool('inspect_upload')
+                       -> backend/workspace_runtime.py: WorkspaceRuntime.inspect_dataset(upload_id) (read-only
+                       column/preview probe)
+      4. graph snapshot read  [pending]
+          detail     : Blueprint (described, not observed): backend/main.py: run_agent_tool('get_graph') ->
+                       WorkspaceRuntime.read_state() -> data/graph_state.json (GraphState.model_dump())
+  [2] Routing (candidate retrieval + decision) (route)  [pending]
+      1. candidates retrieved  [pending]
+          detail     : Blueprint (described, not observed): backend/workspace_runtime.py: route_task() ->
+                       backend/routing.py: CandidateRetriever.retrieve(task, registry) filters
+                       registry.active() specs by available input types and lexical match, sorted by (-score,
+                       tool_id)
+      2. decision produced  [pending]
+          detail     : Blueprint (described, not observed): backend/routing.py: DecisionRouter.decide(task,
+                       registry) -> optional backend/jev_routing.py: JevDecisionRouter.decide() model
+                       opinions; returns RouterDecision(candidates, selected, confidence, rationale,
+                       requires_human_confirmation)
+      3. routing persisted  [pending]
+          detail     : Blueprint (described, not observed): backend/workspace_runtime.py: route_task() ->
+                       backend/task_summary.py: TaskSummaryService.record_routing() appends one JSONL line,
+                       then audit('router.decided')
+      4. route endpoint  [pending]
+          detail     : Blueprint (described, not observed): backend/main.py: POST /api/route ->
+                       workspace.route_task(request.task) yields the RouterDecision plus its recorded summary;
+                       no graph patch and no execution
+  [3] Human-confirmation gate (confirm)  [pending]
+      1. confirmation evaluated  [pending]
+          detail     : Blueprint (described, not observed): backend/routing.py: DecisionRouter.decide() sets
+                       requires_human_confirmation when no candidate matched, the winning score < 0.6, or
+                       spec.risk_level != 'low'
+      2. conversation pauses  [pending]
+          detail     : Blueprint (described, not observed): backend/main.py: chat() returns
+                       status='waiting_for_confirmation' with an empty trace and no graph patch when the
+                       initial lexical route needs confirmation
+      3. human confirms  [pending]
+          detail     : Blueprint (described, not observed): the client accepts the proposal and posts the
+                       patch; GraphPatch.requires_human_confirmation is honoured before /api/patch is called
+  [4] Graph patch (validate -> apply) (patch)  [pending]
+      1. patch validated  [pending]
+          detail     : Blueprint (described, not observed): backend/main.py: POST /api/patch/validate ->
+                       backend/workspace_runtime.py: validate_graph_patch() -> backend/validator.py:
+                       GraphValidator.validate() returns {valid, current_version, next_version, patch_id}
+      2. patch applied  [pending]
+          detail     : Blueprint (described, not observed): backend/main.py: POST /api/patch ->
+                       WorkspaceRuntime.apply_graph_patch() under an RLock: audit('patch.received'),
+                       GraphValidator().validate(), operations applied, state.version += 1, history appended,
+                       write_state(), audit('patch.applied')
+      3. agent patch seam  [pending]
+          detail     : Blueprint (described, not observed): backend/main.py:
+                       run_agent_tool('apply_graph_patch') validates GraphPatch from the tool arguments;
+                       run_agent_tool('add_skill_node') applies an add_node patch
+      4. version conflict path (409)  [pending]
+          detail     : Blueprint (described, not observed): backend/main.py:
+                       post_patch()/validate_graph_patch() catch ValueError beginning with 'Version conflict:'
+                       and raise HTTPException 409 {'code': 'graph_version_conflict', 'current_version': ...};
+                       other validation errors become 422 {'code': 'invalid_graph_patch'}
+  [5] Execution (DAG scheduling, executor seam, preview) (execute)  [pending]
+      1. workflow scheduled  [pending]
+          detail     : Blueprint (described, not observed): backend/main.py: POST /api/workflow/execute ->
+                       WorkspaceRuntime.execute_workflow(restart=False): loops over nodes whose upstream edges
+                       are 'completed' (DAG scheduling), stops on a 'waiting' or 'cancelled' node;
+                       restart=True first resets every node to 'ready'
+      2. node executed  [pending]
+          detail     : Blueprint (described, not observed): backend/workspace_runtime.py:
+                       execute_node(node_id) -> _run_node(): node.status='running', audit('executor.started'),
+                       registry().get(tool_id) spec, executor resolved from ExecutorRegistry
+                       (backend/executors.py seam -> backend/builtin_executors.py),
+                       executor(NodeExecution(...))
+      3. preview built  [pending]
+          detail     : Blueprint (described, not observed): backend/workspace_runtime.py: _run_node() ->
+                       backend/preview.py: build_preview(node.output, spec) per spec.preview_spec;
+                       node.status='completed' unless the executor returned ExecutionOutcome(stop=True) ->
+                       'cancelled'
+      4. single node endpoint  [pending]
+          detail     : Blueprint (described, not observed): backend/main.py: POST /api/execute ->
+                       WorkspaceRuntime.execute_node(node_id, task_id); the agent tool 'run_workflow' instead
+                       calls execute_workflow()
+      5. execution recorded  [pending]
+          detail     : Blueprint (described, not observed): backend/workspace_runtime.py: execute_node() ->
+                       TaskSummaryService.record_execution() with ExecutionResult(node_id, tool_id,
+                       tool_version, status, output, output_schema_valid, trace_id);
+                       audit('executor.completed')
+      6. executor failure path  [pending]
+          detail     : Blueprint (described, not observed): backend/workspace_runtime.py: execute_node()
+                       except ValueError -> node.status='error', node.output={'error': str(exc)},
+                       write_state(), audit('executor.failed'), ExecutionResult(status='failed', error=
+                       ExecutionError(code='execution_failed', retryable=True)); the endpoint returns 422
+  [6] Review gate (review_policy.after_run -> waiting) (review)  [pending]
+      1. review policy evaluated  [pending]
+          detail     : Blueprint (described, not observed): backend/workspace_runtime.py: _run_node() -> if
+                       node.review_policy.after_run and not stopped: node.status='waiting',
+                       node.review_state=ReviewState(status='pending'); execute_workflow() returns early so
+                       downstream nodes stay untouched
+      2. human decision submitted  [pending]
+          detail     : Blueprint (described, not observed): backend/main.py: POST /api/workflow/decision ->
+                       WorkspaceRuntime.submit_node_review(node_id, decision, comment); decision in {continue,
+                       revise, stop}; 'continue' approves and re-runs execute_workflow(), 'stop' sets
+                       node.status='cancelled'; an invalid state raises ValueError -> HTTP 422
+      3. legacy decision alias  [pending]
+          detail     : Blueprint (described, not observed): backend/main.py: POST /api/workflow/human-decision
+                       -> submit_human_decision() maps approve/continue to 'continue' and anything else to
+                       'stop'
+  [7] Persistence and audit (persist)  [pending]
+      1. summary appended  [pending]
+          detail     : Blueprint (described, not observed): backend/task_summary.py:
+                       TaskSummaryService._append() writes one JSON line with recorded_at to
+                       config/observability.json task_summaries.jsonl_path (data/audit/task_summaries.jsonl);
+                       a disabled config writes nothing
+      2. audit events emitted  [pending]
+          detail     : Blueprint (described, not observed): backend/observability.py: audit() emits JSON lines
+                       carrying trace_id for chat.received, tool.called, router.decided, patch.received,
+                       patch.applied, executor.started, executor.completed, executor.failed,
+                       node_review.submitted
+      3. summary endpoint  [pending]
+          detail     : Blueprint (described, not observed): backend/main.py: GET /api/task-summaries/{task_id}
+                       -> WorkspaceRuntime.task_summary() -> TaskSummaryService.get() returns the LAST
+                       matching record, or HTTP 404 when the task has never been recorded
+      4. failed outcome recorded  [pending]
+          detail     : Blueprint (described, not observed): backend/task_summary.py: record_execution() with
+                       execution.status == 'failed' sets status='failed' and error_and_handling={'error':
+                       {'code': 'execution_failed', 'message': ..., 'retryable': true}, 'handling': 'Execution
+                       stopped safely. ...'}
+
+Status legend
+  ready      : declared, never run
+  running    : execution in progress
+  completed  : finished successfully
+  waiting    : paused for a human decision
+  error      : stopped with an error
+  cancelled  : stopped by a gate or reviewer
+  unknown    : source did not say (never treated as success)
+  step-only statuses:
+    pending    : not started yet
+    skipped    : skipped by a gate or policy
+
+Issues (1)
+┌──────────┬───────────────────────┬──────────────────────────────────────────────────┬────────────────────┐
+│ Severity │ Code                  │ Message                                          │ Where              │
+├──────────┼───────────────────────┼──────────────────────────────────────────────────┼────────────────────┤
+│ info     │ blueprint.description │ Every step below is a written-down description   │ flowview/phases.py │
+│          │                       │ of the backend flow, not a recorded run:         │                    │
+│          │                       │ expected steps stay 'pending' until a recording  │                    │
+│          │                       │ is replayed.                                     │                    │
+└──────────┴───────────────────────┴──────────────────────────────────────────────────┴────────────────────┘
+note: dropped column(s) to fit width 110: Hint

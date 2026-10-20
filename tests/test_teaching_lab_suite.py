@@ -9,7 +9,7 @@ class TeachingLabSuiteAcceptanceTests(unittest.TestCase):
     def test_teaching_lab_suite_acceptance_command_passes(self):
         root = Path(__file__).parents[1]
         completed = subprocess.run(
-            [sys.executable, "examples/verify_teaching_lab_suite.py", "--check"],
+            [sys.executable, "tests/tools/verify_teaching_lab_suite.py", "--check"],
             cwd=root,
             capture_output=True,
             text=True,

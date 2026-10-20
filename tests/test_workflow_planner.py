@@ -23,7 +23,7 @@ from tests.reference_composition import workspace as reference_workspace
 ROOT = Path(__file__).parents[1]
 EIS = ROOT / "examples" / "data" / "01_eis_basic_qc" / "eis_spectrum.csv"
 XRD = ROOT / "examples" / "data" / "02_xrd_anatase_identification" / "xrd_anatase.csv"
-FTIR = ROOT / "examples" / "data" / "06_ftir_functional_group_assignment" / "ftir_spectrum.csv"
+FTIR = ROOT / "tests" / "fixtures" / "teaching_lab" / "06_ftir_functional_group_assignment" / "ftir_spectrum.csv"
 
 DISABLED_JEV = {"version": 1, "router": {"enabled": False}, "profiles": {}}
 

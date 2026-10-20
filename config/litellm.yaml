@@ -1,5 +1,7 @@
-# Local OpenAI-compatible gateway for MatFlow.
-# The upstream credential is intentionally resolved from the environment.
+# Local OpenAI-compatible gateway for MatFlow, started by start_llm.bat.
+# Host, port and the caller-key variable live in config/llm.json; this file
+# only declares the upstream models. Every credential is an environment
+# reference, never a value.
 model_list:
   - model_name: deepseek-chat
     litellm_params:
@@ -16,21 +18,19 @@ model_list:
       model: openai/minimax
       api_key: os.environ/SJTU_ZHIYUAN_API_KEY
       api_base: https://models.sjtu.edu.cn/api/v1
-  - model_name: glm
-    litellm_params:
-      model: openai/glm
-      api_key: os.environ/SJTU_ZHIYUAN_API_KEY
-      api_base: https://models.sjtu.edu.cn/api/v1
   - model_name: qwen
     litellm_params:
       model: openai/qwen
       api_key: os.environ/SJTU_ZHIYUAN_API_KEY
       api_base: https://models.sjtu.edu.cn/api/v1
+  # glm is declared upstream but the current SJTU team key is refused with
+  # HTTP 403 ("team can only access models=['public-models']"), so it is not
+  # served. Re-add it here and in config/llm.json once access is granted.
 
 general_settings:
   # Authentication for callers of this local gateway only.  This is not an
   # upstream provider credential; provider credentials remain environment-only.
-  master_key: os.environ/MATFLOW_LITELLM_API_KEY
+  master_key: os.environ/LITELLM_DEFAULT_API_KEY
 
 litellm_settings:
   drop_params: true

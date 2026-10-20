@@ -1,0 +1,20 @@
+{
+  "schema_version": 1,
+  "case_id": "A1-qe-mgo",
+  "network_access_required": false,
+  "sources": [
+    {
+      "role": "qe_input",
+      "path": "backend/domain_packages/qe_demo_fixtures/qe_mgo_scf.in",
+      "sha256": "96f22e7eec3b8870e21d78b10a8c6e4b3c1d787c702f95a5a9e0b53338cce57e",
+      "note": "Packaged pristine-MgO SCF input fixture; read locally by build_demo_patch."
+    },
+    {
+      "role": "qe_stdout",
+      "path": "backend/domain_packages/qe_demo_fixtures/qe_mgo_scf.log",
+      "sha256": "14b530103ab636608f56975349813749ec804acbfef5b860f67038444974c591",
+      "declared_source_path": "qe72_wave1_manual/results/kcheck/scf333.log",
+      "note": "Packaged historical stdout fixture. The declared source path is provenance metadata and is not accessed by the demo."
+    }
+  ]
+}

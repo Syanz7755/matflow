@@ -1,0 +1,20 @@
+flowchart TD
+    %% FlowView: runtime phase map, one node per observable step.
+    %% title: MatFlow backend runtime flow (blueprint) — phase 2: Routing (candidate retrieval + decision)
+    %% source: flowview phase blueprint
+    %% phases: 1; steps: 4
+    subgraph pg_route["Routing #40;candidate retrieval + decision#41; #40;route#41; #91;pending#93;"]
+        n_route_0_candidates_retrieved["candidates retrieved - Blueprint #40;described, not observed#41;: backend/wor…<br/>pending"]:::flowview_pending
+        n_route_1_decision_produced["decision produced - Blueprint #40;described, not observed#41;: backend/routin…<br/>pending"]:::flowview_pending
+        n_route_2_routing_persisted["routing persisted - Blueprint #40;described, not observed#41;: backend/worksp…<br/>pending"]:::flowview_pending
+        n_route_3_route_endpoint["route endpoint - Blueprint #40;described, not observed#41;: backend/main.py: …<br/>pending"]:::flowview_pending
+    end
+    classDef flowview_ready fill:#e8f1fb,stroke:#3b6ea5,color:#102a43;
+    classDef flowview_running fill:#fff4d6,stroke:#a5761b,color:#3d2c00;
+    classDef flowview_completed fill:#e3f6e8,stroke:#2f7d43,color:#0f3319;
+    classDef flowview_waiting fill:#fdf1dc,stroke:#a5761b,color:#3d2c00;
+    classDef flowview_error fill:#fbe3e3,stroke:#a32020,color:#4a0f0f;
+    classDef flowview_cancelled fill:#f0e8f8,stroke:#6b4b9a,color:#2a1040;
+    classDef flowview_unknown fill:#eceff3,stroke:#8792a2,color:#2b3038;
+    classDef flowview_pending fill:#f3f4f6,stroke:#8792a2,color:#2b3038;
+    classDef flowview_skipped fill:#f0e8f8,stroke:#6b4b9a,color:#2a1040;

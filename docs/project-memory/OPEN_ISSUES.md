@@ -1,6 +1,13 @@
 # MatFlow Open Issues
 
-**Updated:** 2026-10-02, after the P0 Domain Package boundary pass.
+## Portfolio update — 2026-10-19
+
+- Local MIT licensing is now present; MF-010's earlier statement that the backend lacks a LICENSE is superseded. Cross-repository publication remains pending.
+- The [routing diagnostic](../evaluation/README.md) records three repeats on one synthetic request; it does not close MF-006 or MF-020. Jev on/off comparison is still open.
+- The [explicit offline replay](../../examples/cases/A1-qe-mgo/README.md) provides a key-free demonstration. Full EBrick EIS integration, frontend acceptance and DSH comparison remain open.
+- The dated tables below are retained as historical maintenance context. Current feature status is in [Project status](../PROJECT_STATUS.md).
+
+**Updated:** 2026-10-07, after removing keyword routing and adding the prompt -> workflow planner.
 
 ## Closed in the P0 boundary pass
 
@@ -14,12 +21,13 @@
 | MF-013 | Recipe results in Core used XRD-specific result keys | `backend/analysis_recipes.py` now emits `best_match`, `match_scores`, and `matched_count` from `match_reference_values`; the evaluator uses generic criteria names |
 | MF-014 | XRD and FTIR shared one package despite independent method boundaries | `backend/domain_packages/xrd.py` and `ftir.py` own separate recipe domains and recipes; package validation enforces ownership |
 | MF-017 | QE replay fixture was published as a selectable scientific capability | The fixture moved to `qe_demo`, requires `qe`, and is excluded from Router candidates by `ToolSpec.agent_selectable=False` |
+| MF-016 | `backend/main.py` kept a second settings read/write path | `main.py` reads and writes settings only through `workspace.read_settings()` / `write_settings()`; the prompt normalizer resolves the open save through `backend/saves.py`; one save is one folder under `data/saves/` |
 
 ## Live issues
 
 | ID | Priority | Issue | Current Evidence | Closure Criteria |
 | --- | --- | --- | --- | --- |
-| MF-006 | P1 | Retrieval and multi-branch planning are unreliable for complex Chinese requests | The original Chinese text often yields no candidates; whole-prompt translation improves only English lexical recall | Preserve the original text; derive a separate multilingual retrieval query; fixed Chinese cases consistently generate the expected topology |
+| MF-006 | P1 | Multi-branch planning from long and Chinese requests is not yet reliable enough to run unattended | Keyword retrieval was removed (2026-10-07): `POST /api/plan` decomposes with the LLM, routes each action by Jev or the LLM over type-compatible candidates, connects typed edges and keeps only parameters the request states. The live suite `tests/test_prompt_to_workflow_online.py` passed 16/16 long prompts in its last run on 2026-10-07 (the previous run passed 15/16, failing on MF-019); results vary between runs (MF-020) | Repeated live runs pass every case of `tests/suites/prompt_to_workflow.json`, and every `planned` workflow executes on its fixture |
 | MF-007 | P1 | Prompt normalizer is not yet integrated into the formal Task chain | A standalone script and five tests exist, but the runtime does not consume it generally | A Task stores the original text, derived structure, and fidelity diff together; failures automatically fall back to the original |
 | MF-008 | P1 | Tool publication and arbitrary-code isolation are incomplete | The declarative Recipe lifecycle works; general code execution is incomplete. Domain Packages are validated structurally, not signed, so `core_contract` is a version gate rather than a trust boundary | Review, publication, withdrawal, sandboxing, resource limits, and audit all have contract tests |
 | MF-009 | P1 | The current state model supports only a single local-file workspace | There is no multi-project database, tenancy, or permission isolation | Establish explicit requirements and an ADR before adding a Project/Run Store; do not rewrite prematurely while the Core boundary is unstable |
@@ -27,8 +35,9 @@
 | MF-011 | P2 | Jev-like fine-tuning lacks a real training-data loop | A configurable decision model and logs exist, but there is no stable labeled dataset | Accumulate and version `(state, candidates, model choice, final choice)`; train only after a baseline outperforms the current rules |
 | MF-012 | P2 | Security for public-network, multi-user, and remote execution is undefined | The current system is loopback-only and single-user | After the product truly requires these capabilities, separately design identity, permissions, secrets, quotas, and a remote-execution threat model |
 | MF-015 | P1 | The backend test suite is not hermetic | An independent review could not isolate some new tests in a copied tree because `tests/test_contracts.py` exercises the live `backend.main` workspace and reads state relative to the working directory; several suites also rely on the repository's `data/` path | Every test module builds its own workspace under a temporary root (or an explicit `MATFLOW_DATA_ROOT`), so a copied tree behaves identically |
-| MF-016 | P1 | `backend/main.py` keeps a second settings read/write path | `main.py`'s `load_settings`/`save_settings` read `ROOT/data/settings.json` while the runtime reads `MATFLOW_DATA_ROOT`; the node-library, runtime-skill and agent-settings routes therefore edit a different file than the runtime when that variable is set | One settings owner: the HTTP layer calls the runtime's settings API, and the legacy helpers are deleted |
 | MF-018 | P2 | The repo-local FlowView tool is committed but not covered by CI, and one documented gap remains | Committed on 2026-10-06 together with `examples/long_prompt_cases.json`; no `.github/` workflow exists and its 252-test suite is run by hand; `doctor --format mermaid` prints the text report | The 252-test suite runs in CI, and `doctor --format mermaid` emits a real diagram (or the format is explicitly unsupported by that subcommand) |
+| MF-019 | P1 | EIS spectra cannot pass through generic control nodes | `EISData` has no `Artifact` parent, while `conditional_gate`, `join` and `aggregate` carry `Artifact`; a plan such as 'QC, gate on the report, then plot' therefore leaves the plot without a type-compatible tool (seen in the 2026-10-07 live run of `long_eis_01_full_context`) | Decide whether `EISData` inherits `Artifact` (as every other domain type does) or the gate becomes type-preserving, and a gated EIS plot plans and runs |
+| MF-020 | P2 | Live planning is slow and varies between runs | A long prompt takes 5-10 LLM calls and 80-300 s with four cases in parallel on the SJTU gateway (deepseek-chat); the same prompt can end as `planned`, `needs_confirmation` or `clarify` on different runs; Jev (port 4079) was not running, so every route came from the LLM | Repeat-run statistics per case are recorded, and latency is measured with Jev enabled |
 
 ## Unresolved Decisions
 

@@ -159,7 +159,16 @@ class Edge(BaseModel):
 
 class GraphState(BaseModel):
     graph_id: str = "local-default"
+    #: Structural version. Advances only when a GraphPatch is applied, which is
+    #: exactly what clients send back as ``base_version``.
     version: int = Field(default=0, ge=0)
+    #: Monotonic revision of the persisted workspace. Advances on *every* write,
+    #: including execution, review and migration, so a client can tell that node
+    #: outputs or review states changed even though the graph did not. Usable as
+    #: an ETag/If-Match precondition and as a stale-read detector.
+    revision: int = Field(default=0, ge=0)
+    #: ISO-8601 UTC timestamp of the last persisted write.
+    updated_at: str | None = None
     nodes: list[Node] = Field(default_factory=list)
     edges: list[Edge] = Field(default_factory=list)
     history: list[dict[str, Any]] = Field(default_factory=list)

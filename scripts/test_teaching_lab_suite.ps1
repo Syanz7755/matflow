@@ -9,8 +9,8 @@ $ErrorActionPreference = 'Stop'
 $projectRoot = (Resolve-Path (Join-Path $PSScriptRoot '..')).Path
 Push-Location $projectRoot
 try {
-    uv run python examples\generate_teaching_lab_suite.py
-    uv run python examples\verify_teaching_lab_suite.py --check
+    uv run python tests\tools\generate_teaching_lab_suite.py
+    uv run python tests\tools\verify_teaching_lab_suite.py --check
 } finally {
     Pop-Location
 }

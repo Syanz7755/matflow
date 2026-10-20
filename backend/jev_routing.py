@@ -5,7 +5,7 @@ from collections.abc import Callable
 import json
 import os
 from pathlib import Path
-from typing import Any
+from typing import Any, Literal
 from urllib import error as urlerror
 from urllib import request as urlrequest
 
@@ -33,7 +33,17 @@ class JevRouterSettings(BaseModel):
     profiles: list[str] = Field(default_factory=list)
     timeout_seconds: int = Field(default=45, ge=1, le=180)
     minimum_calibrated_confidence: float = Field(default=0.7, ge=0, le=1)
-    fallback_to_lexical: bool = True
+    # What happens when the Jev gateway cannot be reached: "llm" hands the
+    # decision to the configured LLM, "none" asks a human. There is no keyword
+    # fallback; a lexical score never selects a tool.
+    fallback: Literal["llm", "none"] = "llm"
+
+    @model_validator(mode="before")
+    @classmethod
+    def reject_lexical_fallback(cls, data: Any) -> Any:
+        if isinstance(data, dict) and "fallback_to_lexical" in data:
+            raise ValueError("fallback_to_lexical is no longer supported: keyword routing is disabled; use fallback 'llm' or 'none'")
+        return data
 
 
 class JevConfig(BaseModel):
@@ -56,6 +66,10 @@ class JevConfig(BaseModel):
             if not any(self.profiles[name].kind == desired_kind for name in names):
                 raise ValueError(f"Strategy {self.router.strategy} requires a {desired_kind} profile")
         return self
+
+
+class JevUnavailableError(RuntimeError):
+    """The Jev gateway could not produce an opinion (transport or protocol failure)."""
 
 
 class ModelSelection(BaseModel):
@@ -92,6 +106,10 @@ class JevDecisionRouter:
     def enabled(self) -> bool:
         return self._config.router.enabled
 
+    @property
+    def fallback(self) -> str:
+        return self._config.router.fallback
+
     def decide(self, task: TaskState, candidates: list[RouterCandidate], registry: ToolRegistry) -> tuple[RouterCandidate | None, float, bool, list[ModelSelection], str]:
         if not self.enabled or len(candidates) < 2:
             return None, 0.0, False, [], "Jev decision routing was not needed."
@@ -102,9 +120,7 @@ class JevDecisionRouter:
                 selections.append(self._select(profile_name, profile, task, candidates, registry))
         except (OSError, ValueError, urlerror.URLError, json.JSONDecodeError) as exc:
             audit("jev_router.failed", error=str(exc), profiles=self._profiles_to_use())
-            if self._config.router.fallback_to_lexical:
-                return None, 0.0, True, selections, f"Jev routing unavailable; lexical fallback requires confirmation: {exc}"
-            raise ValueError(f"Jev routing failed without fallback: {exc}") from exc
+            raise JevUnavailableError(f"Jev routing unavailable: {exc}") from exc
 
         candidate_ids = {candidate.tool_id for candidate in candidates}
         chosen_ids = [selection.selected_tool_id for selection in selections]

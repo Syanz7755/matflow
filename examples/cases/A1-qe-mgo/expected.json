@@ -1,0 +1,25 @@
+{
+  "schema_version": 1,
+  "demo_id": "qe-mgo",
+  "case_selection_mode": "explicit_pinned_case",
+  "execution_mode": "historical_output_replay",
+  "offline": true,
+  "llm_planning": false,
+  "keyword_routing": false,
+  "hpc_submitted": false,
+  "workflow": {
+    "node_count": 4,
+    "edge_count": 3,
+    "all_nodes_completed": true
+  },
+  "result": {
+    "atom_count": 64,
+    "convergence": "converged",
+    "iterations": 14,
+    "energy": {
+      "value": -2417.17683284,
+      "unit": "Ry"
+    },
+    "provenance": "historical_output_replay"
+  }
+}

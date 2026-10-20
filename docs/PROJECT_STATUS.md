@@ -1,117 +1,142 @@
-# 项目阶段完成度评估
+# Project status — 2026-10-19
 
-**评估日期：** 2026-10-01  
-**评估对象：** 当前工作区中的 MatFlow 后端 1.1 开发状态  
-**计分说明：** 下表是面向产品里程碑的工程判断，不是代码覆盖率；“完成”要求能力存在、接口稳定并有自动化证据。
+The backend is a usable local workflow prototype; interview preparation is in progress.
+The current portfolio evidence is the [offline QE replay](../examples/cases/A1-qe-mgo/README.md),
+[routing diagnostic](evaluation/README.md) and [interview preparation guide](INTERVIEW_PREPARATION.zhcn.md).
+All changes in this round remain uncommitted and unpushed.
 
-## 一页结论
+| Area | Current evidence | Remaining boundary |
+|---|---|---|
+| Platform contracts | Typed GraphPatch validation, DAG execution, generic join/aggregate and review/gate tests | Single-user local files; no multi-tenant or public-network security |
+| Domain extension | DomainPackage manifests, loaders, type composition and executor registration | Structural validation is not a trust boundary; limited tool coverage |
+| Model planning | Type-filtered candidates, Jev/LLM selection, no keyword fallback; repeated online smoke on one synthetic request | One request does not establish general accuracy; Jev service was unavailable; expanded on/off evaluation remains open |
+| Offline presentation | Explicit `matflow demo qe-mgo --output <new-directory>`, frozen values, input hashes, recorded run and refusal to overwrite | Pinned historical replay, not LLM planning or a new QE/HPC calculation |
+| Reproducibility | Pytest declared in the locked dev environment; test-only suites/fixtures separated; historical reports archived | Frontend e2e, screenshots and the full EBrick case remain open |
+| Publication | MIT LICENSE is present locally | No commit, frontend repository creation or push performed in this round |
 
-MatFlow 已达到“后端平台基座可用”的阶段性里程碑，可以继续在此基础上开发领域工作流。当前并未达到“用户给出任意材料学提示词，系统即可自动研究方法、生成工具、构造复杂 DAG 并可靠产出科学结论”的产品目标。
+Use the dated [portfolio milestone record](PORTFOLIO_READINESS.md) for verification
+details and remaining work.
+The percentages and test counts below are a preserved **2026-10-01 historical assessment**,
+not the current acceptance result. In particular, its claims that generic controls or
+Domain Package manifests are missing have been superseded by the implementation above.
 
-方向性完成度为：
+---
 
-- 后端平台基座：约 **80%**，阶段性通过；
-- 通用材料学智能工作流产品：约 **55%**，仍处于 Alpha；
-- 当前参考领域能力覆盖：约 **35%**，只表示现有 EIS/XRD/FTIR Demo 的覆盖情况；
-- EBrick 温变阻抗谱参考案例：约 **25%**，尚未闭环，不计入 Platform Core 完成度。
+# Historical stage-completeness assessment (2026-10-01)
 
-这里必须区分三个层级：Platform Core 提供领域无关的工作流机制；Domain Package 提供某一实验方法的类型、Tool 与执行器；Reference Case 使用一个或多个领域包完成具体研究任务。当前代码仍存在部分领域能力进入核心层的问题，相关百分比不能混为一个产品完成度。
+**Assessment date:** 2026-10-01
+**Assessment target:** the MatFlow backend 1.1 development state in the current workspace
+**Scoring note:** the table below is an engineering judgment aimed at product milestones, not code coverage; "complete" requires the capability to exist, the interface to be stable and automated evidence to be present.
 
-## 简表
+## One-page conclusion
 
-| 领域 | 完成度 | 判断 | 已有证据 | 主要缺口 |
+MatFlow has reached the stage milestone "backend platform base is usable" and can keep building domain workflows on top of it. It has not reached the product goal "given any materials-science prompt, the system automatically researches the method, generates Tools, builds a complex DAG and reliably produces scientific conclusions".
+
+The directional completeness is:
+
+- Backend platform base: about **80%**, passing for this stage;
+- General materials-science intelligent-workflow product: about **55%**, still Alpha;
+- Current reference-domain capability coverage: about **35%**, which only describes the coverage of the existing EIS/XRD/FTIR demos;
+- EBrick temperature-dependent impedance-spectroscopy reference case: about **25%**, not yet closed, and not counted toward Platform Core completeness.
+
+Three layers must be kept apart here: Platform Core provides domain-neutral workflow mechanisms; a Domain Package provides the data types, Tools and executors of one measurement method; a Reference Case uses one or more domain packages to complete a concrete research task. The current code still has some domain capability leaking into the core layer, and the percentages must not be merged into a single product-completeness figure.
+
+## Summary table
+
+| Area | Completeness | Judgment | Existing evidence | Main gap |
 | --- | ---: | --- | --- | --- |
-| 权威状态与 HTTP 契约 | 90% | 可用 | 版本化状态、能力发现、原子写入、冲突返回 | 单工作区、文件持久化，尚无多用户隔离 |
-| 类型系统与 GraphPatch 校验 | 90% | 可用 | 名义类型、继承、端口兼容、环路与重复输入检查 | 缺少领域级复合类型和条件分支类型 |
-| DAG 执行与人工审核 | 75% | 基本可用 | 依赖满足后调度、暂停/继续/停止、节点预览 | 无数据驱动的条件门控；缺少通用 join/aggregate Tool |
-| 路由与模型接入 | 65% | 部分可用 | 透明候选检索、Jev 多模型决策、LiteLLM、审计记录 | 中文词法召回弱；在线真实模型未纳入默认回归 |
-| 工具生成与演化 | 55% | 生命周期已起步 | 草稿 Recipe、隐藏夹具评估、有限修复、节点修订提案 | Recipe 仅覆盖有限操作；缺少完整审核/发布接口和通用隔离执行器 |
-| Domain Package 机制 | 45% | 原型级 | 可注册自定义类型和 Tool，具备声明式 Recipe 雏形 | 缺少独立包清单、加载边界和执行器注册机制 |
-| 当前参考领域能力覆盖 | 35% | 示例级 | EIS 基础质检/Nyquist、XRD 峰提取/参考匹配、FTIR 峰提取/波段标注 | 只覆盖有限输入与规则；不能据此推断通用科学分析能力 |
-| Prompt normalize | 45% | 独立工具可用 | 原文保留、同语言检查、严格 JSON、5 项测试 | 尚未进入正式聊天/规划链；缺少数字、单位、否定与路径的完整差异门禁 |
-| FlowView 流程打印 CLI | — | 已交付（随仓只读工具，不计入产品完成度） | 252 项测试通过（3 项跳过）；独立对抗式验证无遗留 P0/P1，验证者第三轮结论为"可交付"（离线打印面、提示词面各一轮；`--http` 实时面三轮，发现的 7 个 P1 与全部 P2 均已修复并加回归测试） | `doctor --format mermaid` 仍打印文本报告；未接入 CI；尚未提交到版本库 |
-| 测试与可审计性 | 85% | 良好 | `tests/` 133 项、含随仓工具共 385 项离线测试通过，trace、任务摘要、情景套件 | 7 项按设计跳过（4 项在线模型授权、3 项符号链接依赖）；缺少 CI；平台、领域包和案例测试尚未完全分层 |
-| 文档 | 85% | 本阶段可用 | 用户、运维、接口、测试、设计与架构文档 | 需随领域能力和前后端契约继续同步 |
+| Authoritative state and HTTP contract | 90% | Usable | Versioned state, capability discovery, atomic writes, conflict responses | Single workspace, file persistence, no multi-user isolation yet |
+| Type system and GraphPatch validation | 90% | Usable | Nominal types, inheritance, port compatibility, cycle and duplicate-input checks | No domain-level composite types or conditional branch types |
+| DAG execution and human review | 75% | Basically usable | Scheduling once dependencies are met, pause/resume/stop, node preview | No data-driven conditional gating; no generic join/aggregate Tool |
+| Routing and model integration | 70% | Partly usable | Type-filtered candidates with Jev decisions and LLM fallback (no keyword routing), `POST /api/plan` prompt -> workflow planner, one gateway config (`config/llm.json`), audit records | Live models are opt-in, not part of the default regression; planning is slow and varies between runs (MF-006, MF-020) |
+| Tool generation and evolution | 55% | Lifecycle has started | Draft Recipes, hidden-fixture evaluation, bounded repair, node revision proposals | Recipes cover only limited operations; no complete review/publication interface and no generic isolated executor |
+| Domain Package mechanism | 45% | Prototype level | Custom types and Tools can be registered, declarative Recipe rudiments exist | No standalone package manifest, load boundaries or executor registration mechanism |
+| Current reference-domain capability coverage | 35% | Example level | EIS basic quality checks/Nyquist, XRD peak extraction/reference matching, FTIR peak extraction/band assignment | Covers only limited inputs and rules; general scientific analysis capability must not be inferred from it |
+| Prompt normalize | 45% | Standalone tool usable | Original text preserved, same-language check, strict JSON, 5 tests | Not yet in the real chat/planning chain; no complete drift gate for numbers, units, negation and paths |
+| FlowView flow-printing CLI | — | Delivered (in-repo read-only tool, not counted toward product completeness) | 252 tests pass (3 skipped); independent adversarial verification left no P0/P1 open, and the verifier's third round concluded "deliverable" (one round each for the offline printing surface and the prompt surface; three rounds for the `--http` live surface, whose 7 P1 findings and all P2 findings were fixed with regression tests) | `doctor --format mermaid` still prints a text report; not wired into CI; not yet committed to version control |
+| Testing and auditability | 85% | Good | 174 tests in `tests/`, 426 offline tests including the in-repo tool pass; trace, task summaries, scenario suite | 7 tests skipped by design (4 online-model authorizations, 3 symlink dependencies); no CI; platform, domain-package and case tests are not fully layered |
+| Documentation | 85% | Usable for this stage | User, operations, interface, testing, design and architecture documentation | Must keep in sync with domain capability and the cross-repository contract |
 
-## 验证记录
+## Verification record
 
-在不连接在线模型服务的条件下运行测试套件（`tests/`）：
+Running the test suite (`tests/`) without connecting to an online model service:
 
 ```text
-Ran 133 tests in 2.9s
+Ran 174 tests in 3.6s
 OK (skipped=4)
 ```
 
-整个仓库（含随仓工具 FlowView 的测试）用 `python -m unittest discover` 一次跑完：
+The whole repository (including the in-repo FlowView tool's tests) in one `python -m unittest discover` pass:
 
 ```text
-Ran 385 tests in 86s
+Ran 426 tests in 90s
 OK (skipped=7)
 ```
 
-跳过项中 4 项是需要显式授权的 Jev/LLM 在线测试，3 项是 FlowView 里依赖符号链接的用例（受限沙箱或未启用开发者模式的 Windows 上会跳过）。测试在受限沙箱中还会因 Windows 临时目录权限产生假错误；在正常权限环境重跑后全部消失，不是代码回归。
+The in-repo FlowView suite alone is `Ran 252 tests in 85s`, `OK (skipped=3)`; `tests/` plus `flowview/tests/` account for the total. These counts were re-measured after the documentation language migration.
 
-现有测试覆盖：
+Of the skips, 4 are Jev/LLM online tests that require explicit authorization, and 3 are FlowView cases that depend on symlinks (they are skipped in a restricted sandbox or on Windows without developer mode). In a restricted sandbox the tests also produce spurious failures from Windows temporary-directory permissions; these disappear entirely when re-run in a normal-permission environment and are not code regressions.
 
-- HTTP 契约、图版本冲突和状态读写；
-- 类型继承、端口兼容和图校验；
-- 路由候选、多模型共识与失败降级；
-- 工作流执行、审核暂停和节点演化；
-- XRD/FTIR 参考领域 Recipe 的噪声夹具评估与修复；
-- Prompt normalize 的配置、模式校验和语言漂移拒绝；
-- 配置驱动场景测试与报告脱敏。
+Existing test coverage:
 
-### 随仓工具：FlowView（已交付）
+- HTTP contract, graph version conflicts and state read/write;
+- type inheritance, port compatibility and graph validation;
+- routing candidates, multi-model consensus and failure degradation;
+- workflow execution, review pauses and node evolution;
+- noise-fixture evaluation and repair of the XRD/FTIR reference-domain Recipes;
+- Prompt normalize configuration, schema validation and language-drift rejection;
+- configuration-driven scenario tests and report redaction.
 
-- 只读 CLI，用 Mermaid 图、终端表格或 JSON 在命令行打印后端流程与运行时阶段；入口 `.\.venv\Scripts\python.exe -m flowview graph|flow|summary|doctor`，联网只走显式的 `--http URL`，默认离线。实时模式只读取运行中的后端（`/api/state`、`/api/task-summaries/{id}`、`/api/capabilities`）并可用 `POST /api/route` 打印后端的真实选路；该接口会让后端记一条路由摘要，打印结果会带 `http.route_recorded` 明示，FlowView 自身不写任何文件。
-- 它是随仓工具，按设计不进入 wheel（`[tool.setuptools.packages.find] include = ["backend*"]` 保持不变），因此不计入上表的产品完成度，其声明与实现由 `flowview/CONTRACT.md` 冻结。
+### In-repo tool: FlowView (delivered)
 
-## 阶段性里程碑判定
+- A read-only CLI that prints the backend flow and the runtime stages on the command line as Mermaid diagrams, terminal tables or JSON. Entry point `.\.venv\Scripts\python.exe -m flowview graph|flow|summary|doctor`; network access goes only through the explicit `--http URL`, and offline is the default. Live mode reads only a running backend (`/api/state`, `/api/task-summaries/{id}`, `/api/capabilities`) and can use `POST /api/route` to print the backend's real routing decision; that endpoint makes the backend record a routing summary and the printed result says so through `http.route_recorded`. FlowView itself writes no file.
+- It is an in-repo tool and by design excluded from the wheel (`[tool.setuptools.packages.find] include = ["backend*"]` stays unchanged), so it is not counted toward product completeness in the table above; its declared contract and its implementation are frozen by `flowview/CONTRACT.md`.
 
-### 已通过：M1 后端基座
+## Stage milestone verdicts
 
-满足以下条件：
+### Passed: M1 backend base
 
-1. 后端是状态与执行的唯一权威；
-2. 客户端通过版本化 HTTP 接口工作；
-3. 工作流变更经过类型、拓扑和版本校验；
-4. 执行可以留下可追踪结果并在人审点暂停；
-5. 模型建议不能直接绕过 Tool 生命周期；
-6. 离线回归测试稳定通过。
+The following hold:
 
-### 未通过：M2 通用智能规划闭环
+1. The backend is the only authority for state and execution;
+2. Clients work through the versioned HTTP interface;
+3. Workflow changes pass type, topology and version validation;
+4. Execution leaves traceable results and pauses at human review points;
+5. A model suggestion cannot bypass the Tool lifecycle directly;
+6. Offline regression tests pass stably.
 
-尚未同时满足：
+### Not passed: M2 general intelligent-planning loop
 
-1. 可靠读取研究规则文档和混合附件；
-2. 从中文复杂请求生成多分支、多汇合 DAG；
-3. 发现 Capability Gap 后研究方法并生成可执行 Tool；
-4. Tool 经隔离评估、审核和发布后进入 Registry；
-5. 使用数据质量门控决定是否运行下游机理分析；
-6. 输出方法、参数、证据、不确定性和失败原因。
+The following do not all hold yet:
 
-## 下一阶段建议
+1. Reliably reading research rule documents and mixed attachments;
+2. Generating a multi-branch, multi-join DAG from a complex Chinese request;
+3. Researching a method and generating an executable Tool after detecting a Capability Gap;
+4. A Tool entering the Registry only after isolated evaluation, review and publication;
+5. Using a data-quality gate to decide whether downstream mechanism analysis runs;
+6. Reporting method, parameters, evidence, uncertainty and failure reasons.
 
-下一阶段应同时维护两条彼此独立的里程碑线。
+## Recommendations for the next stage
 
-### 平台里程碑：Domain Package 边界
+The next stage should maintain two mutually independent milestone lines.
 
-1. Platform Core 只保留领域无关的 Dataset、Artifact、DAG、Review、Tool 生命周期和审计语义；
-2. 定义可版本化的 Domain Package 清单、类型注册、Tool 注册和执行器注册接口；
-3. 增加通用 join、quality-report 和 conditional-gate 语义；
-4. 将 normalize 作为可回退的派生视图接入规划器，而不是覆盖 Research Request；
-5. 将平台契约测试与具体领域包验收测试分层运行。
+### Platform milestone: Domain Package boundary
 
-### 参考案例里程碑：EBrick 温变 EIS
+1. Platform Core keeps only domain-neutral Dataset, Artifact, DAG, Review, Tool lifecycle and audit semantics;
+2. Define a versionable Domain Package manifest plus type, Tool and executor registration interfaces;
+3. Add generic join, quality-report and conditional-gate semantics;
+4. Wire normalization into the planner as a reversible derived view rather than as an overwrite of the Research Request;
+5. Run platform contract tests and concrete domain-package acceptance tests as separate layers.
 
-以下能力属于 EIS Domain Package 或 EBrick Reference Case，不属于 Platform Core：
+### Reference-case milestone: EBrick temperature-dependent EIS
 
-1. 将炉程规则解析为案例所需的结构化温度程序；
-2. 实现 `Cp/G + frequency -> complex impedance` 转换和扫描时间到温度映射；
-3. 运行完整性、KK/Lin-KK 和候选电路比较等并行诊断；
-4. 汇总质量并通过通用 Gate 控制下游；
-5. 质量通过后运行 DRT、分量贡献和案例图表；
-6. 将整条非单链 DAG 纳入 EBrick 固定数据验收。
+The following capabilities belong to the EIS Domain Package or the EBrick Reference Case, not to Platform Core:
 
-在平台里程碑通过前，不应把 MatFlow 对外描述为“领域无关且可自由扩展”；在 EBrick 案例里程碑通过前，也不应声称已经完成温变 EIS 分析。更准确的定位是“具备可靠控制平面的材料学工作流后端，正在分离平台核心、领域包和参考案例”。
+1. Parsing furnace-program rules into the structured temperature program the case needs;
+2. Implementing the `Cp/G + frequency -> complex impedance` conversion and the scan-time-to-temperature mapping;
+3. Running parallel diagnostics such as integrity checks, KK/Lin-KK and candidate-circuit comparison;
+4. Aggregating quality and controlling downstream work through a generic Gate;
+5. Running DRT, component contributions and case charts after quality passes;
+6. Bringing the whole non-linear DAG into EBrick fixed-data acceptance.
 
+Until the platform milestone passes, MatFlow should not be described externally as "domain-neutral and freely extensible"; until the EBrick case milestone passes, it should not be claimed that temperature-dependent EIS analysis is complete. A more accurate positioning is "a materials-workflow backend with a trustworthy control plane that is separating platform core, domain packages and reference cases".

@@ -1,0 +1,33 @@
+{
+  "normalized_prompt": "Context: The user provides attachments containing raw impedance spectroscopy scan files and a rule description document for the same experimental set. The measurement setup uses a four-probe structure with cobalt electrodes and molybdenum wires.\n\nInputs:\n1. Raw scan files: Contain individual scan curves with timestamps or relative time.\n2. Rule description document: Records the furnace segmented program and sample geometry information.\n\nObjectives:\n1. Data Preprocessing & Calibration:\n   - Read both file types.\n   - Map relative time to temperature using the furnace program.\n   - Generate complete impedance spectrum scan data indexed by temperature.\n   - Verify the true meaning, units, and sign conventions of original columns before any physical quantity conversion. Do not assume column names or similar electrical meanings imply completed conversion.\n2. Data Validity Assessment:\n   - Evaluate data validity using diagnostic methods suitable for this impedance spectroscopy type.\n   - Consider: data integrity, frequency coverage, repeated/anomalous points, physical consistency, instrument/electrode/lead artifacts, equivalent circuit fitting quality, model identifiability, and uncertainty.\n3. Tool Construction (if necessary):\n   - If existing workflow nodes are insufficient, propose or construct tools with explicit inputs, outputs, units, and failure conditions.\n   - Tools must undergo necessary evaluation or human review before integration.\n   - Prohibitions: Do not substitute unverified model outputs for numerical calculations. Do not claim execution of literature retrieval capabilities not provided by the system.\n4. Quality Gating:\n   - Merge diagnostic results into a traceable data quality assessment and quality gate.\n   - Proceed to mechanism analysis only if quality requirements are met.\n   - If quality is insufficient, output problem localization and recommended re-measurement/repair steps.\n5. Mechanism Analysis:\n   - Extract contribution ratios of different conduction mechanisms or electrical processes from the impedance spectra.\n   - Determine required methods and plots first, then plan tools (e.g., equivalent circuit components, relaxation time distribution, or other evidence-supported decomposition methods).\n   - Report model dependencies and uncertainties.\n   - Prohibition: Do not force-naming mechanisms without evidence.\n6. Output Generation:\n   - Temperature-calibrated per-scan data.\n   - Quality metrics and diagnostic plots.\n   - Candidate circuits and fitting comparisons.\n   - Quality gate conclusions.\n   - Contribution ratios and uncertainties (only if gate passed).\n   - Required plots: Nyquist, Bode, residuals, and parameter evolution with temperature.\n   - List of methods and assumptions.\n\nWorkflow Topology Constraints:\n- The task is not a single chain. Use branches for parallelizable tasks: document parsing, raw data checking, method selection, different diagnostics, and different plotting.\n- Use merge points for locations requiring joint judgment.\n- Implement an explicit quality gate after quality assessment. Mechanism contribution analysis must not execute if the gate is not passed.\n- Read the current graph and attachments first, then construct the workflow using type-safe graph patches.\n- If limited by missing read, retrieval, tool generation, data type, or execution capabilities, stop accurately at the corresponding position and list the gaps. Do not pretend completion via text.",
+  "ambiguities": [
+    "The specific format of the 'raw scan files' (e.g., CSV, HDF5, proprietary binary) is not specified, which may affect the 'read' step.",
+    "The specific 'furnace segmented program' format in the rule document is not detailed, which may affect the time-to-temperature mapping logic.",
+    "The definition of 'quality requirements' for the gate is not quantified (e.g., specific R-squared threshold, residual limit, or frequency coverage percentage).",
+    "The specific 'diagnostic methods' to be retrieved or determined are not pre-selected, leaving the method selection open to the agent's judgment based on the data.",
+    "The criteria for 'model identifiability' and 'uncertainty' reporting standards are not explicitly defined."
+  ],
+  "preserved_constraints": [
+    "Must check original column meaning, units, and sign conventions before physical quantity conversion.",
+    "Must not treat similar column names or electrical meanings as completed physical quantity conversion.",
+    "Must use a four-probe structure context with cobalt electrodes and molybdenum wires for validity assessment.",
+    "Must not substitute unverified model outputs for numerical calculations.",
+    "Must not claim execution of literature retrieval capabilities not provided by the system.",
+    "Must construct new tools with explicit inputs, outputs, units, and failure conditions if existing nodes are insufficient.",
+    "New tools must undergo evaluation or human review before integration.",
+    "Mechanism analysis is strictly conditional on passing the quality gate.",
+    "If quality gate fails, must output problem localization and re-measurement/repair steps instead of mechanism analysis.",
+    "Must not force-naming mechanisms without evidence.",
+    "Workflow must use branches for parallel tasks (parsing, checking, method selection, diagnostics, plotting).",
+    "Workflow must use merge points for joint judgment.",
+    "Must use type-safe graph patches to construct the workflow.",
+    "Must stop and list gaps if capabilities (read, retrieval, tool generation, data type, execution) are missing, rather than pretending completion."
+  ],
+  "normalization_notes": [
+    "Structured the prompt into Context, Inputs, Objectives, and Workflow Topology Constraints for clarity.",
+    "Explicitly separated the prohibitions (e.g., no fake retrieval, no unverified models) into preserved constraints to ensure they are not lost during execution.",
+    "Clarified the conditional logic for the quality gate: Pass -> Mechanism Analysis; Fail -> Problem Localization/Repair Steps.",
+    "Retained the requirement for 'type-safe graph patches' and the instruction to read the current graph/attachments first as part of the workflow topology constraints.",
+    "Ensured the output list is comprehensive and matches the original request's six points."
+  ]
+}

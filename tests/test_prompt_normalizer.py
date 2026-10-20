@@ -1,9 +1,11 @@
 import json
 import os
+import tempfile
 import unittest
 from pathlib import Path
 from unittest.mock import patch
 
+from backend.llm_config import load_llm_config
 from backend.prompt_normalizer import (
     NormalizerConfig,
     build_messages,
@@ -89,24 +91,28 @@ class PromptNormalizerTests(unittest.TestCase):
                     opener=lambda *_args, **_kwargs: _Response({"choices": [{"message": {"content": json.dumps(payload)}}]}),
                 )
 
-    def test_config_defaults_to_matflow_settings(self):
-        settings = json.dumps({"agent": {
-                "base_url": "http://127.0.0.1:4000/v1",
+    def test_config_defaults_to_the_open_save_settings(self):
+        with tempfile.TemporaryDirectory() as directory:
+            save = Path(directory) / "save"
+            save.mkdir()
+            (save / "settings.json").write_text(json.dumps({"agent": {
+                "base_url": "http://127.0.0.1:4078/v1",
                 "model": "user-model",
                 "api_key_env": "USER_MODEL_KEY",
-            }})
-
-        def read_text(path, **_kwargs):
-            return "" if path.name == ".env" else settings
-
-        with (
-            patch.object(Path, "exists", return_value=True),
-            patch.object(Path, "read_text", read_text),
-            patch.dict(os.environ, {"USER_MODEL_KEY": "configured"}),
-        ):
-            config = load_config(Path("configured-root"))
+            }}), encoding="utf-8")
+            with patch.dict(os.environ, {"USER_MODEL_KEY": "configured", "MATFLOW_DATA_ROOT": str(save)}):
+                config = load_config(Path(directory))
         self.assertEqual(config.model, "user-model")
         self.assertEqual(config.api_key_env, "USER_MODEL_KEY")
+
+    def test_config_falls_back_to_the_llm_gateway_description(self):
+        llm = load_llm_config()
+        with tempfile.TemporaryDirectory() as directory:
+            with patch.dict(os.environ, {llm.gateway.api_key_env: "configured", "MATFLOW_DATA_ROOT": str(Path(directory) / "empty")}):
+                config = load_config(Path(directory))
+        self.assertEqual(config.base_url, llm.base_url)
+        self.assertEqual(config.model, llm.agent_model)
+        self.assertEqual(config.api_key_env, llm.gateway.api_key_env)
 
 
 if __name__ == "__main__":

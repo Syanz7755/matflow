@@ -1,0 +1,82 @@
+{
+  "title": "task route-eis",
+  "source": "task summary route-eis",
+  "graph": null,
+  "trace": null,
+  "phases": [
+    {
+      "name": "route",
+      "title": "Route",
+      "steps": [
+        {
+          "name": "prompt recorded",
+          "status": "completed",
+          "detail": "user prompt: \"Run basic EIS quality checks\"",
+          "error": null,
+          "node_id": null,
+          "tools": []
+        },
+        {
+          "name": "candidates considered",
+          "status": "completed",
+          "detail": "1 candidate tool(s) considered: eis_basic_qc",
+          "error": null,
+          "node_id": null,
+          "tools": []
+        },
+        {
+          "name": "selected eis_basic_qc",
+          "status": "completed",
+          "detail": "confidence 1.00; human confirmation required: no; rationale: Jev decision routing was not needed.",
+          "error": null,
+          "node_id": null,
+          "tools": [
+            "eis_basic_qc"
+          ]
+        }
+      ],
+      "error": null
+    },
+    {
+      "name": "execute",
+      "title": "Execute",
+      "steps": [
+        {
+          "name": "no execution recorded",
+          "status": "pending",
+          "detail": "the record carries result: null, so no tool output was observed",
+          "error": null,
+          "node_id": null,
+          "tools": []
+        }
+      ],
+      "error": null
+    },
+    {
+      "name": "outcome",
+      "title": "Outcome",
+      "steps": [
+        {
+          "name": "outcome: routed",
+          "status": "pending",
+          "detail": "handling: No exception. The selected registered tool may proceed to execution.",
+          "error": null,
+          "node_id": null,
+          "tools": []
+        }
+      ],
+      "error": null
+    }
+  ],
+  "issues": [],
+  "meta": {
+    "mode": "recorded",
+    "task_id": "route-eis",
+    "status": "routed",
+    "steps": "5",
+    "trace_id": "14f74a6d04b747c89744c32c9ed8f386",
+    "recorded_at": "2026-10-04T08:13:06.448455+00:00",
+    "modes": "recorded"
+  },
+  "truncated": []
+}

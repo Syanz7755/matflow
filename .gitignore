@@ -39,6 +39,8 @@ data/saves/
 # Local tooling and diagnostics
 .spec-render/
 *.log
+# QE replay demo fixture is required by the demo and tests, so keep it despite *.log
+!backend/domain_packages/qe_demo_fixtures/*.log
 .DS_Store
 Thumbs.db
 
@@ -50,3 +52,6 @@ Thumbs.db
 # convenience; the logic they call lives in scripts/*.ps1, which stay tracked.
 # flowview/run_flowview.bat is not at the root and is still tracked.
 /*.bat
+
+# Root-level throwaway test workspaces created by non-hermetic tests (MF-015); never part of a release.
+/tmp*/

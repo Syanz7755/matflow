@@ -368,10 +368,13 @@ problem (reported as a readable issue list, never a traceback unless `-v`). `--s
 
 `flow --prompt TEXT` renders one request's flow through the read-only routing adapter
 (`backend_adapter.dry_route`): no model call, no `record_routing()`, no graph write. Its document
-adds a `prompt` phase whose third step reports the retriever's tokenisation (ASCII token count,
-kept tokens, CJK character count) and raises `route.prompt_tokens_unusable` when the prompt is
-mostly CJK, because `backend/routing.py` tokenises with `[a-z0-9]+` and therefore cannot see CJK
-text. An empty `--prompt` is a usage error (exit 2).
+adds a `prompt` phase (the prompt verbatim, its size, and a `routing model` step). The backend
+retriever is a type filter (`backend/routing.py::CandidateRetriever`): it does not read the prompt
+text, so script and language (CJK included) never change the candidate set, and the printer neither
+tokenises nor warns about the prompt's language. A prompt above the 4000-character
+`TaskState.user_message` limit is cut to its first 4000 characters and says so
+(`route.prompt_shortened_for_routing`). `meta.cjk_characters` is informational only. An empty
+`--prompt` is a usage error (exit 2).
 
 `--http [URL]` switches the command from local files to a running backend. The flag is absent by
 default, so offline behaviour is structural: without it no subcommand imports the HTTP client and

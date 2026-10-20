@@ -1,5 +1,17 @@
 # MatFlow Current State
 
+## Portfolio update — 2026-10-19
+
+The current acceptance evidence is [Project status](../PROJECT_STATUS.md),
+[A1 offline replay](../../examples/cases/A1-qe-mgo/README.md) and the
+[routing diagnostic](../evaluation/README.md). The sections below retain the older
+2026-10-02 maintenance snapshot and its historical verification counts.
+Test-only suites now live under `tests/suites/`, extended teaching inputs under
+`tests/fixtures/teaching_lab/`, and old generated reports under
+`docs/history/2026-10-19/`. Pytest is declared in the project dev dependency group.
+The current changes have not been committed or pushed. The EBrick flagship,
+frontend e2e and DSH comparison remain open; no new real research data was copied.
+
 **Verification date:** 2026-10-02
 **Conclusion:** The backend control plane is usable at this phase. The general intelligent computational-materials workflow remains Alpha. Do not claim that arbitrary materials-science requests can automatically produce reliable scientific workflows.
 
@@ -33,6 +45,10 @@ The repositories communicate through the `matflow-http` v1 contract. The backend
 - One executor registry (`backend/executors.py`) that Platform Core and every loaded package register into; `WorkspaceRuntime._run_node` resolves `executor_ref` and holds no domain branch;
 - Domain-neutral generic control semantics: multi-input `join` and `aggregate`, `quality_report`, and a data-driven `conditional_gate` that cancels downstream work;
 - Domain-neutral Core catalogs: `DATA_TYPES` and `builtin_specs()` declare no measurement-method type or Tool, and an empty workspace exposes no scientific capability at all.
+- No keyword routing anywhere (2026-10-07): candidates are a type filter, the choice is made by Jev or — when Jev is unreachable (`jev_router.json` `fallback: "llm"`) — by the LLM; `fallback_to_lexical` is rejected, and `/api/chat` has no keyword pre-gate (the agent calls `ask_user` to wait for confirmation);
+- Prompt -> workflow planner, `POST /api/plan` (`backend/planner.py`): LLM decomposition into action units with directed dependencies, per-action routing, typed edge binding, one parameter-binding pass, a provenance gate that drops parameter values the request or uploads do not state, an `x-matflow-ready` readiness check, and validation through `GraphValidator`. Offline contract tests: `tests/test_workflow_planner.py`; live long-prompt suite: `tests/test_prompt_to_workflow_online.py` with `tests/suites/prompt_to_workflow.json`;
+- One LLM gateway description, `config/llm.json` (port 4078, key variable `LITELLM_DEFAULT_API_KEY`), shared by the backend defaults and `start_llm.bat`;
+- One save, one folder: graph, settings, uploads and the task log live in `data/saves/<save>/` (`backend/saves.py`, `matflow start --save`, `matflow saves`). The earlier flat `data/` content was moved to `data/saves/2026-09-30-ebrick-case05-manual/`.
 
 ### Clients and Adapters
 
@@ -49,7 +65,7 @@ The repositories communicate through the `matflow-http` v1 contract. The backend
 - It keeps its own mirror model and readers (standard library only) so it keeps working when `backend.*` cannot be imported, and `import flowview` never imports `backend`. It never writes `data/`, `config/` or state, never starts a server, and never mutates backend state;
 - Offline is the default and structural: network access exists only behind an explicit `--http [URL]` flag, and without it no subcommand imports the HTTP client, opens a socket or reads `MATFLOW_API_URL`. `--http` reads `GET /api/state`, `GET /api/task-summaries/{id}` and `GET /api/capabilities` from a running backend, plus `POST /api/route` for `flow --prompt --http`; that POST is the one call that makes the backend record a routing summary in its own audit log, and the emitted document discloses it (`http.route_recorded`, with a warning when the outcome is unknown);
 - It is repo-local by design and intentionally not packaged: `pyproject.toml` `[tool.setuptools.packages.find] include = ["backend*"]` is unchanged, and that decision is recorded in `docs/PROJECT_STATUS.md` and a `pyproject.toml` comment. Its documentation is `flowview/README.md` (user guide) and the frozen `flowview/CONTRACT.md`, with three verification records (`flowview/VERIFICATION.md`, `flowview/VERIFICATION_PROMPT_MODE.md`, `flowview/VERIFICATION_LIVE_MODE.md`);
-- Evidence: the flowview suite is 252 tests, `OK (skipped=3)`, and whole-repository discovery is 385 tests, `OK (skipped=7)`; three independent adversarial verification passes (offline printing, the `--prompt` surface, and the `--http` live surface) left no open P0/P1, the live surface taking 3 rounds and finding and fixing 7 P1s. Open items are recorded as MF-018: `doctor --format mermaid` still prints the text report, and there is no CI wiring for the 252 tests.
+- Evidence: the flowview suite is 252 tests, `OK (skipped=3)`, and whole-repository discovery is 426 tests, `OK (skipped=7)`; three independent adversarial verification passes (offline printing, the `--prompt` surface, and the `--http` live surface) left no open P0/P1, the live surface taking 3 rounds and finding and fixing 7 P1s. Open items are recorded as MF-018: `doctor --format mermaid` still prints the text report, and there is no CI wiring for the 252 tests.
 
 ## 3. 2026-10-02 Verification Snapshot
 
@@ -116,7 +132,7 @@ MF-016.
 | --- | --- |
 | Domain Package | The minimum contract is implemented and documented (`docs/DOMAIN_PACKAGES.md`); `eis`, `xrd`, `ftir`, `qe`, and demo-only `qe_demo` packages ship. Remaining: package trust/signing policy and package-scoped execution isolation |
 | Generic join / quality report / conditional gate | Implemented as platform Tools with multi-input ports and a control-plane stop fact, and reused over a plain artifact and an EIS artifact (`tests/test_generic_control_nodes.py`). Remaining: list-valued and cross-run aggregation, and richer criteria than required-keys plus one numeric range |
-| Generate a multi-branch DAG from any complex Chinese request | Not reliable; Chinese lexical retrieval and planner capability are insufficient |
+| Generate a multi-branch DAG from any complex Chinese request | `POST /api/plan` builds typed, multi-branch DAGs from long Chinese and English prompts through the LLM (see MF-006); not yet reliable enough to run unattended, and EIS data cannot pass generic gates (MF-019) |
 | Complete Tool lifecycle | Drafting, evaluation, and bounded repair exist; general review, publication, and isolated code execution remain incomplete |
 | EBrick temperature-dependent EIS case | Data and an evaluation design exist; there is no end-to-end executable acceptance loop |
 | Multi-project/multi-user | Not implemented; the current system is single-user, single-workspace, with local-file persistence |

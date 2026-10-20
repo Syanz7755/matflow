@@ -7,6 +7,7 @@ name = "matflow"
 version = "1.1.0"
 description = "Authoritative HTTP backend for schema-constrained materials workflows"
 readme = "README.md"
+license = {text = "MIT"}
 requires-python = ">=3.11,<3.14"
 dependencies = [
   "fastapi>=0.115,<1.0",
@@ -24,6 +25,7 @@ matflow = "backend.cli:main"
 
 [dependency-groups]
 dev = [
+  "pytest>=9,<10",
   "httpx>=0.27,<1.0",
   "httpx2>=2.13.0",
 ]

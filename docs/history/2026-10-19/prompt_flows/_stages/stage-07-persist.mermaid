@@ -1,0 +1,20 @@
+flowchart TD
+    %% FlowView: runtime phase map, one node per observable step.
+    %% title: MatFlow backend runtime flow (blueprint) — phase 7: Persistence and audit
+    %% source: flowview phase blueprint
+    %% phases: 1; steps: 4
+    subgraph pg_persist["Persistence and audit #40;persist#41; #91;pending#93;"]
+        n_persist_0_summary_appended["summary appended - Blueprint #40;described, not observed#41;: backend/task_su…<br/>pending"]:::flowview_pending
+        n_persist_1_audit_events_emitted["audit events emitted - Blueprint #40;described, not observed#41;: backend/obs…<br/>pending"]:::flowview_pending
+        n_persist_2_summary_endpoint["summary endpoint - Blueprint #40;described, not observed#41;: backend/main.py…<br/>pending"]:::flowview_pending
+        n_persist_3_failed_outcome_recorded["failed outcome recorded - Blueprint #40;described, not observed#41;: backend/…<br/>pending"]:::flowview_pending
+    end
+    classDef flowview_ready fill:#e8f1fb,stroke:#3b6ea5,color:#102a43;
+    classDef flowview_running fill:#fff4d6,stroke:#a5761b,color:#3d2c00;
+    classDef flowview_completed fill:#e3f6e8,stroke:#2f7d43,color:#0f3319;
+    classDef flowview_waiting fill:#fdf1dc,stroke:#a5761b,color:#3d2c00;
+    classDef flowview_error fill:#fbe3e3,stroke:#a32020,color:#4a0f0f;
+    classDef flowview_cancelled fill:#f0e8f8,stroke:#6b4b9a,color:#2a1040;
+    classDef flowview_unknown fill:#eceff3,stroke:#8792a2,color:#2b3038;
+    classDef flowview_pending fill:#f3f4f6,stroke:#8792a2,color:#2b3038;
+    classDef flowview_skipped fill:#f0e8f8,stroke:#6b4b9a,color:#2a1040;

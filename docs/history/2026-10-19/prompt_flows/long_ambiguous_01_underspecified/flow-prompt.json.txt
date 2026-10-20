@@ -1,0 +1,203 @@
+{
+  "flowview_schema": "1.0",
+  "document": {
+    "title": "MatFlow routing preview (read-only)",
+    "source": "dry-route:D:\\Projects\\matflow",
+    "graph": null,
+    "trace": null,
+    "phases": [
+      {
+        "name": "prompt",
+        "title": "Prompt (input)",
+        "steps": [
+          {
+            "name": "user prompt",
+            "status": "completed",
+            "detail": "\u8001\u5e08\u4f60\u597d\uff0c\u6211\u8fd9\u8fb9\u6709\u4e2a\u6d4b\u5b8c\u7684\u6570\u636e\u60f3\u8bf7\u4f60\u5e2e\u6211\u5904\u7406\u4e00\u4e0b\uff0c\u5177\u4f53\u662f\u8fd9\u6837\u7684\uff1a\u4e0a\u5468\u6211\u5728\u5b9e\u9a8c\u5ba4\u505a\u4e86\u8868\u5f81\uff0c\u4eea\u5668\u662f\u516c\u5171\u5e73\u53f0\u90a3\u53f0\uff0c\u6d4b\u8bd5\u7684\u65f6\u5019\u5e08\u5144\u5e2e\u6211\u8c03\u4e86\u53c2\u6570\uff0c\u6211\u8bb0\u5f97\u597d\u50cf\u626b\u4e86\u5f88\u591a\u70b9\uff0c\u6570\u636e\u5bfc\u51fa\u6765\u662f\u4e00\u4e2a\u8868\u683c\u6587\u4ef6\uff0c\u6211\u653e\u5728\u5de5\u4f5c\u76ee\u5f55\u91cc\u4e86\uff0c\u6587\u4ef6\u540d\u91cc\u5e26\u65e5\u671f\uff0c\u4f46\u662f\u6211\u4e0d\u592a\u786e\u5b9a\u662f\u54ea\u4e00\u4e2a\u3002\n\u6211\u5927\u6982\u8bb0\u5f97\u7684\u6570\u636e\u5185\u5bb9\u662f\u8fd9\u6837\u7684\uff1a\u7b2c\u4e00\u5217\u597d\u50cf\u662f\u81ea\u53d8\u91cf\uff0c\u5355\u4f4d\u53ef\u80fd\u662f\u5ea6\u6216\u8005\u7eb3\u7c73\u6216\u8005\u6ce2\u6570\uff0c\u7b2c\u4e8c\u5217\u662f\u4fe1\u53f7\u5f3a\u5ea6\uff0c\u4e0d\u8fc7\u4e5f\u6709\u53ef\u80fd\u7b2c\u4e00\u5217\u662f\u65f6\u95f4\uff0c\u56e0\u4e3a\u90a3\u53f0\u4eea\u5668\u6709\u4e24\u79cd\u6a21\u5f0f\u3002\u6837\u54c1\u662f\u6211\u81ea\u5df1\u505a\u7684\uff0c\u5177\u4f53\u6210\u5206\u8fd8\u5728\u5206\u6790\uff0c\u76ee\u524d\u53ea\u77e5\u9053\u91cc\u9762\u6709\u91d1\u5c5e\u6c27\u5316\u7269\uff0c\u53ef\u80fd\u662f\u949b\u4e5f\u53ef\u80fd\u662f\u950c\uff0c\u8fd8\u6709\u4e00\u70b9\u6709\u673a\u6b8b\u7559\u3002\n\u6211\u60f3\u5f97\u5230\u7684\u7ed3\u8bba\u662f\uff1a\u8fd9\u4e2a\u4e1c\u897f\u5230\u5e95\u662f\u4ec0\u4e48\u3002\u6700\u597d\u80fd\u544a\u8bc9\u6211\u6676\u4f53\u7ed3\u6784\u3001\u7c92\u5f84\u3001\u7eaf\u5ea6\u3001\u8fd8\u6709\u80fd\u4e0d\u80fd\u7528\u4f5c\u50ac\u5316\u5242\u3002\u5982\u679c\u8fd9\u4e9b\u505a\u4e0d\u5230\uff0c\u90a3\u5c31\u544a\u8bc9\u6211\u5b83\u662f\u4e0d\u662f\u65e0\u5b9a\u5f62\u7684\u4e5f\u884c\u3002\u8d8a\u5feb\u8d8a\u597d\uff0c\u6211\u660e\u5929\u8981\u6c47\u62a5\u3002\n\u53e6\u5916\u6211\u4e0a\u4f20\u7684\u65f6\u5019\u597d\u50cf\u4e00\u8d77\u4f20\u4e86\u4e24\u4e2a\u6587\u4ef6\uff0c\u5982\u679c\u4e0d\u786e\u5b9a\u7528\u54ea\u4e2a\uff0c\u4f60\u5c31\u81ea\u5df1\u6311\u4e00\u4e2a\u5408\u9002\u7684\uff0c\u5148\u7528\u7740\u518d\u8bf4\u3002\u5982\u679c\u7f3a\u5c11\u53c2\u6570\uff0c\u4f60\u53ef\u4ee5\u7528\u5e38\u89c4\u7684\u9ed8\u8ba4\u503c\uff0c\u6211\u76f8\u4fe1\u4f60\u7684\u5224\u65ad\u3002",
+            "error": null,
+            "node_id": null,
+            "tools": []
+          },
+          {
+            "name": "prompt size",
+            "status": "completed",
+            "detail": "404 character(s), 4 whitespace-separated token(s); available input types: RawData, TypedTable",
+            "error": null,
+            "node_id": null,
+            "tools": []
+          },
+          {
+            "name": "retriever tokenisation",
+            "status": "waiting",
+            "detail": "backend/routing.py _tokens() keeps the distinct [a-z0-9]+ runs longer than one character. The 404-character prompt yields 0 occurrence(s) / 0 distinct token(s) and 362 CJK character(s); the router was given 0 distinct token(s) (0 occurrence(s), 362 CJK character(s)) [verbatim] -- every CJK character is invisible to the retriever, so no candidate can match",
+            "error": null,
+            "node_id": null,
+            "tools": []
+          }
+        ],
+        "error": null
+      },
+      {
+        "name": "candidates",
+        "title": "Candidates",
+        "steps": [
+          {
+            "name": "no candidate retrieved",
+            "status": "unknown",
+            "detail": "CandidateRetriever found no active compatible tool for this prompt",
+            "error": null,
+            "node_id": null,
+            "tools": []
+          }
+        ],
+        "error": null
+      },
+      {
+        "name": "decision",
+        "title": "Decision",
+        "steps": [
+          {
+            "name": "no tool selected",
+            "status": "waiting",
+            "detail": "confidence 0.00; human confirmation required: yes; rationale: No active compatible tool matched the request.",
+            "error": null,
+            "node_id": null,
+            "tools": []
+          },
+          {
+            "name": "dry run guarantee",
+            "status": "completed",
+            "detail": "DecisionRouter() ran without the JEV/model router: record_routing() was not called and no graph, settings or summary file was written",
+            "error": null,
+            "node_id": null,
+            "tools": []
+          }
+        ],
+        "error": null
+      }
+    ],
+    "issues": [
+      {
+        "severity": "warning",
+        "code": "route.prompt_tokens_unusable",
+        "message": "The retriever cannot see most of this prompt. -- every CJK character is invisible to the retriever, so no candidate can match",
+        "where": "backend/routing.py: _tokens()",
+        "hint": "This is a routing limitation, not a FlowView one: the printer is showing exactly what the backend decided. Add an English/Latin keyword to the request, or route through the model (JEV) router, if a specific tool must be selected.",
+        "detail": null
+      },
+      {
+        "severity": "info",
+        "code": "route.dry_run",
+        "message": "This route was computed read-only: nothing was persisted to the task summary log.",
+        "where": "dry-route:D:\\Projects\\matflow",
+        "hint": null,
+        "detail": null
+      }
+    ],
+    "meta": {
+      "mode": "dry-run",
+      "graph_version": "0",
+      "candidates": "0",
+      "confirmation": "yes",
+      "prompt_characters": "404",
+      "prompt": "\u8001\u5e08\u4f60\u597d\uff0c\u6211\u8fd9\u8fb9\u6709\u4e2a\u6d4b\u5b8c\u7684\u6570\u636e\u60f3\u8bf7\u4f60\u5e2e\u6211\u5904\u7406\u4e00\u4e0b\uff0c\u5177\u4f53\u662f\u8fd9\u6837\u7684\uff1a\u4e0a\u5468\u6211\u5728\u5b9e\u9a8c\u5ba4\u505a\u4e86\u8868\u5f81\uff0c\u4eea\u5668\u662f\u516c\u5171\u5e73\u53f0\u90a3\u53f0\uff0c\u6d4b\u8bd5\u7684\u65f6\u5019\u5e08\u5144\u5e2e\u6211\u8c03\u4e86\u53c2\u6570\uff0c\u6211\u8bb0\u5f97\u597d\u50cf\u626b\u4e86\u5f88\u591a\u70b9\uff0c\u6570\u636e\u5bfc\u51fa\u6765\u662f\u4e00\u4e2a\u8868\u683c\u6587\u4ef6\uff0c\u6211\u653e\u5728\u5de5\u4f5c\u76ee\u5f55\u91cc\u4e86\uff0c\u6587\u4ef6\u540d\u91cc\u5e26\u65e5\u671f\uff0c\u4f46\u662f\u6211\u4e0d\u592a\u786e\u5b9a\u662f\u54ea\u4e00\u4e2a\u3002\n\u6211\u5927\u6982\u8bb0\u5f97\u7684\u6570\u636e\u5185\u5bb9\u662f\u8fd9\u6837\u7684\uff1a\u7b2c\u4e00\u5217\u597d\u50cf\u662f\u81ea\u53d8\u91cf\uff0c\u5355\u4f4d\u53ef\u80fd\u662f\u5ea6\u6216\u8005\u7eb3\u7c73\u6216\u8005\u6ce2\u6570\uff0c\u7b2c\u4e8c\u5217\u662f\u4fe1\u53f7\u5f3a\u5ea6\uff0c\u4e0d\u8fc7\u4e5f\u6709\u53ef\u80fd\u7b2c\u4e00\u5217\u662f\u65f6\u95f4\uff0c\u56e0\u4e3a\u90a3\u53f0\u4eea\u5668\u6709\u4e24\u79cd\u6a21\u5f0f\u3002\u6837\u54c1\u662f\u6211\u81ea\u5df1\u505a\u7684\uff0c\u5177\u4f53\u6210\u5206\u8fd8\u5728\u5206\u6790\uff0c\u76ee\u524d\u53ea\u77e5\u9053\u91cc\u9762\u6709\u91d1\u5c5e\u6c27\u5316\u7269\uff0c\u53ef\u80fd\u662f\u949b\u4e5f\u53ef\u80fd\u662f\u950c\uff0c\u8fd8\u6709\u4e00\u70b9\u6709\u673a\u6b8b\u7559\u3002\n\u6211\u60f3\u5f97\u5230\u7684\u7ed3\u8bba\u662f\uff1a\u8fd9\u4e2a\u4e1c\u897f\u5230\u5e95\u662f\u4ec0\u4e48\u3002\u6700\u597d\u80fd\u544a\u8bc9\u6211\u6676\u4f53\u7ed3\u6784\u3001\u7c92\u5f84\u3001\u7eaf\u5ea6\u3001\u8fd8\u6709\u80fd\u4e0d\u80fd\u7528\u4f5c\u50ac\u5316\u5242\u3002\u5982\u679c\u8fd9\u4e9b\u505a\u4e0d\u5230\uff0c\u90a3\u5c31\u544a\u8bc9\u6211\u5b83\u662f\u4e0d\u662f\u65e0\u5b9a\u5f62\u7684\u4e5f\u884c\u3002\u8d8a\u5feb\u8d8a\u597d\uff0c\u6211\u660e\u5929\u8981\u6c47\u62a5\u3002\n\u53e6\u5916\u6211\u4e0a\u4f20\u7684\u65f6\u5019\u597d\u50cf\u4e00\u8d77\u4f20\u4e86\u4e24\u4e2a\u6587\u4ef6\uff0c\u5982\u679c\u4e0d\u786e\u5b9a\u7528\u54ea\u4e2a\uff0c\u4f60\u5c31\u81ea\u5df1\u6311\u4e00\u4e2a\u5408\u9002\u7684\uff0c\u5148\u7528\u7740\u518d\u8bf4\u3002\u5982\u679c\u7f3a\u5c11\u53c2\u6570\uff0c\u4f60\u53ef\u4ee5\u7528\u5e38\u89c4\u7684\u9ed8\u8ba4\u503c\uff0c\u6211\u76f8\u4fe1\u4f60\u7684\u5224\u65ad\u3002",
+      "retriever_tokens": "0",
+      "routing_tokens": "0",
+      "retriever_tokens_dropped": "0",
+      "cjk_characters": "362",
+      "routing_preview": "verbatim",
+      "modes": "dry-run"
+    },
+    "truncated": []
+  },
+  "phases": [
+    {
+      "name": "prompt",
+      "title": "Prompt (input)",
+      "steps": [
+        {
+          "name": "user prompt",
+          "status": "completed",
+          "detail": "\u8001\u5e08\u4f60\u597d\uff0c\u6211\u8fd9\u8fb9\u6709\u4e2a\u6d4b\u5b8c\u7684\u6570\u636e\u60f3\u8bf7\u4f60\u5e2e\u6211\u5904\u7406\u4e00\u4e0b\uff0c\u5177\u4f53\u662f\u8fd9\u6837\u7684\uff1a\u4e0a\u5468\u6211\u5728\u5b9e\u9a8c\u5ba4\u505a\u4e86\u8868\u5f81\uff0c\u4eea\u5668\u662f\u516c\u5171\u5e73\u53f0\u90a3\u53f0\uff0c\u6d4b\u8bd5\u7684\u65f6\u5019\u5e08\u5144\u5e2e\u6211\u8c03\u4e86\u53c2\u6570\uff0c\u6211\u8bb0\u5f97\u597d\u50cf\u626b\u4e86\u5f88\u591a\u70b9\uff0c\u6570\u636e\u5bfc\u51fa\u6765\u662f\u4e00\u4e2a\u8868\u683c\u6587\u4ef6\uff0c\u6211\u653e\u5728\u5de5\u4f5c\u76ee\u5f55\u91cc\u4e86\uff0c\u6587\u4ef6\u540d\u91cc\u5e26\u65e5\u671f\uff0c\u4f46\u662f\u6211\u4e0d\u592a\u786e\u5b9a\u662f\u54ea\u4e00\u4e2a\u3002\n\u6211\u5927\u6982\u8bb0\u5f97\u7684\u6570\u636e\u5185\u5bb9\u662f\u8fd9\u6837\u7684\uff1a\u7b2c\u4e00\u5217\u597d\u50cf\u662f\u81ea\u53d8\u91cf\uff0c\u5355\u4f4d\u53ef\u80fd\u662f\u5ea6\u6216\u8005\u7eb3\u7c73\u6216\u8005\u6ce2\u6570\uff0c\u7b2c\u4e8c\u5217\u662f\u4fe1\u53f7\u5f3a\u5ea6\uff0c\u4e0d\u8fc7\u4e5f\u6709\u53ef\u80fd\u7b2c\u4e00\u5217\u662f\u65f6\u95f4\uff0c\u56e0\u4e3a\u90a3\u53f0\u4eea\u5668\u6709\u4e24\u79cd\u6a21\u5f0f\u3002\u6837\u54c1\u662f\u6211\u81ea\u5df1\u505a\u7684\uff0c\u5177\u4f53\u6210\u5206\u8fd8\u5728\u5206\u6790\uff0c\u76ee\u524d\u53ea\u77e5\u9053\u91cc\u9762\u6709\u91d1\u5c5e\u6c27\u5316\u7269\uff0c\u53ef\u80fd\u662f\u949b\u4e5f\u53ef\u80fd\u662f\u950c\uff0c\u8fd8\u6709\u4e00\u70b9\u6709\u673a\u6b8b\u7559\u3002\n\u6211\u60f3\u5f97\u5230\u7684\u7ed3\u8bba\u662f\uff1a\u8fd9\u4e2a\u4e1c\u897f\u5230\u5e95\u662f\u4ec0\u4e48\u3002\u6700\u597d\u80fd\u544a\u8bc9\u6211\u6676\u4f53\u7ed3\u6784\u3001\u7c92\u5f84\u3001\u7eaf\u5ea6\u3001\u8fd8\u6709\u80fd\u4e0d\u80fd\u7528\u4f5c\u50ac\u5316\u5242\u3002\u5982\u679c\u8fd9\u4e9b\u505a\u4e0d\u5230\uff0c\u90a3\u5c31\u544a\u8bc9\u6211\u5b83\u662f\u4e0d\u662f\u65e0\u5b9a\u5f62\u7684\u4e5f\u884c\u3002\u8d8a\u5feb\u8d8a\u597d\uff0c\u6211\u660e\u5929\u8981\u6c47\u62a5\u3002\n\u53e6\u5916\u6211\u4e0a\u4f20\u7684\u65f6\u5019\u597d\u50cf\u4e00\u8d77\u4f20\u4e86\u4e24\u4e2a\u6587\u4ef6\uff0c\u5982\u679c\u4e0d\u786e\u5b9a\u7528\u54ea\u4e2a\uff0c\u4f60\u5c31\u81ea\u5df1\u6311\u4e00\u4e2a\u5408\u9002\u7684\uff0c\u5148\u7528\u7740\u518d\u8bf4\u3002\u5982\u679c\u7f3a\u5c11\u53c2\u6570\uff0c\u4f60\u53ef\u4ee5\u7528\u5e38\u89c4\u7684\u9ed8\u8ba4\u503c\uff0c\u6211\u76f8\u4fe1\u4f60\u7684\u5224\u65ad\u3002",
+          "error": null,
+          "node_id": null,
+          "tools": []
+        },
+        {
+          "name": "prompt size",
+          "status": "completed",
+          "detail": "404 character(s), 4 whitespace-separated token(s); available input types: RawData, TypedTable",
+          "error": null,
+          "node_id": null,
+          "tools": []
+        },
+        {
+          "name": "retriever tokenisation",
+          "status": "waiting",
+          "detail": "backend/routing.py _tokens() keeps the distinct [a-z0-9]+ runs longer than one character. The 404-character prompt yields 0 occurrence(s) / 0 distinct token(s) and 362 CJK character(s); the router was given 0 distinct token(s) (0 occurrence(s), 362 CJK character(s)) [verbatim] -- every CJK character is invisible to the retriever, so no candidate can match",
+          "error": null,
+          "node_id": null,
+          "tools": []
+        }
+      ],
+      "error": null
+    },
+    {
+      "name": "candidates",
+      "title": "Candidates",
+      "steps": [
+        {
+          "name": "no candidate retrieved",
+          "status": "unknown",
+          "detail": "CandidateRetriever found no active compatible tool for this prompt",
+          "error": null,
+          "node_id": null,
+          "tools": []
+        }
+      ],
+      "error": null
+    },
+    {
+      "name": "decision",
+      "title": "Decision",
+      "steps": [
+        {
+          "name": "no tool selected",
+          "status": "waiting",
+          "detail": "confidence 0.00; human confirmation required: yes; rationale: No active compatible tool matched the request.",
+          "error": null,
+          "node_id": null,
+          "tools": []
+        },
+        {
+          "name": "dry run guarantee",
+          "status": "completed",
+          "detail": "DecisionRouter() ran without the JEV/model router: record_routing() was not called and no graph, settings or summary file was written",
+          "error": null,
+          "node_id": null,
+          "tools": []
+        }
+      ],
+      "error": null
+    }
+  ],
+  "issues": [
+    {
+      "severity": "warning",
+      "code": "route.prompt_tokens_unusable",
+      "message": "The retriever cannot see most of this prompt. -- every CJK character is invisible to the retriever, so no candidate can match",
+      "where": "backend/routing.py: _tokens()",
+      "hint": "This is a routing limitation, not a FlowView one: the printer is showing exactly what the backend decided. Add an English/Latin keyword to the request, or route through the model (JEV) router, if a specific tool must be selected.",
+      "detail": null
+    },
+    {
+      "severity": "info",
+      "code": "route.dry_run",
+      "message": "This route was computed read-only: nothing was persisted to the task summary log.",
+      "where": "dry-route:D:\\Projects\\matflow",
+      "hint": null,
+      "detail": null
+    }
+  ],
+  "exit_code_hint": 0
+}

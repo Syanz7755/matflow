@@ -1,0 +1,36 @@
+MatFlow backend runtime flow (blueprint) — phase 3: Human-confirmation gate
+────────────────────────────────────────────────────────────────────────
+source     : flowview phase blueprint
+graph      : none in this document
+phases     : 1
+issues     : 0 error(s), 0 warning(s)
+meta       : stage_index=3, stage_name=confirm, stage_title=Human-confirmation gate, modes=stages
+
+Phases (1)
+  [1] Human-confirmation gate (confirm)  [pending]
+      1. confirmation evaluated  [pending]
+          detail     : Blueprint (described, not observed): backend/routing.py: DecisionRouter.decide() sets
+                       requires_human_confirmation when no candidate matched, the winning score < 0.6, or
+                       spec.risk_level != 'low'
+      2. conversation pauses  [pending]
+          detail     : Blueprint (described, not observed): backend/main.py: chat() returns
+                       status='waiting_for_confirmation' with an empty trace and no graph patch when the
+                       initial lexical route needs confirmation
+      3. human confirms  [pending]
+          detail     : Blueprint (described, not observed): the client accepts the proposal and posts the
+                       patch; GraphPatch.requires_human_confirmation is honoured before /api/patch is called
+
+Status legend
+  ready      : declared, never run
+  running    : execution in progress
+  completed  : finished successfully
+  waiting    : paused for a human decision
+  error      : stopped with an error
+  cancelled  : stopped by a gate or reviewer
+  unknown    : source did not say (never treated as success)
+  step-only statuses:
+    pending    : not started yet
+    skipped    : skipped by a gate or policy
+
+Issues (0)
+  No FlowView findings: the source looked consistent.

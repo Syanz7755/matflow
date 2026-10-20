@@ -1,0 +1,64 @@
+{
+  "schema_version": "1.0",
+  "known_results": {
+    "01_eis_basic_qc": {
+      "high_frequency_intercept_ohm": 5.0
+    },
+    "02_xrd_phase_identification": {
+      "dominant_phase": "anatase_tio2",
+      "main_peak_deg": 25.3
+    },
+    "03_uvvis_decay": {
+      "lambda_max_nm": 664,
+      "concentration_trend": "monotonic_decrease"
+    },
+    "04_pycnometer_specific_gravity": {
+      "specific_gravity": 2.6,
+      "tolerance": 0.02
+    },
+    "05_tga_caco3": {
+      "caco3_mass_fraction_percent": 20.0,
+      "tolerance": 0.5
+    },
+    "06_ftir_functional_groups": {
+      "dominant_peak_cm-1": 1710,
+      "assignment": "carbonyl_candidate"
+    },
+    "07_dsc_transition_enthalpy": {
+      "peak_temperature_c": 58.0,
+      "transition": "endothermic_peak"
+    },
+    "08_four_point_resistivity": {
+      "voltage_current_slope_ohm": 120.0,
+      "film_thickness_nm": 100.0
+    },
+    "09_tensile_curve": {
+      "youngs_modulus_gpa": 70.0,
+      "yield_stress_mpa": 140.0
+    },
+    "10_acid_base_titration": {
+      "equivalence_volume_ml": 25.0,
+      "titrant_concentration_m": 0.1
+    },
+    "11_rc_transient": {
+      "time_constant_ms": 20.0,
+      "final_voltage_v": 5.0
+    },
+    "12_photoelectric_effect": {
+      "planck_constant_ev_s": 4.1357e-15,
+      "work_function_ev": 2.1
+    },
+    "13_michelson_wavelength": {
+      "wavelength_nm": 632.8,
+      "tolerance_nm": 1.0
+    },
+    "14_rietveld_refinement": {
+      "requested_tool_id": "rietveld_refinement",
+      "required_handling": "propose_search_or_adaptation_then_human_review"
+    },
+    "15_raman_mapping": {
+      "requested_tool_id": "raman_mapping_analysis",
+      "required_handling": "propose_search_or_adaptation_then_human_review"
+    }
+  }
+}

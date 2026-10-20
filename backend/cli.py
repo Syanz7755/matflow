@@ -16,6 +16,8 @@ from urllib import request as urlrequest
 
 import yaml
 
+from .saves import list_saves, resolve_data_root, validate_save_name
+
 ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_FRONTEND_ROOT = ROOT.parent / "matflow-frontend"
 UI_MANIFEST = "matflow-ui.json"
@@ -148,7 +150,8 @@ def diagnose(ui: str = "none", ui_path: str | None = None) -> int:
     checks = [
         ("Python", f"{sys.version_info.major}.{sys.version_info.minor}.{sys.version_info.micro}"),
         ("Project root", str(ROOT)),
-        ("Data root", os.getenv("MATFLOW_DATA_ROOT", str(ROOT / "data"))),
+        ("Open save", str(resolve_data_root(ROOT))),
+        ("Saves", ", ".join(item["name"] for item in list_saves(ROOT)) or "(none yet)"),
     ]
     try:
         import fastapi
@@ -172,6 +175,17 @@ def diagnose(ui: str = "none", ui_path: str | None = None) -> int:
             return 1
     for label, value in checks:
         print(f"{label:18} {value}")
+    return 0
+
+
+def print_saves() -> int:
+    opened = resolve_data_root(ROOT)
+    saves = list_saves(ROOT)
+    if not saves:
+        print("No saves yet; the first start creates data/saves/default.")
+    for item in saves:
+        marker = "*" if Path(item["path"]) == opened else " "
+        print(f"{marker} {item['name']:32} graph={'yes' if item['has_graph'] else 'no':3} uploads={item['uploads']}")
     return 0
 
 
@@ -234,15 +248,38 @@ def main() -> int:
     serve_parser = commands.add_parser("serve", help="compatibility alias for start --ui none")
     serve_parser.add_argument("--host", default="127.0.0.1")
     serve_parser.add_argument("--port", type=int, default=8000)
+    for subparser in (start_parser, serve_parser):
+        subparser.add_argument("--save", help="open data/saves/<SAVE> (default: $MATFLOW_SAVE or 'default')")
+    commands.add_parser("saves", help="list the save folders under data/saves")
+    demo_parser = commands.add_parser("demo", help="run an explicit offline reference-case demo")
+    demo_cases = demo_parser.add_subparsers(dest="demo_case", required=True)
+    qe_mgo_parser = demo_cases.add_parser("qe-mgo", help="replay the pinned pristine-MgO QE SCF case")
+    qe_mgo_parser.add_argument("--output", required=True, type=Path, help="new archive directory; existing paths are refused")
     args = parser.parse_args()
     try:
+        if getattr(args, "save", None):
+            # The server subprocess inherits the environment, so it opens this save.
+            os.environ["MATFLOW_SAVE"] = validate_save_name(args.save)
+            os.environ.pop("MATFLOW_DATA_ROOT", None)
+        if args.command == "saves":
+            return print_saves()
         if args.command == "diagnose":
             return diagnose(args.ui, args.ui_path)
+        if args.command == "demo":
+            from .demo import DemoArchiveError, run_qe_mgo_demo
+
+            try:
+                summary = run_qe_mgo_demo(args.output)
+            except DemoArchiveError as exc:
+                raise LauncherError(str(exc)) from exc
+            print(json.dumps(summary, ensure_ascii=False, indent=2))
+            return 0
         if args.command == "serve":
             return start(ui="none", ui_path=None, host=args.host, port=args.port, ui_port=5173)
         return start(ui=args.ui, ui_path=args.ui_path, host=args.host, port=args.port, ui_port=args.ui_port)
     except LauncherError as exc:
-        print(f"MatFlow startup failed: {exc}", file=sys.stderr)
+        label = "command" if args.command == "demo" else "startup"
+        print(f"MatFlow {label} failed: {exc}", file=sys.stderr)
         return 1
 
 

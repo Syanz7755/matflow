@@ -1,8 +1,8 @@
 {
   "schema_version": "1.0",
   "suite_id": "prompt-to-workflow-v1",
-  "description": "Long research prompts -> LLM decomposition into action units -> per-action routing (Jev when reachable, otherwise the LLM; never keywords) -> typed, directed dataflow. Prompts are read from examples/long_prompt_cases.json by case_id; this file holds only what the constructed workflow must satisfy.",
-  "prompt_source": "examples/long_prompt_cases.json",
+  "description": "Long research prompts -> LLM decomposition into action units -> per-action routing (Jev when reachable, otherwise the LLM; never keywords) -> typed, directed dataflow. Prompts are read from tests/suites/long_prompt_cases.json by case_id; this file holds only what the constructed workflow must satisfy.",
+  "prompt_source": "tests/suites/long_prompt_cases.json",
   "expectation_keys": {
     "fixtures": "files uploaded into the case's private save before planning",
     "statuses": "allowed WorkflowPlan.status values; a tool whose required parameter (e.g. reference peaks) the prompt does not state can only end in needs_confirmation",
@@ -164,7 +164,7 @@
     {
       "case_id": "long_ftir_01_functional_groups",
       "fixtures": [
-        "examples/data/06_ftir_functional_group_assignment/ftir_spectrum.csv"
+        "tests/fixtures/teaching_lab/06_ftir_functional_group_assignment/ftir_spectrum.csv"
       ],
       "statuses": [
         "planned",
@@ -195,8 +195,8 @@
     {
       "case_id": "long_uvvis_01_decay_kinetics",
       "fixtures": [
-        "examples/data/03_uvvis_methylene_blue_decay/calibration_curve.csv",
-        "examples/data/03_uvvis_methylene_blue_decay/absorbance_time_series.csv"
+        "tests/fixtures/teaching_lab/03_uvvis_methylene_blue_decay/calibration_curve.csv",
+        "tests/fixtures/teaching_lab/03_uvvis_methylene_blue_decay/absorbance_time_series.csv"
       ],
       "statuses": [
         "needs_confirmation",
@@ -216,7 +216,7 @@
     {
       "case_id": "long_tga_01_carbonate_content",
       "fixtures": [
-        "examples/data/05_tga_caco3_content/tga_mass_loss.csv"
+        "tests/fixtures/teaching_lab/05_tga_caco3_content/tga_mass_loss.csv"
       ],
       "statuses": [
         "needs_confirmation",
@@ -236,7 +236,7 @@
     {
       "case_id": "long_dsc_01_transition_enthalpy",
       "fixtures": [
-        "examples/data/07_dsc_transition_enthalpy/dsc_heating.csv"
+        "tests/fixtures/teaching_lab/07_dsc_transition_enthalpy/dsc_heating.csv"
       ],
       "statuses": [
         "needs_confirmation",
@@ -281,7 +281,7 @@
     {
       "case_id": "long_zh_02_four_point_probe",
       "fixtures": [
-        "examples/data/08_four_point_probe_resistivity/four_point_measurements.csv"
+        "tests/fixtures/teaching_lab/08_four_point_probe_resistivity/four_point_measurements.csv"
       ],
       "statuses": [
         "needs_confirmation",
@@ -357,7 +357,7 @@
     {
       "case_id": "long_safety_02_override_rules",
       "fixtures": [
-        "examples/data/05_tga_caco3_content/tga_mass_loss.csv"
+        "tests/fixtures/teaching_lab/05_tga_caco3_content/tga_mass_loss.csv"
       ],
       "statuses": [
         "refused"

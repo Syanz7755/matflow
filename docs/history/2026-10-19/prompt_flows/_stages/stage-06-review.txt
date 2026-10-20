@@ -1,0 +1,40 @@
+MatFlow backend runtime flow (blueprint) — phase 6: Review gate (review_policy.after_run -> waiting)
+────────────────────────────────────────────────────────────────────────
+source     : flowview phase blueprint
+graph      : none in this document
+phases     : 1
+issues     : 0 error(s), 0 warning(s)
+meta       : stage_index=6, stage_name=review, stage_title=Review gate (review_policy.after_run -> waiting),
+             modes=stages
+
+Phases (1)
+  [1] Review gate (review_policy.after_run -> waiting) (review)  [pending]
+      1. review policy evaluated  [pending]
+          detail     : Blueprint (described, not observed): backend/workspace_runtime.py: _run_node() -> if
+                       node.review_policy.after_run and not stopped: node.status='waiting',
+                       node.review_state=ReviewState(status='pending'); execute_workflow() returns early so
+                       downstream nodes stay untouched
+      2. human decision submitted  [pending]
+          detail     : Blueprint (described, not observed): backend/main.py: POST /api/workflow/decision ->
+                       WorkspaceRuntime.submit_node_review(node_id, decision, comment); decision in {continue,
+                       revise, stop}; 'continue' approves and re-runs execute_workflow(), 'stop' sets
+                       node.status='cancelled'; an invalid state raises ValueError -> HTTP 422
+      3. legacy decision alias  [pending]
+          detail     : Blueprint (described, not observed): backend/main.py: POST /api/workflow/human-decision
+                       -> submit_human_decision() maps approve/continue to 'continue' and anything else to
+                       'stop'
+
+Status legend
+  ready      : declared, never run
+  running    : execution in progress
+  completed  : finished successfully
+  waiting    : paused for a human decision
+  error      : stopped with an error
+  cancelled  : stopped by a gate or reviewer
+  unknown    : source did not say (never treated as success)
+  step-only statuses:
+    pending    : not started yet
+    skipped    : skipped by a gate or policy
+
+Issues (0)
+  No FlowView findings: the source looked consistent.

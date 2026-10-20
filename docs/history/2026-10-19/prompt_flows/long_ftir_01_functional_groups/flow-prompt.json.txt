@@ -1,0 +1,187 @@
+{
+  "flowview_schema": "1.0",
+  "document": {
+    "title": "MatFlow routing preview (read-only)",
+    "source": "dry-route:D:\\Projects\\matflow",
+    "graph": null,
+    "trace": null,
+    "phases": [
+      {
+        "name": "prompt",
+        "title": "Prompt (input)",
+        "steps": [
+          {
+            "name": "user prompt",
+            "status": "completed",
+            "detail": "\u3010\u6837\u54c1\u4fe1\u606f\u3011\u8fd9\u662f\u6211\u7528 KBr \u538b\u7247\u6cd5\u5236\u5907\u7684\u805a\u5408\u7269\u8584\u819c\u6837\u54c1\uff0c\u6837\u54c1\u4e0e KBr \u6309\u5927\u7ea6 1:100 \u7684\u6bd4\u4f8b\u6df7\u5408\u7814\u78e8\uff0c\u538b\u5236\u6210\u76f4\u5f84 13 mm \u7684\u900f\u660e\u7247\uff0c\u6d4b\u8bd5\u524d\u5728\u7ea2\u5916\u706f\u4e0b\u5e72\u71e5 20 \u5206\u949f\u4ee5\u9664\u53bb\u5438\u9644\u6c34\u3002\n\u3010\u91c7\u96c6\u53c2\u6570\u3011Thermo Nicolet iS50 \u5085\u91cc\u53f6\u53d8\u6362\u7ea2\u5916\u5149\u8c31\u4eea\uff0c\u5206\u8fa8\u7387 4 cm-1\uff0c\u626b\u63cf\u6b21\u6570 32 \u6b21\uff0c\u626b\u63cf\u8303\u56f4 4000 \u5230 400 cm-1\uff0c\u68c0\u6d4b\u5668\u4e3a DTGS\uff0c\u80cc\u666f\u8c31\u5728\u76f8\u540c\u6761\u4ef6\u4e0b\u91c7\u96c6\u5e76\u5df2\u6263\u9664\u3002\u6837\u54c1\u4ed3\u6ca1\u6709\u5145\u6c2e\uff0c\u6240\u4ee5\u5728 2350 cm-1 \u9644\u8fd1\u53ef\u80fd\u6b8b\u7559 CO2 \u7684\u53cc\u5cf0\uff0c\u5728 667 cm-1 \u9644\u8fd1\u4e5f\u53ef\u80fd\u6709 CO2 \u5f2f\u66f2\u632f\u52a8\uff0c\u5224\u65ad\u65f6\u8bf7\u628a\u8fd9\u4e24\u4e2a\u4f4d\u7f6e\u5f53\u4f5c\u53ef\u80fd\u7684\u7a7a\u6c14\u5cf0\u5904\u7406\u3002\n\u3010\u6570\u636e\u8bf4\u660e\u3011\u5bfc\u51fa\u7684\u4e24\u5217\u662f wavenumber_cm-1 \u548c transmittance_percent\uff0c\u6a2a\u8f74\u4ece\u9ad8\u6ce2\u6570\u5230\u4f4e\u6ce2\u6570\u9012\u51cf\uff0c\u900f\u8fc7\u7387\u57fa\u7ebf\u8f7b\u5fae\u503e\u659c\uff0c\u5728 3400 cm-1 \u9644\u8fd1\u6709\u4e00\u4e2a\u5f88\u5bbd\u7684\u5438\u6536\u5e26\uff0c\u6000\u7591\u662f\u7f9f\u57fa\u6216\u5438\u9644\u6c34\u3002\n\u3010\u8bf7\u6c42\u30111) \u627e\u51fa\u4e3b\u8981\u7684\u5438\u6536\u5cf0\u4f4d\u7f6e\uff0c\u5e76\u6309\u5b98\u80fd\u56e2\u533a\u57df\u5206\u7c7b\uff1a3700-3200\u30013000-2800\u30011800-1500\u30011500-1000\u30011000-400 \u4e94\u4e2a\u533a\u95f4\u5206\u522b\u5217\u51fa\u30022) \u5bf9\u6bcf\u4e2a\u533a\u95f4\u7684\u5cf0\u7ed9\u51fa\u6700\u53ef\u80fd\u7684\u5b98\u80fd\u56e2\u5f52\u5c5e\uff0c\u5e76\u8bf4\u660e\u8be5\u5f52\u5c5e\u662f\u5f3a\u8bc1\u636e\u8fd8\u662f\u5f31\u8bc1\u636e\uff0c\u6bd4\u5982\u662f\u5426\u4e0e\u5176\u4ed6\u5cf0\u7684\u7ec4\u5408\u76f8\u7b26\u30023) \u660e\u786e\u6307\u51fa\u4e0d\u80fd\u4ec5\u51ed\u7ea2\u5916\u786e\u8ba4\u7684\u90e8\u5206\uff0c\u4f8b\u5982\u53d6\u4ee3\u57fa\u4f4d\u7f6e\u6216\u4ea4\u8054\u5ea6\u3002\n\u3010\u7ea6\u675f\u3011\u4e0d\u8981\u76f4\u63a5\u7ed9\u51fa\u6700\u7ec8\u7ed3\u6784\u5f0f\uff1b\u8fd9\u5c5e\u4e8e\u9700\u8981\u4eba\u5de5\u5ba1\u6838\u7684\u7ed3\u8bba\u3002\u5982\u679c\u73b0\u6709\u5de5\u5177\u4e0d\u652f\u6301\u7ea2\u5916\u5cf0\u5f52\u5c5e\uff0c\u8bf7\u8bf4\u660e\u7f3a\u5931\u80fd\u529b\uff0c\u4e0d\u8981\u7528\u901a\u7528\u5316\u5b66\u77e5\u8bc6\u66ff\u4ee3\u8ba1\u7b97\u6d41\u7a0b\u3002",
+            "error": null,
+            "node_id": null,
+            "tools": []
+          },
+          {
+            "name": "prompt size",
+            "status": "completed",
+            "detail": "636 character(s), 48 whitespace-separated token(s); available input types: RawData, TypedTable",
+            "error": null,
+            "node_id": null,
+            "tools": []
+          },
+          {
+            "name": "retriever tokenisation",
+            "status": "completed",
+            "detail": "backend/routing.py _tokens() keeps the distinct [a-z0-9]+ runs longer than one character. The 636-character prompt yields 48 occurrence(s) / 27 distinct token(s) and 372 CJK character(s); the router was given 27 distinct token(s) (48 occurrence(s), 372 CJK character(s)) [verbatim]",
+            "error": null,
+            "node_id": null,
+            "tools": []
+          }
+        ],
+        "error": null
+      },
+      {
+        "name": "candidates",
+        "title": "Candidates",
+        "steps": [
+          {
+            "name": "no candidate retrieved",
+            "status": "unknown",
+            "detail": "CandidateRetriever found no active compatible tool for this prompt",
+            "error": null,
+            "node_id": null,
+            "tools": []
+          }
+        ],
+        "error": null
+      },
+      {
+        "name": "decision",
+        "title": "Decision",
+        "steps": [
+          {
+            "name": "no tool selected",
+            "status": "waiting",
+            "detail": "confidence 0.00; human confirmation required: yes; rationale: No active compatible tool matched the request.",
+            "error": null,
+            "node_id": null,
+            "tools": []
+          },
+          {
+            "name": "dry run guarantee",
+            "status": "completed",
+            "detail": "DecisionRouter() ran without the JEV/model router: record_routing() was not called and no graph, settings or summary file was written",
+            "error": null,
+            "node_id": null,
+            "tools": []
+          }
+        ],
+        "error": null
+      }
+    ],
+    "issues": [
+      {
+        "severity": "info",
+        "code": "route.dry_run",
+        "message": "This route was computed read-only: nothing was persisted to the task summary log.",
+        "where": "dry-route:D:\\Projects\\matflow",
+        "hint": null,
+        "detail": null
+      }
+    ],
+    "meta": {
+      "mode": "dry-run",
+      "graph_version": "0",
+      "candidates": "0",
+      "confirmation": "yes",
+      "prompt_characters": "636",
+      "prompt": "\u3010\u6837\u54c1\u4fe1\u606f\u3011\u8fd9\u662f\u6211\u7528 KBr \u538b\u7247\u6cd5\u5236\u5907\u7684\u805a\u5408\u7269\u8584\u819c\u6837\u54c1\uff0c\u6837\u54c1\u4e0e KBr \u6309\u5927\u7ea6 1:100 \u7684\u6bd4\u4f8b\u6df7\u5408\u7814\u78e8\uff0c\u538b\u5236\u6210\u76f4\u5f84 13 mm \u7684\u900f\u660e\u7247\uff0c\u6d4b\u8bd5\u524d\u5728\u7ea2\u5916\u706f\u4e0b\u5e72\u71e5 20 \u5206\u949f\u4ee5\u9664\u53bb\u5438\u9644\u6c34\u3002\n\u3010\u91c7\u96c6\u53c2\u6570\u3011Thermo Nicolet iS50 \u5085\u91cc\u53f6\u53d8\u6362\u7ea2\u5916\u5149\u8c31\u4eea\uff0c\u5206\u8fa8\u7387 4 cm-1\uff0c\u626b\u63cf\u6b21\u6570 32 \u6b21\uff0c\u626b\u63cf\u8303\u56f4 4000 \u5230 400 cm-1\uff0c\u68c0\u6d4b\u5668\u4e3a DTGS\uff0c\u80cc\u666f\u8c31\u5728\u76f8\u540c\u6761\u4ef6\u4e0b\u91c7\u96c6\u5e76\u5df2\u6263\u9664\u3002\u6837\u54c1\u4ed3\u6ca1\u6709\u5145\u6c2e\uff0c\u6240\u4ee5\u5728 2350 cm-1 \u9644\u8fd1\u53ef\u80fd\u6b8b\u7559 CO2 \u7684\u53cc\u5cf0\uff0c\u5728 667 cm-1 \u9644\u8fd1\u4e5f\u53ef\u80fd\u6709 CO2 \u5f2f\u66f2\u632f\u52a8\uff0c\u5224\u65ad\u65f6\u8bf7\u628a\u8fd9\u4e24\u4e2a\u4f4d\u7f6e\u5f53\u4f5c\u53ef\u80fd\u7684\u7a7a\u6c14\u5cf0\u5904\u7406\u3002\n\u3010\u6570\u636e\u8bf4\u660e\u3011\u5bfc\u51fa\u7684\u4e24\u5217\u662f wavenumber_cm-1 \u548c transmittance_percent\uff0c\u6a2a\u8f74\u4ece\u9ad8\u6ce2\u6570\u5230\u4f4e\u6ce2\u6570\u9012\u51cf\uff0c\u900f\u8fc7\u7387\u57fa\u7ebf\u8f7b\u5fae\u503e\u659c\uff0c\u5728 3400 cm-1 \u9644\u8fd1\u6709\u4e00\u4e2a\u5f88\u5bbd\u7684\u5438\u6536\u5e26\uff0c\u6000\u7591\u662f\u7f9f\u57fa\u6216\u5438\u9644\u6c34\u3002\n\u3010\u8bf7\u6c42\u30111) \u627e\u51fa\u4e3b\u8981\u7684\u5438\u6536\u5cf0\u4f4d\u7f6e\uff0c\u5e76\u6309\u5b98\u80fd\u56e2\u533a\u57df\u5206\u7c7b\uff1a3700-3200\u30013000-2800\u30011800-1500\u30011500-1000\u30011000-400 \u4e94\u4e2a\u533a\u95f4\u5206\u522b\u5217\u51fa\u30022) \u5bf9\u6bcf\u4e2a\u533a\u95f4\u7684\u5cf0\u7ed9\u51fa\u6700\u53ef\u80fd\u7684\u5b98\u80fd\u56e2\u5f52\u5c5e\uff0c\u5e76\u8bf4\u660e\u8be5\u5f52\u5c5e\u662f\u5f3a\u8bc1\u636e\u8fd8\u662f\u5f31\u8bc1\u636e\uff0c\u6bd4\u5982\u662f\u5426\u4e0e\u5176\u4ed6\u5cf0\u7684\u7ec4\u5408\u76f8\u7b26\u30023) \u660e\u786e\u6307\u51fa\u4e0d\u80fd\u4ec5\u51ed\u7ea2\u5916\u786e\u8ba4\u7684\u90e8\u5206\uff0c\u4f8b\u5982\u53d6\u4ee3\u57fa\u4f4d\u7f6e\u6216\u4ea4\u8054\u5ea6\u3002\n\u3010\u7ea6\u675f\u3011\u4e0d\u8981\u76f4\u63a5\u7ed9\u51fa\u6700\u7ec8\u7ed3\u6784\u5f0f\uff1b\u8fd9\u5c5e\u4e8e\u9700\u8981\u4eba\u5de5\u5ba1\u6838\u7684\u7ed3\u8bba\u3002\u5982\u679c\u73b0\u6709\u5de5\u5177\u4e0d\u652f\u6301\u7ea2\u5916\u5cf0\u5f52\u5c5e\uff0c\u8bf7\u8bf4\u660e\u7f3a\u5931\u80fd\u529b\uff0c\u4e0d\u8981\u7528\u901a\u7528\u5316\u5b66\u77e5\u8bc6\u66ff\u4ee3\u8ba1\u7b97\u6d41\u7a0b\u3002",
+      "retriever_tokens": "27",
+      "routing_tokens": "27",
+      "retriever_tokens_dropped": "0",
+      "cjk_characters": "372",
+      "routing_preview": "verbatim",
+      "modes": "dry-run"
+    },
+    "truncated": []
+  },
+  "phases": [
+    {
+      "name": "prompt",
+      "title": "Prompt (input)",
+      "steps": [
+        {
+          "name": "user prompt",
+          "status": "completed",
+          "detail": "\u3010\u6837\u54c1\u4fe1\u606f\u3011\u8fd9\u662f\u6211\u7528 KBr \u538b\u7247\u6cd5\u5236\u5907\u7684\u805a\u5408\u7269\u8584\u819c\u6837\u54c1\uff0c\u6837\u54c1\u4e0e KBr \u6309\u5927\u7ea6 1:100 \u7684\u6bd4\u4f8b\u6df7\u5408\u7814\u78e8\uff0c\u538b\u5236\u6210\u76f4\u5f84 13 mm \u7684\u900f\u660e\u7247\uff0c\u6d4b\u8bd5\u524d\u5728\u7ea2\u5916\u706f\u4e0b\u5e72\u71e5 20 \u5206\u949f\u4ee5\u9664\u53bb\u5438\u9644\u6c34\u3002\n\u3010\u91c7\u96c6\u53c2\u6570\u3011Thermo Nicolet iS50 \u5085\u91cc\u53f6\u53d8\u6362\u7ea2\u5916\u5149\u8c31\u4eea\uff0c\u5206\u8fa8\u7387 4 cm-1\uff0c\u626b\u63cf\u6b21\u6570 32 \u6b21\uff0c\u626b\u63cf\u8303\u56f4 4000 \u5230 400 cm-1\uff0c\u68c0\u6d4b\u5668\u4e3a DTGS\uff0c\u80cc\u666f\u8c31\u5728\u76f8\u540c\u6761\u4ef6\u4e0b\u91c7\u96c6\u5e76\u5df2\u6263\u9664\u3002\u6837\u54c1\u4ed3\u6ca1\u6709\u5145\u6c2e\uff0c\u6240\u4ee5\u5728 2350 cm-1 \u9644\u8fd1\u53ef\u80fd\u6b8b\u7559 CO2 \u7684\u53cc\u5cf0\uff0c\u5728 667 cm-1 \u9644\u8fd1\u4e5f\u53ef\u80fd\u6709 CO2 \u5f2f\u66f2\u632f\u52a8\uff0c\u5224\u65ad\u65f6\u8bf7\u628a\u8fd9\u4e24\u4e2a\u4f4d\u7f6e\u5f53\u4f5c\u53ef\u80fd\u7684\u7a7a\u6c14\u5cf0\u5904\u7406\u3002\n\u3010\u6570\u636e\u8bf4\u660e\u3011\u5bfc\u51fa\u7684\u4e24\u5217\u662f wavenumber_cm-1 \u548c transmittance_percent\uff0c\u6a2a\u8f74\u4ece\u9ad8\u6ce2\u6570\u5230\u4f4e\u6ce2\u6570\u9012\u51cf\uff0c\u900f\u8fc7\u7387\u57fa\u7ebf\u8f7b\u5fae\u503e\u659c\uff0c\u5728 3400 cm-1 \u9644\u8fd1\u6709\u4e00\u4e2a\u5f88\u5bbd\u7684\u5438\u6536\u5e26\uff0c\u6000\u7591\u662f\u7f9f\u57fa\u6216\u5438\u9644\u6c34\u3002\n\u3010\u8bf7\u6c42\u30111) \u627e\u51fa\u4e3b\u8981\u7684\u5438\u6536\u5cf0\u4f4d\u7f6e\uff0c\u5e76\u6309\u5b98\u80fd\u56e2\u533a\u57df\u5206\u7c7b\uff1a3700-3200\u30013000-2800\u30011800-1500\u30011500-1000\u30011000-400 \u4e94\u4e2a\u533a\u95f4\u5206\u522b\u5217\u51fa\u30022) \u5bf9\u6bcf\u4e2a\u533a\u95f4\u7684\u5cf0\u7ed9\u51fa\u6700\u53ef\u80fd\u7684\u5b98\u80fd\u56e2\u5f52\u5c5e\uff0c\u5e76\u8bf4\u660e\u8be5\u5f52\u5c5e\u662f\u5f3a\u8bc1\u636e\u8fd8\u662f\u5f31\u8bc1\u636e\uff0c\u6bd4\u5982\u662f\u5426\u4e0e\u5176\u4ed6\u5cf0\u7684\u7ec4\u5408\u76f8\u7b26\u30023) \u660e\u786e\u6307\u51fa\u4e0d\u80fd\u4ec5\u51ed\u7ea2\u5916\u786e\u8ba4\u7684\u90e8\u5206\uff0c\u4f8b\u5982\u53d6\u4ee3\u57fa\u4f4d\u7f6e\u6216\u4ea4\u8054\u5ea6\u3002\n\u3010\u7ea6\u675f\u3011\u4e0d\u8981\u76f4\u63a5\u7ed9\u51fa\u6700\u7ec8\u7ed3\u6784\u5f0f\uff1b\u8fd9\u5c5e\u4e8e\u9700\u8981\u4eba\u5de5\u5ba1\u6838\u7684\u7ed3\u8bba\u3002\u5982\u679c\u73b0\u6709\u5de5\u5177\u4e0d\u652f\u6301\u7ea2\u5916\u5cf0\u5f52\u5c5e\uff0c\u8bf7\u8bf4\u660e\u7f3a\u5931\u80fd\u529b\uff0c\u4e0d\u8981\u7528\u901a\u7528\u5316\u5b66\u77e5\u8bc6\u66ff\u4ee3\u8ba1\u7b97\u6d41\u7a0b\u3002",
+          "error": null,
+          "node_id": null,
+          "tools": []
+        },
+        {
+          "name": "prompt size",
+          "status": "completed",
+          "detail": "636 character(s), 48 whitespace-separated token(s); available input types: RawData, TypedTable",
+          "error": null,
+          "node_id": null,
+          "tools": []
+        },
+        {
+          "name": "retriever tokenisation",
+          "status": "completed",
+          "detail": "backend/routing.py _tokens() keeps the distinct [a-z0-9]+ runs longer than one character. The 636-character prompt yields 48 occurrence(s) / 27 distinct token(s) and 372 CJK character(s); the router was given 27 distinct token(s) (48 occurrence(s), 372 CJK character(s)) [verbatim]",
+          "error": null,
+          "node_id": null,
+          "tools": []
+        }
+      ],
+      "error": null
+    },
+    {
+      "name": "candidates",
+      "title": "Candidates",
+      "steps": [
+        {
+          "name": "no candidate retrieved",
+          "status": "unknown",
+          "detail": "CandidateRetriever found no active compatible tool for this prompt",
+          "error": null,
+          "node_id": null,
+          "tools": []
+        }
+      ],
+      "error": null
+    },
+    {
+      "name": "decision",
+      "title": "Decision",
+      "steps": [
+        {
+          "name": "no tool selected",
+          "status": "waiting",
+          "detail": "confidence 0.00; human confirmation required: yes; rationale: No active compatible tool matched the request.",
+          "error": null,
+          "node_id": null,
+          "tools": []
+        },
+        {
+          "name": "dry run guarantee",
+          "status": "completed",
+          "detail": "DecisionRouter() ran without the JEV/model router: record_routing() was not called and no graph, settings or summary file was written",
+          "error": null,
+          "node_id": null,
+          "tools": []
+        }
+      ],
+      "error": null
+    }
+  ],
+  "issues": [
+    {
+      "severity": "info",
+      "code": "route.dry_run",
+      "message": "This route was computed read-only: nothing was persisted to the task summary log.",
+      "where": "dry-route:D:\\Projects\\matflow",
+      "hint": null,
+      "detail": null
+    }
+  ],
+  "exit_code_hint": 0
+}

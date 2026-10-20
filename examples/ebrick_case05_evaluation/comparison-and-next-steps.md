@@ -1,64 +1,64 @@
-# EBrick case 05：预期、实跑与下一步
+# EBrick case 05: expectations, actual run and next steps
 
-> 范围说明：本文是 EBrick Reference Case 的历史评估。图规划、审核和状态聚合属于 Platform Core 问题；Cp/G 换算、复阻抗类型、阈值和科学验收属于 EIS Domain Package 或本案例，不能作为平台默认能力。
+> Scope note: this document is a historical evaluation of the EBrick Reference Case. Graph planning, review and state aggregation are Platform Core concerns; Cp/G conversion, complex-impedance types, thresholds and scientific acceptance belong to the EIS Domain Package or to this case and must not become default platform capability.
 
-## 结论
+## Conclusion
 
-这次测试在“编排结构”层面成功，在“科学计算”层面按预期失败。十节点、九连边的工作流能够导入、执行、在末端等待人工复核，并在选择继续后全部完成；但当前所谓 Nyquist 预览把 `primary=Cp` 和 `secondary=G` 直接当成阻抗实部、虚部，不能用于物理解读。
+This test succeeded at the "orchestration structure" level and failed at the "scientific computation" level, as expected. The ten-node, nine-edge workflow could be imported, executed, paused at human review on the final node, and then completed fully once continue was chosen; but the current so-called Nyquist preview treats `primary=Cp` and `secondary=G` directly as the real and imaginary parts of impedance, which makes it unusable for physical interpretation.
 
-工具节点先在本地文件中生成，工具 ID、定义与预期结果均没有放进路由 prompt。冻结预期后，四个经过审核的别名才发布到本地节点注册表，因为执行器若完全看不到节点，运行时也不可能调用它们。因此这里的“不可见”边界是：路由前不泄露设计过程、节点定义或答案；运行时只允许系统看到已发布的节点契约。
+The tool nodes were generated in a local file first, and neither the tool ids, their definitions nor the expected results were placed into the routing prompt. Only after the expectations were frozen were the four reviewed aliases published to the local node registry, because a runtime cannot call nodes its executor cannot see at all. The "invisible" boundary here is therefore: the design process, node definitions and answers are not leaked before routing; at runtime the system is allowed to see only the published node contracts.
 
-## 预期与实际对比
+## Expected versus actual
 
-| 检查项 | 冻结预期 | 实际结果 | 判断 |
+| Check | Frozen expectation | Actual result | Verdict |
 |---|---|---|---|
-| 路由首选工具 | `ebrick_cp_g_normalize` | `ebrick_case05_import` | 不符合 |
-| 路由是否生成整条工作流 | 否；当前路由器只会选单个工具 | 否 | 符合能力判断 |
-| 路由置信情况 | Jev 可能分歧并要求确认 | 五个候选同为 100%，Jev 分歧，要求人工确认 | 风险命中 |
-| 工作流规模 | 10 节点、9 连边 | 10 节点、9 连边 | 符合 |
-| 首次运行终态 | 最终节点等待人工复核 | `preview-100khz` 等待复核 | 符合 |
-| 复核后终态 | 全部完成 | 10/10 节点完成 | 符合 |
-| 20 Hz QC | 33027/33027 | 33027/33027 | 符合 |
-| 1 kHz QC | 33027/22563 | 33027/22563 | 符合 |
-| 100 kHz QC | 33027/10464 | 33027/10464 | 符合 |
-| 每个预览点数 | 500 | 500 | 符合实现预期 |
-| 科学有效性 | 失败 | 失败 | 负对照命中 |
-| 首点坐标 | 当前实现约 `(-1.00071e-10, -3.68831e-08)`；正确阻抗约 `(2.428915e7, -8.281386e6)` | 与当前错误实现完全一致 | 确认语义缺陷 |
+| Router's first-choice tool | `ebrick_cp_g_normalize` | `ebrick_case05_import` | Does not match |
+| Does routing generate the whole workflow | No; the current router only selects a single tool | No | Matches the capability assessment |
+| Routing confidence | Jev may disagree and require confirmation | All five candidates at 100%, Jev disagreed, human confirmation required | Risk materialised |
+| Workflow size | 10 nodes, 9 edges | 10 nodes, 9 edges | Matches |
+| Final state after first run | the final node waits for human review | `preview-100khz` awaits review | Matches |
+| Final state after review | all complete | 10/10 nodes complete | Matches |
+| 20 Hz QC | 33027/33027 | 33027/33027 | Matches |
+| 1 kHz QC | 33027/22563 | 33027/22563 | Matches |
+| 100 kHz QC | 33027/10464 | 33027/10464 | Matches |
+| Points per preview | 500 | 500 | Matches the implementation's intent |
+| Scientific validity | fail | fail | Negative control materialised |
+| First-point coordinates | current implementation about `(-1.00071e-10, -3.68831e-08)`; correct impedance about `(2.428915e7, -8.281386e6)` | exactly consistent with the current broken implementation | Confirms the semantic defect |
 
-路由错误不是随机波动，而是检索与排序问题：导入、归一化和通用节点同时获得 100%，单工具路由缺乏“当前输入已是 RawData、下一步应做列映射”的阶段约束，最终选中了导入节点。它也没有把 prompt 中的顺序和三分支要求合成为图。
+The routing error is not random noise but a retrieval and ranking problem: import, normalization and the generic node all scored 100% at once, single-tool routing lacks the stage constraint "the current input is already RawData, so the next step should be column mapping", and the import node was selected in the end. Routing also failed to compose the ordering and three-branch requirements of the prompt into a graph.
 
-三条绘图分支虽然接在不同阈值的 QC 节点之后，却都绘制同一批前 500 行。说明当前绘图节点没有消费上游 QC 掩码或筛选后的数据，只是重新读取原始上传数据。QC 数字正确，并不意味着绘图使用了 QC 结果。
+Although the three plotting branches hang off QC nodes with different thresholds, all of them plot the same first 500 rows. That shows the current plotting node does not consume the upstream QC mask or the filtered data; it re-reads the original uploaded data. Correct QC numbers do not mean the plot used the QC result.
 
-另一个界面问题是：最终节点仍处于 Waiting 时，顶部已经显示“工作流运行完成”。这会把“引擎停止执行”和“流程业务完成”混为一谈。
+Another interface problem: while the final node was still Waiting, the header already showed "Workflow run complete". That conflates "the engine stopped executing" with "the business process completed".
 
-## 改进优先级
+## Improvement priorities
 
-### P0：先修科学数据契约
+### P0: fix the scientific data contract first
 
-1. 在 EIS Domain Package 中新增 `cp_g_to_impedance` Tool，显式输入频率 `f`、并联电容 `Cp`、电导 `G`，计算 `Y = G + j·2πf·Cp`、`Z = 1/Y`；同时记录单位、虚部符号约定、有限值检查和物理象限检查。
-2. 在 EIS Domain Package 中定义 `ComplexImpedanceSweep` 类型，禁止 `plot_nyquist` 直接接受只有 Cp/G 语义的普通表格。
-3. 让 QC 输出筛选后的数据或可传递的行掩码；绘图必须消费该输出，不得绕回上传文件。按 `curve_index` 保留 327 条扫描，而不是截取前 500 行。
+1. Add a `cp_g_to_impedance` Tool to the EIS Domain Package that takes frequency `f`, parallel capacitance `Cp` and conductance `G` explicitly and computes `Y = G + j·2πf·Cp`, `Z = 1/Y`; it must also record units, the imaginary-part sign convention, a finite-value check and a physical-quadrant check.
+2. Define a `ComplexImpedanceSweep` type in the EIS Domain Package and forbid `plot_nyquist` from accepting an ordinary table that only carries Cp/G semantics.
+3. Have QC output the filtered data or a transferable row mask; the plot must consume that output and must not fall back to the uploaded file. Keep 327 sweeps by `curve_index` instead of slicing the first 500 rows.
 
-### P1：把路由升级为阶段感知的图规划
+### P1: upgrade routing into stage-aware graph planning
 
-1. prompt 包含多个动作时，返回有序或分支 `GraphPatch`，而不是只选一个工具。
-2. 排序同时使用当前输入类型、节点输入/输出类型、已完成阶段和目标阶段；当已有 RawData 时，归一化应压过再次导入。
-3. 对并列 100% 禁止按注册顺序决胜；Jev 分歧时给出候选差异，或明确要求用户选择。
-4. 增加中文与中英混合分词，避免中文任务词在词法回退中消失。
+1. When a prompt contains several actions, return an ordered or branching `GraphPatch` instead of selecting only one tool.
+2. Rank using the current input type, node input/output types, completed stages and the target stage together; when RawData already exists, normalization should outrank importing again.
+3. Never break a tie at 100% by registry order; on a Jev disagreement, present the candidate differences or explicitly ask the user to choose.
+4. Add Chinese and mixed Chinese–English tokenization so Chinese task words do not vanish from lexical fallback. *(Superseded: lexical fallback was removed; routing is a type filter plus a model decision, so Chinese prompts reach the model verbatim.)*
 
-### P1：修正复核和状态表达
+### P1: fix review and state reporting
 
-1. 顶层状态由节点状态聚合：存在 Waiting 就显示“等待人工复核”，不能显示“完成”。
-2. 在复核面板分别展示“结构验证”和“科学验证”，本次只能接受前者。
-3. 在 Platform Core 增加草稿 Tool → 离线评估 → 审核 → 发布的通用生命周期，使隐藏测试 Tool 无需提前混入生产注册表。
+1. Aggregate the top-level status from node statuses: when any node is Waiting, show "awaiting human review" and never "complete".
+2. Show "structural validation" and "scientific validation" separately in the review panel; this run may accept only the former.
+3. Add the generic draft Tool → offline evaluation → review → publication lifecycle to Platform Core so hidden test Tools need not be mixed into the production registry in advance.
 
-### P2：建立 EBrick 回归基线
+### P2: establish the EBrick regression baseline
 
-1. 固化本例的 33027 行、327 条曲线、三档 QC 数量及首点阻抗数值。
-2. 对频率阈值做性质测试：阈值升高时保留行数应单调不增；不同阈值的绘图输入必须随之变化。
-3. 将既有分析报告中的 257 条成功拟合、70 条不完整或失败作为独立参考，不让工作流凭空声称完成等效电路拟合。
-4. 解析描述文件中的炉温程序、直径和厚度，并作为可追踪元数据贯穿转换、绘图和拟合。
+1. Freeze this case's 33027 rows, 327 curves, the three QC counts and the first-point impedance values.
+2. Property-test the frequency thresholds: as the threshold rises the number of retained rows must be non-increasing, and a different threshold must change the plotting input.
+3. Keep the existing analysis report's 257 successful fits and 70 incomplete or failed fits as an independent reference so the workflow cannot claim an equivalent-circuit fit out of thin air.
+4. Parse the furnace program, diameter and thickness from the description file and carry them as traceable metadata through conversion, plotting and fitting.
 
-## 建议的下一轮验收门槛
+## Suggested acceptance gate for the next round
 
-下一轮不应只要求“10 个节点都绿”。至少需要同时满足：首点阻抗与解析计算一致；20 Hz、1 kHz、100 kHz 分支的输入行数分别为 33027、22563、10464；图按扫描分组；最终复核前界面保持 Waiting；路由能从同一 prompt 生成或建议完整的多阶段图。
+The next round must not merely require "all 10 nodes green". It must satisfy at least: the first-point impedance agrees with the analytical calculation; the 20 Hz, 1 kHz and 100 kHz branches take 33027, 22563 and 10464 input rows respectively; the graph is grouped by sweep; the interface stays Waiting before the final review; and routing can generate or suggest a complete multi-stage graph from the same prompt.

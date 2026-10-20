@@ -1,0 +1,41 @@
+MatFlow backend runtime flow (blueprint) — phase 1: Request and trace correlation
+────────────────────────────────────────────────────────────────────────
+source     : flowview phase blueprint
+graph      : none in this document
+phases     : 1
+issues     : 0 error(s), 0 warning(s)
+meta       : stage_index=1, stage_name=request, stage_title=Request and trace correlation, modes=stages
+
+Phases (1)
+  [1] Request and trace correlation (request)  [pending]
+      1. request accepted  [pending]
+          detail     : Blueprint (described, not observed): backend/main.py: chat() -> audit('chat.received')
+                       then TaskState(user_message, graph_version=workspace.read_state().version,
+                       available_input_types)
+      2. trace id assigned  [pending]
+          detail     : Blueprint (described, not observed): backend/main.py: trace_request() HTTP middleware
+                       reads X-Trace-ID or generates uuid4().hex, calls backend/observability.py:
+                       set_trace_id() and echoes X-Trace-ID; current_trace_id() stamps every later audit
+                       record and task summary
+      3. input inspected  [pending]
+          detail     : Blueprint (described, not observed): backend/main.py: run_agent_tool('inspect_upload')
+                       -> backend/workspace_runtime.py: WorkspaceRuntime.inspect_dataset(upload_id) (read-only
+                       column/preview probe)
+      4. graph snapshot read  [pending]
+          detail     : Blueprint (described, not observed): backend/main.py: run_agent_tool('get_graph') ->
+                       WorkspaceRuntime.read_state() -> data/graph_state.json (GraphState.model_dump())
+
+Status legend
+  ready      : declared, never run
+  running    : execution in progress
+  completed  : finished successfully
+  waiting    : paused for a human decision
+  error      : stopped with an error
+  cancelled  : stopped by a gate or reviewer
+  unknown    : source did not say (never treated as success)
+  step-only statuses:
+    pending    : not started yet
+    skipped    : skipped by a gate or policy
+
+Issues (0)
+  No FlowView findings: the source looked consistent.

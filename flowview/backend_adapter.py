@@ -286,76 +286,28 @@ def schema_document(root: Path | None = None) -> FlowDocument:
     )
 
 
-def _prompt_token_diagnostic(prompt: str) -> tuple[int, int, int, str]:
-    """Count what the retriever can actually see in a prompt, and explain anomalies.
-
-    ``backend.routing._tokens`` keeps only ``[a-z0-9]+`` runs of length > 1 and returns them as a
-    **set**, so the count reported here is the size of that set, not the number of occurrences — a
-    repeated prompt must not look like a richer one than it is. CJK text contributes no tokens at
-    all, which is worth surfacing instead of leaving the reader to guess why a route looks wrong.
-    """
+def _cjk_characters(prompt: str) -> int:
+    """How many CJK characters the prompt holds (informational; routing never reads words)."""
     import re
 
-    occurrences = re.findall(r"[a-z0-9]+", prompt.lower())
-    distinct = {token for token in occurrences if len(token) > 1}
-    cjk = len(re.findall(r"[\u3400-\u9fff\uf900-\ufaff\u3040-\u30ff]", prompt))
-    note = ""
-    if cjk and not distinct:
-        note = " -- every CJK character is invisible to the retriever, so no candidate can match"
-    elif cjk > 20 * max(1, len(distinct)):
-        note = " -- the prompt is overwhelmingly CJK: lexical matching sees almost none of it"
-    elif not distinct:
-        note = " -- no token of length > 1 survived tokenisation, so nothing can match"
-    return len(occurrences), len(distinct), cjk, note
+    return len(re.findall(r"[㐀-鿿豈-﫿぀-ヿ]", prompt))
 
 
 MAX_TASK_MESSAGE = 4000
 
 
-def _route_preview_message(prompt: str, *, limit: int = MAX_TASK_MESSAGE) -> tuple[str, bool, tuple[str, ...]]:
-    """Build the text the router will actually see from a prompt of any length.
+def _route_preview_message(prompt: str, *, limit: int = MAX_TASK_MESSAGE) -> tuple[str, bool]:
+    """The text handed to ``TaskState.user_message`` (capped at ``limit`` characters).
 
-    ``backend/contracts.py`` caps ``TaskState.user_message`` at :data:`MAX_TASK_MESSAGE` characters,
-    so a longer prompt cannot be passed through as-is. The preview must contain **only the prompt's
-    own tokens**: adding descriptive header text of our own would enter the query set and invent
-    candidates that the real prompt never mentioned, which is worse than a refused request.
-
-    The retriever scores with a *set* intersection, so the preview is the distinct ``[a-z0-9]+`` runs
-    of the prompt (length > 1, first-appearance order). Returns the preview, whether it was
-    shortened, and the tokens that had to be dropped when even the deduplicated set was too long.
+    ``backend/contracts.py`` caps ``user_message`` at :data:`MAX_TASK_MESSAGE` characters, so a longer
+    prompt is cut to its own first ``limit`` characters (a prefix of the user's text, never text of
+    our own). The retriever does not read the message at all (it is a type filter), so the cut only
+    matters to the model that later decides; language and script play no part. Returns the text and
+    whether it was shortened.
     """
     if len(prompt) <= limit:
-        return prompt, False, ()
-    import re
-
-    tokens: list[str] = []
-    seen: set[str] = set()
-    for token in re.findall(r"[a-z0-9]+", prompt.lower()):
-        if len(token) > 1 and token not in seen:
-            seen.add(token)
-            tokens.append(token)
-
-    # First pass: fit whole tokens. An oversized token is skipped, never used to consume the budget,
-    # so the tokens after it still get their chance (they are often the ones naming a tool).
-    kept: list[str] = []
-    size = 0
-    dropped: list[str] = []
-    for token in tokens:
-        if size + len(token) + 1 > limit:
-            dropped.append(token)
-            continue
-        kept.append(token)
-        size += len(token) + 1
-
-    if not kept and dropped:
-        # Nothing fit at all (one enormous token). Truncating a prefix of the prompt's OWN token
-        # keeps the subset property: every character still comes from the user's text, so this can
-        # never manufacture a token the prompt did not contain. The token is reported as dropped
-        # because it was not routed whole.
-        room = max(1, limit - 1)
-        kept.append(dropped[0][:room])
-        size = room + 1
-    return " ".join(kept)[:limit], True, tuple(dropped)
+        return prompt, False
+    return prompt[:limit], True
 
 
 def dry_route(
@@ -365,7 +317,11 @@ def dry_route(
     include_candidates: bool = True,
     available_input_types: Sequence[str] = _DEFAULT_INPUT_TYPES,
 ) -> FlowDocument:
-    """Read-only routing preview: decide() with the lexical retriever, no JEV model, no persistence."""
+    """Read-only routing preview: decide() with the type-filter retriever, no model, no persistence.
+
+    The backend never routes by keywords: candidates come from a type filter and the choice from
+    Jev or the LLM. This offline preview runs no model, so it lists candidates and selects nothing.
+    """
     issues: list[FlowIssue] = []
     prompt_text = _text(prompt)
     if not prompt_text.strip():
@@ -378,79 +334,20 @@ def dry_route(
             hint='Pass the request text, for example: --prompt "run basic EIS quality checks".',
             title="MatFlow routing preview (empty prompt)",
         )
-    raw_tokens, usable_tokens, cjk_characters, token_note = _prompt_token_diagnostic(prompt_text)
-    preview_text, shortened, dropped_tokens = _route_preview_message(prompt_text)
-    preview_raw, preview_tokens, preview_cjk, _ = _prompt_token_diagnostic(preview_text)
+    cjk_characters = _cjk_characters(prompt_text)
+    preview_text, shortened = _route_preview_message(prompt_text)
     if shortened:
-        dropped_text = ""
-        if dropped_tokens:
-            # A single pathological token can be enormous; never let it dominate the report.
-            shown_drops = [token[:40] + ("…" if len(token) > 40 else "") for token in dropped_tokens[:12]]
-            dropped_text = (
-                f" {len(dropped_tokens)} distinct token(s) did not fit into the preview: "
-                + ", ".join(shown_drops)
-                + (" …" if len(dropped_tokens) > 12 else "")
-            )
-        no_tokens = preview_tokens == 0
         issues.append(
             FlowIssue(
-                severity="info" if not dropped_tokens else "warning",
+                severity="info",
                 code="route.prompt_shortened_for_routing",
                 message=(
                     f"The prompt is {len(prompt_text)} characters, above the backend's "
-                    f"{MAX_TASK_MESSAGE}-character user_message limit, so routing used a "
-                    f"{len(preview_text)}-character preview built only from the prompt's own tokens."
-                    + dropped_text
+                    f"{MAX_TASK_MESSAGE}-character user_message limit, so routing used its first "
+                    f"{len(preview_text)} characters."
                 ),
                 where="backend.contracts.TaskState.user_message",
-                hint=(
-                    "The prompt printed in text and JSON mode is the full text; the preview carries the "
-                    "prompt's own distinct [a-z0-9]+ tokens and nothing else, so no candidate can come from "
-                    "words FlowView added."
-                    + (
-                        " Because tokens were dropped, both the route and its confidence were computed "
-                        "over the preview rather than the whole request: treat the decision as incomplete."
-                        if dropped_tokens
-                        else ""
-                    )
-                    + (
-                        " This prompt yields no ASCII token at all, so the router was given an empty "
-                        "query and cannot select anything: the request needs a Latin keyword or the "
-                        "model (JEV) router."
-                        if no_tokens
-                        else ""
-                    )
-                ),
-            )
-        )
-    if shortened and preview_tokens == 0:
-        issues.append(
-            FlowIssue(
-                severity="warning",
-                code="route.no_retriever_tokens",
-                message=(
-                    f"The {len(prompt_text)}-character prompt contains no [a-z0-9]+ token longer than one "
-                    "character, so the router received an empty query."
-                ),
-                where="backend/routing.py: _tokens()",
-                hint=(
-                    "No candidate can be selected from a prompt the tokeniser cannot see. Add a Latin "
-                    "keyword (a tool id, a column name, a unit) or route through the model (JEV) router."
-                ),
-            )
-        )
-    if token_note:
-        issues.append(
-            FlowIssue(
-                severity="warning",
-                code="route.prompt_tokens_unusable",
-                message="The retriever cannot see most of this prompt." + token_note,
-                where="backend/routing.py: _tokens()",
-                hint=(
-                    "This is a routing limitation, not a FlowView one: the printer is showing exactly "
-                    "what the backend decided. Add an English/Latin keyword to the request, or route "
-                    "through the model (JEV) router, if a specific tool must be selected."
-                ),
+                hint="The prompt printed in text and JSON mode is the full text; only the model-facing request is cut.",
             )
         )
     try:
@@ -478,11 +375,9 @@ def dry_route(
             )
         task = contracts.TaskState(
             task_id="dry-run",
-            # TaskState requires 1..4000 characters. When the prompt yields no token at all the
-            # router still gets the prompt's OWN first characters (never the `_label` placeholder,
-            # which would put a `?` in the query that the user did not type); `_tokens` sees nothing
-            # in either case, so no candidate can match.
-            user_message=_label(preview_text or prompt_text[:MAX_TASK_MESSAGE], "?"),
+            # TaskState requires 1..4000 characters; the prompt's own text is passed unchanged
+            # (any script, CJK included).
+            user_message=preview_text,
             graph_version=max(0, version_number),
             available_input_types=accepted,
         )
@@ -583,24 +478,19 @@ def dry_route(
                         f"{len(prompt_text)} character(s), {len(prompt_text.split())} whitespace-separated token(s); "
                         f"available input types: {', '.join(accepted) if accepted else '(none)'}"
                         + (
-                            f"; routing consumed a {len(preview_text)}-character preview "
-                            f"with {preview_tokens} of the prompt's {usable_tokens} distinct token(s)"
+                            f"; routing consumed the first {len(preview_text)} characters"
                             if shortened
                             else ""
                         )
                     ),
                 ),
                 FlowStep(
-                    name="retriever tokenisation",
-                    status="waiting" if (token_note or dropped_tokens) else "completed",
+                    name="routing model",
+                    status="waiting",
                     detail=(
-                        f"backend/routing.py _tokens() keeps the distinct [a-z0-9]+ runs longer than one character. "
-                        f"The {len(prompt_text)}-character prompt yields {raw_tokens} occurrence(s) / "
-                        f"{usable_tokens} distinct token(s) and {cjk_characters} CJK character(s); "
-                        f"the router was given {preview_tokens} distinct token(s) "
-                        f"({preview_raw} occurrence(s), {preview_cjk} CJK character(s))"
-                        + (" [shortened]" if shortened else " [verbatim]")
-                        + f"{token_note}"
+                        "Routing does not read keywords: candidates come from a type filter and the "
+                        "choice from Jev or the configured LLM. This offline preview runs no model, so "
+                        "no tool is selected; use --http against a running backend for a real decision."
                     ),
                 ),
             ),
@@ -628,9 +518,6 @@ def dry_route(
             "confirmation": "yes" if confirmation is True else "no" if confirmation is False else "unknown",
             "prompt_characters": str(len(prompt_text)),
             "prompt": prompt_text,
-            "retriever_tokens": str(usable_tokens),
-            "routing_tokens": str(preview_tokens),
-            "retriever_tokens_dropped": str(len(dropped_tokens)),
             "cjk_characters": str(cjk_characters),
             "routing_preview": "shortened" if shortened else "verbatim",
         },

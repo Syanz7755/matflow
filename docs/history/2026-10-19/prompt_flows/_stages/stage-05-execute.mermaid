@@ -1,0 +1,22 @@
+flowchart TD
+    %% FlowView: runtime phase map, one node per observable step.
+    %% title: MatFlow backend runtime flow (blueprint) — phase 5: Execution (DAG scheduling, executor seam, preview)
+    %% source: flowview phase blueprint
+    %% phases: 1; steps: 6
+    subgraph pg_execute["Execution #40;DAG scheduling, executor seam, preview#41; #40;execute#41; #91;pending#93;"]
+        n_execute_0_workflow_scheduled["workflow scheduled - Blueprint #40;described, not observed#41;: backend/main.…<br/>pending"]:::flowview_pending
+        n_execute_1_node_executed["node executed - Blueprint #40;described, not observed#41;: backend/workspace_…<br/>pending"]:::flowview_pending
+        n_execute_2_preview_built["preview built - Blueprint #40;described, not observed#41;: backend/workspace_…<br/>pending"]:::flowview_pending
+        n_execute_3_single_node_endpoint["single node endpoint - Blueprint #40;described, not observed#41;: backend/mai…<br/>pending"]:::flowview_pending
+        n_execute_4_execution_recorded["execution recorded - Blueprint #40;described, not observed#41;: backend/works…<br/>pending"]:::flowview_pending
+        n_execute_5_executor_failure_path["executor failure path - Blueprint #40;described, not observed#41;: backend/wo…<br/>pending"]:::flowview_pending
+    end
+    classDef flowview_ready fill:#e8f1fb,stroke:#3b6ea5,color:#102a43;
+    classDef flowview_running fill:#fff4d6,stroke:#a5761b,color:#3d2c00;
+    classDef flowview_completed fill:#e3f6e8,stroke:#2f7d43,color:#0f3319;
+    classDef flowview_waiting fill:#fdf1dc,stroke:#a5761b,color:#3d2c00;
+    classDef flowview_error fill:#fbe3e3,stroke:#a32020,color:#4a0f0f;
+    classDef flowview_cancelled fill:#f0e8f8,stroke:#6b4b9a,color:#2a1040;
+    classDef flowview_unknown fill:#eceff3,stroke:#8792a2,color:#2b3038;
+    classDef flowview_pending fill:#f3f4f6,stroke:#8792a2,color:#2b3038;
+    classDef flowview_skipped fill:#f0e8f8,stroke:#6b4b9a,color:#2a1040;

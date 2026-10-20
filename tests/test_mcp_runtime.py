@@ -1,3 +1,4 @@
+import json
 import tempfile
 import unittest
 from pathlib import Path
@@ -76,11 +77,15 @@ class ChatContractTests(unittest.TestCase):
         self.assertEqual(response.json()["status"], "waiting_for_confirmation")
         self.assertEqual(response.json()["state"]["nodes"], [])
 
-    def test_read_only_reply_for_an_unmatched_capability_waits_for_confirmation(self):
-        reply = {"role": "assistant", "content": "Please provide the missing structural model."}
+    def test_agent_question_for_an_unmatched_capability_waits_for_confirmation(self):
+        question = "Please provide the missing structural model."
+        reply = {"role": "assistant", "content": "", "tool_calls": [{
+            "id": "ask-1", "type": "function",
+            "function": {"name": "ask_user", "arguments": json.dumps({"question": question})},
+        }]}
         with tempfile.TemporaryDirectory() as directory:
             runtime = WorkspaceRuntime(Path(directory))
-            with patch.object(main, "workspace", runtime), patch.object(main, "model_completion", return_value=reply):
+            with patch.object(main, "workspace", runtime), patch.object(main, "model_completion", return_value=reply) as model:
                 response = TestClient(app).post("/api/chat", json={
                     "message": "Run an unsupported refinement.",
                     "attachments": [{"upload_id": "fixture", "name": "pattern.xy"}],
@@ -88,7 +93,19 @@ class ChatContractTests(unittest.TestCase):
 
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.json()["status"], "waiting_for_confirmation")
+        self.assertEqual(response.json()["message"], question)
         self.assertEqual(response.json()["tool_proposals"], [])
+        model.assert_called_once()  # ask_user ends the turn
+
+    def test_chat_without_attachments_reaches_the_model_instead_of_a_keyword_gate(self):
+        reply = {"role": "assistant", "content": "Upload the spectrum and I will plan the workflow."}
+        with tempfile.TemporaryDirectory() as directory:
+            runtime = WorkspaceRuntime(Path(directory))
+            with patch.object(main, "workspace", runtime), patch.object(main, "model_completion", return_value=reply) as model:
+                response = TestClient(app).post("/api/chat", json={"message": "请帮我分析阻抗谱"})
+
+        model.assert_called_once()
+        self.assertEqual(response.json()["message"], reply["content"])
 
     def test_backend_no_longer_mounts_mcp(self):
         response = TestClient(app).post("/mcp", json={})

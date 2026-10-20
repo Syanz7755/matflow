@@ -4,8 +4,8 @@ The suite keeps both a human expectation (``expected_route``) and the last obser
 (``observed_route``), so a report can say "this case is misrouted" instead of quietly accepting
 whatever the retriever produced.
 
-    python -m flowview.tools.sync_prompt_cases --suite examples/long_prompt_cases.json
-    python -m flowview.tools.sync_prompt_cases --suite examples/long_prompt_cases.json --write
+    python -m flowview.tools.sync_prompt_cases --suite tests/suites/long_prompt_cases.json
+    python -m flowview.tools.sync_prompt_cases --suite tests/suites/long_prompt_cases.json --write
 """
 from __future__ import annotations
 
@@ -16,7 +16,7 @@ from pathlib import Path
 from typing import Any, Mapping, Sequence
 
 ROOT = Path(__file__).resolve().parents[2]
-DEFAULT_SUITE = ROOT / "examples" / "long_prompt_cases.json"
+DEFAULT_SUITE = ROOT / "tests" / "suites" / "long_prompt_cases.json"
 
 
 def observe(prompt: str) -> dict[str, Any]:

@@ -1,4 +1,4 @@
-"""Generate deterministic, synthetic input data for the MatFlow example cases.
+"""Generate deterministic, synthetic input data for the two MatFlow demos.
 
 The inputs are teaching/test fixtures only.  They are deliberately simple so the
 expected result can be asserted in automated end-to-end tests.
@@ -95,7 +95,4 @@ def generate_tga() -> None:
 if __name__ == "__main__":
     generate_eis()
     generate_xrd()
-    generate_uvvis()
-    generate_pycnometer()
-    generate_tga()
     print(f"Wrote synthetic fixtures under {ROOT}")

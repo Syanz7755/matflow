@@ -1,0 +1,231 @@
+{
+  "flowview_schema": "1.0",
+  "document": {
+    "title": "MatFlow routing preview (read-only)",
+    "source": "dry-route:D:\\Projects\\matflow",
+    "graph": null,
+    "trace": null,
+    "phases": [
+      {
+        "name": "prompt",
+        "title": "Prompt (input)",
+        "steps": [
+          {
+            "name": "user prompt",
+            "status": "completed",
+            "detail": "\u3010\u6d4b\u91cf\u76ee\u7684\u3011\u6211\u9700\u8981\u7528\u56db\u63a2\u9488\u6cd5\u6d4b\u4e00\u5757\u534a\u5bfc\u4f53\u8584\u819c\u7684\u65b9\u5757\u7535\u963b\u548c\u7535\u963b\u7387\uff0c\u8584\u819c\u662f\u78c1\u63a7\u6e85\u5c04\u751f\u957f\u7684 ITO\uff0c\u539a\u5ea6\u5927\u7ea6 180 nm\uff0c\u957f\u5728\u73bb\u7483\u886c\u5e95\u4e0a\uff0c\u6837\u54c1\u5c3a\u5bf8 10 mm \u00d7 10 mm\u3002\n\u3010\u6d4b\u91cf\u8bbe\u7f6e\u3011\u7528\u7684\u662f\u76f4\u7ebf\u56db\u63a2\u9488\uff0c\u63a2\u9488\u95f4\u8ddd 1.0 mm\uff0c\u9488\u5c16\u534a\u5f84\u5927\u7ea6 40 \u5fae\u7c73\uff0c\u538b\u529b\u8c03\u5230\u521a\u597d\u63a5\u89e6\u3002\u7535\u6d41\u6e90\u662f Keithley 2400\uff0c\u5728 1 \u53f7\u9488\u548c 4 \u53f7\u9488\u4e4b\u95f4\u6ce8\u5165\u7535\u6d41\uff0c\u7528 2182A \u7eb3\u4f0f\u8868\u6d4b 2 \u53f7\u548c 3 \u53f7\u9488\u4e4b\u95f4\u7684\u7535\u538b\uff0c\u7535\u6d41\u4ece 1 \u5fae\u5b89\u5230 1 \u6beb\u5b89\u53d6\u4e86\u5341\u4e2a\u70b9\uff0c\u6bcf\u4e2a\u70b9\u6b63\u53cd\u4e24\u4e2a\u65b9\u5411\u5404\u6d4b\u4e00\u6b21\u4ee5\u6d88\u9664\u70ed\u7535\u52bf\u3002\n\u3010\u6570\u636e\u8bf4\u660e\u3011\u5bfc\u51fa\u7684 CSV \u6709\u4e94\u5217\uff1acurrent_A \u662f\u6ce8\u5165\u7535\u6d41\uff0cvoltage_V \u662f\u6d4b\u91cf\u7535\u538b\uff0cprobe_spacing_mm \u662f\u63a2\u9488\u95f4\u8ddd\uff0cthickness_nm \u662f\u819c\u539a\uff0cposition \u662f\u6837\u54c1\u4e0a\u7684\u6d4b\u91cf\u4f4d\u7f6e\u7f16\u53f7\u3002\u6211\u5728\u6837\u54c1\u4e2d\u5fc3\u548c\u56db\u4e2a\u89d2\u9644\u8fd1\u5404\u6d4b\u4e86\u4e00\u7ec4\uff0c\u4e00\u5171\u4e94\u7ec4\uff0c\u60f3\u770b\u770b\u5747\u5300\u6027\u3002\n\u3010\u9700\u8981\u4f60\u505a\u7684\u30111) \u5148\u505a\u57fa\u7840\u8d28\u68c0\uff1a\u5224\u65ad\u7535\u6d41\u548c\u7535\u538b\u662f\u5426\u7ebf\u6027\u76f8\u5173\u3001\u6709\u6ca1\u6709\u63a5\u89e6\u4e0d\u826f\u5bfc\u81f4\u7684\u8df3\u70b9\u3001\u6b63\u53cd\u65b9\u5411\u6d4b\u91cf\u662f\u5426\u4e00\u81f4\u30022) \u8ba1\u7b97\u65b9\u5757\u7535\u963b Rsh\uff0c\u5355\u4f4d\u6b27\u59c6\u6bcf\u65b9\uff0c\u5e76\u8bf4\u660e\u4f60\u7528\u7684\u662f\u54ea\u4e00\u4e2a\u51e0\u4f55\u4fee\u6b63\u56e0\u5b50\uff0c\u56e0\u4e3a\u8584\u819c\u539a\u5ea6\u8fdc\u5c0f\u4e8e\u63a2\u9488\u95f4\u8ddd\u30023) \u6362\u7b97\u6210\u7535\u963b\u7387\uff0c\u5355\u4f4d\u6b27\u59c6\u5398\u7c73\uff0c\u5e76\u8bf4\u660e\u819c\u539a\u6d4b\u91cf\u8bef\u5dee 5% \u5bf9\u7ed3\u679c\u7684\u5f71\u54cd\u6709\u591a\u5927\u30024) \u6c47\u603b\u4e94\u4e2a\u4f4d\u7f6e\u7684\u7ed3\u679c\uff0c\u5224\u65ad\u8584\u819c\u7684\u5747\u5300\u6027\u662f\u5426\u6ee1\u8db3\u4e00\u822c\u5668\u4ef6\u8981\u6c42\uff0c\u5e76\u8bf4\u660e\u4f60\u5224\u65ad\u6240\u7528\u7684\u9608\u503c\u662f\u4ece\u54ea\u91cc\u6765\u7684\u3002\n\u3010\u7ea6\u675f\u3011\u5982\u679c\u6211\u6ca1\u6709\u63d0\u4f9b\u886c\u5e95\u7c7b\u578b\u6216\u8005\u662f\u5426\u9700\u8981\u8003\u8651\u7edd\u7f18\u886c\u5e95\u4fee\u6b63\uff0c\u8bf7\u76f4\u63a5\u95ee\u6211\uff0c\u4e0d\u8981\u9ed8\u8ba4\u9009\u4e00\u4e2a\u3002",
+            "error": null,
+            "node_id": null,
+            "tools": []
+          },
+          {
+            "name": "prompt size",
+            "status": "completed",
+            "detail": "627 character(s), 47 whitespace-separated token(s); available input types: RawData, TypedTable",
+            "error": null,
+            "node_id": null,
+            "tools": []
+          },
+          {
+            "name": "retriever tokenisation",
+            "status": "waiting",
+            "detail": "backend/routing.py _tokens() keeps the distinct [a-z0-9]+ runs longer than one character. The 627-character prompt yields 37 occurrence(s) / 17 distinct token(s) and 414 CJK character(s); the router was given 17 distinct token(s) (37 occurrence(s), 414 CJK character(s)) [verbatim] -- the prompt is overwhelmingly CJK: lexical matching sees almost none of it",
+            "error": null,
+            "node_id": null,
+            "tools": []
+          }
+        ],
+        "error": null
+      },
+      {
+        "name": "candidates",
+        "title": "Candidates",
+        "steps": [
+          {
+            "name": "ebrick_case05_import (candidate)",
+            "status": "pending",
+            "detail": "candidate only, nothing executed; score 0.25; version 1.0.0; reasons: matches: csv",
+            "error": null,
+            "node_id": null,
+            "tools": [
+              "ebrick_case05_import"
+            ]
+          },
+          {
+            "name": "raw_file_import (candidate)",
+            "status": "pending",
+            "detail": "candidate only, nothing executed; score 0.25; version 1.0.0; reasons: matches: csv",
+            "error": null,
+            "node_id": null,
+            "tools": [
+              "raw_file_import"
+            ]
+          }
+        ],
+        "error": null
+      },
+      {
+        "name": "decision",
+        "title": "Decision",
+        "steps": [
+          {
+            "name": "selected ebrick_case05_import",
+            "status": "waiting",
+            "detail": "confidence 0.25; human confirmation required: yes; rationale: Selected EBrick Case 05 CSV Import from 2 compatible candidate(s).",
+            "error": null,
+            "node_id": null,
+            "tools": [
+              "ebrick_case05_import"
+            ]
+          },
+          {
+            "name": "dry run guarantee",
+            "status": "completed",
+            "detail": "DecisionRouter() ran without the JEV/model router: record_routing() was not called and no graph, settings or summary file was written",
+            "error": null,
+            "node_id": null,
+            "tools": []
+          }
+        ],
+        "error": null
+      }
+    ],
+    "issues": [
+      {
+        "severity": "warning",
+        "code": "route.prompt_tokens_unusable",
+        "message": "The retriever cannot see most of this prompt. -- the prompt is overwhelmingly CJK: lexical matching sees almost none of it",
+        "where": "backend/routing.py: _tokens()",
+        "hint": "This is a routing limitation, not a FlowView one: the printer is showing exactly what the backend decided. Add an English/Latin keyword to the request, or route through the model (JEV) router, if a specific tool must be selected.",
+        "detail": null
+      },
+      {
+        "severity": "info",
+        "code": "route.dry_run",
+        "message": "This route was computed read-only: nothing was persisted to the task summary log.",
+        "where": "dry-route:D:\\Projects\\matflow",
+        "hint": null,
+        "detail": null
+      }
+    ],
+    "meta": {
+      "mode": "dry-run",
+      "graph_version": "0",
+      "candidates": "2",
+      "confirmation": "yes",
+      "prompt_characters": "627",
+      "prompt": "\u3010\u6d4b\u91cf\u76ee\u7684\u3011\u6211\u9700\u8981\u7528\u56db\u63a2\u9488\u6cd5\u6d4b\u4e00\u5757\u534a\u5bfc\u4f53\u8584\u819c\u7684\u65b9\u5757\u7535\u963b\u548c\u7535\u963b\u7387\uff0c\u8584\u819c\u662f\u78c1\u63a7\u6e85\u5c04\u751f\u957f\u7684 ITO\uff0c\u539a\u5ea6\u5927\u7ea6 180 nm\uff0c\u957f\u5728\u73bb\u7483\u886c\u5e95\u4e0a\uff0c\u6837\u54c1\u5c3a\u5bf8 10 mm \u00d7 10 mm\u3002\n\u3010\u6d4b\u91cf\u8bbe\u7f6e\u3011\u7528\u7684\u662f\u76f4\u7ebf\u56db\u63a2\u9488\uff0c\u63a2\u9488\u95f4\u8ddd 1.0 mm\uff0c\u9488\u5c16\u534a\u5f84\u5927\u7ea6 40 \u5fae\u7c73\uff0c\u538b\u529b\u8c03\u5230\u521a\u597d\u63a5\u89e6\u3002\u7535\u6d41\u6e90\u662f Keithley 2400\uff0c\u5728 1 \u53f7\u9488\u548c 4 \u53f7\u9488\u4e4b\u95f4\u6ce8\u5165\u7535\u6d41\uff0c\u7528 2182A \u7eb3\u4f0f\u8868\u6d4b 2 \u53f7\u548c 3 \u53f7\u9488\u4e4b\u95f4\u7684\u7535\u538b\uff0c\u7535\u6d41\u4ece 1 \u5fae\u5b89\u5230 1 \u6beb\u5b89\u53d6\u4e86\u5341\u4e2a\u70b9\uff0c\u6bcf\u4e2a\u70b9\u6b63\u53cd\u4e24\u4e2a\u65b9\u5411\u5404\u6d4b\u4e00\u6b21\u4ee5\u6d88\u9664\u70ed\u7535\u52bf\u3002\n\u3010\u6570\u636e\u8bf4\u660e\u3011\u5bfc\u51fa\u7684 CSV \u6709\u4e94\u5217\uff1acurrent_A \u662f\u6ce8\u5165\u7535\u6d41\uff0cvoltage_V \u662f\u6d4b\u91cf\u7535\u538b\uff0cprobe_spacing_mm \u662f\u63a2\u9488\u95f4\u8ddd\uff0cthickness_nm \u662f\u819c\u539a\uff0cposition \u662f\u6837\u54c1\u4e0a\u7684\u6d4b\u91cf\u4f4d\u7f6e\u7f16\u53f7\u3002\u6211\u5728\u6837\u54c1\u4e2d\u5fc3\u548c\u56db\u4e2a\u89d2\u9644\u8fd1\u5404\u6d4b\u4e86\u4e00\u7ec4\uff0c\u4e00\u5171\u4e94\u7ec4\uff0c\u60f3\u770b\u770b\u5747\u5300\u6027\u3002\n\u3010\u9700\u8981\u4f60\u505a\u7684\u30111) \u5148\u505a\u57fa\u7840\u8d28\u68c0\uff1a\u5224\u65ad\u7535\u6d41\u548c\u7535\u538b\u662f\u5426\u7ebf\u6027\u76f8\u5173\u3001\u6709\u6ca1\u6709\u63a5\u89e6\u4e0d\u826f\u5bfc\u81f4\u7684\u8df3\u70b9\u3001\u6b63\u53cd\u65b9\u5411\u6d4b\u91cf\u662f\u5426\u4e00\u81f4\u30022) \u8ba1\u7b97\u65b9\u5757\u7535\u963b Rsh\uff0c\u5355\u4f4d\u6b27\u59c6\u6bcf\u65b9\uff0c\u5e76\u8bf4\u660e\u4f60\u7528\u7684\u662f\u54ea\u4e00\u4e2a\u51e0\u4f55\u4fee\u6b63\u56e0\u5b50\uff0c\u56e0\u4e3a\u8584\u819c\u539a\u5ea6\u8fdc\u5c0f\u4e8e\u63a2\u9488\u95f4\u8ddd\u30023) \u6362\u7b97\u6210\u7535\u963b\u7387\uff0c\u5355\u4f4d\u6b27\u59c6\u5398\u7c73\uff0c\u5e76\u8bf4\u660e\u819c\u539a\u6d4b\u91cf\u8bef\u5dee 5% \u5bf9\u7ed3\u679c\u7684\u5f71\u54cd\u6709\u591a\u5927\u30024) \u6c47\u603b\u4e94\u4e2a\u4f4d\u7f6e\u7684\u7ed3\u679c\uff0c\u5224\u65ad\u8584\u819c\u7684\u5747\u5300\u6027\u662f\u5426\u6ee1\u8db3\u4e00\u822c\u5668\u4ef6\u8981\u6c42\uff0c\u5e76\u8bf4\u660e\u4f60\u5224\u65ad\u6240\u7528\u7684\u9608\u503c\u662f\u4ece\u54ea\u91cc\u6765\u7684\u3002\n\u3010\u7ea6\u675f\u3011\u5982\u679c\u6211\u6ca1\u6709\u63d0\u4f9b\u886c\u5e95\u7c7b\u578b\u6216\u8005\u662f\u5426\u9700\u8981\u8003\u8651\u7edd\u7f18\u886c\u5e95\u4fee\u6b63\uff0c\u8bf7\u76f4\u63a5\u95ee\u6211\uff0c\u4e0d\u8981\u9ed8\u8ba4\u9009\u4e00\u4e2a\u3002",
+      "retriever_tokens": "17",
+      "routing_tokens": "17",
+      "retriever_tokens_dropped": "0",
+      "cjk_characters": "414",
+      "routing_preview": "verbatim",
+      "modes": "dry-run"
+    },
+    "truncated": []
+  },
+  "phases": [
+    {
+      "name": "prompt",
+      "title": "Prompt (input)",
+      "steps": [
+        {
+          "name": "user prompt",
+          "status": "completed",
+          "detail": "\u3010\u6d4b\u91cf\u76ee\u7684\u3011\u6211\u9700\u8981\u7528\u56db\u63a2\u9488\u6cd5\u6d4b\u4e00\u5757\u534a\u5bfc\u4f53\u8584\u819c\u7684\u65b9\u5757\u7535\u963b\u548c\u7535\u963b\u7387\uff0c\u8584\u819c\u662f\u78c1\u63a7\u6e85\u5c04\u751f\u957f\u7684 ITO\uff0c\u539a\u5ea6\u5927\u7ea6 180 nm\uff0c\u957f\u5728\u73bb\u7483\u886c\u5e95\u4e0a\uff0c\u6837\u54c1\u5c3a\u5bf8 10 mm \u00d7 10 mm\u3002\n\u3010\u6d4b\u91cf\u8bbe\u7f6e\u3011\u7528\u7684\u662f\u76f4\u7ebf\u56db\u63a2\u9488\uff0c\u63a2\u9488\u95f4\u8ddd 1.0 mm\uff0c\u9488\u5c16\u534a\u5f84\u5927\u7ea6 40 \u5fae\u7c73\uff0c\u538b\u529b\u8c03\u5230\u521a\u597d\u63a5\u89e6\u3002\u7535\u6d41\u6e90\u662f Keithley 2400\uff0c\u5728 1 \u53f7\u9488\u548c 4 \u53f7\u9488\u4e4b\u95f4\u6ce8\u5165\u7535\u6d41\uff0c\u7528 2182A \u7eb3\u4f0f\u8868\u6d4b 2 \u53f7\u548c 3 \u53f7\u9488\u4e4b\u95f4\u7684\u7535\u538b\uff0c\u7535\u6d41\u4ece 1 \u5fae\u5b89\u5230 1 \u6beb\u5b89\u53d6\u4e86\u5341\u4e2a\u70b9\uff0c\u6bcf\u4e2a\u70b9\u6b63\u53cd\u4e24\u4e2a\u65b9\u5411\u5404\u6d4b\u4e00\u6b21\u4ee5\u6d88\u9664\u70ed\u7535\u52bf\u3002\n\u3010\u6570\u636e\u8bf4\u660e\u3011\u5bfc\u51fa\u7684 CSV \u6709\u4e94\u5217\uff1acurrent_A \u662f\u6ce8\u5165\u7535\u6d41\uff0cvoltage_V \u662f\u6d4b\u91cf\u7535\u538b\uff0cprobe_spacing_mm \u662f\u63a2\u9488\u95f4\u8ddd\uff0cthickness_nm \u662f\u819c\u539a\uff0cposition \u662f\u6837\u54c1\u4e0a\u7684\u6d4b\u91cf\u4f4d\u7f6e\u7f16\u53f7\u3002\u6211\u5728\u6837\u54c1\u4e2d\u5fc3\u548c\u56db\u4e2a\u89d2\u9644\u8fd1\u5404\u6d4b\u4e86\u4e00\u7ec4\uff0c\u4e00\u5171\u4e94\u7ec4\uff0c\u60f3\u770b\u770b\u5747\u5300\u6027\u3002\n\u3010\u9700\u8981\u4f60\u505a\u7684\u30111) \u5148\u505a\u57fa\u7840\u8d28\u68c0\uff1a\u5224\u65ad\u7535\u6d41\u548c\u7535\u538b\u662f\u5426\u7ebf\u6027\u76f8\u5173\u3001\u6709\u6ca1\u6709\u63a5\u89e6\u4e0d\u826f\u5bfc\u81f4\u7684\u8df3\u70b9\u3001\u6b63\u53cd\u65b9\u5411\u6d4b\u91cf\u662f\u5426\u4e00\u81f4\u30022) \u8ba1\u7b97\u65b9\u5757\u7535\u963b Rsh\uff0c\u5355\u4f4d\u6b27\u59c6\u6bcf\u65b9\uff0c\u5e76\u8bf4\u660e\u4f60\u7528\u7684\u662f\u54ea\u4e00\u4e2a\u51e0\u4f55\u4fee\u6b63\u56e0\u5b50\uff0c\u56e0\u4e3a\u8584\u819c\u539a\u5ea6\u8fdc\u5c0f\u4e8e\u63a2\u9488\u95f4\u8ddd\u30023) \u6362\u7b97\u6210\u7535\u963b\u7387\uff0c\u5355\u4f4d\u6b27\u59c6\u5398\u7c73\uff0c\u5e76\u8bf4\u660e\u819c\u539a\u6d4b\u91cf\u8bef\u5dee 5% \u5bf9\u7ed3\u679c\u7684\u5f71\u54cd\u6709\u591a\u5927\u30024) \u6c47\u603b\u4e94\u4e2a\u4f4d\u7f6e\u7684\u7ed3\u679c\uff0c\u5224\u65ad\u8584\u819c\u7684\u5747\u5300\u6027\u662f\u5426\u6ee1\u8db3\u4e00\u822c\u5668\u4ef6\u8981\u6c42\uff0c\u5e76\u8bf4\u660e\u4f60\u5224\u65ad\u6240\u7528\u7684\u9608\u503c\u662f\u4ece\u54ea\u91cc\u6765\u7684\u3002\n\u3010\u7ea6\u675f\u3011\u5982\u679c\u6211\u6ca1\u6709\u63d0\u4f9b\u886c\u5e95\u7c7b\u578b\u6216\u8005\u662f\u5426\u9700\u8981\u8003\u8651\u7edd\u7f18\u886c\u5e95\u4fee\u6b63\uff0c\u8bf7\u76f4\u63a5\u95ee\u6211\uff0c\u4e0d\u8981\u9ed8\u8ba4\u9009\u4e00\u4e2a\u3002",
+          "error": null,
+          "node_id": null,
+          "tools": []
+        },
+        {
+          "name": "prompt size",
+          "status": "completed",
+          "detail": "627 character(s), 47 whitespace-separated token(s); available input types: RawData, TypedTable",
+          "error": null,
+          "node_id": null,
+          "tools": []
+        },
+        {
+          "name": "retriever tokenisation",
+          "status": "waiting",
+          "detail": "backend/routing.py _tokens() keeps the distinct [a-z0-9]+ runs longer than one character. The 627-character prompt yields 37 occurrence(s) / 17 distinct token(s) and 414 CJK character(s); the router was given 17 distinct token(s) (37 occurrence(s), 414 CJK character(s)) [verbatim] -- the prompt is overwhelmingly CJK: lexical matching sees almost none of it",
+          "error": null,
+          "node_id": null,
+          "tools": []
+        }
+      ],
+      "error": null
+    },
+    {
+      "name": "candidates",
+      "title": "Candidates",
+      "steps": [
+        {
+          "name": "ebrick_case05_import (candidate)",
+          "status": "pending",
+          "detail": "candidate only, nothing executed; score 0.25; version 1.0.0; reasons: matches: csv",
+          "error": null,
+          "node_id": null,
+          "tools": [
+            "ebrick_case05_import"
+          ]
+        },
+        {
+          "name": "raw_file_import (candidate)",
+          "status": "pending",
+          "detail": "candidate only, nothing executed; score 0.25; version 1.0.0; reasons: matches: csv",
+          "error": null,
+          "node_id": null,
+          "tools": [
+            "raw_file_import"
+          ]
+        }
+      ],
+      "error": null
+    },
+    {
+      "name": "decision",
+      "title": "Decision",
+      "steps": [
+        {
+          "name": "selected ebrick_case05_import",
+          "status": "waiting",
+          "detail": "confidence 0.25; human confirmation required: yes; rationale: Selected EBrick Case 05 CSV Import from 2 compatible candidate(s).",
+          "error": null,
+          "node_id": null,
+          "tools": [
+            "ebrick_case05_import"
+          ]
+        },
+        {
+          "name": "dry run guarantee",
+          "status": "completed",
+          "detail": "DecisionRouter() ran without the JEV/model router: record_routing() was not called and no graph, settings or summary file was written",
+          "error": null,
+          "node_id": null,
+          "tools": []
+        }
+      ],
+      "error": null
+    }
+  ],
+  "issues": [
+    {
+      "severity": "warning",
+      "code": "route.prompt_tokens_unusable",
+      "message": "The retriever cannot see most of this prompt. -- the prompt is overwhelmingly CJK: lexical matching sees almost none of it",
+      "where": "backend/routing.py: _tokens()",
+      "hint": "This is a routing limitation, not a FlowView one: the printer is showing exactly what the backend decided. Add an English/Latin keyword to the request, or route through the model (JEV) router, if a specific tool must be selected.",
+      "detail": null
+    },
+    {
+      "severity": "info",
+      "code": "route.dry_run",
+      "message": "This route was computed read-only: nothing was persisted to the task summary log.",
+      "where": "dry-route:D:\\Projects\\matflow",
+      "hint": null,
+      "detail": null
+    }
+  ],
+  "exit_code_hint": 0
+}

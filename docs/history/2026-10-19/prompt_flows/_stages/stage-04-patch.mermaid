@@ -1,0 +1,20 @@
+flowchart TD
+    %% FlowView: runtime phase map, one node per observable step.
+    %% title: MatFlow backend runtime flow (blueprint) — phase 4: Graph patch (validate -> apply)
+    %% source: flowview phase blueprint
+    %% phases: 1; steps: 4
+    subgraph pg_patch["Graph patch #40;validate -&gt; apply#41; #40;patch#41; #91;pending#93;"]
+        n_patch_0_patch_validated["patch validated - Blueprint #40;described, not observed#41;: backend/main.py:…<br/>pending"]:::flowview_pending
+        n_patch_1_patch_applied["patch applied - Blueprint #40;described, not observed#41;: backend/main.py: P…<br/>pending"]:::flowview_pending
+        n_patch_2_agent_patch_seam["agent patch seam - Blueprint #40;described, not observed#41;: backend/main.py…<br/>pending"]:::flowview_pending
+        n_patch_3_version_conflict_path__409["version conflict path #40;409#41; - Blueprint #40;described, not observed#41;: back…<br/>pending"]:::flowview_pending
+    end
+    classDef flowview_ready fill:#e8f1fb,stroke:#3b6ea5,color:#102a43;
+    classDef flowview_running fill:#fff4d6,stroke:#a5761b,color:#3d2c00;
+    classDef flowview_completed fill:#e3f6e8,stroke:#2f7d43,color:#0f3319;
+    classDef flowview_waiting fill:#fdf1dc,stroke:#a5761b,color:#3d2c00;
+    classDef flowview_error fill:#fbe3e3,stroke:#a32020,color:#4a0f0f;
+    classDef flowview_cancelled fill:#f0e8f8,stroke:#6b4b9a,color:#2a1040;
+    classDef flowview_unknown fill:#eceff3,stroke:#8792a2,color:#2b3038;
+    classDef flowview_pending fill:#f3f4f6,stroke:#8792a2,color:#2b3038;
+    classDef flowview_skipped fill:#f0e8f8,stroke:#6b4b9a,color:#2a1040;

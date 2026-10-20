@@ -7,12 +7,12 @@
       "mode": "online_api",
       "working_directory": ".",
       "executable": "uv",
-      "arguments": ["run", "litellm", "--config", "config/litellm.yaml", "--port", "4000"],
-      "required_environment": ["SJTU_ZHIYUAN_API_KEY", "MATFLOW_LITELLM_API_KEY"],
-      "health_url": "http://127.0.0.1:4000/health/readiness",
-      "readiness_url": "http://127.0.0.1:4000/v1/models",
-      "readiness_api_key_env": "MATFLOW_LITELLM_API_KEY",
-      "startup_timeout_seconds": 30
+      "arguments": ["run", "litellm", "--config", "config/litellm.yaml", "--host", "127.0.0.1", "--port", "4078"],
+      "required_environment": ["SJTU_ZHIYUAN_API_KEY", "LITELLM_DEFAULT_API_KEY"],
+      "health_url": "http://127.0.0.1:4078/health/readiness",
+      "readiness_url": "http://127.0.0.1:4078/v1/models",
+      "readiness_api_key_env": "LITELLM_DEFAULT_API_KEY",
+      "startup_timeout_seconds": 60
     },
     {
       "id": "jev_decision_gateway",

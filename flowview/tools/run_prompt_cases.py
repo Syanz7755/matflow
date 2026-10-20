@@ -7,8 +7,8 @@ can be reviewed without opening 60 files.
 
 This is a report generator, not a test: it never fails the build, it records what happened.
 
-    python -m flowview.tools.run_prompt_cases --suite examples/long_prompt_cases.json \
-        --out examples/reports/prompt_flows
+    python -m flowview.tools.run_prompt_cases --suite tests/suites/long_prompt_cases.json \
+        --out .tmp/prompt_flows
 """
 from __future__ import annotations
 
@@ -23,8 +23,8 @@ from ..codes import EXIT_OK, describe_exception
 from ..model import FlowDocument
 
 ROOT = Path(__file__).resolve().parents[2]
-DEFAULT_SUITE = ROOT / "examples" / "long_prompt_cases.json"
-DEFAULT_OUT = ROOT / "examples" / "reports" / "prompt_flows"
+DEFAULT_SUITE = ROOT / "tests" / "suites" / "long_prompt_cases.json"
+DEFAULT_OUT = ROOT / ".tmp" / "prompt_flows"
 DEFAULT_FORMATS = ("mermaid", "text", "json")
 MAX_STEM = 64
 
@@ -109,7 +109,6 @@ def _route_facts(document: FlowDocument) -> dict[str, Any]:
     confidence: str | None = None
     rationale: str | None = None
     confirmation = bool(document.meta.get("confirmation") == "yes")
-    retriever_tokens: str | None = document.meta.get("retriever_tokens")
     cjk_characters: str | None = document.meta.get("cjk_characters")
     for phase in document.phases:
         for step in phase.steps:
@@ -123,19 +122,12 @@ def _route_facts(document: FlowDocument) -> dict[str, Any]:
                     confidence = detail.split("confidence ", 1)[1].split(";", 1)[0].strip()
                 if "rationale: " in detail:
                     rationale = detail.split("rationale: ", 1)[1].strip()
-            if step.name == "retriever tokenisation" and step.detail:
-                detail = step.detail
-                if retriever_tokens is None and "ASCII token(s)," in detail:
-                    retriever_tokens = detail.split("ASCII token(s),", 1)[0].rsplit(":", 1)[-1].strip()
-                if cjk_characters is None and "CJK character(s)" in detail:
-                    cjk_characters = detail.split("CJK character(s)", 1)[0].rsplit(",", 1)[-1].strip()
     return {
         "selected": selected,
         "candidates": candidates,
         "confidence": confidence,
         "rationale": rationale,
         "requires_human_confirmation": confirmation,
-        "retriever_tokens": retriever_tokens,
         "cjk_characters": cjk_characters,
     }
 
@@ -374,7 +366,7 @@ def _index_markdown(suite: Mapping[str, Any], records: Sequence[Mapping[str, Any
         f"- cases: **{len(records)}**",
         f"- total prompt text: **{sum(record.get('prompt_characters', 0) for record in records)} characters**",
         f"- scope: {suite.get('scope', '')}",
-        "- routing mode: deterministic lexical retriever, JEV model router disabled, nothing persisted (offline, reproducible)",
+        "- routing mode: deterministic type-filter retriever, JEV model router disabled, nothing persisted (offline, reproducible)",
         f"- verdicts: " + ", ".join(f"{name}={count}" for name, count in sorted(verdicts.items())),
         "",
         "## How to read this directory",
@@ -394,11 +386,9 @@ def _index_markdown(suite: Mapping[str, Any], records: Sequence[Mapping[str, Any
         f"- **misrouted** ({len(misrouted)}): a matching tool IS registered and active, yet another tool was selected.",
         f"- **false match on a missing capability** ({len(false_matches)}): no tool for this request is registered, yet one was selected anyway.",
         "",
-        "Root cause visible in every `flow-prompt.text.txt` under the `retriever tokenisation` step:",
-        "`backend/routing.py` tokenises with `[a-z0-9]+`, so CJK text contributes **zero** tokens. A long Chinese",
-        "prompt is therefore almost invisible to lexical retrieval, and whatever Latin fragments it contains",
-        "(file names, column headers, units) decide the route. That is why a 595-character EIS request lands on",
-        "`ebrick_case05_import` instead of `eis_basic_qc`.",
+        "Retrieval is a type filter, so every case sees the same candidates regardless of language; with the",
+        "model router disabled (offline mode) nothing is selected, and any 'misrouted' record reflects a",
+        "stale expectation rather than a tokenisation limit (CJK text is not tokenised or scored anywhere).",
         "",
     ]
     if misrouted or false_matches:
@@ -434,18 +424,17 @@ def _index_markdown(suite: Mapping[str, Any], records: Sequence[Mapping[str, Any
         "",
         "## Route summary",
         "",
-        "| case_id | candidates | selected | confidence | confirmation | retriever tokens | CJK chars | rationale |",
-        "| --- | --- | --- | --- | --- | --- | --- | --- |",
+        "| case_id | candidates | selected | confidence | confirmation | CJK chars | rationale |",
+        "| --- | --- | --- | --- | --- | --- | --- |",
     ]
     for record in records:
         route = record.get("route") or {}
         rationale = (route.get("rationale") or "").replace("|", "\\|")
-        tokens = route.get("retriever_tokens", record.get("retriever_tokens", "?"))
         cjk = route.get("cjk_characters", record.get("cjk_characters", "?"))
         lines.append(
             f"| `{record['case_id']}` | {len(route.get('candidates') or [])} | "
             f"`{', '.join(route.get('selected') or []) or '(none)'}` | {route.get('confidence') or '?'} | "
-            f"{'yes' if route.get('requires_human_confirmation') else 'no'} | {tokens} | {cjk} | {rationale} |"
+            f"{'yes' if route.get('requires_human_confirmation') else 'no'} | {cjk} | {rationale} |"
         )
 
     if task:
@@ -504,8 +493,8 @@ def main(argv: Sequence[str] | None = None) -> int:
         prog="python -m flowview.tools.run_prompt_cases",
         description="Run a long-prompt case suite through FlowView and save every printed flow.",
     )
-    parser.add_argument("--suite", default=str(DEFAULT_SUITE), help="case suite JSON (default: examples/long_prompt_cases.json)")
-    parser.add_argument("--out", default=str(DEFAULT_OUT), help="output directory (default: examples/reports/prompt_flows)")
+    parser.add_argument("--suite", default=str(DEFAULT_SUITE), help="case suite JSON (default: tests/suites/long_prompt_cases.json)")
+    parser.add_argument("--out", default=str(DEFAULT_OUT), help="output directory (default: .tmp/prompt_flows)")
     parser.add_argument("--formats", default=",".join(DEFAULT_FORMATS), help="comma-separated formats to save")
     parser.add_argument("--limit", type=int, default=0, help="render only the first N cases (0 = all)")
     parser.add_argument("--no-task", action="store_true", help="skip the recorded-task section")
@@ -558,7 +547,7 @@ def main(argv: Sequence[str] | None = None) -> int:
         "suite": str(suite_path),
         "suite_id": suite.get("suite_id"),
         "generated_by": "flowview.tools.run_prompt_cases",
-        "routing_mode": "lexical DecisionRouter, JEV model router disabled, nothing persisted",
+        "routing_mode": "type-filter DecisionRouter, JEV model router disabled, nothing persisted",
         "formats": list(formats),
         "cases": report_records,
         "stages": stages,

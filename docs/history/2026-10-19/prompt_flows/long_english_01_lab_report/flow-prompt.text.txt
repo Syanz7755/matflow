@@ -1,0 +1,144 @@
+MatFlow routing preview (read-only)
+────────────────────────────────────────────────────────────────────────
+source     : dry-route:D:\Projects\matflow
+graph      : none in this document
+phases     : 3
+issues     : 0 error(s), 0 warning(s)
+meta       : mode=dry-run, graph_version=0, candidates=9, confirmation=no, prompt_characters=2124,
+             prompt=Please treat this as a formal analysis request and work only through the
+             registered tools. Sample and history: the specimen is a 1 mm thick sintered pellet of a
+             garnet-type solid electrolyte, roughly 12 mm diameter, stored in a dry box for three
+             weeks before measurement. The pellet was sputter-coated with gold on both faces and
+             clamped between spring-loaded stainless steel contacts. Before the measurement the cell
+             rested at open circuit for 30 minutes; the open-circuit voltage settled at 12 mV, which
+             is small relative to any decomposition potential we care about, but I am mentioning it
+             because you should note it as a possible source of a low-frequency artefact. Instrument
+             and settings: measurements ran on a Gamry Reference 600+ in potentiostatic EIS mode, 10
+             mV AC amplitude, no DC bias, from 1 MHz down to 0.1 Hz, 10 points per decade, giving 61
+             frequencies. The reported temperature is 25.0 plus or minus 0.5 degrees Celsius. Three
+             repeated sweeps were taken back to back; I am giving you the first sweep only, and I
+             expect you to say explicitly whether a single sweep is enough to claim repeatability.
+             Data layout: the CSV has a header line written by the instrument, then one blank line,
+             then the columns frequency_Hz, Z_real_ohm and Z_imag_ohm. The imaginary part is
+             negative for capacitive behaviour. If the file does not parse the way I described, tell
+             me which line and what you saw rather than silently skipping rows. What I need: (1) a
+             basic quality check of the spectrum, covering monotonic frequency ordering, duplicate
+             frequencies, outliers, negative real part, and whether the high-frequency end
+             approaches a real-axis intercept; (2) a Nyquist plot from the valid points with -Z_imag
+             on the vertical axis, and the high-frequency intercept value reported next to the plot;
+             (3) a short verdict on whether this single sweep supports a claim about the bulk
+             resistance, and if not, what additional data would be needed. Boundaries: do not invent
+             a model or a fitting procedure that is not available in the workspace; if a capability
+             is missing, name it and list what a human must confirm before execution.,
+             retriever_tokens=219, routing_tokens=219, ... (+4 more)
+
+Phases (3)
+  [1] Prompt (input) (prompt)  [completed]
+      1. user prompt  [completed]
+          detail     : Please treat this as a formal analysis request and work only through the
+                       registered tools. Sample and history: the specimen is a 1 mm thick sintered
+                       pellet of a garnet-type solid electrolyte, roughly 12 mm diameter, stored in
+                       a dry box for three weeks before measurement. The pellet was sputter-coated
+                       with gold on both faces and clamped between spring-loaded stainless steel
+                       contacts. Before the measurement the cell rested at open circuit for 30
+                       minutes; the open-circuit voltage settled at 12 mV, which is small relative
+                       to any decomposition potential we care about, but I am mentioning it because
+                       you should note it as a possible source of a low-frequency artefact.
+                       Instrument and settings: measurements ran on a Gamry Reference 600+ in
+                       potentiostatic EIS mode, 10 mV AC amplitude, no DC bias, from 1 MHz down to
+                       0.1 Hz, 10 points per decade, giving 61 frequencies. The reported temperature
+                       is 25.0 plus or minus 0.5 degrees Celsius. Three repeated sweeps were taken
+                       back to back; I am giving you the first sweep only, and I expect you to say
+                       explicitly whether a single sweep is enough to claim repeatability. Data
+                       layout: the CSV has a header line written by the instrument, then one blank
+                       line, then the columns frequency_Hz, Z_real_ohm and Z_imag_ohm. The imaginary
+                       part is negative for capacitive behaviour. If the file does not parse the way
+                       I described, tell me which line and what you saw rather than silently
+                       skipping rows. What I need: (1) a basic quality check of the spectrum,
+                       covering monotonic frequency ordering, duplicate frequencies, outliers,
+                       negative real part, and whether the high-frequency end approaches a real-axis
+                       intercept; (2) a Nyquist plot from the valid points with -Z_imag on the
+                       vertical axis, and the high-frequency intercept value reported next to the
+                       plot; (3) a short verdict on whether this single sweep supports a claim about
+                       the bulk resistance, and if not, what additional data would be needed.
+                       Boundaries: do not invent a model or a fitting procedure that is not
+                       available in the workspace; if a capability is missing, name it and list what
+                       a human must confirm before execution.
+      2. prompt size  [completed]
+          detail     : 2124 character(s), 354 whitespace-separated token(s); available input types:
+                       RawData, TypedTable
+      3. retriever tokenisation  [completed]
+          detail     : backend/routing.py _tokens() keeps the distinct [a-z0-9]+ runs longer than
+                       one character. The 2124-character prompt yields 371 occurrence(s) / 219
+                       distinct token(s) and 0 CJK character(s); the router was given 219 distinct
+                       token(s) (371 occurrence(s), 0 CJK character(s)) [verbatim]
+  [2] Candidates (candidates)  [pending]
+      1. ebrick_case05_import (candidate)  [pending]
+          detail     : candidate only, nothing executed; score 1.00; version 1.0.0; reasons:
+                       matches: and, csv, frequency, sweep, temperature, the
+          tools      : ebrick_case05_import
+      2. ebrick_cp_g_normalize (candidate)  [pending]
+          detail     : candidate only, nothing executed; score 1.00; version 1.0.0; reasons:
+                       matches: and, columns, frequency, hz, sweep; input ports are compatible
+          tools      : ebrick_cp_g_normalize
+      3. ebrick_cp_g_qc (candidate)  [pending]
+          detail     : candidate only, nothing executed; score 1.00; version 1.0.0; reasons:
+                       matches: frequency, in, is, not, rows, sweep, this, valid; input ports are
+                       compatible
+          tools      : ebrick_cp_g_qc
+      4. eis_basic_qc (candidate)  [pending]
+          detail     : candidate only, nothing executed; score 1.00; version 1.0.0; reasons:
+                       matches: analysis, and, basic, eis, nyquist, quality; input ports are
+                       compatible
+          tools      : eis_basic_qc
+      5. normalize_columns (candidate)  [pending]
+          detail     : candidate only, nothing executed; score 1.00; version 1.0.0; reasons:
+                       matches: any, axis, be, columns, data, file, in, must, name, the; input ports
+                       are compatible
+          tools      : normalize_columns
+      6. raw_file_import (candidate)  [pending]
+          detail     : candidate only, nothing executed; score 1.00; version 1.0.0; reasons:
+                       matches: csv, data, file, or
+          tools      : raw_file_import
+      7. type_cast (candidate)  [pending]
+          detail     : candidate only, nothing executed; score 1.00; version 1.0.0; reasons:
+                       matches: and, per, through, type; input ports are compatible
+          tools      : type_cast
+      8. raw_file_import_raw_file_import_1_f29b82 (candidate)  [pending]
+          detail     : candidate only, nothing executed; score 0.75; version 1.0.0; reasons:
+                       matches: file, the, with
+          tools      : raw_file_import_raw_file_import_1_f29b82
+      9. skill_node (candidate)  [pending]
+          detail     : candidate only, nothing executed; score 0.50; version 1.0.0; reasons:
+                       matches: and, data; input ports are compatible
+          tools      : skill_node
+  [3] Decision (decision)  [completed]
+      1. selected ebrick_case05_import  [completed]
+          detail     : confidence 1.00; human confirmation required: no; rationale: Selected EBrick
+                       Case 05 CSV Import from 9 compatible candidate(s).
+          tools      : ebrick_case05_import
+      2. dry run guarantee  [completed]
+          detail     : DecisionRouter() ran without the JEV/model router: record_routing() was not
+                       called and no graph, settings or summary file was written
+
+Status legend
+  ready      : declared, never run
+  running    : execution in progress
+  completed  : finished successfully
+  waiting    : paused for a human decision
+  error      : stopped with an error
+  cancelled  : stopped by a gate or reviewer
+  unknown    : source did not say (never treated as success)
+  step-only statuses:
+    pending    : not started yet
+    skipped    : skipped by a gate or policy
+
+Issues (1)
+┌──────────┬───────────────┬────────────────────────────────┬───────────────────────────────┬──────┐
+│ Severity │ Code          │ Message                        │ Where                         │ Hint │
+├──────────┼───────────────┼────────────────────────────────┼───────────────────────────────┼──────┤
+│ info     │ route.dry_run │ This route was computed        │ dry-route:D:\Projects\matflow │ -    │
+│          │               │ read-only: nothing was         │                               │      │
+│          │               │ persisted to the task summary  │                               │      │
+│          │               │ log.                           │                               │      │
+└──────────┴───────────────┴────────────────────────────────┴───────────────────────────────┴──────┘

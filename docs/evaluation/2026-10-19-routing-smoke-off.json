@@ -1,0 +1,3287 @@
+{
+  "meta": {
+    "generated_at": "2026-10-19T08:50:41+00:00",
+    "jev": "off",
+    "repeats": 3,
+    "models": [
+      "qwen",
+      "deepseek-chat",
+      "deepseek-reasoner"
+    ],
+    "experiment_id": "5780a85e32daaab6ec38ccde29cb254ec27902eca27394dd3f8160f184f60b9d",
+    "scheduled_plans": 9,
+    "recorded_plans": 9,
+    "request_timeout_s": 300,
+    "unavailable_models": {
+      "minimax": "HTTP 403"
+    },
+    "gateway_models": [
+      "deepseek-chat",
+      "deepseek-reasoner",
+      "minimax",
+      "qwen"
+    ],
+    "registry_tools": [
+      "aggregate",
+      "conditional_gate",
+      "eis_basic_qc",
+      "ftir_band_assignment",
+      "ftir_peak_extraction",
+      "join",
+      "normalize_columns",
+      "plot_nyquist",
+      "qe_parse_output",
+      "qe_pw_input",
+      "qe_structure",
+      "quality_report",
+      "raw_file_import",
+      "skill_node",
+      "type_cast",
+      "xrd_peak_extraction",
+      "xrd_reference_match"
+    ],
+    "dataset": {
+      "excluded_no_gold": [],
+      "excluded_count": 0,
+      "duplicates_removed": 3,
+      "case_count": 1,
+      "by_source": {
+        "known_answer": 1
+      },
+      "by_expectation": {
+        "positive": 1
+      },
+      "by_language": {
+        "zh": 1
+      },
+      "subset": "first 1"
+    },
+    "wall_clock_s": 767,
+    "temperature": 0.2,
+    "note": "Gold labels are derived from repository suites; see docs/ROUTING_EVALUATION.md. No credentials are recorded.",
+    "analysis_source_sha256": "98b06e88978667f5ef1d5ef6b5aa497c4ec8488287642480518b19402c7e5106",
+    "analysis_note": "Reaggregated original live observations after evaluator fixes; no new model calls."
+  },
+  "metrics": {
+    "overall_first_repeat_all_models": {
+      "cases": 3,
+      "workflow_exact_match": {
+        "k": 3,
+        "n": 3,
+        "rate": 1.0,
+        "ci95": [
+          0.4385,
+          1.0
+        ]
+      },
+      "workflow_exact_match_excluding_transport_failures": {
+        "k": 3,
+        "n": 3,
+        "rate": 1.0,
+        "ci95": [
+          0.4385,
+          1.0
+        ]
+      },
+      "plans_with_transport_error": {
+        "k": 0,
+        "n": 3,
+        "rate": 0.0,
+        "ci95": [
+          0.0,
+          0.5615
+        ]
+      },
+      "step_top1_all_gold_tools": {
+        "k": 3,
+        "n": 3,
+        "rate": 1.0,
+        "ci95": [
+          0.4385,
+          1.0
+        ]
+      },
+      "step_top1_analysis_tools": {
+        "k": 3,
+        "n": 3,
+        "rate": 1.0,
+        "ci95": [
+          0.4385,
+          1.0
+        ]
+      },
+      "correct_capability_gap": {
+        "k": 0,
+        "n": 0,
+        "rate": null,
+        "ci95": null
+      },
+      "correct_escalation": {
+        "k": 0,
+        "n": 0,
+        "rate": null,
+        "ci95": null
+      },
+      "false_null": {
+        "k": 0,
+        "n": 3,
+        "rate": 0.0,
+        "ci95": [
+          0.0,
+          0.5615
+        ]
+      },
+      "wrong_tool_on_gold_step": {
+        "k": 0,
+        "n": 3,
+        "rate": 0.0,
+        "ci95": [
+          0.0,
+          0.5615
+        ]
+      },
+      "null_action_rate": {
+        "k": 0,
+        "n": 12,
+        "rate": 0.0,
+        "ci95": [
+          0.0,
+          0.2425
+        ]
+      },
+      "needs_human_action_rate": {
+        "k": 0,
+        "n": 12,
+        "rate": 0.0,
+        "ci95": [
+          0.0,
+          0.2425
+        ]
+      },
+      "plan_needs_human_rate": {
+        "k": 0,
+        "n": 3,
+        "rate": 0.0,
+        "ci95": [
+          0.0,
+          0.5615
+        ]
+      },
+      "jev_to_llm_fallback": {
+        "k": 0,
+        "n": 0,
+        "rate": null,
+        "ci95": null
+      },
+      "parse_failure": {
+        "k": 0,
+        "n": 19,
+        "rate": 0.0,
+        "ci95": [
+          0.0,
+          0.1682
+        ]
+      },
+      "transport_error": {
+        "k": 0,
+        "n": 19,
+        "rate": 0.0,
+        "ci95": [
+          0.0,
+          0.1682
+        ]
+      },
+      "invalid_choice_action_rate": {
+        "k": 0,
+        "n": 12,
+        "rate": 0.0,
+        "ci95": [
+          0.0,
+          0.2425
+        ]
+      },
+      "plan_failed": {
+        "k": 0,
+        "n": 3,
+        "rate": 0.0,
+        "ci95": [
+          0.0,
+          0.5615
+        ]
+      },
+      "plan_latency_s": {
+        "median": 171.17,
+        "p90": 244.41
+      },
+      "llm_call_latency_s": {
+        "median": 14.25,
+        "p90": 66.37,
+        "calls": 19
+      },
+      "all_repeats": {
+        "runs": 3,
+        "workflow_exact_match": {
+          "k": 3,
+          "n": 3,
+          "rate": 1.0,
+          "ci95": [
+            0.4385,
+            1.0
+          ]
+        }
+      }
+    },
+    "by_model": {
+      "deepseek-chat": {
+        "cases": 1,
+        "workflow_exact_match": {
+          "k": 1,
+          "n": 1,
+          "rate": 1.0,
+          "ci95": [
+            0.2065,
+            1.0
+          ]
+        },
+        "workflow_exact_match_excluding_transport_failures": {
+          "k": 1,
+          "n": 1,
+          "rate": 1.0,
+          "ci95": [
+            0.2065,
+            1.0
+          ]
+        },
+        "plans_with_transport_error": {
+          "k": 0,
+          "n": 1,
+          "rate": 0.0,
+          "ci95": [
+            0.0,
+            0.7935
+          ]
+        },
+        "step_top1_all_gold_tools": {
+          "k": 1,
+          "n": 1,
+          "rate": 1.0,
+          "ci95": [
+            0.2065,
+            1.0
+          ]
+        },
+        "step_top1_analysis_tools": {
+          "k": 1,
+          "n": 1,
+          "rate": 1.0,
+          "ci95": [
+            0.2065,
+            1.0
+          ]
+        },
+        "correct_capability_gap": {
+          "k": 0,
+          "n": 0,
+          "rate": null,
+          "ci95": null
+        },
+        "correct_escalation": {
+          "k": 0,
+          "n": 0,
+          "rate": null,
+          "ci95": null
+        },
+        "false_null": {
+          "k": 0,
+          "n": 1,
+          "rate": 0.0,
+          "ci95": [
+            0.0,
+            0.7935
+          ]
+        },
+        "wrong_tool_on_gold_step": {
+          "k": 0,
+          "n": 1,
+          "rate": 0.0,
+          "ci95": [
+            0.0,
+            0.7935
+          ]
+        },
+        "null_action_rate": {
+          "k": 0,
+          "n": 4,
+          "rate": 0.0,
+          "ci95": [
+            0.0,
+            0.4899
+          ]
+        },
+        "needs_human_action_rate": {
+          "k": 0,
+          "n": 4,
+          "rate": 0.0,
+          "ci95": [
+            0.0,
+            0.4899
+          ]
+        },
+        "plan_needs_human_rate": {
+          "k": 0,
+          "n": 1,
+          "rate": 0.0,
+          "ci95": [
+            0.0,
+            0.7935
+          ]
+        },
+        "jev_to_llm_fallback": {
+          "k": 0,
+          "n": 0,
+          "rate": null,
+          "ci95": null
+        },
+        "parse_failure": {
+          "k": 0,
+          "n": 6,
+          "rate": 0.0,
+          "ci95": [
+            0.0,
+            0.3903
+          ]
+        },
+        "transport_error": {
+          "k": 0,
+          "n": 6,
+          "rate": 0.0,
+          "ci95": [
+            0.0,
+            0.3903
+          ]
+        },
+        "invalid_choice_action_rate": {
+          "k": 0,
+          "n": 4,
+          "rate": 0.0,
+          "ci95": [
+            0.0,
+            0.4899
+          ]
+        },
+        "plan_failed": {
+          "k": 0,
+          "n": 1,
+          "rate": 0.0,
+          "ci95": [
+            0.0,
+            0.7935
+          ]
+        },
+        "plan_latency_s": {
+          "median": 171.17,
+          "p90": 171.17
+        },
+        "llm_call_latency_s": {
+          "median": 18.15,
+          "p90": 63.44,
+          "calls": 6
+        },
+        "all_repeats": {
+          "runs": 3,
+          "workflow_exact_match": {
+            "k": 3,
+            "n": 3,
+            "rate": 1.0,
+            "ci95": [
+              0.4385,
+              1.0
+            ]
+          }
+        }
+      },
+      "deepseek-reasoner": {
+        "cases": 1,
+        "workflow_exact_match": {
+          "k": 1,
+          "n": 1,
+          "rate": 1.0,
+          "ci95": [
+            0.2065,
+            1.0
+          ]
+        },
+        "workflow_exact_match_excluding_transport_failures": {
+          "k": 1,
+          "n": 1,
+          "rate": 1.0,
+          "ci95": [
+            0.2065,
+            1.0
+          ]
+        },
+        "plans_with_transport_error": {
+          "k": 0,
+          "n": 1,
+          "rate": 0.0,
+          "ci95": [
+            0.0,
+            0.7935
+          ]
+        },
+        "step_top1_all_gold_tools": {
+          "k": 1,
+          "n": 1,
+          "rate": 1.0,
+          "ci95": [
+            0.2065,
+            1.0
+          ]
+        },
+        "step_top1_analysis_tools": {
+          "k": 1,
+          "n": 1,
+          "rate": 1.0,
+          "ci95": [
+            0.2065,
+            1.0
+          ]
+        },
+        "correct_capability_gap": {
+          "k": 0,
+          "n": 0,
+          "rate": null,
+          "ci95": null
+        },
+        "correct_escalation": {
+          "k": 0,
+          "n": 0,
+          "rate": null,
+          "ci95": null
+        },
+        "false_null": {
+          "k": 0,
+          "n": 1,
+          "rate": 0.0,
+          "ci95": [
+            0.0,
+            0.7935
+          ]
+        },
+        "wrong_tool_on_gold_step": {
+          "k": 0,
+          "n": 1,
+          "rate": 0.0,
+          "ci95": [
+            0.0,
+            0.7935
+          ]
+        },
+        "null_action_rate": {
+          "k": 0,
+          "n": 4,
+          "rate": 0.0,
+          "ci95": [
+            0.0,
+            0.4899
+          ]
+        },
+        "needs_human_action_rate": {
+          "k": 0,
+          "n": 4,
+          "rate": 0.0,
+          "ci95": [
+            0.0,
+            0.4899
+          ]
+        },
+        "plan_needs_human_rate": {
+          "k": 0,
+          "n": 1,
+          "rate": 0.0,
+          "ci95": [
+            0.0,
+            0.7935
+          ]
+        },
+        "jev_to_llm_fallback": {
+          "k": 0,
+          "n": 0,
+          "rate": null,
+          "ci95": null
+        },
+        "parse_failure": {
+          "k": 0,
+          "n": 7,
+          "rate": 0.0,
+          "ci95": [
+            0.0,
+            0.3543
+          ]
+        },
+        "transport_error": {
+          "k": 0,
+          "n": 7,
+          "rate": 0.0,
+          "ci95": [
+            0.0,
+            0.3543
+          ]
+        },
+        "invalid_choice_action_rate": {
+          "k": 0,
+          "n": 4,
+          "rate": 0.0,
+          "ci95": [
+            0.0,
+            0.4899
+          ]
+        },
+        "plan_failed": {
+          "k": 0,
+          "n": 1,
+          "rate": 0.0,
+          "ci95": [
+            0.0,
+            0.7935
+          ]
+        },
+        "plan_latency_s": {
+          "median": 262.72,
+          "p90": 262.72
+        },
+        "llm_call_latency_s": {
+          "median": 19.58,
+          "p90": 82.96,
+          "calls": 7
+        },
+        "all_repeats": {
+          "runs": 3,
+          "workflow_exact_match": {
+            "k": 3,
+            "n": 3,
+            "rate": 1.0,
+            "ci95": [
+              0.4385,
+              1.0
+            ]
+          }
+        }
+      },
+      "qwen": {
+        "cases": 1,
+        "workflow_exact_match": {
+          "k": 1,
+          "n": 1,
+          "rate": 1.0,
+          "ci95": [
+            0.2065,
+            1.0
+          ]
+        },
+        "workflow_exact_match_excluding_transport_failures": {
+          "k": 1,
+          "n": 1,
+          "rate": 1.0,
+          "ci95": [
+            0.2065,
+            1.0
+          ]
+        },
+        "plans_with_transport_error": {
+          "k": 0,
+          "n": 1,
+          "rate": 0.0,
+          "ci95": [
+            0.0,
+            0.7935
+          ]
+        },
+        "step_top1_all_gold_tools": {
+          "k": 1,
+          "n": 1,
+          "rate": 1.0,
+          "ci95": [
+            0.2065,
+            1.0
+          ]
+        },
+        "step_top1_analysis_tools": {
+          "k": 1,
+          "n": 1,
+          "rate": 1.0,
+          "ci95": [
+            0.2065,
+            1.0
+          ]
+        },
+        "correct_capability_gap": {
+          "k": 0,
+          "n": 0,
+          "rate": null,
+          "ci95": null
+        },
+        "correct_escalation": {
+          "k": 0,
+          "n": 0,
+          "rate": null,
+          "ci95": null
+        },
+        "false_null": {
+          "k": 0,
+          "n": 1,
+          "rate": 0.0,
+          "ci95": [
+            0.0,
+            0.7935
+          ]
+        },
+        "wrong_tool_on_gold_step": {
+          "k": 0,
+          "n": 1,
+          "rate": 0.0,
+          "ci95": [
+            0.0,
+            0.7935
+          ]
+        },
+        "null_action_rate": {
+          "k": 0,
+          "n": 4,
+          "rate": 0.0,
+          "ci95": [
+            0.0,
+            0.4899
+          ]
+        },
+        "needs_human_action_rate": {
+          "k": 0,
+          "n": 4,
+          "rate": 0.0,
+          "ci95": [
+            0.0,
+            0.4899
+          ]
+        },
+        "plan_needs_human_rate": {
+          "k": 0,
+          "n": 1,
+          "rate": 0.0,
+          "ci95": [
+            0.0,
+            0.7935
+          ]
+        },
+        "jev_to_llm_fallback": {
+          "k": 0,
+          "n": 0,
+          "rate": null,
+          "ci95": null
+        },
+        "parse_failure": {
+          "k": 0,
+          "n": 6,
+          "rate": 0.0,
+          "ci95": [
+            0.0,
+            0.3903
+          ]
+        },
+        "transport_error": {
+          "k": 0,
+          "n": 6,
+          "rate": 0.0,
+          "ci95": [
+            0.0,
+            0.3903
+          ]
+        },
+        "invalid_choice_action_rate": {
+          "k": 0,
+          "n": 4,
+          "rate": 0.0,
+          "ci95": [
+            0.0,
+            0.4899
+          ]
+        },
+        "plan_failed": {
+          "k": 0,
+          "n": 1,
+          "rate": 0.0,
+          "ci95": [
+            0.0,
+            0.7935
+          ]
+        },
+        "plan_latency_s": {
+          "median": 80.06,
+          "p90": 80.06
+        },
+        "llm_call_latency_s": {
+          "median": 2.81,
+          "p90": 35.97,
+          "calls": 6
+        },
+        "all_repeats": {
+          "runs": 3,
+          "workflow_exact_match": {
+            "k": 3,
+            "n": 3,
+            "rate": 1.0,
+            "ci95": [
+              0.4385,
+              1.0
+            ]
+          }
+        }
+      }
+    },
+    "by_model_language": {
+      "deepseek-chat|zh": {
+        "cases": 1,
+        "workflow_exact_match": {
+          "k": 1,
+          "n": 1,
+          "rate": 1.0,
+          "ci95": [
+            0.2065,
+            1.0
+          ]
+        },
+        "workflow_exact_match_excluding_transport_failures": {
+          "k": 1,
+          "n": 1,
+          "rate": 1.0,
+          "ci95": [
+            0.2065,
+            1.0
+          ]
+        },
+        "plans_with_transport_error": {
+          "k": 0,
+          "n": 1,
+          "rate": 0.0,
+          "ci95": [
+            0.0,
+            0.7935
+          ]
+        },
+        "step_top1_all_gold_tools": {
+          "k": 1,
+          "n": 1,
+          "rate": 1.0,
+          "ci95": [
+            0.2065,
+            1.0
+          ]
+        },
+        "step_top1_analysis_tools": {
+          "k": 1,
+          "n": 1,
+          "rate": 1.0,
+          "ci95": [
+            0.2065,
+            1.0
+          ]
+        },
+        "correct_capability_gap": {
+          "k": 0,
+          "n": 0,
+          "rate": null,
+          "ci95": null
+        },
+        "correct_escalation": {
+          "k": 0,
+          "n": 0,
+          "rate": null,
+          "ci95": null
+        },
+        "false_null": {
+          "k": 0,
+          "n": 1,
+          "rate": 0.0,
+          "ci95": [
+            0.0,
+            0.7935
+          ]
+        },
+        "wrong_tool_on_gold_step": {
+          "k": 0,
+          "n": 1,
+          "rate": 0.0,
+          "ci95": [
+            0.0,
+            0.7935
+          ]
+        },
+        "null_action_rate": {
+          "k": 0,
+          "n": 4,
+          "rate": 0.0,
+          "ci95": [
+            0.0,
+            0.4899
+          ]
+        },
+        "needs_human_action_rate": {
+          "k": 0,
+          "n": 4,
+          "rate": 0.0,
+          "ci95": [
+            0.0,
+            0.4899
+          ]
+        },
+        "plan_needs_human_rate": {
+          "k": 0,
+          "n": 1,
+          "rate": 0.0,
+          "ci95": [
+            0.0,
+            0.7935
+          ]
+        },
+        "jev_to_llm_fallback": {
+          "k": 0,
+          "n": 0,
+          "rate": null,
+          "ci95": null
+        },
+        "parse_failure": {
+          "k": 0,
+          "n": 6,
+          "rate": 0.0,
+          "ci95": [
+            0.0,
+            0.3903
+          ]
+        },
+        "transport_error": {
+          "k": 0,
+          "n": 6,
+          "rate": 0.0,
+          "ci95": [
+            0.0,
+            0.3903
+          ]
+        },
+        "invalid_choice_action_rate": {
+          "k": 0,
+          "n": 4,
+          "rate": 0.0,
+          "ci95": [
+            0.0,
+            0.4899
+          ]
+        },
+        "plan_failed": {
+          "k": 0,
+          "n": 1,
+          "rate": 0.0,
+          "ci95": [
+            0.0,
+            0.7935
+          ]
+        },
+        "plan_latency_s": {
+          "median": 171.17,
+          "p90": 171.17
+        },
+        "llm_call_latency_s": {
+          "median": 18.15,
+          "p90": 63.44,
+          "calls": 6
+        },
+        "all_repeats": {
+          "runs": 3,
+          "workflow_exact_match": {
+            "k": 3,
+            "n": 3,
+            "rate": 1.0,
+            "ci95": [
+              0.4385,
+              1.0
+            ]
+          }
+        }
+      },
+      "deepseek-chat|en": {
+        "cases": 0,
+        "workflow_exact_match": {
+          "k": 0,
+          "n": 0,
+          "rate": null,
+          "ci95": null
+        },
+        "workflow_exact_match_excluding_transport_failures": {
+          "k": 0,
+          "n": 0,
+          "rate": null,
+          "ci95": null
+        },
+        "plans_with_transport_error": {
+          "k": 0,
+          "n": 0,
+          "rate": null,
+          "ci95": null
+        },
+        "step_top1_all_gold_tools": {
+          "k": 0,
+          "n": 0,
+          "rate": null,
+          "ci95": null
+        },
+        "step_top1_analysis_tools": {
+          "k": 0,
+          "n": 0,
+          "rate": null,
+          "ci95": null
+        },
+        "correct_capability_gap": {
+          "k": 0,
+          "n": 0,
+          "rate": null,
+          "ci95": null
+        },
+        "correct_escalation": {
+          "k": 0,
+          "n": 0,
+          "rate": null,
+          "ci95": null
+        },
+        "false_null": {
+          "k": 0,
+          "n": 0,
+          "rate": null,
+          "ci95": null
+        },
+        "wrong_tool_on_gold_step": {
+          "k": 0,
+          "n": 0,
+          "rate": null,
+          "ci95": null
+        },
+        "null_action_rate": {
+          "k": 0,
+          "n": 0,
+          "rate": null,
+          "ci95": null
+        },
+        "needs_human_action_rate": {
+          "k": 0,
+          "n": 0,
+          "rate": null,
+          "ci95": null
+        },
+        "plan_needs_human_rate": {
+          "k": 0,
+          "n": 0,
+          "rate": null,
+          "ci95": null
+        },
+        "jev_to_llm_fallback": {
+          "k": 0,
+          "n": 0,
+          "rate": null,
+          "ci95": null
+        },
+        "parse_failure": {
+          "k": 0,
+          "n": 0,
+          "rate": null,
+          "ci95": null
+        },
+        "transport_error": {
+          "k": 0,
+          "n": 0,
+          "rate": null,
+          "ci95": null
+        },
+        "invalid_choice_action_rate": {
+          "k": 0,
+          "n": 0,
+          "rate": null,
+          "ci95": null
+        },
+        "plan_failed": {
+          "k": 0,
+          "n": 0,
+          "rate": null,
+          "ci95": null
+        },
+        "plan_latency_s": {
+          "median": null,
+          "p90": null
+        },
+        "llm_call_latency_s": {
+          "median": null,
+          "p90": null,
+          "calls": 0
+        },
+        "all_repeats": {
+          "runs": 0,
+          "workflow_exact_match": {
+            "k": 0,
+            "n": 0,
+            "rate": null,
+            "ci95": null
+          }
+        }
+      },
+      "deepseek-reasoner|zh": {
+        "cases": 1,
+        "workflow_exact_match": {
+          "k": 1,
+          "n": 1,
+          "rate": 1.0,
+          "ci95": [
+            0.2065,
+            1.0
+          ]
+        },
+        "workflow_exact_match_excluding_transport_failures": {
+          "k": 1,
+          "n": 1,
+          "rate": 1.0,
+          "ci95": [
+            0.2065,
+            1.0
+          ]
+        },
+        "plans_with_transport_error": {
+          "k": 0,
+          "n": 1,
+          "rate": 0.0,
+          "ci95": [
+            0.0,
+            0.7935
+          ]
+        },
+        "step_top1_all_gold_tools": {
+          "k": 1,
+          "n": 1,
+          "rate": 1.0,
+          "ci95": [
+            0.2065,
+            1.0
+          ]
+        },
+        "step_top1_analysis_tools": {
+          "k": 1,
+          "n": 1,
+          "rate": 1.0,
+          "ci95": [
+            0.2065,
+            1.0
+          ]
+        },
+        "correct_capability_gap": {
+          "k": 0,
+          "n": 0,
+          "rate": null,
+          "ci95": null
+        },
+        "correct_escalation": {
+          "k": 0,
+          "n": 0,
+          "rate": null,
+          "ci95": null
+        },
+        "false_null": {
+          "k": 0,
+          "n": 1,
+          "rate": 0.0,
+          "ci95": [
+            0.0,
+            0.7935
+          ]
+        },
+        "wrong_tool_on_gold_step": {
+          "k": 0,
+          "n": 1,
+          "rate": 0.0,
+          "ci95": [
+            0.0,
+            0.7935
+          ]
+        },
+        "null_action_rate": {
+          "k": 0,
+          "n": 4,
+          "rate": 0.0,
+          "ci95": [
+            0.0,
+            0.4899
+          ]
+        },
+        "needs_human_action_rate": {
+          "k": 0,
+          "n": 4,
+          "rate": 0.0,
+          "ci95": [
+            0.0,
+            0.4899
+          ]
+        },
+        "plan_needs_human_rate": {
+          "k": 0,
+          "n": 1,
+          "rate": 0.0,
+          "ci95": [
+            0.0,
+            0.7935
+          ]
+        },
+        "jev_to_llm_fallback": {
+          "k": 0,
+          "n": 0,
+          "rate": null,
+          "ci95": null
+        },
+        "parse_failure": {
+          "k": 0,
+          "n": 7,
+          "rate": 0.0,
+          "ci95": [
+            0.0,
+            0.3543
+          ]
+        },
+        "transport_error": {
+          "k": 0,
+          "n": 7,
+          "rate": 0.0,
+          "ci95": [
+            0.0,
+            0.3543
+          ]
+        },
+        "invalid_choice_action_rate": {
+          "k": 0,
+          "n": 4,
+          "rate": 0.0,
+          "ci95": [
+            0.0,
+            0.4899
+          ]
+        },
+        "plan_failed": {
+          "k": 0,
+          "n": 1,
+          "rate": 0.0,
+          "ci95": [
+            0.0,
+            0.7935
+          ]
+        },
+        "plan_latency_s": {
+          "median": 262.72,
+          "p90": 262.72
+        },
+        "llm_call_latency_s": {
+          "median": 19.58,
+          "p90": 82.96,
+          "calls": 7
+        },
+        "all_repeats": {
+          "runs": 3,
+          "workflow_exact_match": {
+            "k": 3,
+            "n": 3,
+            "rate": 1.0,
+            "ci95": [
+              0.4385,
+              1.0
+            ]
+          }
+        }
+      },
+      "deepseek-reasoner|en": {
+        "cases": 0,
+        "workflow_exact_match": {
+          "k": 0,
+          "n": 0,
+          "rate": null,
+          "ci95": null
+        },
+        "workflow_exact_match_excluding_transport_failures": {
+          "k": 0,
+          "n": 0,
+          "rate": null,
+          "ci95": null
+        },
+        "plans_with_transport_error": {
+          "k": 0,
+          "n": 0,
+          "rate": null,
+          "ci95": null
+        },
+        "step_top1_all_gold_tools": {
+          "k": 0,
+          "n": 0,
+          "rate": null,
+          "ci95": null
+        },
+        "step_top1_analysis_tools": {
+          "k": 0,
+          "n": 0,
+          "rate": null,
+          "ci95": null
+        },
+        "correct_capability_gap": {
+          "k": 0,
+          "n": 0,
+          "rate": null,
+          "ci95": null
+        },
+        "correct_escalation": {
+          "k": 0,
+          "n": 0,
+          "rate": null,
+          "ci95": null
+        },
+        "false_null": {
+          "k": 0,
+          "n": 0,
+          "rate": null,
+          "ci95": null
+        },
+        "wrong_tool_on_gold_step": {
+          "k": 0,
+          "n": 0,
+          "rate": null,
+          "ci95": null
+        },
+        "null_action_rate": {
+          "k": 0,
+          "n": 0,
+          "rate": null,
+          "ci95": null
+        },
+        "needs_human_action_rate": {
+          "k": 0,
+          "n": 0,
+          "rate": null,
+          "ci95": null
+        },
+        "plan_needs_human_rate": {
+          "k": 0,
+          "n": 0,
+          "rate": null,
+          "ci95": null
+        },
+        "jev_to_llm_fallback": {
+          "k": 0,
+          "n": 0,
+          "rate": null,
+          "ci95": null
+        },
+        "parse_failure": {
+          "k": 0,
+          "n": 0,
+          "rate": null,
+          "ci95": null
+        },
+        "transport_error": {
+          "k": 0,
+          "n": 0,
+          "rate": null,
+          "ci95": null
+        },
+        "invalid_choice_action_rate": {
+          "k": 0,
+          "n": 0,
+          "rate": null,
+          "ci95": null
+        },
+        "plan_failed": {
+          "k": 0,
+          "n": 0,
+          "rate": null,
+          "ci95": null
+        },
+        "plan_latency_s": {
+          "median": null,
+          "p90": null
+        },
+        "llm_call_latency_s": {
+          "median": null,
+          "p90": null,
+          "calls": 0
+        },
+        "all_repeats": {
+          "runs": 0,
+          "workflow_exact_match": {
+            "k": 0,
+            "n": 0,
+            "rate": null,
+            "ci95": null
+          }
+        }
+      },
+      "qwen|zh": {
+        "cases": 1,
+        "workflow_exact_match": {
+          "k": 1,
+          "n": 1,
+          "rate": 1.0,
+          "ci95": [
+            0.2065,
+            1.0
+          ]
+        },
+        "workflow_exact_match_excluding_transport_failures": {
+          "k": 1,
+          "n": 1,
+          "rate": 1.0,
+          "ci95": [
+            0.2065,
+            1.0
+          ]
+        },
+        "plans_with_transport_error": {
+          "k": 0,
+          "n": 1,
+          "rate": 0.0,
+          "ci95": [
+            0.0,
+            0.7935
+          ]
+        },
+        "step_top1_all_gold_tools": {
+          "k": 1,
+          "n": 1,
+          "rate": 1.0,
+          "ci95": [
+            0.2065,
+            1.0
+          ]
+        },
+        "step_top1_analysis_tools": {
+          "k": 1,
+          "n": 1,
+          "rate": 1.0,
+          "ci95": [
+            0.2065,
+            1.0
+          ]
+        },
+        "correct_capability_gap": {
+          "k": 0,
+          "n": 0,
+          "rate": null,
+          "ci95": null
+        },
+        "correct_escalation": {
+          "k": 0,
+          "n": 0,
+          "rate": null,
+          "ci95": null
+        },
+        "false_null": {
+          "k": 0,
+          "n": 1,
+          "rate": 0.0,
+          "ci95": [
+            0.0,
+            0.7935
+          ]
+        },
+        "wrong_tool_on_gold_step": {
+          "k": 0,
+          "n": 1,
+          "rate": 0.0,
+          "ci95": [
+            0.0,
+            0.7935
+          ]
+        },
+        "null_action_rate": {
+          "k": 0,
+          "n": 4,
+          "rate": 0.0,
+          "ci95": [
+            0.0,
+            0.4899
+          ]
+        },
+        "needs_human_action_rate": {
+          "k": 0,
+          "n": 4,
+          "rate": 0.0,
+          "ci95": [
+            0.0,
+            0.4899
+          ]
+        },
+        "plan_needs_human_rate": {
+          "k": 0,
+          "n": 1,
+          "rate": 0.0,
+          "ci95": [
+            0.0,
+            0.7935
+          ]
+        },
+        "jev_to_llm_fallback": {
+          "k": 0,
+          "n": 0,
+          "rate": null,
+          "ci95": null
+        },
+        "parse_failure": {
+          "k": 0,
+          "n": 6,
+          "rate": 0.0,
+          "ci95": [
+            0.0,
+            0.3903
+          ]
+        },
+        "transport_error": {
+          "k": 0,
+          "n": 6,
+          "rate": 0.0,
+          "ci95": [
+            0.0,
+            0.3903
+          ]
+        },
+        "invalid_choice_action_rate": {
+          "k": 0,
+          "n": 4,
+          "rate": 0.0,
+          "ci95": [
+            0.0,
+            0.4899
+          ]
+        },
+        "plan_failed": {
+          "k": 0,
+          "n": 1,
+          "rate": 0.0,
+          "ci95": [
+            0.0,
+            0.7935
+          ]
+        },
+        "plan_latency_s": {
+          "median": 80.06,
+          "p90": 80.06
+        },
+        "llm_call_latency_s": {
+          "median": 2.81,
+          "p90": 35.97,
+          "calls": 6
+        },
+        "all_repeats": {
+          "runs": 3,
+          "workflow_exact_match": {
+            "k": 3,
+            "n": 3,
+            "rate": 1.0,
+            "ci95": [
+              0.4385,
+              1.0
+            ]
+          }
+        }
+      },
+      "qwen|en": {
+        "cases": 0,
+        "workflow_exact_match": {
+          "k": 0,
+          "n": 0,
+          "rate": null,
+          "ci95": null
+        },
+        "workflow_exact_match_excluding_transport_failures": {
+          "k": 0,
+          "n": 0,
+          "rate": null,
+          "ci95": null
+        },
+        "plans_with_transport_error": {
+          "k": 0,
+          "n": 0,
+          "rate": null,
+          "ci95": null
+        },
+        "step_top1_all_gold_tools": {
+          "k": 0,
+          "n": 0,
+          "rate": null,
+          "ci95": null
+        },
+        "step_top1_analysis_tools": {
+          "k": 0,
+          "n": 0,
+          "rate": null,
+          "ci95": null
+        },
+        "correct_capability_gap": {
+          "k": 0,
+          "n": 0,
+          "rate": null,
+          "ci95": null
+        },
+        "correct_escalation": {
+          "k": 0,
+          "n": 0,
+          "rate": null,
+          "ci95": null
+        },
+        "false_null": {
+          "k": 0,
+          "n": 0,
+          "rate": null,
+          "ci95": null
+        },
+        "wrong_tool_on_gold_step": {
+          "k": 0,
+          "n": 0,
+          "rate": null,
+          "ci95": null
+        },
+        "null_action_rate": {
+          "k": 0,
+          "n": 0,
+          "rate": null,
+          "ci95": null
+        },
+        "needs_human_action_rate": {
+          "k": 0,
+          "n": 0,
+          "rate": null,
+          "ci95": null
+        },
+        "plan_needs_human_rate": {
+          "k": 0,
+          "n": 0,
+          "rate": null,
+          "ci95": null
+        },
+        "jev_to_llm_fallback": {
+          "k": 0,
+          "n": 0,
+          "rate": null,
+          "ci95": null
+        },
+        "parse_failure": {
+          "k": 0,
+          "n": 0,
+          "rate": null,
+          "ci95": null
+        },
+        "transport_error": {
+          "k": 0,
+          "n": 0,
+          "rate": null,
+          "ci95": null
+        },
+        "invalid_choice_action_rate": {
+          "k": 0,
+          "n": 0,
+          "rate": null,
+          "ci95": null
+        },
+        "plan_failed": {
+          "k": 0,
+          "n": 0,
+          "rate": null,
+          "ci95": null
+        },
+        "plan_latency_s": {
+          "median": null,
+          "p90": null
+        },
+        "llm_call_latency_s": {
+          "median": null,
+          "p90": null,
+          "calls": 0
+        },
+        "all_repeats": {
+          "runs": 0,
+          "workflow_exact_match": {
+            "k": 0,
+            "n": 0,
+            "rate": null,
+            "ci95": null
+          }
+        }
+      }
+    },
+    "by_model_domain": {
+      "deepseek-chat|eis": {
+        "cases": 1,
+        "workflow_exact_match": {
+          "k": 1,
+          "n": 1,
+          "rate": 1.0,
+          "ci95": [
+            0.2065,
+            1.0
+          ]
+        },
+        "workflow_exact_match_excluding_transport_failures": {
+          "k": 1,
+          "n": 1,
+          "rate": 1.0,
+          "ci95": [
+            0.2065,
+            1.0
+          ]
+        },
+        "plans_with_transport_error": {
+          "k": 0,
+          "n": 1,
+          "rate": 0.0,
+          "ci95": [
+            0.0,
+            0.7935
+          ]
+        },
+        "step_top1_all_gold_tools": {
+          "k": 1,
+          "n": 1,
+          "rate": 1.0,
+          "ci95": [
+            0.2065,
+            1.0
+          ]
+        },
+        "step_top1_analysis_tools": {
+          "k": 1,
+          "n": 1,
+          "rate": 1.0,
+          "ci95": [
+            0.2065,
+            1.0
+          ]
+        },
+        "correct_capability_gap": {
+          "k": 0,
+          "n": 0,
+          "rate": null,
+          "ci95": null
+        },
+        "correct_escalation": {
+          "k": 0,
+          "n": 0,
+          "rate": null,
+          "ci95": null
+        },
+        "false_null": {
+          "k": 0,
+          "n": 1,
+          "rate": 0.0,
+          "ci95": [
+            0.0,
+            0.7935
+          ]
+        },
+        "wrong_tool_on_gold_step": {
+          "k": 0,
+          "n": 1,
+          "rate": 0.0,
+          "ci95": [
+            0.0,
+            0.7935
+          ]
+        },
+        "null_action_rate": {
+          "k": 0,
+          "n": 4,
+          "rate": 0.0,
+          "ci95": [
+            0.0,
+            0.4899
+          ]
+        },
+        "needs_human_action_rate": {
+          "k": 0,
+          "n": 4,
+          "rate": 0.0,
+          "ci95": [
+            0.0,
+            0.4899
+          ]
+        },
+        "plan_needs_human_rate": {
+          "k": 0,
+          "n": 1,
+          "rate": 0.0,
+          "ci95": [
+            0.0,
+            0.7935
+          ]
+        },
+        "jev_to_llm_fallback": {
+          "k": 0,
+          "n": 0,
+          "rate": null,
+          "ci95": null
+        },
+        "parse_failure": {
+          "k": 0,
+          "n": 6,
+          "rate": 0.0,
+          "ci95": [
+            0.0,
+            0.3903
+          ]
+        },
+        "transport_error": {
+          "k": 0,
+          "n": 6,
+          "rate": 0.0,
+          "ci95": [
+            0.0,
+            0.3903
+          ]
+        },
+        "invalid_choice_action_rate": {
+          "k": 0,
+          "n": 4,
+          "rate": 0.0,
+          "ci95": [
+            0.0,
+            0.4899
+          ]
+        },
+        "plan_failed": {
+          "k": 0,
+          "n": 1,
+          "rate": 0.0,
+          "ci95": [
+            0.0,
+            0.7935
+          ]
+        },
+        "plan_latency_s": {
+          "median": 171.17,
+          "p90": 171.17
+        },
+        "llm_call_latency_s": {
+          "median": 18.15,
+          "p90": 63.44,
+          "calls": 6
+        },
+        "all_repeats": {
+          "runs": 3,
+          "workflow_exact_match": {
+            "k": 3,
+            "n": 3,
+            "rate": 1.0,
+            "ci95": [
+              0.4385,
+              1.0
+            ]
+          }
+        }
+      },
+      "deepseek-reasoner|eis": {
+        "cases": 1,
+        "workflow_exact_match": {
+          "k": 1,
+          "n": 1,
+          "rate": 1.0,
+          "ci95": [
+            0.2065,
+            1.0
+          ]
+        },
+        "workflow_exact_match_excluding_transport_failures": {
+          "k": 1,
+          "n": 1,
+          "rate": 1.0,
+          "ci95": [
+            0.2065,
+            1.0
+          ]
+        },
+        "plans_with_transport_error": {
+          "k": 0,
+          "n": 1,
+          "rate": 0.0,
+          "ci95": [
+            0.0,
+            0.7935
+          ]
+        },
+        "step_top1_all_gold_tools": {
+          "k": 1,
+          "n": 1,
+          "rate": 1.0,
+          "ci95": [
+            0.2065,
+            1.0
+          ]
+        },
+        "step_top1_analysis_tools": {
+          "k": 1,
+          "n": 1,
+          "rate": 1.0,
+          "ci95": [
+            0.2065,
+            1.0
+          ]
+        },
+        "correct_capability_gap": {
+          "k": 0,
+          "n": 0,
+          "rate": null,
+          "ci95": null
+        },
+        "correct_escalation": {
+          "k": 0,
+          "n": 0,
+          "rate": null,
+          "ci95": null
+        },
+        "false_null": {
+          "k": 0,
+          "n": 1,
+          "rate": 0.0,
+          "ci95": [
+            0.0,
+            0.7935
+          ]
+        },
+        "wrong_tool_on_gold_step": {
+          "k": 0,
+          "n": 1,
+          "rate": 0.0,
+          "ci95": [
+            0.0,
+            0.7935
+          ]
+        },
+        "null_action_rate": {
+          "k": 0,
+          "n": 4,
+          "rate": 0.0,
+          "ci95": [
+            0.0,
+            0.4899
+          ]
+        },
+        "needs_human_action_rate": {
+          "k": 0,
+          "n": 4,
+          "rate": 0.0,
+          "ci95": [
+            0.0,
+            0.4899
+          ]
+        },
+        "plan_needs_human_rate": {
+          "k": 0,
+          "n": 1,
+          "rate": 0.0,
+          "ci95": [
+            0.0,
+            0.7935
+          ]
+        },
+        "jev_to_llm_fallback": {
+          "k": 0,
+          "n": 0,
+          "rate": null,
+          "ci95": null
+        },
+        "parse_failure": {
+          "k": 0,
+          "n": 7,
+          "rate": 0.0,
+          "ci95": [
+            0.0,
+            0.3543
+          ]
+        },
+        "transport_error": {
+          "k": 0,
+          "n": 7,
+          "rate": 0.0,
+          "ci95": [
+            0.0,
+            0.3543
+          ]
+        },
+        "invalid_choice_action_rate": {
+          "k": 0,
+          "n": 4,
+          "rate": 0.0,
+          "ci95": [
+            0.0,
+            0.4899
+          ]
+        },
+        "plan_failed": {
+          "k": 0,
+          "n": 1,
+          "rate": 0.0,
+          "ci95": [
+            0.0,
+            0.7935
+          ]
+        },
+        "plan_latency_s": {
+          "median": 262.72,
+          "p90": 262.72
+        },
+        "llm_call_latency_s": {
+          "median": 19.58,
+          "p90": 82.96,
+          "calls": 7
+        },
+        "all_repeats": {
+          "runs": 3,
+          "workflow_exact_match": {
+            "k": 3,
+            "n": 3,
+            "rate": 1.0,
+            "ci95": [
+              0.4385,
+              1.0
+            ]
+          }
+        }
+      },
+      "qwen|eis": {
+        "cases": 1,
+        "workflow_exact_match": {
+          "k": 1,
+          "n": 1,
+          "rate": 1.0,
+          "ci95": [
+            0.2065,
+            1.0
+          ]
+        },
+        "workflow_exact_match_excluding_transport_failures": {
+          "k": 1,
+          "n": 1,
+          "rate": 1.0,
+          "ci95": [
+            0.2065,
+            1.0
+          ]
+        },
+        "plans_with_transport_error": {
+          "k": 0,
+          "n": 1,
+          "rate": 0.0,
+          "ci95": [
+            0.0,
+            0.7935
+          ]
+        },
+        "step_top1_all_gold_tools": {
+          "k": 1,
+          "n": 1,
+          "rate": 1.0,
+          "ci95": [
+            0.2065,
+            1.0
+          ]
+        },
+        "step_top1_analysis_tools": {
+          "k": 1,
+          "n": 1,
+          "rate": 1.0,
+          "ci95": [
+            0.2065,
+            1.0
+          ]
+        },
+        "correct_capability_gap": {
+          "k": 0,
+          "n": 0,
+          "rate": null,
+          "ci95": null
+        },
+        "correct_escalation": {
+          "k": 0,
+          "n": 0,
+          "rate": null,
+          "ci95": null
+        },
+        "false_null": {
+          "k": 0,
+          "n": 1,
+          "rate": 0.0,
+          "ci95": [
+            0.0,
+            0.7935
+          ]
+        },
+        "wrong_tool_on_gold_step": {
+          "k": 0,
+          "n": 1,
+          "rate": 0.0,
+          "ci95": [
+            0.0,
+            0.7935
+          ]
+        },
+        "null_action_rate": {
+          "k": 0,
+          "n": 4,
+          "rate": 0.0,
+          "ci95": [
+            0.0,
+            0.4899
+          ]
+        },
+        "needs_human_action_rate": {
+          "k": 0,
+          "n": 4,
+          "rate": 0.0,
+          "ci95": [
+            0.0,
+            0.4899
+          ]
+        },
+        "plan_needs_human_rate": {
+          "k": 0,
+          "n": 1,
+          "rate": 0.0,
+          "ci95": [
+            0.0,
+            0.7935
+          ]
+        },
+        "jev_to_llm_fallback": {
+          "k": 0,
+          "n": 0,
+          "rate": null,
+          "ci95": null
+        },
+        "parse_failure": {
+          "k": 0,
+          "n": 6,
+          "rate": 0.0,
+          "ci95": [
+            0.0,
+            0.3903
+          ]
+        },
+        "transport_error": {
+          "k": 0,
+          "n": 6,
+          "rate": 0.0,
+          "ci95": [
+            0.0,
+            0.3903
+          ]
+        },
+        "invalid_choice_action_rate": {
+          "k": 0,
+          "n": 4,
+          "rate": 0.0,
+          "ci95": [
+            0.0,
+            0.4899
+          ]
+        },
+        "plan_failed": {
+          "k": 0,
+          "n": 1,
+          "rate": 0.0,
+          "ci95": [
+            0.0,
+            0.7935
+          ]
+        },
+        "plan_latency_s": {
+          "median": 80.06,
+          "p90": 80.06
+        },
+        "llm_call_latency_s": {
+          "median": 2.81,
+          "p90": 35.97,
+          "calls": 6
+        },
+        "all_repeats": {
+          "runs": 3,
+          "workflow_exact_match": {
+            "k": 3,
+            "n": 3,
+            "rate": 1.0,
+            "ci95": [
+              0.4385,
+              1.0
+            ]
+          }
+        }
+      }
+    },
+    "cross_model_disagreement": {
+      "case_level": {
+        "k": 0,
+        "n": 1,
+        "rate": 0.0,
+        "ci95": [
+          0.0,
+          0.7935
+        ]
+      },
+      "step_level": {
+        "k": 0,
+        "n": 1,
+        "rate": 0.0,
+        "ci95": [
+          0.0,
+          0.7935
+        ]
+      },
+      "case_level_by_language": {
+        "zh": {
+          "k": 0,
+          "n": 1,
+          "rate": 0.0,
+          "ci95": [
+            0.0,
+            0.7935
+          ]
+        },
+        "en": {
+          "k": 0,
+          "n": 0,
+          "rate": null,
+          "ci95": null
+        }
+      },
+      "models_compared": [
+        "deepseek-chat",
+        "deepseek-reasoner",
+        "qwen"
+      ]
+    },
+    "self_consistency": {
+      "deepseek-chat": {
+        "k": 1,
+        "n": 1,
+        "rate": 1.0,
+        "ci95": [
+          0.2065,
+          1.0
+        ]
+      },
+      "deepseek-reasoner": {
+        "k": 1,
+        "n": 1,
+        "rate": 1.0,
+        "ci95": [
+          0.2065,
+          1.0
+        ]
+      },
+      "qwen": {
+        "k": 1,
+        "n": 1,
+        "rate": 1.0,
+        "ci95": [
+          0.2065,
+          1.0
+        ]
+      }
+    }
+  },
+  "records": [
+    {
+      "case_id": "known:01_eis_basic_qc",
+      "source": "known_answer",
+      "language": "zh",
+      "domain": "eis",
+      "expect": "positive",
+      "prompt_excerpt": "对一份阻抗频率扫描做基础 EIS 质量检查，并绘制 Nyquist 图。",
+      "gold": {
+        "must": [
+          "eis_basic_qc"
+        ],
+        "forbidden": [
+          "skill_node",
+          "xrd_*",
+          "ftir_*",
+          "qe_*"
+        ],
+        "statuses": null
+      },
+      "model": "qwen",
+      "repeat": 0,
+      "jev": "off",
+      "plan_status": "planned",
+      "plan_reason": "The uploaded file contains the required impedance columns. The plan imports the data, maps the columns, runs the EIS basic analysis (which includes quality checks), and plots the Nyquist diagram.",
+      "elapsed_s": 80.06,
+      "call_latencies": [
+        4.23,
+        1.17,
+        10.23,
+        1.28,
+        61.72,
+        1.39
+      ],
+      "llm_calls": 6,
+      "actions": [
+        {
+          "id": "a1",
+          "goal": "Import the uploaded impedance spectrum CSV file",
+          "status": "routed",
+          "tool_id": "raw_file_import",
+          "router": "llm",
+          "confidence": 1.0,
+          "requires_confirmation": false,
+          "n_candidates": 2,
+          "jev_fallback": false,
+          "invalid_choice": false,
+          "llm_failed": false,
+          "rationale": "The goal is to import the uploaded impedance spectrum CSV file, which matches the function of the raw_file_import tool."
+        },
+        {
+          "id": "a2",
+          "goal": "Map the raw columns to typed impedance data columns",
+          "status": "routed",
+          "tool_id": "normalize_columns",
+          "router": "llm",
+          "confidence": 0.95,
+          "requires_confirmation": false,
+          "n_candidates": 1,
+          "jev_fallback": false,
+          "invalid_choice": false,
+          "llm_failed": false,
+          "rationale": "The goal is to map raw columns to typed impedance data, which matches the normalize_columns tool's function of mapping user column names onto typed columns."
+        },
+        {
+          "id": "a3",
+          "goal": "Perform basic EIS analysis and quality checks",
+          "status": "routed",
+          "tool_id": "eis_basic_qc",
+          "router": "llm",
+          "confidence": 1.0,
+          "requires_confirmation": false,
+          "n_candidates": 4,
+          "jev_fallback": false,
+          "invalid_choice": false,
+          "llm_failed": false,
+          "rationale": "The request asks for basic EIS quality checks and Nyquist plotting, which is the exact function of the eis_basic_qc tool."
+        },
+        {
+          "id": "a4",
+          "goal": "Create a Nyquist plot from the EIS data",
+          "status": "routed",
+          "tool_id": "plot_nyquist",
+          "router": "llm",
+          "confidence": 0.98,
+          "requires_confirmation": false,
+          "n_candidates": 5,
+          "jev_fallback": false,
+          "invalid_choice": false,
+          "llm_failed": false,
+          "rationale": "The goal is to create a Nyquist plot from EIS data, and the 'plot_nyquist' tool is specifically designed for this task, accepting EISData as input."
+        }
+      ],
+      "error": null,
+      "replies": 6,
+      "parse_failures": 0,
+      "transport_errors": 0,
+      "rate_limited": 0,
+      "case_pass": true,
+      "steps": [
+        {
+          "gold": "eis_basic_qc",
+          "outcome": "hit",
+          "chosen": "eis_basic_qc"
+        }
+      ],
+      "signature": {
+        "analysis": [
+          "eis_basic_qc"
+        ],
+        "gap": false,
+        "escalated": false
+      },
+      "forbidden_hits": [],
+      "routed_tools": [
+        "raw_file_import",
+        "normalize_columns",
+        "eis_basic_qc",
+        "plot_nyquist"
+      ],
+      "experiment_id": "5780a85e32daaab6ec38ccde29cb254ec27902eca27394dd3f8160f184f60b9d"
+    },
+    {
+      "case_id": "known:01_eis_basic_qc",
+      "source": "known_answer",
+      "language": "zh",
+      "domain": "eis",
+      "expect": "positive",
+      "prompt_excerpt": "对一份阻抗频率扫描做基础 EIS 质量检查，并绘制 Nyquist 图。",
+      "gold": {
+        "must": [
+          "eis_basic_qc"
+        ],
+        "forbidden": [
+          "skill_node",
+          "xrd_*",
+          "ftir_*",
+          "qe_*"
+        ],
+        "statuses": null
+      },
+      "model": "deepseek-chat",
+      "repeat": 0,
+      "jev": "off",
+      "plan_status": "planned",
+      "plan_reason": "The uploaded EIS CSV can be imported, mapped, quality-checked, and plotted. The EIS Basic Analysis produces both EISData and EISQCReport; the QC report is an artifact that can be used for a quality report, but the request only asks for the QC check and Nyquist plot, so no gate is needed.",
+      "elapsed_s": 171.17,
+      "call_latencies": [
+        22.05,
+        64.27,
+        3.33,
+        4.62,
+        62.62,
+        14.25
+      ],
+      "llm_calls": 6,
+      "actions": [
+        {
+          "id": "a1",
+          "goal": "Import the uploaded EIS spectrum CSV file",
+          "status": "routed",
+          "tool_id": "raw_file_import",
+          "router": "llm",
+          "confidence": 1.0,
+          "requires_confirmation": false,
+          "n_candidates": 2,
+          "jev_fallback": false,
+          "invalid_choice": false,
+          "llm_failed": false,
+          "rationale": "The request is to import the uploaded EIS spectrum CSV file, which matches the raw_file_import tool's purpose."
+        },
+        {
+          "id": "a2",
+          "goal": "Map the frequency, real impedance, and imaginary impedance columns to typed columns",
+          "status": "routed",
+          "tool_id": "normalize_columns",
+          "router": "llm",
+          "confidence": 1.0,
+          "requires_confirmation": false,
+          "n_candidates": 1,
+          "jev_fallback": false,
+          "invalid_choice": false,
+          "llm_failed": false,
+          "rationale": "The request explicitly maps frequency, real, and imaginary columns to typed columns, which is exactly the normalize_columns tool's function."
+        },
+        {
+          "id": "a3",
+          "goal": "Perform basic EIS quality checks and produce EIS data and QC report",
+          "status": "routed",
+          "tool_id": "eis_basic_qc",
+          "router": "llm",
+          "confidence": 1.0,
+          "requires_confirmation": false,
+          "n_candidates": 4,
+          "jev_fallback": false,
+          "invalid_choice": false,
+          "llm_failed": false,
+          "rationale": "The request explicitly asks for basic EIS quality checks and Nyquist plot, which matches the eis_basic_qc tool's purpose and inputs."
+        },
+        {
+          "id": "a4",
+          "goal": "Plot the Nyquist diagram from the EIS data",
+          "status": "routed",
+          "tool_id": "plot_nyquist",
+          "router": "llm",
+          "confidence": 1.0,
+          "requires_confirmation": false,
+          "n_candidates": 5,
+          "jev_fallback": false,
+          "invalid_choice": false,
+          "llm_failed": false,
+          "rationale": "The request explicitly asks to plot the Nyquist diagram from EIS data, and plot_nyquist is the only tool that creates a Nyquist plot from EISData."
+        }
+      ],
+      "error": null,
+      "replies": 6,
+      "parse_failures": 0,
+      "transport_errors": 0,
+      "rate_limited": 0,
+      "case_pass": true,
+      "steps": [
+        {
+          "gold": "eis_basic_qc",
+          "outcome": "hit",
+          "chosen": "eis_basic_qc"
+        }
+      ],
+      "signature": {
+        "analysis": [
+          "eis_basic_qc"
+        ],
+        "gap": false,
+        "escalated": false
+      },
+      "forbidden_hits": [],
+      "routed_tools": [
+        "raw_file_import",
+        "normalize_columns",
+        "eis_basic_qc",
+        "plot_nyquist"
+      ],
+      "experiment_id": "5780a85e32daaab6ec38ccde29cb254ec27902eca27394dd3f8160f184f60b9d"
+    },
+    {
+      "case_id": "known:01_eis_basic_qc",
+      "source": "known_answer",
+      "language": "zh",
+      "domain": "eis",
+      "expect": "positive",
+      "prompt_excerpt": "对一份阻抗频率扫描做基础 EIS 质量检查，并绘制 Nyquist 图。",
+      "gold": {
+        "must": [
+          "eis_basic_qc"
+        ],
+        "forbidden": [
+          "skill_node",
+          "xrd_*",
+          "ftir_*",
+          "qe_*"
+        ],
+        "statuses": null
+      },
+      "model": "deepseek-reasoner",
+      "repeat": 0,
+      "jev": "off",
+      "plan_status": "planned",
+      "plan_reason": "Plan covers the requested basic EIS quality check and Nyquist plot from the uploaded impedance spectrum.",
+      "elapsed_s": 262.72,
+      "call_latencies": [
+        74.75,
+        10.28,
+        16.64,
+        95.27,
+        8.84,
+        19.58,
+        37.34
+      ],
+      "llm_calls": 7,
+      "actions": [
+        {
+          "id": "a1",
+          "goal": "Import the uploaded EIS spectrum CSV file",
+          "status": "routed",
+          "tool_id": "raw_file_import",
+          "router": "llm",
+          "confidence": 1.0,
+          "requires_confirmation": false,
+          "n_candidates": 2,
+          "jev_fallback": false,
+          "invalid_choice": false,
+          "llm_failed": false,
+          "rationale": "The request is to import the uploaded EIS spectrum CSV, which exactly matches the raw_file_import tool's capability."
+        },
+        {
+          "id": "a2",
+          "goal": "Map the frequency, real impedance, and imaginary impedance columns to typed columns",
+          "status": "routed",
+          "tool_id": "normalize_columns",
+          "router": "llm",
+          "confidence": 0.95,
+          "requires_confirmation": false,
+          "n_candidates": 1,
+          "jev_fallback": false,
+          "invalid_choice": false,
+          "llm_failed": false,
+          "rationale": "The normalize_columns tool maps user-specified column names to typed columns, exactly matching the requested mapping of frequency, real impedance, and imaginary impedance columns."
+        },
+        {
+          "id": "a3",
+          "goal": "Run basic EIS quality checks and produce typed EIS data with a quality-control report",
+          "status": "routed",
+          "tool_id": "eis_basic_qc",
+          "router": "llm",
+          "confidence": 1.0,
+          "requires_confirmation": false,
+          "n_candidates": 4,
+          "jev_fallback": false,
+          "invalid_choice": false,
+          "llm_failed": false,
+          "rationale": "The request asks for basic EIS quality checks and a Nyquist plot, which is exactly what eis_basic_qc performs on the typed EIS table."
+        },
+        {
+          "id": "a4",
+          "goal": "Plot the Nyquist diagram from the EIS data",
+          "status": "routed",
+          "tool_id": "plot_nyquist",
+          "router": "llm",
+          "confidence": 1.0,
+          "requires_confirmation": false,
+          "n_candidates": 5,
+          "jev_fallback": false,
+          "invalid_choice": false,
+          "llm_failed": false,
+          "rationale": "The plot_nyquist tool directly creates a Nyquist plot from the upstream EISData artifact, matching the requested plotting step."
+        }
+      ],
+      "error": null,
+      "replies": 7,
+      "parse_failures": 0,
+      "transport_errors": 0,
+      "rate_limited": 0,
+      "case_pass": true,
+      "steps": [
+        {
+          "gold": "eis_basic_qc",
+          "outcome": "hit",
+          "chosen": "eis_basic_qc"
+        }
+      ],
+      "signature": {
+        "analysis": [
+          "eis_basic_qc"
+        ],
+        "gap": false,
+        "escalated": false
+      },
+      "forbidden_hits": [],
+      "routed_tools": [
+        "raw_file_import",
+        "normalize_columns",
+        "eis_basic_qc",
+        "plot_nyquist"
+      ],
+      "experiment_id": "5780a85e32daaab6ec38ccde29cb254ec27902eca27394dd3f8160f184f60b9d"
+    },
+    {
+      "case_id": "known:01_eis_basic_qc",
+      "source": "known_answer",
+      "language": "zh",
+      "domain": "eis",
+      "expect": "positive",
+      "prompt_excerpt": "对一份阻抗频率扫描做基础 EIS 质量检查，并绘制 Nyquist 图。",
+      "gold": {
+        "must": [
+          "eis_basic_qc"
+        ],
+        "forbidden": [
+          "skill_node",
+          "xrd_*",
+          "ftir_*",
+          "qe_*"
+        ],
+        "statuses": null
+      },
+      "model": "qwen",
+      "repeat": 1,
+      "jev": "off",
+      "plan_status": "planned",
+      "plan_reason": "Plan covers the requested EIS quality check and Nyquist plot using the uploaded spectrum.",
+      "elapsed_s": 77.67,
+      "call_latencies": [
+        8.53,
+        1.22,
+        1.47,
+        61.72,
+        2.09,
+        2.64
+      ],
+      "llm_calls": 6,
+      "actions": [
+        {
+          "id": "a1",
+          "goal": "Import the uploaded impedance spectrum CSV file",
+          "status": "routed",
+          "tool_id": "raw_file_import",
+          "router": "llm",
+          "confidence": 1.0,
+          "requires_confirmation": false,
+          "n_candidates": 2,
+          "jev_fallback": false,
+          "invalid_choice": false,
+          "llm_failed": false,
+          "rationale": "The goal is to import the uploaded CSV file, which matches the description of the raw_file_import tool."
+        },
+        {
+          "id": "a2",
+          "goal": "Map the raw columns to typed impedance columns",
+          "status": "routed",
+          "tool_id": "normalize_columns",
+          "router": "llm",
+          "confidence": 0.95,
+          "requires_confirmation": false,
+          "n_candidates": 1,
+          "jev_fallback": false,
+          "invalid_choice": false,
+          "llm_failed": false,
+          "rationale": "The goal is to map raw columns to typed impedance columns, which matches the normalize_columns tool's function of mapping user column names onto typed columns."
+        },
+        {
+          "id": "a3",
+          "goal": "Run basic EIS quality checks and produce typed EIS data",
+          "status": "routed",
+          "tool_id": "eis_basic_qc",
+          "router": "llm",
+          "confidence": 1.0,
+          "requires_confirmation": false,
+          "n_candidates": 4,
+          "jev_fallback": false,
+          "invalid_choice": false,
+          "llm_failed": false,
+          "rationale": "The tool performs EIS quality checks and produces typed EIS data, matching the goal and input data type."
+        },
+        {
+          "id": "a4",
+          "goal": "Create a standard Nyquist plot from the EIS data",
+          "status": "routed",
+          "tool_id": "plot_nyquist",
+          "router": "llm",
+          "confidence": 1.0,
+          "requires_confirmation": false,
+          "n_candidates": 5,
+          "jev_fallback": false,
+          "invalid_choice": false,
+          "llm_failed": false,
+          "rationale": "The goal is to create a standard Nyquist plot from the EIS data, which matches the description of the plot_nyquist tool."
+        }
+      ],
+      "error": null,
+      "replies": 6,
+      "parse_failures": 0,
+      "transport_errors": 0,
+      "rate_limited": 0,
+      "case_pass": true,
+      "steps": [
+        {
+          "gold": "eis_basic_qc",
+          "outcome": "hit",
+          "chosen": "eis_basic_qc"
+        }
+      ],
+      "signature": {
+        "analysis": [
+          "eis_basic_qc"
+        ],
+        "gap": false,
+        "escalated": false
+      },
+      "forbidden_hits": [],
+      "routed_tools": [
+        "raw_file_import",
+        "normalize_columns",
+        "eis_basic_qc",
+        "plot_nyquist"
+      ],
+      "experiment_id": "5780a85e32daaab6ec38ccde29cb254ec27902eca27394dd3f8160f184f60b9d"
+    },
+    {
+      "case_id": "known:01_eis_basic_qc",
+      "source": "known_answer",
+      "language": "zh",
+      "domain": "eis",
+      "expect": "positive",
+      "prompt_excerpt": "对一份阻抗频率扫描做基础 EIS 质量检查，并绘制 Nyquist 图。",
+      "gold": {
+        "must": [
+          "eis_basic_qc"
+        ],
+        "forbidden": [
+          "skill_node",
+          "xrd_*",
+          "ftir_*",
+          "qe_*"
+        ],
+        "statuses": null
+      },
+      "model": "deepseek-chat",
+      "repeat": 1,
+      "jev": "off",
+      "plan_status": "planned",
+      "plan_reason": "The uploaded EIS CSV can be imported, mapped, analyzed for quality, and plotted. All requested operations are covered by available capabilities.",
+      "elapsed_s": 99.2,
+      "call_latencies": [
+        60.58,
+        3.44,
+        4.06,
+        2.14,
+        11.23,
+        17.75
+      ],
+      "llm_calls": 6,
+      "actions": [
+        {
+          "id": "a1",
+          "goal": "Import the EIS spectrum CSV file",
+          "status": "routed",
+          "tool_id": "raw_file_import",
+          "router": "llm",
+          "confidence": 1.0,
+          "requires_confirmation": false,
+          "n_candidates": 2,
+          "jev_fallback": false,
+          "invalid_choice": false,
+          "llm_failed": false,
+          "rationale": "The request is to import the EIS spectrum CSV file, which matches the raw_file_import tool's purpose of importing an uploaded CSV file."
+        },
+        {
+          "id": "a2",
+          "goal": "Map frequency_hz, z_real_ohm, z_imag_ohm columns to typed columns",
+          "status": "routed",
+          "tool_id": "normalize_columns",
+          "router": "llm",
+          "confidence": 1.0,
+          "requires_confirmation": false,
+          "n_candidates": 1,
+          "jev_fallback": false,
+          "invalid_choice": false,
+          "llm_failed": false,
+          "rationale": "The request explicitly asks to map the three uploaded columns to typed columns, which is exactly what normalize_columns performs."
+        },
+        {
+          "id": "a3",
+          "goal": "Run basic EIS quality checks and produce EIS data and quality report",
+          "status": "routed",
+          "tool_id": "eis_basic_qc",
+          "router": "llm",
+          "confidence": 1.0,
+          "requires_confirmation": false,
+          "n_candidates": 4,
+          "jev_fallback": false,
+          "invalid_choice": false,
+          "llm_failed": false,
+          "rationale": "The request is for basic EIS quality checks and Nyquist plotting, which matches the eis_basic_qc tool's description and inputs."
+        },
+        {
+          "id": "a4",
+          "goal": "Plot Nyquist diagram from EIS data",
+          "status": "routed",
+          "tool_id": "plot_nyquist",
+          "router": "llm",
+          "confidence": 1.0,
+          "requires_confirmation": false,
+          "n_candidates": 5,
+          "jev_fallback": false,
+          "invalid_choice": false,
+          "llm_failed": false,
+          "rationale": "The request asks to plot a Nyquist diagram from EIS data, and plot_nyquist is the only tool that creates a Nyquist plot from EISData."
+        }
+      ],
+      "error": null,
+      "replies": 6,
+      "parse_failures": 0,
+      "transport_errors": 0,
+      "rate_limited": 0,
+      "case_pass": true,
+      "steps": [
+        {
+          "gold": "eis_basic_qc",
+          "outcome": "hit",
+          "chosen": "eis_basic_qc"
+        }
+      ],
+      "signature": {
+        "analysis": [
+          "eis_basic_qc"
+        ],
+        "gap": false,
+        "escalated": false
+      },
+      "forbidden_hits": [],
+      "routed_tools": [
+        "raw_file_import",
+        "normalize_columns",
+        "eis_basic_qc",
+        "plot_nyquist"
+      ],
+      "experiment_id": "5780a85e32daaab6ec38ccde29cb254ec27902eca27394dd3f8160f184f60b9d"
+    },
+    {
+      "case_id": "known:01_eis_basic_qc",
+      "source": "known_answer",
+      "language": "zh",
+      "domain": "eis",
+      "expect": "positive",
+      "prompt_excerpt": "对一份阻抗频率扫描做基础 EIS 质量检查，并绘制 Nyquist 图。",
+      "gold": {
+        "must": [
+          "eis_basic_qc"
+        ],
+        "forbidden": [
+          "skill_node",
+          "xrd_*",
+          "ftir_*",
+          "qe_*"
+        ],
+        "statuses": null
+      },
+      "model": "deepseek-reasoner",
+      "repeat": 1,
+      "jev": "off",
+      "plan_status": "planned",
+      "plan_reason": "The uploaded impedance sweep can be imported, mapped, quality-checked, and plotted with the available EIS capabilities.",
+      "elapsed_s": 199.22,
+      "call_latencies": [
+        32.7,
+        22.23,
+        39.02,
+        16.19,
+        32.69,
+        56.39
+      ],
+      "llm_calls": 6,
+      "actions": [
+        {
+          "id": "a1",
+          "goal": "Import the uploaded EIS spectrum CSV file",
+          "status": "routed",
+          "tool_id": "raw_file_import",
+          "router": "llm",
+          "confidence": 1.0,
+          "requires_confirmation": false,
+          "n_candidates": 2,
+          "jev_fallback": false,
+          "invalid_choice": false,
+          "llm_failed": false,
+          "rationale": "The requested unit of work is importing the uploaded EIS spectrum CSV file, which exactly matches the raw_file_import tool."
+        },
+        {
+          "id": "a2",
+          "goal": "Map the uploaded columns to typed frequency, real impedance, and imaginary impedance columns",
+          "status": "routed",
+          "tool_id": "normalize_columns",
+          "router": "llm",
+          "confidence": 1.0,
+          "requires_confirmation": false,
+          "n_candidates": 1,
+          "jev_fallback": false,
+          "invalid_choice": false,
+          "llm_failed": false,
+          "rationale": "The normalize_columns tool maps user-supplied column names onto typed columns, exactly matching the requested frequency, real, and imaginary impedance mapping."
+        },
+        {
+          "id": "a3",
+          "goal": "Run basic EIS quality checks on the mapped impedance spectrum",
+          "status": "routed",
+          "tool_id": "eis_basic_qc",
+          "router": "llm",
+          "confidence": 1.0,
+          "requires_confirmation": false,
+          "n_candidates": 4,
+          "jev_fallback": false,
+          "invalid_choice": false,
+          "llm_failed": false,
+          "rationale": "The request asks for basic EIS quality checks and a Nyquist plot on the mapped impedance spectrum, which exactly matches the eis_basic_qc tool's Nyquist/Bode quality-check functionality."
+        },
+        {
+          "id": "a4",
+          "goal": "Plot the Nyquist diagram from the EIS data",
+          "status": "routed",
+          "tool_id": "plot_nyquist",
+          "router": "llm",
+          "confidence": 1.0,
+          "requires_confirmation": false,
+          "n_candidates": 5,
+          "jev_fallback": false,
+          "invalid_choice": false,
+          "llm_failed": false,
+          "rationale": "The request explicitly asks to plot the Nyquist diagram from the EIS data, and plot_nyquist is the tool that performs exactly that unit of work."
+        }
+      ],
+      "error": null,
+      "replies": 6,
+      "parse_failures": 0,
+      "transport_errors": 0,
+      "rate_limited": 0,
+      "case_pass": true,
+      "steps": [
+        {
+          "gold": "eis_basic_qc",
+          "outcome": "hit",
+          "chosen": "eis_basic_qc"
+        }
+      ],
+      "signature": {
+        "analysis": [
+          "eis_basic_qc"
+        ],
+        "gap": false,
+        "escalated": false
+      },
+      "forbidden_hits": [],
+      "routed_tools": [
+        "raw_file_import",
+        "normalize_columns",
+        "eis_basic_qc",
+        "plot_nyquist"
+      ],
+      "experiment_id": "5780a85e32daaab6ec38ccde29cb254ec27902eca27394dd3f8160f184f60b9d"
+    },
+    {
+      "case_id": "known:01_eis_basic_qc",
+      "source": "known_answer",
+      "language": "zh",
+      "domain": "eis",
+      "expect": "positive",
+      "prompt_excerpt": "对一份阻抗频率扫描做基础 EIS 质量检查，并绘制 Nyquist 图。",
+      "gold": {
+        "must": [
+          "eis_basic_qc"
+        ],
+        "forbidden": [
+          "skill_node",
+          "xrd_*",
+          "ftir_*",
+          "qe_*"
+        ],
+        "statuses": null
+      },
+      "model": "qwen",
+      "repeat": 2,
+      "jev": "off",
+      "plan_status": "planned",
+      "plan_reason": "Plan covers the requested EIS quality check and Nyquist plot using the uploaded spectrum.",
+      "elapsed_s": 375.34,
+      "call_latencies": [
+        4.38,
+        1.25,
+        1.38,
+        63.58,
+        1.66,
+        3.08
+      ],
+      "llm_calls": 6,
+      "actions": [
+        {
+          "id": "a1",
+          "goal": "Import the uploaded EIS spectrum CSV file",
+          "status": "routed",
+          "tool_id": "raw_file_import",
+          "router": "llm",
+          "confidence": 0.95,
+          "requires_confirmation": false,
+          "n_candidates": 2,
+          "jev_fallback": false,
+          "invalid_choice": false,
+          "llm_failed": false,
+          "rationale": "The goal is to import the uploaded EIS spectrum CSV file, which matches the functionality of the raw_file_import tool."
+        },
+        {
+          "id": "a2",
+          "goal": "Map the uploaded columns to typed frequency, real impedance, and imaginary impedance columns",
+          "status": "routed",
+          "tool_id": "normalize_columns",
+          "router": "llm",
+          "confidence": 0.95,
+          "requires_confirmation": false,
+          "n_candidates": 1,
+          "jev_fallback": false,
+          "invalid_choice": false,
+          "llm_failed": false,
+          "rationale": "The goal is to map uploaded columns to typed frequency, real, and imaginary impedance columns, which matches the normalize_columns tool's function of mapping user column names onto typed columns."
+        },
+        {
+          "id": "a3",
+          "goal": "Run basic EIS quality checks and produce typed EIS data",
+          "status": "routed",
+          "tool_id": "eis_basic_qc",
+          "router": "llm",
+          "confidence": 1.0,
+          "requires_confirmation": false,
+          "n_candidates": 4,
+          "jev_fallback": false,
+          "invalid_choice": false,
+          "llm_failed": false,
+          "rationale": "The tool performs basic EIS quality checks and produces typed EIS data, matching the goal and request."
+        },
+        {
+          "id": "a4",
+          "goal": "Create a standard Nyquist plot from the EIS data",
+          "status": "routed",
+          "tool_id": "plot_nyquist",
+          "router": "llm",
+          "confidence": 1.0,
+          "requires_confirmation": false,
+          "n_candidates": 5,
+          "jev_fallback": false,
+          "invalid_choice": false,
+          "llm_failed": false,
+          "rationale": "The goal is to create a standard Nyquist plot from EIS data, which matches the description and inputs of the plot_nyquist tool."
+        }
+      ],
+      "error": null,
+      "replies": 6,
+      "parse_failures": 0,
+      "transport_errors": 1,
+      "rate_limited": 0,
+      "case_pass": true,
+      "steps": [
+        {
+          "gold": "eis_basic_qc",
+          "outcome": "hit",
+          "chosen": "eis_basic_qc"
+        }
+      ],
+      "signature": {
+        "analysis": [
+          "eis_basic_qc"
+        ],
+        "gap": false,
+        "escalated": false
+      },
+      "forbidden_hits": [],
+      "routed_tools": [
+        "raw_file_import",
+        "normalize_columns",
+        "eis_basic_qc",
+        "plot_nyquist"
+      ],
+      "experiment_id": "5780a85e32daaab6ec38ccde29cb254ec27902eca27394dd3f8160f184f60b9d"
+    },
+    {
+      "case_id": "known:01_eis_basic_qc",
+      "source": "known_answer",
+      "language": "zh",
+      "domain": "eis",
+      "expect": "positive",
+      "prompt_excerpt": "对一份阻抗频率扫描做基础 EIS 质量检查，并绘制 Nyquist 图。",
+      "gold": {
+        "must": [
+          "eis_basic_qc"
+        ],
+        "forbidden": [
+          "skill_node",
+          "xrd_*",
+          "ftir_*",
+          "qe_*"
+        ],
+        "statuses": null
+      },
+      "model": "deepseek-chat",
+      "repeat": 2,
+      "jev": "off",
+      "plan_status": "planned",
+      "plan_reason": "The uploaded EIS CSV has the required columns for the EIS basic analysis and Nyquist plot.",
+      "elapsed_s": 94.66,
+      "call_latencies": [
+        69.16,
+        6.56,
+        2.61,
+        4.55,
+        7.16,
+        1.94,
+        2.67
+      ],
+      "llm_calls": 7,
+      "actions": [
+        {
+          "id": "a1",
+          "goal": "Import the EIS spectrum CSV file",
+          "status": "routed",
+          "tool_id": "raw_file_import",
+          "router": "llm",
+          "confidence": 1.0,
+          "requires_confirmation": false,
+          "n_candidates": 2,
+          "jev_fallback": false,
+          "invalid_choice": false,
+          "llm_failed": false,
+          "rationale": "The request is to import the EIS spectrum CSV file, which matches the raw_file_import tool's purpose of importing an uploaded data file."
+        },
+        {
+          "id": "a2",
+          "goal": "Map the frequency, real impedance, and imaginary impedance columns to typed columns",
+          "status": "routed",
+          "tool_id": "normalize_columns",
+          "router": "llm",
+          "confidence": 1.0,
+          "requires_confirmation": false,
+          "n_candidates": 1,
+          "jev_fallback": false,
+          "invalid_choice": false,
+          "llm_failed": false,
+          "rationale": "The request explicitly maps frequency, real impedance, and imaginary impedance columns to typed columns, which is exactly the normalize_columns tool's function."
+        },
+        {
+          "id": "a3",
+          "goal": "Perform basic EIS quality checks and produce EIS data and quality report",
+          "status": "routed",
+          "tool_id": "eis_basic_qc",
+          "router": "llm",
+          "confidence": 1.0,
+          "requires_confirmation": false,
+          "n_candidates": 4,
+          "jev_fallback": false,
+          "invalid_choice": false,
+          "llm_failed": false,
+          "rationale": "The request explicitly asks for basic EIS quality checks and Nyquist plot, which matches the EIS Basic Analysis tool's description and outputs."
+        },
+        {
+          "id": "a4",
+          "goal": "Plot the Nyquist diagram from the EIS data",
+          "status": "routed",
+          "tool_id": "plot_nyquist",
+          "router": "llm",
+          "confidence": 1.0,
+          "requires_confirmation": false,
+          "n_candidates": 5,
+          "jev_fallback": false,
+          "invalid_choice": false,
+          "llm_failed": false,
+          "rationale": "The request explicitly asks to plot the Nyquist diagram from EIS data, and plot_nyquist is the only tool that creates a Nyquist plot from EISData."
+        }
+      ],
+      "error": null,
+      "replies": 7,
+      "parse_failures": 0,
+      "transport_errors": 0,
+      "rate_limited": 0,
+      "case_pass": true,
+      "steps": [
+        {
+          "gold": "eis_basic_qc",
+          "outcome": "hit",
+          "chosen": "eis_basic_qc"
+        }
+      ],
+      "signature": {
+        "analysis": [
+          "eis_basic_qc"
+        ],
+        "gap": false,
+        "escalated": false
+      },
+      "forbidden_hits": [],
+      "routed_tools": [
+        "raw_file_import",
+        "normalize_columns",
+        "eis_basic_qc",
+        "plot_nyquist"
+      ],
+      "experiment_id": "5780a85e32daaab6ec38ccde29cb254ec27902eca27394dd3f8160f184f60b9d"
+    },
+    {
+      "case_id": "known:01_eis_basic_qc",
+      "source": "known_answer",
+      "language": "zh",
+      "domain": "eis",
+      "expect": "positive",
+      "prompt_excerpt": "对一份阻抗频率扫描做基础 EIS 质量检查，并绘制 Nyquist 图。",
+      "gold": {
+        "must": [
+          "eis_basic_qc"
+        ],
+        "forbidden": [
+          "skill_node",
+          "xrd_*",
+          "ftir_*",
+          "qe_*"
+        ],
+        "statuses": null
+      },
+      "model": "deepseek-reasoner",
+      "repeat": 2,
+      "jev": "off",
+      "plan_status": "planned",
+      "plan_reason": "Plan covers the requested EIS quality check and Nyquist plot using the uploaded impedance spectrum.",
+      "elapsed_s": 305.0,
+      "call_latencies": [
+        117.02,
+        10.53,
+        28.33,
+        79.7,
+        18.19,
+        8.77,
+        42.45
+      ],
+      "llm_calls": 7,
+      "actions": [
+        {
+          "id": "a1",
+          "goal": "Import eis_spectrum.csv as raw data",
+          "status": "routed",
+          "tool_id": "raw_file_import",
+          "router": "llm",
+          "confidence": 1.0,
+          "requires_confirmation": false,
+          "n_candidates": 2,
+          "jev_fallback": false,
+          "invalid_choice": false,
+          "llm_failed": false,
+          "rationale": "The request explicitly asks to import eis_spectrum.csv as raw data, which matches the raw_file_import tool."
+        },
+        {
+          "id": "a2",
+          "goal": "Map impedance columns to typed columns",
+          "status": "routed",
+          "tool_id": "normalize_columns",
+          "router": "llm",
+          "confidence": 0.95,
+          "requires_confirmation": false,
+          "n_candidates": 1,
+          "jev_fallback": false,
+          "invalid_choice": false,
+          "llm_failed": false,
+          "rationale": "The requested unit of work is mapping the uploaded impedance columns to typed columns, which normalize_columns performs directly."
+        },
+        {
+          "id": "a3",
+          "goal": "Run basic EIS quality checks and produce EIS data",
+          "status": "routed",
+          "tool_id": "eis_basic_qc",
+          "router": "llm",
+          "confidence": 0.98,
+          "requires_confirmation": false,
+          "n_candidates": 4,
+          "jev_fallback": false,
+          "invalid_choice": false,
+          "llm_failed": false,
+          "rationale": "The request asks for basic EIS quality checks and a Nyquist plot on impedance frequency-scan data, which exactly matches the EIS Basic Analysis tool's Nyquist/Bode QC and typed EIS output."
+        },
+        {
+          "id": "a4",
+          "goal": "Plot Nyquist diagram from EIS data",
+          "status": "routed",
+          "tool_id": "plot_nyquist",
+          "router": "llm",
+          "confidence": 1.0,
+          "requires_confirmation": false,
+          "n_candidates": 5,
+          "jev_fallback": false,
+          "invalid_choice": false,
+          "llm_failed": false,
+          "rationale": "The requested unit of work is exactly to plot a Nyquist diagram from EIS data, which the plot_nyquist tool performs on the upstream EISData artifact."
+        }
+      ],
+      "error": null,
+      "replies": 7,
+      "parse_failures": 0,
+      "transport_errors": 0,
+      "rate_limited": 0,
+      "case_pass": true,
+      "steps": [
+        {
+          "gold": "eis_basic_qc",
+          "outcome": "hit",
+          "chosen": "eis_basic_qc"
+        }
+      ],
+      "signature": {
+        "analysis": [
+          "eis_basic_qc"
+        ],
+        "gap": false,
+        "escalated": false
+      },
+      "forbidden_hits": [],
+      "routed_tools": [
+        "raw_file_import",
+        "normalize_columns",
+        "eis_basic_qc",
+        "plot_nyquist"
+      ],
+      "experiment_id": "5780a85e32daaab6ec38ccde29cb254ec27902eca27394dd3f8160f184f60b9d"
+    }
+  ]
+}

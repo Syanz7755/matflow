@@ -1,0 +1,35 @@
+Recorded task — stage 1: Route
+────────────────────────────────────────────────────────────────────────
+source     : task summary route-eis
+graph      : none in this document
+phases     : 1
+issues     : 0 error(s), 0 warning(s)
+meta       : mode=recorded, task_id=route-eis, status=routed, steps=5,
+             trace_id=14f74a6d04b747c89744c32c9ed8f386, recorded_at=2026-10-04T08:13:06.448455+00:00,
+             modes=recorded, stage_index=1, ... (+1 more)
+
+Phases (1)
+  [1] Route (route)  [completed]
+      1. prompt recorded  [completed]
+          detail     : user prompt: "Run basic EIS quality checks"
+      2. candidates considered  [completed]
+          detail     : 1 candidate tool(s) considered: eis_basic_qc
+      3. selected eis_basic_qc  [completed]
+          detail     : confidence 1.00; human confirmation required: no; rationale: Jev decision routing was
+                       not needed.
+          tools      : eis_basic_qc
+
+Status legend
+  ready      : declared, never run
+  running    : execution in progress
+  completed  : finished successfully
+  waiting    : paused for a human decision
+  error      : stopped with an error
+  cancelled  : stopped by a gate or reviewer
+  unknown    : source did not say (never treated as success)
+  step-only statuses:
+    pending    : not started yet
+    skipped    : skipped by a gate or policy
+
+Issues (0)
+  No FlowView findings: the source looked consistent.

@@ -14,15 +14,17 @@ from backend.validator import GraphValidator
 from backend.workspace_runtime import WorkspaceRuntime
 
 ROOT = Path(__file__).resolve().parents[1]
-CASES = ROOT / "examples" / "qe_benchmark_cases.json"
-REPORT = ROOT / "examples" / "qe_benchmark_report.md"
+CASES = ROOT / "tests" / "suites" / "qe_benchmark_cases.json"
+REPORT = ROOT / "tests" / "suites" / "qe_benchmark_report.md"
 
 
 def main() -> int:
     cases = json.loads(CASES.read_text(encoding="utf-8"))["cases"]
+    temp_root = ROOT / ".tmp"
+    temp_root.mkdir(parents=True, exist_ok=True)
     rows = []
     for case in cases:
-        with tempfile.TemporaryDirectory(prefix="matflow-qe-bench-") as directory:
+        with tempfile.TemporaryDirectory(prefix="matflow-qe-bench-", dir=temp_root) as directory:
             runtime = WorkspaceRuntime(Path(directory), packages=("qe", "qe_demo"))
             task = TaskState(user_message=case["prompt"], graph_version=0, available_input_types=case["input_types"])
             decision = DecisionRouter().decide(task, runtime.registry())
@@ -35,10 +37,14 @@ def main() -> int:
             outcome = runtime.execute_workflow(restart=True)
             final = next((item.get("result") for item in outcome["results"] if item.get("result", {}).get("kind") == "QEResult"), None)
             execution_ok = bool(final and final.get("convergence") == "converged")
-            rows.append({"id": case["id"], "expected": case["expected_tool"], "selected": selected, "tool_selection": selected == case["expected_tool"], "schema_validity": schema_ok, "workflow_validity": True, "execution_success": execution_ok})
+            rows.append({"id": case["id"], "expected": case["expected_tool"], "selected": selected,
+                         "candidate_type_coverage": case["expected_tool"] in {c.tool_id for c in decision.candidates},
+                         "model_free_escalation": not decision.selected and decision.requires_human_confirmation,
+                         "schema_validity": schema_ok, "workflow_validity": True, "execution_success": execution_ok})
 
-    metrics = {key: sum(bool(row[key]) for row in rows) for key in ("tool_selection", "schema_validity", "workflow_validity", "execution_success")}
-    lines = ["# QE Minimum Benchmark", "", f"Cases: {len(rows)}. Scope: deterministic contracts plus archived-output replay; execution success is not a new Slurm run.", "", "| Metric | Pass | Rate |", "| --- | ---: | ---: |"]
+    metrics = {key: sum(bool(row[key]) for row in rows) for key in ("candidate_type_coverage", "model_free_escalation", "schema_validity", "workflow_validity", "execution_success")}
+    lines = ["# QE Minimum Contract Benchmark", "", f"Cases: {len(rows)}. Scope: deterministic contracts plus archived-output replay; execution success is not a new Slurm run.",
+             "", "No model is configured: selecting no tool and asking a person is the required safe behavior. Candidate type coverage is not semantic routing accuracy. The pinned workflow is constructed separately from the route decision. Earlier lexical-router tool-selection scores are not comparable.", "", "| Metric | Pass | Rate |", "| --- | ---: | ---: |"]
     for key, passed in metrics.items():
         lines.append(f"| {key.replace('_', ' ')} | {passed}/{len(rows)} | {passed / len(rows):.0%} |")
     lines.extend(["", "| Case | Expected Tool | Selected Tool | Schema | Workflow | Replay execution |", "| --- | --- | --- | --- | --- | --- |"])

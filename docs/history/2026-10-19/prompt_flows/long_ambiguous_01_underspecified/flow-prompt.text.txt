@@ -1,0 +1,83 @@
+MatFlow routing preview (read-only)
+────────────────────────────────────────────────────────────────────────
+source     : dry-route:D:\Projects\matflow
+graph      : none in this document
+phases     : 3
+issues     : 0 error(s), 1 warning(s)
+meta       : mode=dry-run, graph_version=0, candidates=0, confirmation=yes, prompt_characters=404,
+             prompt=老师你好，我这边有个测完的数据想请你帮我处理一下，具体是这样的：上周我在实验室做
+             了表征，仪器是公共平台那台，测试的时候师兄帮我调了参数，我记得好像扫了很多点，数据导出
+             来是一个表格文件，我放在工作目录里了，文件名里带日期，但是我不太确定是哪一个。
+             我大概记得的数据内容是这样的：第一列好像是自变量，单位可能是度或者纳米或者波数，第二列
+             是信号强度，不过也有可能第一列是时间，因为那台仪器有两种模式。样品是我自己做的，具体成
+             分还在分析，目前只知道里面有金属氧化物，可能是钛也可能是锌，还有一点有机残留。
+             我想得到的结论是：这个东西到底是什么。最好能告诉我晶体结构、粒径、纯度、还有能不能用作
+             催化剂。如果这些做不到，那就告诉我它是不是无定形的也行。越快越好，我明天要汇报。
+             另外我上传的时候好像一起传了两个文件，如果不确定用哪个，你就自己挑一个合适的，先用着再
+             说。如果缺少参数，你可以用常规的默认值，我相信你的判断。, retriever_tokens=0,
+             routing_tokens=0, ... (+4 more)
+
+Phases (3)
+  [1] Prompt (input) (prompt)  [waiting]
+      1. user prompt  [completed]
+          detail     : 老师你好，我这边有个测完的数据想请你帮我处理一下，具体是这样的：上周我在实验
+                       室做了表征，仪器是公共平台那台，测试的时候师兄帮我调了参数，我记得好像扫了很
+                       多点，数据导出来是一个表格文件，我放在工作目录里了，文件名里带日期，但是我不
+                       太确定是哪一个。
+                       我大概记得的数据内容是这样的：第一列好像是自变量，单位可能是度或者纳米或者波
+                       数，第二列是信号强度，不过也有可能第一列是时间，因为那台仪器有两种模式。样品
+                       是我自己做的，具体成分还在分析，目前只知道里面有金属氧化物，可能是钛也可能是
+                       锌，还有一点有机残留。
+                       我想得到的结论是：这个东西到底是什么。最好能告诉我晶体结构、粒径、纯度、还有
+                       能不能用作催化剂。如果这些做不到，那就告诉我它是不是无定形的也行。越快越好，
+                       我明天要汇报。
+                       另外我上传的时候好像一起传了两个文件，如果不确定用哪个，你就自己挑一个合适的
+                       ，先用着再说。如果缺少参数，你可以用常规的默认值，我相信你的判断。
+      2. prompt size  [completed]
+          detail     : 404 character(s), 4 whitespace-separated token(s); available input types:
+                       RawData, TypedTable
+      3. retriever tokenisation  [waiting]
+          detail     : backend/routing.py _tokens() keeps the distinct [a-z0-9]+ runs longer than
+                       one character. The 404-character prompt yields 0 occurrence(s) / 0 distinct
+                       token(s) and 362 CJK character(s); the router was given 0 distinct token(s)
+                       (0 occurrence(s), 362 CJK character(s)) [verbatim] -- every CJK character is
+                       invisible to the retriever, so no candidate can match
+  [2] Candidates (candidates)  [pending]
+      1. no candidate retrieved  [unknown]
+          detail     : CandidateRetriever found no active compatible tool for this prompt
+  [3] Decision (decision)  [waiting]
+      1. no tool selected  [waiting]
+          detail     : confidence 0.00; human confirmation required: yes; rationale: No active
+                       compatible tool matched the request.
+      2. dry run guarantee  [completed]
+          detail     : DecisionRouter() ran without the JEV/model router: record_routing() was not
+                       called and no graph, settings or summary file was written
+
+Status legend
+  ready      : declared, never run
+  running    : execution in progress
+  completed  : finished successfully
+  waiting    : paused for a human decision
+  error      : stopped with an error
+  cancelled  : stopped by a gate or reviewer
+  unknown    : source did not say (never treated as success)
+  step-only statuses:
+    pending    : not started yet
+    skipped    : skipped by a gate or policy
+
+Issues (2)
+┌──────────┬─────────────────────────────┬────────────────────────────┬────────────────────────────┐
+│ Severity │ Code                        │ Message                    │ Where                      │
+├──────────┼─────────────────────────────┼────────────────────────────┼────────────────────────────┤
+│ warning  │ route.prompt_tokens_unusabl │ The retriever cannot see   │ backend/routing.py:        │
+│          │ e                           │ most of this prompt. --    │ _tokens()                  │
+│          │                             │ every CJK character is     │                            │
+│          │                             │ invisible to the           │                            │
+│          │                             │ retriever, so no candidate │                            │
+│          │                             │ can match                  │                            │
+│ info     │ route.dry_run               │ This route was computed    │ dry-route:D:\Projects\matf │
+│          │                             │ read-only: nothing was     │ low                        │
+│          │                             │ persisted to the task      │                            │
+│          │                             │ summary log.               │                            │
+└──────────┴─────────────────────────────┴────────────────────────────┴────────────────────────────┘
+note: dropped column(s) to fit width 100: Hint

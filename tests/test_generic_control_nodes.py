@@ -139,7 +139,9 @@ class GenericControlNodeTests(unittest.TestCase):
         )
 
         outcome = self.runtime.execute_workflow()
-        self.assertNotIn("stopped", outcome)
+        self.assertTrue(outcome["ok"])
+        self.assertFalse(outcome["stopped"])
+        self.assertEqual(outcome["errors"], [])
 
         nodes = self._nodes()
         self.assertIs(nodes["report"].output["passed"], True)
@@ -183,7 +185,9 @@ class GenericControlNodeTests(unittest.TestCase):
         )
 
         outcome = self.runtime.execute_workflow()
-        self.assertNotIn("stopped", outcome)
+        self.assertTrue(outcome["ok"])
+        self.assertFalse(outcome["stopped"])
+        self.assertEqual(outcome["errors"], [])
 
         nodes = self._nodes()
         self.assertEqual(nodes["qc"].output["kind"], "EISQCReport")

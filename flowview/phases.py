@@ -75,15 +75,15 @@ def phase_blueprint() -> tuple[FlowPhase, ...]:
                 _step(
                     "candidates retrieved",
                     "backend/workspace_runtime.py: route_task() -> backend/routing.py: "
-                    "CandidateRetriever.retrieve(task, registry) filters registry.active() specs by "
-                    "available input types and lexical match, sorted by (-score, tool_id)",
+                    "CandidateRetriever.retrieve(task, registry) keeps the agent-selectable specs whose "
+                    "input ports accept the available types (a type filter; no keyword score), sorted by tool_id",
                 ),
                 _step(
                     "decision produced",
-                    "backend/routing.py: DecisionRouter.decide(task, registry) -> optional "
-                    "backend/jev_routing.py: JevDecisionRouter.decide() model opinions; returns "
-                    "RouterDecision(candidates, selected, confidence, rationale, "
-                    "requires_human_confirmation)",
+                    "backend/routing.py: DecisionRouter.decide(task, registry) -> ToolSelector: "
+                    "backend/jev_routing.py JevDecisionRouter.decide() when enabled and reachable, otherwise "
+                    "the configured LLM (LLMToolSelector); never keywords; returns RouterDecision(candidates, "
+                    "selected, confidence, rationale, requires_human_confirmation)",
                 ),
                 _step(
                     "routing persisted",
@@ -104,13 +104,14 @@ def phase_blueprint() -> tuple[FlowPhase, ...]:
             steps=(
                 _step(
                     "confirmation evaluated",
-                    "backend/routing.py: DecisionRouter.decide() sets requires_human_confirmation when "
-                    "no candidate matched, the winning score < 0.6, or spec.risk_level != 'low'",
+                    "backend/routing.py: ToolSelector.select() sets requires_human_confirmation when no "
+                    "model selects a candidate, Jev disagrees or is below its threshold, the LLM confidence "
+                    "< 0.6, or spec.risk_level != 'low'",
                 ),
                 _step(
                     "conversation pauses",
-                    "backend/main.py: chat() returns status='waiting_for_confirmation' with an empty "
-                    "trace and no graph patch when the initial lexical route needs confirmation",
+                    "backend/main.py: chat() returns status='waiting_for_confirmation' when the agent "
+                    "calls ask_user, proposes a draft, or leaves a node waiting (no keyword pre-route)",
                 ),
                 _step(
                     "human confirms",

@@ -30,6 +30,9 @@ Python 3.11–3.13 is supported. The backend does not require Node.js, npm, or a
 ## Start
 
 ```powershell
+# LLM gateway (reuses a running LiteLLM that accepts $LITELLM_DEFAULT_API_KEY, or starts one)
+start_llm.bat
+
 # Backend only
 uv run matflow start --ui none
 
@@ -37,9 +40,15 @@ uv run matflow start --ui none
 uv run matflow start --ui webui
 ```
 
+The gateway is described once in `config/llm.json` (host, port, key variable, models); see [config/README.md](config/README.md).
+
+### Saves: one save, one folder
+
+All local workspace state — graph, workspace settings, uploads and the task log — lives in `data/saves/<save>/`. `uv run matflow start --save NAME` (or `MATFLOW_SAVE=NAME`) opens another save; the default is `default`, and `MATFLOW_DATA_ROOT` names an explicit folder. `uv run matflow saves` lists them. `data/saves/` is Git-ignored.
+
 The frontend repository is resolved from `--ui-path`, then `MATFLOW_WEBUI_DIR`, then `../matflow-frontend`. With no `--ui`, interactive terminals show a menu and non-interactive sessions start only the backend. `uv run matflow serve` remains an alias for `start --ui none`.
 
-The UI can also be started from `D:\Projects\matflow-frontend` with `npm run dev`; it connects to `http://127.0.0.1:8000/api` by default.
+The UI can also be started directly from a `../matflow-frontend` sibling checkout with `npm run dev`; it connects to `http://127.0.0.1:8000/api` by default.
 
 Default endpoints:
 
@@ -49,7 +58,45 @@ Default endpoints:
 
 The former backend `/mcp` endpoint was removed in v1. MCP, DSH, and ChatGPT integration is provided by `matflow-frontend`, whose bridge defaults to `http://127.0.0.1:8001/mcp`.
 
+## Frontend and MCP bridge
+
+The React workbench and the MCP/DSH bridge live in a separate repository, `matflow-frontend`, which is not public yet. This repository is the authoritative backend and runs standalone: the CLI (`uv run matflow ...`) and the HTTP API at `http://127.0.0.1:8000/api` (OpenAPI at `/docs`) need no UI, Node.js or MCP package.
+
+Without the UI you can:
+
+```powershell
+uv sync
+uv run matflow diagnose          # readiness check
+uv run matflow start --ui none   # backend + HTTP API only
+uv run pytest -q                 # full test suite
+```
+
+and then call the API directly, for example `GET /api/capabilities`, `POST /api/plan`, or the QE replay demo `POST /api/qe/demo` (see below). The read-only `flowview` printer (see [docs/USER_MANUAL.md](docs/USER_MANUAL.md)) renders the current workflow graph in the terminal.
+
+### Screenshots
+
+Screenshots are still pending; see the [capture checklist](docs/images/README.md).
+
+## Prompt -> workflow planning
+
+`POST /api/plan` turns a (long) research request into a typed workflow:
+
+1. the LLM decomposes the request into action units with directed dependencies;
+2. every action is routed to one registered tool by Jev, or by the LLM when Jev is unreachable — candidates are filtered by data types only, never by keywords;
+3. dependencies become typed edges, and one LLM pass binds parameters, keeping only values the request or the uploaded columns state.
+
+The result is a validated `GraphPatch` with a status: `planned`, `needs_confirmation` (capability gaps, missing parameters), `clarify`, `refused` or `failed`. It is applied only when it is `planned` and the request sets `"apply": true`.
+
 ## QE replay demo
+
+For a fully offline, fixed-case replay without a server, LLM key or HPC access:
+
+```powershell
+uv run matflow demo qe-mgo --output ./qe-mgo-run
+```
+
+The output directory must be new. See the [A1 case and demo scripts](examples/cases/A1-qe-mgo/README.md).
+This explicitly selects a pinned workflow; it does not measure model planning.
 
 Start the backend and WebUI, then choose **Run MgO QE replay demo** from the workbench. The pinned natural-language request builds a four-node workflow: MgO structure → `pw.x` input generation → archived QE output replay → result parsing. The graph shows node states, parameters, parsed total energy, Fermi energy and convergence evidence. The replay is local and labelled as historical; it does not submit a Slurm job.
 
@@ -89,6 +136,16 @@ tables, and the independence guarantee.
 uv run --group dev python -m unittest discover -v
 ```
 
+The long-prompt planning suite runs the real chain (LLM decomposition, Jev/LLM routing, typed dataflow, and execution of every `planned` workflow on its fixture) against the configured gateway:
+
+```powershell
+$env:MATFLOW_RUN_LLM_APPLICATION_TESTS = "1"
+$env:MATFLOW_SCENARIO_REPORT_DIR = "examples/reports/prompt_to_workflow"   # optional JSON report
+uv run --group dev python -m unittest tests.test_prompt_to_workflow_online -v
+```
+
+Expectations live in `tests/suites/prompt_to_workflow.json`; `MATFLOW_PROMPT_CASES` selects cases.
+
 Model routing and application scenarios can also be run separately. The
 default is deterministic and offline; live gateways are explicitly enabled:
 
@@ -118,3 +175,14 @@ Project documentation:
 - [Current status and roadmap](docs/PROJECT_STATUS.md)
 - [Design philosophy and implementation architecture](docs/DESIGN_AND_ARCHITECTURE.md)
 - [HTTP API contract](docs/BACKEND_API_CONTRACT.md)
+
+## Documentation languages
+
+Interview evidence and limitations: [preparation guide (Chinese)](docs/INTERVIEW_PREPARATION.zhcn.md).
+Routing evaluation: [methodology](docs/ROUTING_EVALUATION.md) and [diagnostic run](docs/evaluation/README.md).
+
+English is the primary language of this repository. Documentation is written in English as `X.md`, and the Chinese version is retained as a sibling `X.zhcn.md`; the two are kept in sync. Chinese text elsewhere — in tests, fixtures, recorded evidence and examples — is input data that exercises the Chinese interaction path, not documentation.
+
+## License
+
+MIT — see [LICENSE](LICENSE).

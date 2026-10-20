@@ -1,0 +1,587 @@
+{
+  "flowview_schema": "1.0",
+  "document": {
+    "title": "MatFlow backend runtime flow (blueprint)",
+    "source": "flowview phase blueprint",
+    "graph": null,
+    "trace": null,
+    "phases": [
+      {
+        "name": "request",
+        "title": "Request and trace correlation",
+        "steps": [
+          {
+            "name": "request accepted",
+            "status": "pending",
+            "detail": "Blueprint (described, not observed): backend/main.py: chat() -> audit('chat.received') then TaskState(user_message, graph_version=workspace.read_state().version, available_input_types)",
+            "error": null,
+            "node_id": null,
+            "tools": []
+          },
+          {
+            "name": "trace id assigned",
+            "status": "pending",
+            "detail": "Blueprint (described, not observed): backend/main.py: trace_request() HTTP middleware reads X-Trace-ID or generates uuid4().hex, calls backend/observability.py: set_trace_id() and echoes X-Trace-ID; current_trace_id() stamps every later audit record and task summary",
+            "error": null,
+            "node_id": null,
+            "tools": []
+          },
+          {
+            "name": "input inspected",
+            "status": "pending",
+            "detail": "Blueprint (described, not observed): backend/main.py: run_agent_tool('inspect_upload') -> backend/workspace_runtime.py: WorkspaceRuntime.inspect_dataset(upload_id) (read-only column/preview probe)",
+            "error": null,
+            "node_id": null,
+            "tools": []
+          },
+          {
+            "name": "graph snapshot read",
+            "status": "pending",
+            "detail": "Blueprint (described, not observed): backend/main.py: run_agent_tool('get_graph') -> WorkspaceRuntime.read_state() -> data/graph_state.json (GraphState.model_dump())",
+            "error": null,
+            "node_id": null,
+            "tools": []
+          }
+        ],
+        "error": null
+      },
+      {
+        "name": "route",
+        "title": "Routing (candidate retrieval + decision)",
+        "steps": [
+          {
+            "name": "candidates retrieved",
+            "status": "pending",
+            "detail": "Blueprint (described, not observed): backend/workspace_runtime.py: route_task() -> backend/routing.py: CandidateRetriever.retrieve(task, registry) filters registry.active() specs by available input types and lexical match, sorted by (-score, tool_id)",
+            "error": null,
+            "node_id": null,
+            "tools": []
+          },
+          {
+            "name": "decision produced",
+            "status": "pending",
+            "detail": "Blueprint (described, not observed): backend/routing.py: DecisionRouter.decide(task, registry) -> optional backend/jev_routing.py: JevDecisionRouter.decide() model opinions; returns RouterDecision(candidates, selected, confidence, rationale, requires_human_confirmation)",
+            "error": null,
+            "node_id": null,
+            "tools": []
+          },
+          {
+            "name": "routing persisted",
+            "status": "pending",
+            "detail": "Blueprint (described, not observed): backend/workspace_runtime.py: route_task() -> backend/task_summary.py: TaskSummaryService.record_routing() appends one JSONL line, then audit('router.decided')",
+            "error": null,
+            "node_id": null,
+            "tools": []
+          },
+          {
+            "name": "route endpoint",
+            "status": "pending",
+            "detail": "Blueprint (described, not observed): backend/main.py: POST /api/route -> workspace.route_task(request.task) yields the RouterDecision plus its recorded summary; no graph patch and no execution",
+            "error": null,
+            "node_id": null,
+            "tools": []
+          }
+        ],
+        "error": null
+      },
+      {
+        "name": "confirm",
+        "title": "Human-confirmation gate",
+        "steps": [
+          {
+            "name": "confirmation evaluated",
+            "status": "pending",
+            "detail": "Blueprint (described, not observed): backend/routing.py: DecisionRouter.decide() sets requires_human_confirmation when no candidate matched, the winning score < 0.6, or spec.risk_level != 'low'",
+            "error": null,
+            "node_id": null,
+            "tools": []
+          },
+          {
+            "name": "conversation pauses",
+            "status": "pending",
+            "detail": "Blueprint (described, not observed): backend/main.py: chat() returns status='waiting_for_confirmation' with an empty trace and no graph patch when the initial lexical route needs confirmation",
+            "error": null,
+            "node_id": null,
+            "tools": []
+          },
+          {
+            "name": "human confirms",
+            "status": "pending",
+            "detail": "Blueprint (described, not observed): the client accepts the proposal and posts the patch; GraphPatch.requires_human_confirmation is honoured before /api/patch is called",
+            "error": null,
+            "node_id": null,
+            "tools": []
+          }
+        ],
+        "error": null
+      },
+      {
+        "name": "patch",
+        "title": "Graph patch (validate -> apply)",
+        "steps": [
+          {
+            "name": "patch validated",
+            "status": "pending",
+            "detail": "Blueprint (described, not observed): backend/main.py: POST /api/patch/validate -> backend/workspace_runtime.py: validate_graph_patch() -> backend/validator.py: GraphValidator.validate() returns {valid, current_version, next_version, patch_id}",
+            "error": null,
+            "node_id": null,
+            "tools": []
+          },
+          {
+            "name": "patch applied",
+            "status": "pending",
+            "detail": "Blueprint (described, not observed): backend/main.py: POST /api/patch -> WorkspaceRuntime.apply_graph_patch() under an RLock: audit('patch.received'), GraphValidator().validate(), operations applied, state.version += 1, history appended, write_state(), audit('patch.applied')",
+            "error": null,
+            "node_id": null,
+            "tools": []
+          },
+          {
+            "name": "agent patch seam",
+            "status": "pending",
+            "detail": "Blueprint (described, not observed): backend/main.py: run_agent_tool('apply_graph_patch') validates GraphPatch from the tool arguments; run_agent_tool('add_skill_node') applies an add_node patch",
+            "error": null,
+            "node_id": null,
+            "tools": []
+          },
+          {
+            "name": "version conflict path (409)",
+            "status": "pending",
+            "detail": "Blueprint (described, not observed): backend/main.py: post_patch()/validate_graph_patch() catch ValueError beginning with 'Version conflict:' and raise HTTPException 409 {'code': 'graph_version_conflict', 'current_version': ...}; other validation errors become 422 {'code': 'invalid_graph_patch'}",
+            "error": null,
+            "node_id": null,
+            "tools": []
+          }
+        ],
+        "error": null
+      },
+      {
+        "name": "execute",
+        "title": "Execution (DAG scheduling, executor seam, preview)",
+        "steps": [
+          {
+            "name": "workflow scheduled",
+            "status": "pending",
+            "detail": "Blueprint (described, not observed): backend/main.py: POST /api/workflow/execute -> WorkspaceRuntime.execute_workflow(restart=False): loops over nodes whose upstream edges are 'completed' (DAG scheduling), stops on a 'waiting' or 'cancelled' node; restart=True first resets every node to 'ready'",
+            "error": null,
+            "node_id": null,
+            "tools": []
+          },
+          {
+            "name": "node executed",
+            "status": "pending",
+            "detail": "Blueprint (described, not observed): backend/workspace_runtime.py: execute_node(node_id) -> _run_node(): node.status='running', audit('executor.started'), registry().get(tool_id) spec, executor resolved from ExecutorRegistry (backend/executors.py seam -> backend/builtin_executors.py), executor(NodeExecution(...))",
+            "error": null,
+            "node_id": null,
+            "tools": []
+          },
+          {
+            "name": "preview built",
+            "status": "pending",
+            "detail": "Blueprint (described, not observed): backend/workspace_runtime.py: _run_node() -> backend/preview.py: build_preview(node.output, spec) per spec.preview_spec; node.status='completed' unless the executor returned ExecutionOutcome(stop=True) -> 'cancelled'",
+            "error": null,
+            "node_id": null,
+            "tools": []
+          },
+          {
+            "name": "single node endpoint",
+            "status": "pending",
+            "detail": "Blueprint (described, not observed): backend/main.py: POST /api/execute -> WorkspaceRuntime.execute_node(node_id, task_id); the agent tool 'run_workflow' instead calls execute_workflow()",
+            "error": null,
+            "node_id": null,
+            "tools": []
+          },
+          {
+            "name": "execution recorded",
+            "status": "pending",
+            "detail": "Blueprint (described, not observed): backend/workspace_runtime.py: execute_node() -> TaskSummaryService.record_execution() with ExecutionResult(node_id, tool_id, tool_version, status, output, output_schema_valid, trace_id); audit('executor.completed')",
+            "error": null,
+            "node_id": null,
+            "tools": []
+          },
+          {
+            "name": "executor failure path",
+            "status": "pending",
+            "detail": "Blueprint (described, not observed): backend/workspace_runtime.py: execute_node() except ValueError -> node.status='error', node.output={'error': str(exc)}, write_state(), audit('executor.failed'), ExecutionResult(status='failed', error= ExecutionError(code='execution_failed', retryable=True)); the endpoint returns 422",
+            "error": null,
+            "node_id": null,
+            "tools": []
+          }
+        ],
+        "error": null
+      },
+      {
+        "name": "review",
+        "title": "Review gate (review_policy.after_run -> waiting)",
+        "steps": [
+          {
+            "name": "review policy evaluated",
+            "status": "pending",
+            "detail": "Blueprint (described, not observed): backend/workspace_runtime.py: _run_node() -> if node.review_policy.after_run and not stopped: node.status='waiting', node.review_state=ReviewState(status='pending'); execute_workflow() returns early so downstream nodes stay untouched",
+            "error": null,
+            "node_id": null,
+            "tools": []
+          },
+          {
+            "name": "human decision submitted",
+            "status": "pending",
+            "detail": "Blueprint (described, not observed): backend/main.py: POST /api/workflow/decision -> WorkspaceRuntime.submit_node_review(node_id, decision, comment); decision in {continue, revise, stop}; 'continue' approves and re-runs execute_workflow(), 'stop' sets node.status='cancelled'; an invalid state raises ValueError -> HTTP 422",
+            "error": null,
+            "node_id": null,
+            "tools": []
+          },
+          {
+            "name": "legacy decision alias",
+            "status": "pending",
+            "detail": "Blueprint (described, not observed): backend/main.py: POST /api/workflow/human-decision -> submit_human_decision() maps approve/continue to 'continue' and anything else to 'stop'",
+            "error": null,
+            "node_id": null,
+            "tools": []
+          }
+        ],
+        "error": null
+      },
+      {
+        "name": "persist",
+        "title": "Persistence and audit",
+        "steps": [
+          {
+            "name": "summary appended",
+            "status": "pending",
+            "detail": "Blueprint (described, not observed): backend/task_summary.py: TaskSummaryService._append() writes one JSON line with recorded_at to config/observability.json task_summaries.jsonl_path (data/audit/task_summaries.jsonl); a disabled config writes nothing",
+            "error": null,
+            "node_id": null,
+            "tools": []
+          },
+          {
+            "name": "audit events emitted",
+            "status": "pending",
+            "detail": "Blueprint (described, not observed): backend/observability.py: audit() emits JSON lines carrying trace_id for chat.received, tool.called, router.decided, patch.received, patch.applied, executor.started, executor.completed, executor.failed, node_review.submitted",
+            "error": null,
+            "node_id": null,
+            "tools": []
+          },
+          {
+            "name": "summary endpoint",
+            "status": "pending",
+            "detail": "Blueprint (described, not observed): backend/main.py: GET /api/task-summaries/{task_id} -> WorkspaceRuntime.task_summary() -> TaskSummaryService.get() returns the LAST matching record, or HTTP 404 when the task has never been recorded",
+            "error": null,
+            "node_id": null,
+            "tools": []
+          },
+          {
+            "name": "failed outcome recorded",
+            "status": "pending",
+            "detail": "Blueprint (described, not observed): backend/task_summary.py: record_execution() with execution.status == 'failed' sets status='failed' and error_and_handling={'error': {'code': 'execution_failed', 'message': ..., 'retryable': true}, 'handling': 'Execution stopped safely. ...'}",
+            "error": null,
+            "node_id": null,
+            "tools": []
+          }
+        ],
+        "error": null
+      }
+    ],
+    "issues": [
+      {
+        "severity": "info",
+        "code": "blueprint.description",
+        "message": "Every step below is a written-down description of the backend flow, not a recorded run: expected steps stay 'pending' until a recording is replayed.",
+        "where": "flowview/phases.py",
+        "hint": "Run 'python -m flowview run-flow --from TRACE.jsonl' or 'python -m flowview run-flow --task TASK_ID' to see observed statuses.",
+        "detail": null
+      }
+    ],
+    "meta": {
+      "mode": "blueprint",
+      "phases": "7",
+      "steps": "28",
+      "modes": "blueprint"
+    },
+    "truncated": []
+  },
+  "phases": [
+    {
+      "name": "request",
+      "title": "Request and trace correlation",
+      "steps": [
+        {
+          "name": "request accepted",
+          "status": "pending",
+          "detail": "Blueprint (described, not observed): backend/main.py: chat() -> audit('chat.received') then TaskState(user_message, graph_version=workspace.read_state().version, available_input_types)",
+          "error": null,
+          "node_id": null,
+          "tools": []
+        },
+        {
+          "name": "trace id assigned",
+          "status": "pending",
+          "detail": "Blueprint (described, not observed): backend/main.py: trace_request() HTTP middleware reads X-Trace-ID or generates uuid4().hex, calls backend/observability.py: set_trace_id() and echoes X-Trace-ID; current_trace_id() stamps every later audit record and task summary",
+          "error": null,
+          "node_id": null,
+          "tools": []
+        },
+        {
+          "name": "input inspected",
+          "status": "pending",
+          "detail": "Blueprint (described, not observed): backend/main.py: run_agent_tool('inspect_upload') -> backend/workspace_runtime.py: WorkspaceRuntime.inspect_dataset(upload_id) (read-only column/preview probe)",
+          "error": null,
+          "node_id": null,
+          "tools": []
+        },
+        {
+          "name": "graph snapshot read",
+          "status": "pending",
+          "detail": "Blueprint (described, not observed): backend/main.py: run_agent_tool('get_graph') -> WorkspaceRuntime.read_state() -> data/graph_state.json (GraphState.model_dump())",
+          "error": null,
+          "node_id": null,
+          "tools": []
+        }
+      ],
+      "error": null
+    },
+    {
+      "name": "route",
+      "title": "Routing (candidate retrieval + decision)",
+      "steps": [
+        {
+          "name": "candidates retrieved",
+          "status": "pending",
+          "detail": "Blueprint (described, not observed): backend/workspace_runtime.py: route_task() -> backend/routing.py: CandidateRetriever.retrieve(task, registry) filters registry.active() specs by available input types and lexical match, sorted by (-score, tool_id)",
+          "error": null,
+          "node_id": null,
+          "tools": []
+        },
+        {
+          "name": "decision produced",
+          "status": "pending",
+          "detail": "Blueprint (described, not observed): backend/routing.py: DecisionRouter.decide(task, registry) -> optional backend/jev_routing.py: JevDecisionRouter.decide() model opinions; returns RouterDecision(candidates, selected, confidence, rationale, requires_human_confirmation)",
+          "error": null,
+          "node_id": null,
+          "tools": []
+        },
+        {
+          "name": "routing persisted",
+          "status": "pending",
+          "detail": "Blueprint (described, not observed): backend/workspace_runtime.py: route_task() -> backend/task_summary.py: TaskSummaryService.record_routing() appends one JSONL line, then audit('router.decided')",
+          "error": null,
+          "node_id": null,
+          "tools": []
+        },
+        {
+          "name": "route endpoint",
+          "status": "pending",
+          "detail": "Blueprint (described, not observed): backend/main.py: POST /api/route -> workspace.route_task(request.task) yields the RouterDecision plus its recorded summary; no graph patch and no execution",
+          "error": null,
+          "node_id": null,
+          "tools": []
+        }
+      ],
+      "error": null
+    },
+    {
+      "name": "confirm",
+      "title": "Human-confirmation gate",
+      "steps": [
+        {
+          "name": "confirmation evaluated",
+          "status": "pending",
+          "detail": "Blueprint (described, not observed): backend/routing.py: DecisionRouter.decide() sets requires_human_confirmation when no candidate matched, the winning score < 0.6, or spec.risk_level != 'low'",
+          "error": null,
+          "node_id": null,
+          "tools": []
+        },
+        {
+          "name": "conversation pauses",
+          "status": "pending",
+          "detail": "Blueprint (described, not observed): backend/main.py: chat() returns status='waiting_for_confirmation' with an empty trace and no graph patch when the initial lexical route needs confirmation",
+          "error": null,
+          "node_id": null,
+          "tools": []
+        },
+        {
+          "name": "human confirms",
+          "status": "pending",
+          "detail": "Blueprint (described, not observed): the client accepts the proposal and posts the patch; GraphPatch.requires_human_confirmation is honoured before /api/patch is called",
+          "error": null,
+          "node_id": null,
+          "tools": []
+        }
+      ],
+      "error": null
+    },
+    {
+      "name": "patch",
+      "title": "Graph patch (validate -> apply)",
+      "steps": [
+        {
+          "name": "patch validated",
+          "status": "pending",
+          "detail": "Blueprint (described, not observed): backend/main.py: POST /api/patch/validate -> backend/workspace_runtime.py: validate_graph_patch() -> backend/validator.py: GraphValidator.validate() returns {valid, current_version, next_version, patch_id}",
+          "error": null,
+          "node_id": null,
+          "tools": []
+        },
+        {
+          "name": "patch applied",
+          "status": "pending",
+          "detail": "Blueprint (described, not observed): backend/main.py: POST /api/patch -> WorkspaceRuntime.apply_graph_patch() under an RLock: audit('patch.received'), GraphValidator().validate(), operations applied, state.version += 1, history appended, write_state(), audit('patch.applied')",
+          "error": null,
+          "node_id": null,
+          "tools": []
+        },
+        {
+          "name": "agent patch seam",
+          "status": "pending",
+          "detail": "Blueprint (described, not observed): backend/main.py: run_agent_tool('apply_graph_patch') validates GraphPatch from the tool arguments; run_agent_tool('add_skill_node') applies an add_node patch",
+          "error": null,
+          "node_id": null,
+          "tools": []
+        },
+        {
+          "name": "version conflict path (409)",
+          "status": "pending",
+          "detail": "Blueprint (described, not observed): backend/main.py: post_patch()/validate_graph_patch() catch ValueError beginning with 'Version conflict:' and raise HTTPException 409 {'code': 'graph_version_conflict', 'current_version': ...}; other validation errors become 422 {'code': 'invalid_graph_patch'}",
+          "error": null,
+          "node_id": null,
+          "tools": []
+        }
+      ],
+      "error": null
+    },
+    {
+      "name": "execute",
+      "title": "Execution (DAG scheduling, executor seam, preview)",
+      "steps": [
+        {
+          "name": "workflow scheduled",
+          "status": "pending",
+          "detail": "Blueprint (described, not observed): backend/main.py: POST /api/workflow/execute -> WorkspaceRuntime.execute_workflow(restart=False): loops over nodes whose upstream edges are 'completed' (DAG scheduling), stops on a 'waiting' or 'cancelled' node; restart=True first resets every node to 'ready'",
+          "error": null,
+          "node_id": null,
+          "tools": []
+        },
+        {
+          "name": "node executed",
+          "status": "pending",
+          "detail": "Blueprint (described, not observed): backend/workspace_runtime.py: execute_node(node_id) -> _run_node(): node.status='running', audit('executor.started'), registry().get(tool_id) spec, executor resolved from ExecutorRegistry (backend/executors.py seam -> backend/builtin_executors.py), executor(NodeExecution(...))",
+          "error": null,
+          "node_id": null,
+          "tools": []
+        },
+        {
+          "name": "preview built",
+          "status": "pending",
+          "detail": "Blueprint (described, not observed): backend/workspace_runtime.py: _run_node() -> backend/preview.py: build_preview(node.output, spec) per spec.preview_spec; node.status='completed' unless the executor returned ExecutionOutcome(stop=True) -> 'cancelled'",
+          "error": null,
+          "node_id": null,
+          "tools": []
+        },
+        {
+          "name": "single node endpoint",
+          "status": "pending",
+          "detail": "Blueprint (described, not observed): backend/main.py: POST /api/execute -> WorkspaceRuntime.execute_node(node_id, task_id); the agent tool 'run_workflow' instead calls execute_workflow()",
+          "error": null,
+          "node_id": null,
+          "tools": []
+        },
+        {
+          "name": "execution recorded",
+          "status": "pending",
+          "detail": "Blueprint (described, not observed): backend/workspace_runtime.py: execute_node() -> TaskSummaryService.record_execution() with ExecutionResult(node_id, tool_id, tool_version, status, output, output_schema_valid, trace_id); audit('executor.completed')",
+          "error": null,
+          "node_id": null,
+          "tools": []
+        },
+        {
+          "name": "executor failure path",
+          "status": "pending",
+          "detail": "Blueprint (described, not observed): backend/workspace_runtime.py: execute_node() except ValueError -> node.status='error', node.output={'error': str(exc)}, write_state(), audit('executor.failed'), ExecutionResult(status='failed', error= ExecutionError(code='execution_failed', retryable=True)); the endpoint returns 422",
+          "error": null,
+          "node_id": null,
+          "tools": []
+        }
+      ],
+      "error": null
+    },
+    {
+      "name": "review",
+      "title": "Review gate (review_policy.after_run -> waiting)",
+      "steps": [
+        {
+          "name": "review policy evaluated",
+          "status": "pending",
+          "detail": "Blueprint (described, not observed): backend/workspace_runtime.py: _run_node() -> if node.review_policy.after_run and not stopped: node.status='waiting', node.review_state=ReviewState(status='pending'); execute_workflow() returns early so downstream nodes stay untouched",
+          "error": null,
+          "node_id": null,
+          "tools": []
+        },
+        {
+          "name": "human decision submitted",
+          "status": "pending",
+          "detail": "Blueprint (described, not observed): backend/main.py: POST /api/workflow/decision -> WorkspaceRuntime.submit_node_review(node_id, decision, comment); decision in {continue, revise, stop}; 'continue' approves and re-runs execute_workflow(), 'stop' sets node.status='cancelled'; an invalid state raises ValueError -> HTTP 422",
+          "error": null,
+          "node_id": null,
+          "tools": []
+        },
+        {
+          "name": "legacy decision alias",
+          "status": "pending",
+          "detail": "Blueprint (described, not observed): backend/main.py: POST /api/workflow/human-decision -> submit_human_decision() maps approve/continue to 'continue' and anything else to 'stop'",
+          "error": null,
+          "node_id": null,
+          "tools": []
+        }
+      ],
+      "error": null
+    },
+    {
+      "name": "persist",
+      "title": "Persistence and audit",
+      "steps": [
+        {
+          "name": "summary appended",
+          "status": "pending",
+          "detail": "Blueprint (described, not observed): backend/task_summary.py: TaskSummaryService._append() writes one JSON line with recorded_at to config/observability.json task_summaries.jsonl_path (data/audit/task_summaries.jsonl); a disabled config writes nothing",
+          "error": null,
+          "node_id": null,
+          "tools": []
+        },
+        {
+          "name": "audit events emitted",
+          "status": "pending",
+          "detail": "Blueprint (described, not observed): backend/observability.py: audit() emits JSON lines carrying trace_id for chat.received, tool.called, router.decided, patch.received, patch.applied, executor.started, executor.completed, executor.failed, node_review.submitted",
+          "error": null,
+          "node_id": null,
+          "tools": []
+        },
+        {
+          "name": "summary endpoint",
+          "status": "pending",
+          "detail": "Blueprint (described, not observed): backend/main.py: GET /api/task-summaries/{task_id} -> WorkspaceRuntime.task_summary() -> TaskSummaryService.get() returns the LAST matching record, or HTTP 404 when the task has never been recorded",
+          "error": null,
+          "node_id": null,
+          "tools": []
+        },
+        {
+          "name": "failed outcome recorded",
+          "status": "pending",
+          "detail": "Blueprint (described, not observed): backend/task_summary.py: record_execution() with execution.status == 'failed' sets status='failed' and error_and_handling={'error': {'code': 'execution_failed', 'message': ..., 'retryable': true}, 'handling': 'Execution stopped safely. ...'}",
+          "error": null,
+          "node_id": null,
+          "tools": []
+        }
+      ],
+      "error": null
+    }
+  ],
+  "issues": [
+    {
+      "severity": "info",
+      "code": "blueprint.description",
+      "message": "Every step below is a written-down description of the backend flow, not a recorded run: expected steps stay 'pending' until a recording is replayed.",
+      "where": "flowview/phases.py",
+      "hint": "Run 'python -m flowview run-flow --from TRACE.jsonl' or 'python -m flowview run-flow --task TASK_ID' to see observed statuses.",
+      "detail": null
+    }
+  ],
+  "exit_code_hint": 0
+}

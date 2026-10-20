@@ -1,0 +1,43 @@
+MatFlow backend runtime flow (blueprint) — phase 4: Graph patch (validate -> apply)
+────────────────────────────────────────────────────────────────────────
+source     : flowview phase blueprint
+graph      : none in this document
+phases     : 1
+issues     : 0 error(s), 0 warning(s)
+meta       : stage_index=4, stage_name=patch, stage_title=Graph patch (validate -> apply), modes=stages
+
+Phases (1)
+  [1] Graph patch (validate -> apply) (patch)  [pending]
+      1. patch validated  [pending]
+          detail     : Blueprint (described, not observed): backend/main.py: POST /api/patch/validate ->
+                       backend/workspace_runtime.py: validate_graph_patch() -> backend/validator.py:
+                       GraphValidator.validate() returns {valid, current_version, next_version, patch_id}
+      2. patch applied  [pending]
+          detail     : Blueprint (described, not observed): backend/main.py: POST /api/patch ->
+                       WorkspaceRuntime.apply_graph_patch() under an RLock: audit('patch.received'),
+                       GraphValidator().validate(), operations applied, state.version += 1, history appended,
+                       write_state(), audit('patch.applied')
+      3. agent patch seam  [pending]
+          detail     : Blueprint (described, not observed): backend/main.py:
+                       run_agent_tool('apply_graph_patch') validates GraphPatch from the tool arguments;
+                       run_agent_tool('add_skill_node') applies an add_node patch
+      4. version conflict path (409)  [pending]
+          detail     : Blueprint (described, not observed): backend/main.py:
+                       post_patch()/validate_graph_patch() catch ValueError beginning with 'Version conflict:'
+                       and raise HTTPException 409 {'code': 'graph_version_conflict', 'current_version': ...};
+                       other validation errors become 422 {'code': 'invalid_graph_patch'}
+
+Status legend
+  ready      : declared, never run
+  running    : execution in progress
+  completed  : finished successfully
+  waiting    : paused for a human decision
+  error      : stopped with an error
+  cancelled  : stopped by a gate or reviewer
+  unknown    : source did not say (never treated as success)
+  step-only statuses:
+    pending    : not started yet
+    skipped    : skipped by a gate or policy
+
+Issues (0)
+  No FlowView findings: the source looked consistent.
