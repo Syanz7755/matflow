@@ -59,6 +59,9 @@ uv run pytest tests/test_demo.py -q               # 5 passed
 fixture SHA-256 = 14b53010...（与 data-sources.json 一致）
 ```
 
+最终 head `be08106` 在同一全新克隆内再次 `fetch + reset --hard` 后复跑
+`uv run pytest tests/test_demo.py -q` → `5 passed`（1.25 s），退出码 0。
+
 ## 4. 证据位置
 
 | 证据 | 位置 |
