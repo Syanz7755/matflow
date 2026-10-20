@@ -5,23 +5,27 @@
 The 22:00 demo acceptance was resumed at 21:13:54 Beijing time, after the 18:00/20:00/21:00/21:30
 gates had passed, and closed against actual evidence. **It is not fully met**: no freeze tag was
 created. The candidate tree is committed and pushed on `acceptance/2026-10-20-demo`
-(head `2fe225d`, preceded by the reproducibility fix `3ae3ab2`), and the frontend repository is now
-public at https://github.com/Syanz7755/matflow-frontend with default branch `main`.
+(preceded by the reproducibility fix `3ae3ab2`), and the frontend repository is now public at
+https://github.com/Syanz7755/matflow-frontend with default branch `main` at `2ea00ea`.
 Evidence: [acceptance report](../acceptance/2026-10-20/REPORT.zhcn.md),
-[task assignment](../acceptance/2026-10-20/TASK_ASSIGNMENT.zhcn.md) and the four
+[task assignment](../acceptance/2026-10-20/TASK_ASSIGNMENT.zhcn.md),
+[frontend evidence](../acceptance/2026-10-20/frontend.md) and the four
 [screenshots](../images/README.md).
 
 Verified on Windows: full suite `498 passed, 9 skipped, 393 subtests`; QE MgO replay 3/3 fresh-archive
 runs matching the frozen values; a genuine fresh clone of the public remote with an independent
 `uv sync` environment (demo exit 0, `tests/test_demo.py` 5 passed); review-gate pause/continue
-(7 focused tests) plus the review-gate screenshot. A real reproducibility defect was fixed: line-ending
-normalization changed the frozen QE fixture hash on a fresh clone, so `.gitattributes` now marks the
-fixtures and the recorded A1 run `-text`.
+(7 focused tests) plus the review-gate screenshot. Frontend: `npm test` 16 passed, build succeeded,
+`npm audit --omit=dev` clean, but browser E2E is 6 passed / 1 failed (the editor run leaves the
+downstream EIS node `Ready` after a review `Continue`); the Windows-only Playwright python path is
+fixed. A real reproducibility defect was fixed: line-ending normalization changed the frozen QE
+fixture hash on a fresh clone, so `.gitattributes` now marks the fixtures and the recorded A1 run
+`-text`.
 
-Still open: Ubuntu fresh-clone acceptance, Chinese live model routing, the 10-prompt-per-model online
-matrix, the live model-decision/rule-check view and a recording, and the backend default branch has
-not been fast-forwarded to the candidate. The repository's maintainer absolute paths were sanitized
-out of tracked files on this pass.
+Still open: the one failing frontend E2E case, Ubuntu fresh-clone acceptance, Chinese live model
+routing, the 10-prompt-per-model online matrix, the live model-decision/rule-check view and a
+recording, and the backend default branch has not been fast-forwarded to the candidate. The
+repository's maintainer absolute paths were sanitized out of tracked files on this pass.
 
 ## Portfolio update — 2026-10-19
 

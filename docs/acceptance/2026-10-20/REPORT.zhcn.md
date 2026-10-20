@@ -27,13 +27,13 @@
 |---|---|---|---|
 | 从零安装 | 从 GitHub 克隆配套版本；独立环境；不复制原目录环境/数据 | 在项目外 `<acceptance-root>\matflow-clone2` 从公开远端 `--depth 1` 全新克隆 `3ae3ab2`，`uv sync` 建独立环境；`uv run matflow demo qe-mgo` 退出码 0；`uv run pytest tests/test_demo.py -q` → `5 passed` | **Windows 通过**；Linux 未执行 |
 | 原测试 | 两个平台全部原测试；逐项说明跳过；原有两项 QE 回放测试实际通过 | Windows 本机全量：`498 passed, 9 skipped, 393 subtests passed`（97.77 s）。跳过项为 9 项设计内在线/符号链接用例（4 项需显式授权的 Jev/LLM 在线测试、3 项 FlowView 符号链接用例、2 项其它在线场景），未删除、未弱化。QE 聚焦：`21 passed`（`tests/test_demo.py tests/test_qe_package.py tests/test_cli.py`）。Linux 未执行 | **Windows 通过**；Linux 未执行 |
-| 完整前端 | 安装、单测、构建、浏览器 E2E 通过；修复 Windows 专属启动路径 | 本地 `npm test` 退出码 0；子代理完成前端仓库公开、构建、E2E 与 Windows 启动路径修复，细节以 [frontend.md](frontend.md) 为准（该文件由子代理写入；若未生成则该项只按本地 `npm test` 证据计） | **部分完成**（以 frontend.md 与实际 E2E 结果为准） |
+| 完整前端 | 安装、单测、构建、浏览器 E2E 通过；修复 Windows 专属启动路径 | `npm test` 16 passed（3+4+9）、`npm run build` 成功、`npm audit --omit=dev` → 0 vulnerabilities；Windows 专属启动路径已修复（Playwright 按平台选择 Python 解释器，支持 `MATFLOW_E2E_PYTHON`）；浏览器 E2E **6 passed / 1 failed**，失败为 `research-workbench.spec.mjs:155`（Continue 后下游 EIS 节点仍 `Ready`、Normalize 报 Error），两次复跑可复现、未修复。详见 [frontend.md](frontend.md) | **部分完成（E2E 未全过）** |
 | 自动主线 | 每次新工作区，自动完成 QE 四节点流程；结果与冻结预期一致；连续 3 次 | 3 次均使用新归档目录（`.tmp/acceptance/2026-10-20/qe-run{1,2,3}`），每次 0.66–0.68 s 完成；4 节点/3 边全部 `completed`；`convergence=converged`、`iterations=14`、`energy=-2417.17683284 Ry`、`atom_count=64`，与 `expected.json` 逐字段一致；`llm_called=false`、`hpc_submitted=false`、`offline=true`、`provenance=historical_output_replay`；两个 fixture 的 SHA-256 与 `data-sources.json` 一致 | **通过** |
 | 中文 | 至少一条中文提示词进入真实模型路由并记录实际选择 | 未执行。中文离线用例（`tests/test_cjk_*`、教学实验套件）在 498 项全量测试内通过，但不等于真实模型路由 | **未达（未执行）** |
 | 设计可视化 | 以文字/图例/样式区分模型决策、规则检查、人工审核；标识来自真实执行记录 | 已取得真实运行界面截图：四节点 QE 回放的图状态与参数、`Historical output replay · Slurm not submitted` 标签、解析结果、`Parse QE result` 的 **Review/Waiting** 审核面板（见 §5.1 与 [docs/images](../images/README.md)）。**模型决策/规则检查**的在线视图未取得（窗口内未执行真实模型路由），仅有 `Decision record` 入口可见 | **部分通过** |
 | 人工确认 | 暂停时下游未执行，明确确认后才继续；不计作自动主线干预 | 机制测试证据：`tests/test_api_contract_v11.py -k "review or confirm"` → 5 passed；`tests/test_node_evolution.py -k review` → 2 passed（含 `test_review_after_run_builds_preview_and_blocks_until_continue`、`test_continuing_a_review_runs_the_downstream_nodes`、`test_stopping_a_review_leaves_the_downstream_nodes_alone`）。界面证据：[node-review-gate.png](screenshots/node-review-gate.png) 显示审核节点处于 `Waiting`、结果预览仍可见、Continue/Revise/Stop 未确认；未单独录制“确认后下游继续”的连续画面 | **部分通过** |
 | 在线抽测 | 所有可用模型各 10 条，逐条结果/准确率/失败/耗时 | 未执行；无逐条记录，不估造准确率或费用数字 | **未达（未执行）** |
-| 公开交付 | README 安装步骤可照做；截图链接有效；无维护者绝对路径；公开默认分支与交付版本一致 | 后端已推送公开分支 `acceptance/2026-10-20-demo`（`2fe225d`）；前端仓库公开（默认分支 `main`，见 [frontend.md](frontend.md)）。README 的 4 张截图已补齐为真实文件（[docs/images](../images/README.md)），链接有效；跟踪文件中本机绝对路径已清零（历史记录内路径脱敏为占位符）。后端默认分支 `main` 仍是旧提交，交付版本位于验收分支 | **部分完成** |
+| 公开交付 | README 安装步骤可照做；截图链接有效；无维护者绝对路径；公开默认分支与交付版本一致 | 后端已推送公开分支 `acceptance/2026-10-20-demo`（`2fe225d`）；前端仓库公开（默认分支 `main`，交付提交 `2ea00ea`，见 [frontend.md](frontend.md)）。README 的 4 张截图已补齐为真实文件（[docs/images](../images/README.md)），链接有效；跟踪文件中本机绝对路径已清零（历史记录内路径脱敏为占位符）。后端默认分支 `main` 仍是旧提交，交付版本位于验收分支 | **部分完成** |
 
 ## 3. 可复现性阻断项（本次实际发现并修复）
 
@@ -66,7 +66,7 @@ fixture SHA-256 = 14b53010...（与 data-sources.json 一致）
 | 三次 QE 回放摘要 | [qe-run1-summary.json](qe-run1-summary.json)、[qe-run2-summary.json](qe-run2-summary.json)、[qe-run3-summary.json](qe-run3-summary.json) |
 | 三次回放完整归档（工作区、图状态） | `.tmp/acceptance/2026-10-20/qe-run{1,2,3}/`（本机，不提交） |
 | 全新克隆复验日志 | `<acceptance-root>\`（本机，项目外） |
-| 前端证据 | [frontend.md](frontend.md)（子代理写入） |
+| 前端证据 | [frontend.md](frontend.md)（Lead 复核整理，含命令输出与 E2E 失败明细） |
 | 冻结预期与输入来源 | [expected.json](../../examples/cases/A1-qe-mgo/expected.json)、[data-sources.json](../../examples/cases/A1-qe-mgo/data-sources.json) |
 | 任务分配 | [TASK_ASSIGNMENT.zhcn.md](TASK_ASSIGNMENT.zhcn.md) |
 
@@ -85,8 +85,11 @@ fixture SHA-256 = 14b53010...（与 data-sources.json 一致）
    未打冻结标签，未做 21:30 之后的“从远端重新克隆复验 + 最终候选”完整闭环。
 7. **测试隔离性（MF-015）**：仓库根目录出现过 20+ 个 `tmp*` 临时目录（非密封测试遗留），
    已在 `.gitignore` 忽略，但测试本身仍依赖工作目录，属于既有未关闭问题。
-8. **依赖告警**：`source-map-js` 高危告警已按补丁级修复到 1.2.2（前端仓库提交见 [frontend.md](frontend.md)，
-   本地 `npm test` 通过）；安全影响判断为构建期依赖，未做批量升级。
+8. **前端 E2E**：`research-workbench.spec.mjs:155` 真实失败——审核 `Continue` 后下游节点未完成
+   （`Normalize` 报 Error、`EIS Basic Analysis` 停在 Ready）；两次独立复跑可复现，未修复，未改断言、
+   未跳过。CI 的 E2E 任务仍是 `.github/workflows/ci.yml` 中的 TODO。
+9. **依赖告警**：`source-map-js` 高危告警已按补丁级修复到 1.2.2（前端提交 `b8781dc`），
+   升级后 `npm test`/`npm run build` 通过、`npm audit --omit=dev` 归零；判定为构建期依赖，未做批量升级。
 
 ## 5.1 界面截图（2026-10-20 实际运行）
 
