@@ -158,6 +158,56 @@ class LoadedPackageTests(unittest.TestCase):
         self.assertEqual(nodes["plot"].output["kind"], "Plot")
         self.assertEqual(nodes["plot"].output["points"], 4)
 
+    def test_ui_created_normalize_node_does_not_block_eis_mapping_defaults(self):
+        """A Normalize node added with no mapping must not block EIS.
+
+        The Tool library copies each Tool's declared parameters into a new node,
+        so ``normalize_columns`` now starts unmapped while ``eis_basic_qc``
+        carries its own mapping defaults.  The package resolves those defaults;
+        Platform Core still knows no measurement column name.
+        """
+        advertised = self.runtime.registry().legacy_view()["eis_basic_qc"]["params"]
+        self.assertEqual(advertised["frequency_column"], "frequency_hz")
+        self.assertEqual(advertised["real_column"], "z_real")
+        self.assertEqual(advertised["imag_column"], "z_imag")
+        self.assertEqual(self.runtime.registry().legacy_view()["normalize_columns"]["params"], {})
+
+        upload = self.runtime.import_dataset("eis_spectrum.csv", EIS_CSV, "text/csv")
+        self.runtime.write_state(
+            GraphState(
+                nodes=[
+                    Node(id="input", type="raw_file_import", params={"upload_id": upload["id"]}),
+                    Node(id="map", type="normalize_columns"),
+                    Node(
+                        id="qc",
+                        type="eis_basic_qc",
+                        params={
+                            "min_frequency_hz": 10,
+                            "fit_model": "None",
+                            "frequency_column": "frequency_hz",
+                            "real_column": "z_real_ohm",
+                            "imag_column": "z_imag_ohm",
+                        },
+                    ),
+                ],
+                edges=[
+                    Edge(id="e1", source="input", source_port="raw", target="map", target_port="raw"),
+                    Edge(id="e2", source="map", source_port="table", target="qc", target_port="data"),
+                ],
+            )
+        )
+
+        outcome = self.runtime.execute_workflow()
+        self.assertNotIn("error", outcome["results"][-1])
+        nodes = {node.id: node for node in self.runtime.read_state().nodes}
+        self.assertEqual(nodes["map"].output["mapping"], {})
+        self.assertEqual(nodes["qc"].output["kind"], "EISQCReport")
+        self.assertEqual(nodes["qc"].output["rows_valid"], 4)
+        self.assertEqual(
+            nodes["qc"].output["mapping"],
+            {"frequency_column": "frequency_hz", "real_column": "z_real_ohm", "imag_column": "z_imag_ohm"},
+        )
+
     def test_legacy_tool_id_migration_is_owned_by_the_package(self):
         self.runtime.write_state(
             GraphState(

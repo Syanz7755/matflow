@@ -50,11 +50,27 @@ EIS_TOOL_SPECS: dict[str, ToolSpec] = {
         category="Analysis",
         inputs={"data": "TypedTable"},
         outputs={"report": "EISQCReport", "data": "EISData"},
-        params={"min_frequency_hz": 10, "fit_model": "None"},
-        parameter_schema=parameter_schema_for({"min_frequency_hz": 10, "fit_model": "None"}),
+        params={
+            "min_frequency_hz": 10,
+            "fit_model": "None",
+            "frequency_column": "frequency_hz",
+            "real_column": "z_real",
+            "imag_column": "z_imag",
+        },
+        parameter_schema=parameter_schema_for(
+            {
+                "min_frequency_hz": 10,
+                "fit_model": "None",
+                "frequency_column": "frequency_hz",
+                "real_column": "z_real",
+                "imag_column": "z_imag",
+            }
+        ),
         description=(
-            "Nyquist/Bode quality checks and a typed EIS output. Reads the upstream column "
-            "mapping keys frequency_column, real_column and imag_column (each naming a column of the file)."
+            "Nyquist/Bode quality checks and a typed EIS output. Uses the upstream column "
+            "mapping keys frequency_column, real_column and imag_column when the Normalize node "
+            "supplies them; otherwise it falls back to its own parameters of the same names "
+            "(defaults frequency_hz, z_real, z_imag)."
         ),
         executor_ref="builtin:eis_basic_qc",
         preview_spec={"outputs": {"report": {"renderer": "json_tree"}, "data": {"renderer": "json_tree"}}},
@@ -84,12 +100,38 @@ EIS_TOOL_SPECS: dict[str, ToolSpec] = {
 }
 
 
+EIS_MAPPING_KEYS = ("frequency_column", "real_column", "imag_column")
+
+
+def _resolved_mapping(ctx: NodeExecution, table_output: dict[str, Any]) -> dict[str, Any]:
+    """Resolve the EIS column mapping.
+
+    The upstream Normalize node owns the mapping when it supplies one. When its
+    mapping is empty (a node added from the Tool library with no configuration),
+    this package falls back to its own parameters, so the EIS Tool stays usable
+    without teaching Platform Core any measurement column name.
+    """
+    mapping = dict(table_output.get("mapping") or {})
+    for key in EIS_MAPPING_KEYS:
+        value = mapping.get(key) or ctx.node.params.get(key)
+        if value:
+            mapping[key] = value
+    missing = [key for key in EIS_MAPPING_KEYS if not mapping.get(key)]
+    if missing:
+        raise ValueError(
+            "EIS Basic Analysis needs a column mapping for: "
+            + ", ".join(missing)
+            + " (map it upstream or set frequency_column, real_column and imag_column on this node)."
+        )
+    return mapping
+
+
 def eis_basic_qc(ctx: NodeExecution) -> dict[str, Any]:
     table = ctx.runtime.node_input(ctx.state, ctx.node.id, "data")
     if not table.output:
         raise ValueError(f"Upstream node {table.id} has not run")
     frame = ctx.runtime.dataset_frame(table.output["upload_id"])
-    mapping = table.output["mapping"]
+    mapping = _resolved_mapping(ctx, table.output)
     frequency = pd.to_numeric(frame[mapping["frequency_column"]], errors="coerce")
     real = pd.to_numeric(frame[mapping["real_column"]], errors="coerce")
     imag = pd.to_numeric(frame[mapping["imag_column"]], errors="coerce")
