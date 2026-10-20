@@ -267,6 +267,21 @@ def build_cases(registered: set[str]) -> tuple[list[dict[str, Any]], dict[str, A
     }
 
 
+def select_cases(cases: list[dict[str, Any]], spec: str) -> tuple[list[dict[str, Any]], list[str]]:
+    """Cases named by a comma-separated ``--cases`` spec, in spec order, plus any unknown ids.
+
+    An empty spec selects every case unchanged, so omitting ``--cases`` keeps the
+    historical behaviour exactly. Repeating an id selects it once; the order of
+    the spec is the run order, which makes a frozen case list reproducible.
+    """
+    wanted = list(dict.fromkeys(item.strip() for item in (spec or "").split(",") if item.strip()))
+    if not wanted:
+        return list(cases), []
+    by_id = {case["case_id"]: case for case in cases}
+    unknown = [case_id for case_id in wanted if case_id not in by_id]
+    return [by_id[case_id] for case_id in wanted if case_id in by_id], unknown
+
+
 # ----------------------------------------------------------------------------
 # Scoring one plan against its gold label (pure)
 # ----------------------------------------------------------------------------
@@ -711,6 +726,7 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--workers", type=positive_int, default=6)
     parser.add_argument("--per-model", type=positive_int, default=3, help="max concurrent requests per model")
     parser.add_argument("--sources", default="", help="comma-separated subset of: teaching_lab,prompt_stability,long_prompt,known_answer")
+    parser.add_argument("--cases", default="", help="comma-separated case ids, run in the given order (a frozen list lives in tests/suites/demo10_routing_cases.json); unknown ids are an error")
     parser.add_argument("--limit", type=int, default=0, help="keep only the first N cases (smoke test)")
     parser.add_argument("--sample", type=int, default=0, help="stratified deterministic subset of N cases (see stratified_order)")
     parser.add_argument("--checkpoint", default="", help="JSONL file to resume from / append to")
@@ -746,6 +762,13 @@ def main(argv: list[str] | None = None) -> int:
     from tests.reference_composition import registry as reference_registry
     registry_tools = sorted(reference_registry().agent_selectable())
     cases, dataset = build_cases(set(registry_tools))
+    if args.cases:
+        cases, unknown = select_cases(cases, args.cases)
+        if unknown:
+            print(f"Unknown case id(s) in --cases: {', '.join(unknown)}. "
+                  f"{len(cases)} of the requested ids matched a case; ids come from build_cases "
+                  f"(see tests/suites/demo10_routing_cases.json for a frozen example).")
+            return 2
     if args.sources:
         keep = {s.strip() for s in args.sources.split(",")}
         cases = [c for c in cases if c["source"] in keep]
@@ -757,7 +780,11 @@ def main(argv: list[str] | None = None) -> int:
     dataset["by_source"] = dict(Counter(c["source"] for c in cases))
     dataset["by_expectation"] = dict(Counter(c["expect"] for c in cases))
     dataset["by_language"] = dict(Counter(c["language"] for c in cases))
-    dataset["subset"] = f"stratified sample of {len(cases)}" if args.sample else ("first %d" % args.limit if args.limit else "all labelled cases")
+    if args.cases:
+        dataset["subset"] = f"--cases selection of {len(cases)}"
+        dataset["cases_spec"] = [c["case_id"] for c in cases]
+    else:
+        dataset["subset"] = f"stratified sample of {len(cases)}" if args.sample else ("first %d" % args.limit if args.limit else "all labelled cases")
     jobs = [Job(m, c, r) for r in range(args.repeats) for c in cases for m in models]
     print(f"{len(cases)} cases x {len(models)} models x {args.repeats} repeats = {len(jobs)} plans (Jev {args.jev})", flush=True)
 

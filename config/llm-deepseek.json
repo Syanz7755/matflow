@@ -1,0 +1,15 @@
+{
+  "version": 1,
+  "gateway": {
+    "label": "MatFlow DeepSeek official gateway",
+    "host": "127.0.0.1",
+    "port": 4080,
+    "api_key_env": "LITELLM_DEFAULT_API_KEY",
+    "litellm_config": "config/litellm-deepseek.yaml",
+    "startup_timeout_seconds": 60
+  },
+  "models": ["deepseek-official-flash", "deepseek-official-v4-pro"],
+  "agent_model": "deepseek-official-flash",
+  "planner_model": "deepseek-official-flash",
+  "request_timeout_seconds": 180
+}

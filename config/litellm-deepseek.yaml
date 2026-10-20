@@ -1,0 +1,22 @@
+# MatFlow-owned local gateway that serves the DeepSeek official provider only.
+# The credential is an environment reference, never a value; only the process
+# started by scripts/start_demo.ps1 holds it, and it is used for DeepSeek only.
+# Model ids follow the provider's current catalogue (checked 2026-10-20):
+# deepseek-flash and deepseek-v4-pro. Re-check before quoting this list.
+model_list:
+  - model_name: deepseek-official-flash
+    litellm_params:
+      model: openai/deepseek-flash
+      api_key: os.environ/DEEPSEEK_API_KEY_MATFLOW_EXCLUSIVE
+      api_base: https://api.deepseek.com
+  - model_name: deepseek-official-v4-pro
+    litellm_params:
+      model: openai/deepseek-v4-pro
+      api_key: os.environ/DEEPSEEK_API_KEY_MATFLOW_EXCLUSIVE
+      api_base: https://api.deepseek.com
+
+general_settings:
+  master_key: os.environ/LITELLM_DEFAULT_API_KEY
+
+litellm_settings:
+  drop_params: true

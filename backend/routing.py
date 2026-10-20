@@ -161,9 +161,12 @@ class ToolSelector:
             try:
                 winner, confidence, confirmation, selections, rationale = self._jev.decide(task, candidates, registry)
             except JevUnavailableError as exc:
+                # The transport detail is for operators, not for the user-facing
+                # rationale: keep the stable fact, never the raw urlopen text.
+                audit("jev.unavailable", error_type=type(exc).__name__)
                 if self._jev.fallback != "llm":
-                    return Selection(None, 0.0, True, f"{exc}; the configured fallback is a human decision.", "jev")
-                jev_note = f"{exc}; the LLM decided instead."
+                    return Selection(None, 0.0, True, "Jev routing unavailable; the configured fallback is a human decision.", "jev")
+                jev_note = "Jev routing unavailable; the LLM decided instead."
             else:
                 evidence = [ModelDecisionEvidence.model_validate(item.model_dump()) for item in selections]
                 if winner is not None and not confirmation:

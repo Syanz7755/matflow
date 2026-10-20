@@ -87,6 +87,49 @@ class MetricTests(unittest.TestCase):
         self.assertEqual(ev.language_of("Run EIS QC"), "en")
 
 
+class CaseSelectionTests(unittest.TestCase):
+    """The ``--cases`` filter: a frozen id list must select exactly those cases, in order."""
+
+    def setUp(self):
+        self.cases = [ev._case(cid, "test", f"prompt {cid}", "eis", "positive", [], ["eis_basic_qc"])
+                      for cid in ("a", "b", "c")]
+
+    def test_absent_flag_keeps_every_case_unchanged(self):
+        selected, unknown = ev.select_cases(self.cases, "")
+        self.assertEqual(selected, self.cases)
+        self.assertEqual(unknown, [])
+
+    def test_selection_follows_the_spec_order(self):
+        selected, unknown = ev.select_cases(self.cases, "c, a")
+        self.assertEqual([c["case_id"] for c in selected], ["c", "a"])
+        self.assertEqual(unknown, [])
+
+    def test_repeated_ids_run_once(self):
+        selected, _ = ev.select_cases(self.cases, "b,b,a")
+        self.assertEqual([c["case_id"] for c in selected], ["b", "a"])
+
+    def test_unknown_ids_are_reported_rather_than_ignored(self):
+        selected, unknown = ev.select_cases(self.cases, "a,nope,other")
+        self.assertEqual([c["case_id"] for c in selected], ["a"])
+        self.assertEqual(unknown, ["nope", "other"])
+
+    def test_frozen_demo10_selection_rebuilds_offline(self):
+        """The frozen 10-case file must name cases that build_cases still produces, with the same gold."""
+        from tests.reference_composition import registry as reference_registry
+        cases, _ = ev.build_cases(set(reference_registry().agent_selectable()))
+        frozen = json.loads((ROOT / "tests" / "suites" / "demo10_routing_cases.json").read_text(encoding="utf-8"))
+        selected, unknown = ev.select_cases(cases, ",".join(entry["case_id"] for entry in frozen))
+        self.assertEqual(unknown, [])
+        self.assertEqual([c["case_id"] for c in selected], [entry["case_id"] for entry in frozen])
+        for entry, built in zip(frozen, selected):
+            self.assertEqual(entry["prompt"], built["prompt"])
+            self.assertEqual((entry["expect"], entry["language"]), (built["expect"], built["language"]))
+            self.assertEqual(entry["gold"]["must"], built["gold"]["must"])
+            self.assertEqual(entry["gold"]["forbidden"], built["gold"]["forbidden"])
+            self.assertEqual(entry["gold"]["statuses"], built["gold"]["statuses"])
+            self.assertEqual(entry["fixtures"], built["fixtures"])
+
+
 class ScoringTests(unittest.TestCase):
     def test_positive_labels_do_not_override_disallowed_status(self):
         scored = ev.score_plan(case("positive", ["eis_basic_qc"], statuses=["planned"]),

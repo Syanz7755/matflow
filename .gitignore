@@ -55,3 +55,6 @@ Thumbs.db
 
 # Root-level throwaway test workspaces created by non-hermetic tests (MF-015); never part of a release.
 /tmp*/
+
+# Temporary Jev-config folders leaked by an interrupted evaluation run in the repo cwd.
+/matflow-eval-*/
