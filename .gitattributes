@@ -12,3 +12,7 @@
 *.jpg binary
 *.gif binary
 *.pdf binary
+
+# QE replay fixtures are byte-hashed and replayed verbatim; never convert their line endings.
+backend/domain_packages/qe_demo_fixtures/* -text -diff
+examples/cases/A1-qe-mgo/recorded/** -text -diff
