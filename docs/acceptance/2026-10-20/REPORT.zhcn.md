@@ -63,6 +63,10 @@ uv run pytest tests/test_demo.py -q               # 5 passed
 fixture SHA-256 = 14b53010...（与 data-sources.json 一致）
 ```
 
+最终候选 head `094040d` 在同一全新克隆内 `fetch + reset --hard` 后复验：
+`uv run pytest tests/test_demo.py tests/test_domain_packages.py -q` → `32 passed`（2.51 s），
+`uv run matflow demo qe-mgo` 退出码 0。该 head 之后的提交仅为本文档修订。
+
 ### 3.2 EIS 列映射默认值（由前端 E2E 暴露，后端修复）
 
 修复前窗口内 E2E 为 6 passed / 1 failed：`research-workbench.spec.mjs:155` 在人工审核
