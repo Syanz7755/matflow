@@ -53,7 +53,7 @@ Review 审核门）→（下游）Plot Nyquist。
 - 截图（真实运行）：[01 导入/建图](frontend-ops/screenshots/02-graph-built.png)、
   [审核暂停](frontend-ops/screenshots/03-review-waiting.png)、
   [继续后完成](frontend-ops/screenshots/04-continue-completed.png)、
-  [QE 回放](frontend-ops/screenshots/06-qe-replay.png)；Lead 独立截图见
+  [QE 回放](frontend-ops/screenshots/06-qe-replay-demo.png)；Lead 独立截图见
   [lead-verify](lead-verify/LEAD_VERIFY.zhcn.md)。
 - **一键启动**：`scripts/start_demo.ps1`（或双击 `scripts/start_demo.bat`）从 User 作用域读密钥、复用或
   启动两个网关、后端 8000 与前端 5173，逐项健康检查后打印 URL；Lead 已实测通过。
