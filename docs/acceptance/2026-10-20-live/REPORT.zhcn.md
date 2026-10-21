@@ -125,7 +125,8 @@ UI 决策面板（真实在线模型）截图：[决策面板](chinese-routing/0
 5. `qwen` 本窗口因服务时序退化未完成 10 条矩阵（实测 121.7 s/次），`minimax` 上游 403；
    二者均记录为不可用/不计分，没有编造数字。矩阵是小样本路由阶段比较，不是完整 harness/科学能力排名。
 6. Jev（4079）未运行：Jev consensus / calibrated confidence 路径未验收；中文与矩阵均为 `router=llm`。
-7. 按用户指令**跳过 Ubuntu**；未录制演示视频；未做跨浏览器（Firefox/WebKit）与并发多用户验证。
+7. 按用户指令**跳过 Ubuntu**；未录制演示视频（已交付录制教材与期望画面，见 §9）；
+   未做跨浏览器（Firefox/WebKit）与并发多用户验证。
 8. 前端 CI 仍无 E2E 作业（仅 ubuntu test-build）；GitHub Actions 结果未核验。
 
 ## 8. 判定
@@ -135,3 +136,14 @@ UI 决策面板（真实在线模型）截图：[决策面板](chinese-routing/0
 （一键启动 + 操作手册 + 自动 API 检查脚本）。因此本轮交付 **在指定范围内成立**；完整计划中的
 Ubuntu 双平台项按用户指令暂缓，Jev 在线路径、上列缺陷与录屏/CI 等仍按已知局限保留，不宣称
 “完整计划全部达标”。
+
+## 9. 演示录制教材（补充，2026-10-20 深夜）
+
+- 新增 [演示录制教程](demo-tutorial/DEMO_TUTORIAL.zhcn.md)：10 个分镜的逐步操作（每个点击 + 期望画面 +
+  旁白）、18 项“会被演示的功能”清单、OBS 录制设置、剪辑与交付、8 类失败处置、重置流程。
+- 教程期望画面（1920×1080，11 张实拍）与逐帧数值：[`demo-tutorial/screenshots/`](demo-tutorial/screenshots/)、
+  [`demo-tutorial/capture.json`](demo-tutorial/capture.json)（含 `rows_valid=13`、`pass=true`、
+  `-2417.17683284 Ry`、路由 3.46 s / `deepseek-official-flash` / 置信度 95%）。
+- 新增可复跑脚本 `scripts/live_acceptance/capture_demo_frames.mjs`（Playwright，只读走完 S0–S9 并截图记账；
+  两次实拍均复现 D-01 端口点击偶发不注册，脚本按“再点一次”自动重试）。
+- **视频本身尚未录制**：本轮交付的是录制教材、期望画面与可复跑脚本；未新增 `demo-2026-10-20` 标签。

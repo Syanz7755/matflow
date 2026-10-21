@@ -1,0 +1,5705 @@
+{
+  "capturedAt": "2026-10-21T02:31:04.716Z",
+  "webUrl": "http://127.0.0.1:5331/",
+  "api": "http://127.0.0.1:8032/api",
+  "viewport": "1920x1080",
+  "dataset": "examples/data/01_eis_basic_qc/eis_spectrum.csv",
+  "routePrompt": "请对这份电化学阻抗谱数据做基本质控：检查高频段虚部符号是否为负、低频段是否发散，并给出质控结论。",
+  "steps": [
+    {
+      "at": "2026-10-21T02:31:04.987Z",
+      "message": "screenshot 00-empty-workspace.png"
+    },
+    {
+      "at": "2026-10-21T02:31:05.068Z",
+      "message": "screenshot 01-import-dataset.png"
+    },
+    {
+      "at": "2026-10-21T02:31:05.164Z",
+      "message": "added node Raw File Import"
+    },
+    {
+      "at": "2026-10-21T02:31:05.252Z",
+      "message": "added node Normalize / Column Mapping"
+    },
+    {
+      "at": "2026-10-21T02:31:05.319Z",
+      "message": "added node EIS Basic Analysis"
+    },
+    {
+      "at": "2026-10-21T02:31:05.334Z",
+      "message": "clicked the raw port on Raw File Import"
+    },
+    {
+      "at": "2026-10-21T02:31:07.342Z",
+      "message": "connect mode did not open from Raw File Import.raw (attempt 1); clicking again"
+    },
+    {
+      "at": "2026-10-21T02:31:07.621Z",
+      "message": "clicked the raw port on Raw File Import"
+    },
+    {
+      "at": "2026-10-21T02:31:07.633Z",
+      "message": "clicked the raw port on Normalize / Column Mapping"
+    },
+    {
+      "at": "2026-10-21T02:31:07.657Z",
+      "message": "connected raw -> raw on attempt 1"
+    },
+    {
+      "at": "2026-10-21T02:31:07.669Z",
+      "message": "clicked the table port on Normalize / Column Mapping"
+    },
+    {
+      "at": "2026-10-21T02:31:07.674Z",
+      "message": "clicked the data port on EIS Basic Analysis"
+    },
+    {
+      "at": "2026-10-21T02:31:12.675Z",
+      "message": "connect table -> data did not register on attempt 1; retrying"
+    },
+    {
+      "at": "2026-10-21T02:31:13.002Z",
+      "message": "clicked the table port on Normalize / Column Mapping"
+    },
+    {
+      "at": "2026-10-21T02:31:13.017Z",
+      "message": "clicked the data port on EIS Basic Analysis"
+    },
+    {
+      "at": "2026-10-21T02:31:13.019Z",
+      "message": "connected table -> data on attempt 2"
+    },
+    {
+      "at": "2026-10-21T02:31:13.058Z",
+      "message": "screenshot 02-graph-built.png"
+    },
+    {
+      "at": "2026-10-21T02:31:13.101Z",
+      "message": "selected eis_basic_qc-1"
+    },
+    {
+      "at": "2026-10-21T02:31:13.114Z",
+      "message": "set frequency column=frequency_hz"
+    },
+    {
+      "at": "2026-10-21T02:31:13.130Z",
+      "message": "set real column=z_real_ohm"
+    },
+    {
+      "at": "2026-10-21T02:31:13.146Z",
+      "message": "set imag column=z_imag_ohm"
+    },
+    {
+      "at": "2026-10-21T02:31:13.194Z",
+      "message": "screenshot 03-inspector-params.png"
+    },
+    {
+      "at": "2026-10-21T02:31:13.233Z",
+      "message": "review gate on the EIS node"
+    },
+    {
+      "at": "2026-10-21T02:31:13.294Z",
+      "message": "saved: Saved as graph v1."
+    },
+    {
+      "at": "2026-10-21T02:31:13.359Z",
+      "message": "screenshot 04-saved-review-on.png"
+    },
+    {
+      "at": "2026-10-21T02:31:13.478Z",
+      "message": "selected eis_basic_qc-1"
+    },
+    {
+      "at": "2026-10-21T02:31:13.543Z",
+      "message": "screenshot 05-review-waiting.png"
+    },
+    {
+      "at": "2026-10-21T02:31:13.661Z",
+      "message": "screenshot 06-completed-result.png"
+    },
+    {
+      "at": "2026-10-21T02:31:13.793Z",
+      "message": "saved: Saved as graph v2."
+    },
+    {
+      "at": "2026-10-21T02:31:13.856Z",
+      "message": "screenshot 07-cleared-workspace.png"
+    },
+    {
+      "at": "2026-10-21T02:31:14.097Z",
+      "message": "screenshot 08-qe-replay.png"
+    },
+    {
+      "at": "2026-10-21T02:31:14.274Z",
+      "message": "screenshot 09-route-dialog.png"
+    },
+    {
+      "at": "2026-10-21T02:31:17.913Z",
+      "message": "screenshot 10-decision-record.png"
+    }
+  ],
+  "states": {
+    "afterSave": {
+      "graph_id": "local-default",
+      "version": 1,
+      "revision": 1,
+      "updated_at": "2026-10-21T02:31:13+00:00",
+      "nodes": [
+        {
+          "id": "raw_file_import-1",
+          "type": "raw_file_import",
+          "tool_id": "raw_file_import",
+          "tool_version": "1.0.0",
+          "label": "Raw File Import",
+          "params": {
+            "file_name": "measurement.csv",
+            "upload_id": "b9c995fdfcda4f0e997a529047340d74_eis_spectrum.csv"
+          },
+          "position": {
+            "x": 80,
+            "y": 80
+          },
+          "status": "ready",
+          "output": null,
+          "preview": null,
+          "review_policy": {
+            "after_run": false,
+            "prompt": "Review this result before continuing."
+          },
+          "review_state": {
+            "status": "off",
+            "comment": null
+          }
+        },
+        {
+          "id": "normalize_columns-1",
+          "type": "normalize_columns",
+          "tool_id": "normalize_columns",
+          "tool_version": "1.0.0",
+          "label": "Normalize / Column Mapping",
+          "params": {},
+          "position": {
+            "x": 420,
+            "y": 80
+          },
+          "status": "ready",
+          "output": null,
+          "preview": null,
+          "review_policy": {
+            "after_run": false,
+            "prompt": "Review this result before continuing."
+          },
+          "review_state": {
+            "status": "off",
+            "comment": null
+          }
+        },
+        {
+          "id": "eis_basic_qc-1",
+          "type": "eis_basic_qc",
+          "tool_id": "eis_basic_qc",
+          "tool_version": "1.0.0",
+          "label": "EIS Basic Analysis",
+          "params": {
+            "min_frequency_hz": 10,
+            "fit_model": "None",
+            "frequency_column": "frequency_hz",
+            "real_column": "z_real_ohm",
+            "imag_column": "z_imag_ohm"
+          },
+          "position": {
+            "x": 760,
+            "y": 80
+          },
+          "status": "ready",
+          "output": null,
+          "preview": null,
+          "review_policy": {
+            "after_run": true,
+            "prompt": "Review this result before continuing."
+          },
+          "review_state": {
+            "status": "off",
+            "comment": null
+          }
+        }
+      ],
+      "edges": [
+        {
+          "id": "raw_file_import-1-raw--normalize_columns-1-raw",
+          "source": "raw_file_import-1",
+          "source_port": "raw",
+          "target": "normalize_columns-1",
+          "target_port": "raw"
+        },
+        {
+          "id": "normalize_columns-1-table--eis_basic_qc-1-data",
+          "source": "normalize_columns-1",
+          "source_port": "table",
+          "target": "eis_basic_qc-1",
+          "target_port": "data"
+        }
+      ],
+      "history": [
+        {
+          "version": 1,
+          "patch": {
+            "patch_id": "862d4a0e-1cd8-41d5-b5c0-21313ac8c7df",
+            "base_version": 0,
+            "operations": [
+              {
+                "op": "add_node",
+                "node": {
+                  "id": "raw_file_import-1",
+                  "type": "raw_file_import",
+                  "tool_id": "raw_file_import",
+                  "tool_version": "1.0.0",
+                  "label": "Raw File Import",
+                  "params": {
+                    "file_name": "measurement.csv",
+                    "upload_id": "b9c995fdfcda4f0e997a529047340d74_eis_spectrum.csv"
+                  },
+                  "position": {
+                    "x": 80,
+                    "y": 80
+                  },
+                  "status": "ready",
+                  "output": null,
+                  "preview": null,
+                  "review_policy": {
+                    "after_run": false,
+                    "prompt": "Review this result before continuing."
+                  },
+                  "review_state": {
+                    "status": "off",
+                    "comment": null
+                  }
+                },
+                "node_id": null,
+                "params": null,
+                "changes": null,
+                "edge": null,
+                "edge_id": null,
+                "replacement_node": null,
+                "reconnect_edges": null,
+                "proposal_id": null
+              },
+              {
+                "op": "add_node",
+                "node": {
+                  "id": "normalize_columns-1",
+                  "type": "normalize_columns",
+                  "tool_id": "normalize_columns",
+                  "tool_version": "1.0.0",
+                  "label": "Normalize / Column Mapping",
+                  "params": {},
+                  "position": {
+                    "x": 420,
+                    "y": 80
+                  },
+                  "status": "ready",
+                  "output": null,
+                  "preview": null,
+                  "review_policy": {
+                    "after_run": false,
+                    "prompt": "Review this result before continuing."
+                  },
+                  "review_state": {
+                    "status": "off",
+                    "comment": null
+                  }
+                },
+                "node_id": null,
+                "params": null,
+                "changes": null,
+                "edge": null,
+                "edge_id": null,
+                "replacement_node": null,
+                "reconnect_edges": null,
+                "proposal_id": null
+              },
+              {
+                "op": "add_node",
+                "node": {
+                  "id": "eis_basic_qc-1",
+                  "type": "eis_basic_qc",
+                  "tool_id": "eis_basic_qc",
+                  "tool_version": "1.0.0",
+                  "label": "EIS Basic Analysis",
+                  "params": {
+                    "min_frequency_hz": 10,
+                    "fit_model": "None",
+                    "frequency_column": "frequency_hz",
+                    "real_column": "z_real_ohm",
+                    "imag_column": "z_imag_ohm"
+                  },
+                  "position": {
+                    "x": 760,
+                    "y": 80
+                  },
+                  "status": "ready",
+                  "output": null,
+                  "preview": null,
+                  "review_policy": {
+                    "after_run": true,
+                    "prompt": "Review this result before continuing."
+                  },
+                  "review_state": {
+                    "status": "off",
+                    "comment": null
+                  }
+                },
+                "node_id": null,
+                "params": null,
+                "changes": null,
+                "edge": null,
+                "edge_id": null,
+                "replacement_node": null,
+                "reconnect_edges": null,
+                "proposal_id": null
+              },
+              {
+                "op": "connect",
+                "node": null,
+                "node_id": null,
+                "params": null,
+                "changes": null,
+                "edge": {
+                  "id": "raw_file_import-1-raw--normalize_columns-1-raw",
+                  "source": "raw_file_import-1",
+                  "source_port": "raw",
+                  "target": "normalize_columns-1",
+                  "target_port": "raw"
+                },
+                "edge_id": null,
+                "replacement_node": null,
+                "reconnect_edges": null,
+                "proposal_id": null
+              },
+              {
+                "op": "connect",
+                "node": null,
+                "node_id": null,
+                "params": null,
+                "changes": null,
+                "edge": {
+                  "id": "normalize_columns-1-table--eis_basic_qc-1-data",
+                  "source": "normalize_columns-1",
+                  "source_port": "table",
+                  "target": "eis_basic_qc-1",
+                  "target_port": "data"
+                },
+                "edge_id": null,
+                "replacement_node": null,
+                "reconnect_edges": null,
+                "proposal_id": null
+              }
+            ],
+            "rationale": "Saved from the MatFlow workflow editor",
+            "requires_human_confirmation": false
+          },
+          "before": {
+            "graph_id": "local-default",
+            "version": 0,
+            "revision": 0,
+            "updated_at": null,
+            "nodes": [],
+            "edges": [],
+            "history": []
+          }
+        }
+      ]
+    },
+    "waiting": {
+      "graph_id": "local-default",
+      "version": 1,
+      "revision": 8,
+      "updated_at": "2026-10-21T02:31:13+00:00",
+      "nodes": [
+        {
+          "id": "raw_file_import-1",
+          "type": "raw_file_import",
+          "tool_id": "raw_file_import",
+          "tool_version": "1.0.0",
+          "label": "Raw File Import",
+          "params": {
+            "file_name": "measurement.csv",
+            "upload_id": "b9c995fdfcda4f0e997a529047340d74_eis_spectrum.csv"
+          },
+          "position": {
+            "x": 80,
+            "y": 80
+          },
+          "status": "completed",
+          "output": {
+            "kind": "RawData",
+            "upload_id": "b9c995fdfcda4f0e997a529047340d74_eis_spectrum.csv",
+            "rows": 13,
+            "columns": [
+              "frequency_hz",
+              "z_real_ohm",
+              "z_imag_ohm"
+            ],
+            "preview": [
+              {
+                "frequency_hz": 100000,
+                "z_real_ohm": 5.00001,
+                "z_imag_ohm": -0.01592
+              },
+              {
+                "frequency_hz": 50000,
+                "z_real_ohm": 5.00003,
+                "z_imag_ohm": -0.03183
+              },
+              {
+                "frequency_hz": 20000,
+                "z_real_ohm": 5.00016,
+                "z_imag_ohm": -0.07958
+              },
+              {
+                "frequency_hz": 10000,
+                "z_real_ohm": 5.00063,
+                "z_imag_ohm": -0.15915
+              },
+              {
+                "frequency_hz": 5000,
+                "z_real_ohm": 5.00253,
+                "z_imag_ohm": -0.31829
+              },
+              {
+                "frequency_hz": 2000,
+                "z_real_ohm": 5.01583,
+                "z_imag_ohm": -0.79546
+              },
+              {
+                "frequency_hz": 1000,
+                "z_real_ohm": 5.06323,
+                "z_imag_ohm": -1.58903
+              },
+              {
+                "frequency_hz": 500,
+                "z_real_ohm": 5.25171,
+                "z_imag_ohm": -3.16307
+              }
+            ]
+          },
+          "preview": {
+            "kind": "table",
+            "port": "raw",
+            "rows": [
+              {
+                "frequency_hz": 100000,
+                "z_real_ohm": 5.00001,
+                "z_imag_ohm": -0.01592
+              },
+              {
+                "frequency_hz": 50000,
+                "z_real_ohm": 5.00003,
+                "z_imag_ohm": -0.03183
+              },
+              {
+                "frequency_hz": 20000,
+                "z_real_ohm": 5.00016,
+                "z_imag_ohm": -0.07958
+              },
+              {
+                "frequency_hz": 10000,
+                "z_real_ohm": 5.00063,
+                "z_imag_ohm": -0.15915
+              },
+              {
+                "frequency_hz": 5000,
+                "z_real_ohm": 5.00253,
+                "z_imag_ohm": -0.31829
+              },
+              {
+                "frequency_hz": 2000,
+                "z_real_ohm": 5.01583,
+                "z_imag_ohm": -0.79546
+              },
+              {
+                "frequency_hz": 1000,
+                "z_real_ohm": 5.06323,
+                "z_imag_ohm": -1.58903
+              },
+              {
+                "frequency_hz": 500,
+                "z_real_ohm": 5.25171,
+                "z_imag_ohm": -3.16307
+              }
+            ],
+            "truncated": false
+          },
+          "review_policy": {
+            "after_run": false,
+            "prompt": "Review this result before continuing."
+          },
+          "review_state": {
+            "status": "off",
+            "comment": null
+          }
+        },
+        {
+          "id": "normalize_columns-1",
+          "type": "normalize_columns",
+          "tool_id": "normalize_columns",
+          "tool_version": "1.0.0",
+          "label": "Normalize / Column Mapping",
+          "params": {},
+          "position": {
+            "x": 420,
+            "y": 80
+          },
+          "status": "completed",
+          "output": {
+            "kind": "TypedTable",
+            "upload_id": "b9c995fdfcda4f0e997a529047340d74_eis_spectrum.csv",
+            "mapping": {},
+            "rows": 13
+          },
+          "preview": {
+            "kind": "json_tree",
+            "port": "table",
+            "data": {
+              "kind": "TypedTable",
+              "upload_id": "b9c995fdfcda4f0e997a529047340d74_eis_spectrum.csv",
+              "mapping": {},
+              "rows": 13
+            }
+          },
+          "review_policy": {
+            "after_run": false,
+            "prompt": "Review this result before continuing."
+          },
+          "review_state": {
+            "status": "off",
+            "comment": null
+          }
+        },
+        {
+          "id": "eis_basic_qc-1",
+          "type": "eis_basic_qc",
+          "tool_id": "eis_basic_qc",
+          "tool_version": "1.0.0",
+          "label": "EIS Basic Analysis",
+          "params": {
+            "min_frequency_hz": 10,
+            "fit_model": "None",
+            "frequency_column": "frequency_hz",
+            "real_column": "z_real_ohm",
+            "imag_column": "z_imag_ohm"
+          },
+          "position": {
+            "x": 760,
+            "y": 80
+          },
+          "status": "waiting",
+          "output": {
+            "kind": "EISQCReport",
+            "upload_id": "b9c995fdfcda4f0e997a529047340d74_eis_spectrum.csv",
+            "mapping": {
+              "frequency_column": "frequency_hz",
+              "real_column": "z_real_ohm",
+              "imag_column": "z_imag_ohm"
+            },
+            "rows_valid": 13,
+            "rows_retained": 13,
+            "min_frequency_hz": 10,
+            "pass": true,
+            "issues": []
+          },
+          "preview": {
+            "kind": "json_tree",
+            "port": "report",
+            "data": {
+              "kind": "EISQCReport",
+              "upload_id": "b9c995fdfcda4f0e997a529047340d74_eis_spectrum.csv",
+              "mapping": {
+                "frequency_column": "frequency_hz",
+                "real_column": "z_real_ohm",
+                "imag_column": "z_imag_ohm"
+              },
+              "rows_valid": 13,
+              "rows_retained": 13,
+              "min_frequency_hz": 10,
+              "pass": true,
+              "issues": []
+            }
+          },
+          "review_policy": {
+            "after_run": true,
+            "prompt": "Review this result before continuing."
+          },
+          "review_state": {
+            "status": "pending",
+            "comment": null
+          }
+        }
+      ],
+      "edges": [
+        {
+          "id": "raw_file_import-1-raw--normalize_columns-1-raw",
+          "source": "raw_file_import-1",
+          "source_port": "raw",
+          "target": "normalize_columns-1",
+          "target_port": "raw"
+        },
+        {
+          "id": "normalize_columns-1-table--eis_basic_qc-1-data",
+          "source": "normalize_columns-1",
+          "source_port": "table",
+          "target": "eis_basic_qc-1",
+          "target_port": "data"
+        }
+      ],
+      "history": [
+        {
+          "version": 1,
+          "patch": {
+            "patch_id": "862d4a0e-1cd8-41d5-b5c0-21313ac8c7df",
+            "base_version": 0,
+            "operations": [
+              {
+                "op": "add_node",
+                "node": {
+                  "id": "raw_file_import-1",
+                  "type": "raw_file_import",
+                  "tool_id": "raw_file_import",
+                  "tool_version": "1.0.0",
+                  "label": "Raw File Import",
+                  "params": {
+                    "file_name": "measurement.csv",
+                    "upload_id": "b9c995fdfcda4f0e997a529047340d74_eis_spectrum.csv"
+                  },
+                  "position": {
+                    "x": 80,
+                    "y": 80
+                  },
+                  "status": "ready",
+                  "output": null,
+                  "preview": null,
+                  "review_policy": {
+                    "after_run": false,
+                    "prompt": "Review this result before continuing."
+                  },
+                  "review_state": {
+                    "status": "off",
+                    "comment": null
+                  }
+                },
+                "node_id": null,
+                "params": null,
+                "changes": null,
+                "edge": null,
+                "edge_id": null,
+                "replacement_node": null,
+                "reconnect_edges": null,
+                "proposal_id": null
+              },
+              {
+                "op": "add_node",
+                "node": {
+                  "id": "normalize_columns-1",
+                  "type": "normalize_columns",
+                  "tool_id": "normalize_columns",
+                  "tool_version": "1.0.0",
+                  "label": "Normalize / Column Mapping",
+                  "params": {},
+                  "position": {
+                    "x": 420,
+                    "y": 80
+                  },
+                  "status": "ready",
+                  "output": null,
+                  "preview": null,
+                  "review_policy": {
+                    "after_run": false,
+                    "prompt": "Review this result before continuing."
+                  },
+                  "review_state": {
+                    "status": "off",
+                    "comment": null
+                  }
+                },
+                "node_id": null,
+                "params": null,
+                "changes": null,
+                "edge": null,
+                "edge_id": null,
+                "replacement_node": null,
+                "reconnect_edges": null,
+                "proposal_id": null
+              },
+              {
+                "op": "add_node",
+                "node": {
+                  "id": "eis_basic_qc-1",
+                  "type": "eis_basic_qc",
+                  "tool_id": "eis_basic_qc",
+                  "tool_version": "1.0.0",
+                  "label": "EIS Basic Analysis",
+                  "params": {
+                    "min_frequency_hz": 10,
+                    "fit_model": "None",
+                    "frequency_column": "frequency_hz",
+                    "real_column": "z_real_ohm",
+                    "imag_column": "z_imag_ohm"
+                  },
+                  "position": {
+                    "x": 760,
+                    "y": 80
+                  },
+                  "status": "ready",
+                  "output": null,
+                  "preview": null,
+                  "review_policy": {
+                    "after_run": true,
+                    "prompt": "Review this result before continuing."
+                  },
+                  "review_state": {
+                    "status": "off",
+                    "comment": null
+                  }
+                },
+                "node_id": null,
+                "params": null,
+                "changes": null,
+                "edge": null,
+                "edge_id": null,
+                "replacement_node": null,
+                "reconnect_edges": null,
+                "proposal_id": null
+              },
+              {
+                "op": "connect",
+                "node": null,
+                "node_id": null,
+                "params": null,
+                "changes": null,
+                "edge": {
+                  "id": "raw_file_import-1-raw--normalize_columns-1-raw",
+                  "source": "raw_file_import-1",
+                  "source_port": "raw",
+                  "target": "normalize_columns-1",
+                  "target_port": "raw"
+                },
+                "edge_id": null,
+                "replacement_node": null,
+                "reconnect_edges": null,
+                "proposal_id": null
+              },
+              {
+                "op": "connect",
+                "node": null,
+                "node_id": null,
+                "params": null,
+                "changes": null,
+                "edge": {
+                  "id": "normalize_columns-1-table--eis_basic_qc-1-data",
+                  "source": "normalize_columns-1",
+                  "source_port": "table",
+                  "target": "eis_basic_qc-1",
+                  "target_port": "data"
+                },
+                "edge_id": null,
+                "replacement_node": null,
+                "reconnect_edges": null,
+                "proposal_id": null
+              }
+            ],
+            "rationale": "Saved from the MatFlow workflow editor",
+            "requires_human_confirmation": false
+          },
+          "before": {
+            "graph_id": "local-default",
+            "version": 0,
+            "revision": 0,
+            "updated_at": null,
+            "nodes": [],
+            "edges": [],
+            "history": []
+          }
+        }
+      ]
+    },
+    "completed": {
+      "graph_id": "local-default",
+      "version": 1,
+      "revision": 9,
+      "updated_at": "2026-10-21T02:31:13+00:00",
+      "nodes": [
+        {
+          "id": "raw_file_import-1",
+          "type": "raw_file_import",
+          "tool_id": "raw_file_import",
+          "tool_version": "1.0.0",
+          "label": "Raw File Import",
+          "params": {
+            "file_name": "measurement.csv",
+            "upload_id": "b9c995fdfcda4f0e997a529047340d74_eis_spectrum.csv"
+          },
+          "position": {
+            "x": 80,
+            "y": 80
+          },
+          "status": "completed",
+          "output": {
+            "kind": "RawData",
+            "upload_id": "b9c995fdfcda4f0e997a529047340d74_eis_spectrum.csv",
+            "rows": 13,
+            "columns": [
+              "frequency_hz",
+              "z_real_ohm",
+              "z_imag_ohm"
+            ],
+            "preview": [
+              {
+                "frequency_hz": 100000,
+                "z_real_ohm": 5.00001,
+                "z_imag_ohm": -0.01592
+              },
+              {
+                "frequency_hz": 50000,
+                "z_real_ohm": 5.00003,
+                "z_imag_ohm": -0.03183
+              },
+              {
+                "frequency_hz": 20000,
+                "z_real_ohm": 5.00016,
+                "z_imag_ohm": -0.07958
+              },
+              {
+                "frequency_hz": 10000,
+                "z_real_ohm": 5.00063,
+                "z_imag_ohm": -0.15915
+              },
+              {
+                "frequency_hz": 5000,
+                "z_real_ohm": 5.00253,
+                "z_imag_ohm": -0.31829
+              },
+              {
+                "frequency_hz": 2000,
+                "z_real_ohm": 5.01583,
+                "z_imag_ohm": -0.79546
+              },
+              {
+                "frequency_hz": 1000,
+                "z_real_ohm": 5.06323,
+                "z_imag_ohm": -1.58903
+              },
+              {
+                "frequency_hz": 500,
+                "z_real_ohm": 5.25171,
+                "z_imag_ohm": -3.16307
+              }
+            ]
+          },
+          "preview": {
+            "kind": "table",
+            "port": "raw",
+            "rows": [
+              {
+                "frequency_hz": 100000,
+                "z_real_ohm": 5.00001,
+                "z_imag_ohm": -0.01592
+              },
+              {
+                "frequency_hz": 50000,
+                "z_real_ohm": 5.00003,
+                "z_imag_ohm": -0.03183
+              },
+              {
+                "frequency_hz": 20000,
+                "z_real_ohm": 5.00016,
+                "z_imag_ohm": -0.07958
+              },
+              {
+                "frequency_hz": 10000,
+                "z_real_ohm": 5.00063,
+                "z_imag_ohm": -0.15915
+              },
+              {
+                "frequency_hz": 5000,
+                "z_real_ohm": 5.00253,
+                "z_imag_ohm": -0.31829
+              },
+              {
+                "frequency_hz": 2000,
+                "z_real_ohm": 5.01583,
+                "z_imag_ohm": -0.79546
+              },
+              {
+                "frequency_hz": 1000,
+                "z_real_ohm": 5.06323,
+                "z_imag_ohm": -1.58903
+              },
+              {
+                "frequency_hz": 500,
+                "z_real_ohm": 5.25171,
+                "z_imag_ohm": -3.16307
+              }
+            ],
+            "truncated": false
+          },
+          "review_policy": {
+            "after_run": false,
+            "prompt": "Review this result before continuing."
+          },
+          "review_state": {
+            "status": "off",
+            "comment": null
+          }
+        },
+        {
+          "id": "normalize_columns-1",
+          "type": "normalize_columns",
+          "tool_id": "normalize_columns",
+          "tool_version": "1.0.0",
+          "label": "Normalize / Column Mapping",
+          "params": {},
+          "position": {
+            "x": 420,
+            "y": 80
+          },
+          "status": "completed",
+          "output": {
+            "kind": "TypedTable",
+            "upload_id": "b9c995fdfcda4f0e997a529047340d74_eis_spectrum.csv",
+            "mapping": {},
+            "rows": 13
+          },
+          "preview": {
+            "kind": "json_tree",
+            "port": "table",
+            "data": {
+              "kind": "TypedTable",
+              "upload_id": "b9c995fdfcda4f0e997a529047340d74_eis_spectrum.csv",
+              "mapping": {},
+              "rows": 13
+            }
+          },
+          "review_policy": {
+            "after_run": false,
+            "prompt": "Review this result before continuing."
+          },
+          "review_state": {
+            "status": "off",
+            "comment": null
+          }
+        },
+        {
+          "id": "eis_basic_qc-1",
+          "type": "eis_basic_qc",
+          "tool_id": "eis_basic_qc",
+          "tool_version": "1.0.0",
+          "label": "EIS Basic Analysis",
+          "params": {
+            "min_frequency_hz": 10,
+            "fit_model": "None",
+            "frequency_column": "frequency_hz",
+            "real_column": "z_real_ohm",
+            "imag_column": "z_imag_ohm"
+          },
+          "position": {
+            "x": 760,
+            "y": 80
+          },
+          "status": "completed",
+          "output": {
+            "kind": "EISQCReport",
+            "upload_id": "b9c995fdfcda4f0e997a529047340d74_eis_spectrum.csv",
+            "mapping": {
+              "frequency_column": "frequency_hz",
+              "real_column": "z_real_ohm",
+              "imag_column": "z_imag_ohm"
+            },
+            "rows_valid": 13,
+            "rows_retained": 13,
+            "min_frequency_hz": 10,
+            "pass": true,
+            "issues": []
+          },
+          "preview": {
+            "kind": "json_tree",
+            "port": "report",
+            "data": {
+              "kind": "EISQCReport",
+              "upload_id": "b9c995fdfcda4f0e997a529047340d74_eis_spectrum.csv",
+              "mapping": {
+                "frequency_column": "frequency_hz",
+                "real_column": "z_real_ohm",
+                "imag_column": "z_imag_ohm"
+              },
+              "rows_valid": 13,
+              "rows_retained": 13,
+              "min_frequency_hz": 10,
+              "pass": true,
+              "issues": []
+            }
+          },
+          "review_policy": {
+            "after_run": true,
+            "prompt": "Review this result before continuing."
+          },
+          "review_state": {
+            "status": "approved",
+            "comment": null
+          }
+        }
+      ],
+      "edges": [
+        {
+          "id": "raw_file_import-1-raw--normalize_columns-1-raw",
+          "source": "raw_file_import-1",
+          "source_port": "raw",
+          "target": "normalize_columns-1",
+          "target_port": "raw"
+        },
+        {
+          "id": "normalize_columns-1-table--eis_basic_qc-1-data",
+          "source": "normalize_columns-1",
+          "source_port": "table",
+          "target": "eis_basic_qc-1",
+          "target_port": "data"
+        }
+      ],
+      "history": [
+        {
+          "version": 1,
+          "patch": {
+            "patch_id": "862d4a0e-1cd8-41d5-b5c0-21313ac8c7df",
+            "base_version": 0,
+            "operations": [
+              {
+                "op": "add_node",
+                "node": {
+                  "id": "raw_file_import-1",
+                  "type": "raw_file_import",
+                  "tool_id": "raw_file_import",
+                  "tool_version": "1.0.0",
+                  "label": "Raw File Import",
+                  "params": {
+                    "file_name": "measurement.csv",
+                    "upload_id": "b9c995fdfcda4f0e997a529047340d74_eis_spectrum.csv"
+                  },
+                  "position": {
+                    "x": 80,
+                    "y": 80
+                  },
+                  "status": "ready",
+                  "output": null,
+                  "preview": null,
+                  "review_policy": {
+                    "after_run": false,
+                    "prompt": "Review this result before continuing."
+                  },
+                  "review_state": {
+                    "status": "off",
+                    "comment": null
+                  }
+                },
+                "node_id": null,
+                "params": null,
+                "changes": null,
+                "edge": null,
+                "edge_id": null,
+                "replacement_node": null,
+                "reconnect_edges": null,
+                "proposal_id": null
+              },
+              {
+                "op": "add_node",
+                "node": {
+                  "id": "normalize_columns-1",
+                  "type": "normalize_columns",
+                  "tool_id": "normalize_columns",
+                  "tool_version": "1.0.0",
+                  "label": "Normalize / Column Mapping",
+                  "params": {},
+                  "position": {
+                    "x": 420,
+                    "y": 80
+                  },
+                  "status": "ready",
+                  "output": null,
+                  "preview": null,
+                  "review_policy": {
+                    "after_run": false,
+                    "prompt": "Review this result before continuing."
+                  },
+                  "review_state": {
+                    "status": "off",
+                    "comment": null
+                  }
+                },
+                "node_id": null,
+                "params": null,
+                "changes": null,
+                "edge": null,
+                "edge_id": null,
+                "replacement_node": null,
+                "reconnect_edges": null,
+                "proposal_id": null
+              },
+              {
+                "op": "add_node",
+                "node": {
+                  "id": "eis_basic_qc-1",
+                  "type": "eis_basic_qc",
+                  "tool_id": "eis_basic_qc",
+                  "tool_version": "1.0.0",
+                  "label": "EIS Basic Analysis",
+                  "params": {
+                    "min_frequency_hz": 10,
+                    "fit_model": "None",
+                    "frequency_column": "frequency_hz",
+                    "real_column": "z_real_ohm",
+                    "imag_column": "z_imag_ohm"
+                  },
+                  "position": {
+                    "x": 760,
+                    "y": 80
+                  },
+                  "status": "ready",
+                  "output": null,
+                  "preview": null,
+                  "review_policy": {
+                    "after_run": true,
+                    "prompt": "Review this result before continuing."
+                  },
+                  "review_state": {
+                    "status": "off",
+                    "comment": null
+                  }
+                },
+                "node_id": null,
+                "params": null,
+                "changes": null,
+                "edge": null,
+                "edge_id": null,
+                "replacement_node": null,
+                "reconnect_edges": null,
+                "proposal_id": null
+              },
+              {
+                "op": "connect",
+                "node": null,
+                "node_id": null,
+                "params": null,
+                "changes": null,
+                "edge": {
+                  "id": "raw_file_import-1-raw--normalize_columns-1-raw",
+                  "source": "raw_file_import-1",
+                  "source_port": "raw",
+                  "target": "normalize_columns-1",
+                  "target_port": "raw"
+                },
+                "edge_id": null,
+                "replacement_node": null,
+                "reconnect_edges": null,
+                "proposal_id": null
+              },
+              {
+                "op": "connect",
+                "node": null,
+                "node_id": null,
+                "params": null,
+                "changes": null,
+                "edge": {
+                  "id": "normalize_columns-1-table--eis_basic_qc-1-data",
+                  "source": "normalize_columns-1",
+                  "source_port": "table",
+                  "target": "eis_basic_qc-1",
+                  "target_port": "data"
+                },
+                "edge_id": null,
+                "replacement_node": null,
+                "reconnect_edges": null,
+                "proposal_id": null
+              }
+            ],
+            "rationale": "Saved from the MatFlow workflow editor",
+            "requires_human_confirmation": false
+          },
+          "before": {
+            "graph_id": "local-default",
+            "version": 0,
+            "revision": 0,
+            "updated_at": null,
+            "nodes": [],
+            "edges": [],
+            "history": []
+          }
+        }
+      ]
+    },
+    "cleared": {
+      "graph_id": "local-default",
+      "version": 2,
+      "revision": 10,
+      "updated_at": "2026-10-21T02:31:13+00:00",
+      "nodes": [],
+      "edges": [],
+      "history": [
+        {
+          "version": 1,
+          "patch": {
+            "patch_id": "862d4a0e-1cd8-41d5-b5c0-21313ac8c7df",
+            "base_version": 0,
+            "operations": [
+              {
+                "op": "add_node",
+                "node": {
+                  "id": "raw_file_import-1",
+                  "type": "raw_file_import",
+                  "tool_id": "raw_file_import",
+                  "tool_version": "1.0.0",
+                  "label": "Raw File Import",
+                  "params": {
+                    "file_name": "measurement.csv",
+                    "upload_id": "b9c995fdfcda4f0e997a529047340d74_eis_spectrum.csv"
+                  },
+                  "position": {
+                    "x": 80,
+                    "y": 80
+                  },
+                  "status": "ready",
+                  "output": null,
+                  "preview": null,
+                  "review_policy": {
+                    "after_run": false,
+                    "prompt": "Review this result before continuing."
+                  },
+                  "review_state": {
+                    "status": "off",
+                    "comment": null
+                  }
+                },
+                "node_id": null,
+                "params": null,
+                "changes": null,
+                "edge": null,
+                "edge_id": null,
+                "replacement_node": null,
+                "reconnect_edges": null,
+                "proposal_id": null
+              },
+              {
+                "op": "add_node",
+                "node": {
+                  "id": "normalize_columns-1",
+                  "type": "normalize_columns",
+                  "tool_id": "normalize_columns",
+                  "tool_version": "1.0.0",
+                  "label": "Normalize / Column Mapping",
+                  "params": {},
+                  "position": {
+                    "x": 420,
+                    "y": 80
+                  },
+                  "status": "ready",
+                  "output": null,
+                  "preview": null,
+                  "review_policy": {
+                    "after_run": false,
+                    "prompt": "Review this result before continuing."
+                  },
+                  "review_state": {
+                    "status": "off",
+                    "comment": null
+                  }
+                },
+                "node_id": null,
+                "params": null,
+                "changes": null,
+                "edge": null,
+                "edge_id": null,
+                "replacement_node": null,
+                "reconnect_edges": null,
+                "proposal_id": null
+              },
+              {
+                "op": "add_node",
+                "node": {
+                  "id": "eis_basic_qc-1",
+                  "type": "eis_basic_qc",
+                  "tool_id": "eis_basic_qc",
+                  "tool_version": "1.0.0",
+                  "label": "EIS Basic Analysis",
+                  "params": {
+                    "min_frequency_hz": 10,
+                    "fit_model": "None",
+                    "frequency_column": "frequency_hz",
+                    "real_column": "z_real_ohm",
+                    "imag_column": "z_imag_ohm"
+                  },
+                  "position": {
+                    "x": 760,
+                    "y": 80
+                  },
+                  "status": "ready",
+                  "output": null,
+                  "preview": null,
+                  "review_policy": {
+                    "after_run": true,
+                    "prompt": "Review this result before continuing."
+                  },
+                  "review_state": {
+                    "status": "off",
+                    "comment": null
+                  }
+                },
+                "node_id": null,
+                "params": null,
+                "changes": null,
+                "edge": null,
+                "edge_id": null,
+                "replacement_node": null,
+                "reconnect_edges": null,
+                "proposal_id": null
+              },
+              {
+                "op": "connect",
+                "node": null,
+                "node_id": null,
+                "params": null,
+                "changes": null,
+                "edge": {
+                  "id": "raw_file_import-1-raw--normalize_columns-1-raw",
+                  "source": "raw_file_import-1",
+                  "source_port": "raw",
+                  "target": "normalize_columns-1",
+                  "target_port": "raw"
+                },
+                "edge_id": null,
+                "replacement_node": null,
+                "reconnect_edges": null,
+                "proposal_id": null
+              },
+              {
+                "op": "connect",
+                "node": null,
+                "node_id": null,
+                "params": null,
+                "changes": null,
+                "edge": {
+                  "id": "normalize_columns-1-table--eis_basic_qc-1-data",
+                  "source": "normalize_columns-1",
+                  "source_port": "table",
+                  "target": "eis_basic_qc-1",
+                  "target_port": "data"
+                },
+                "edge_id": null,
+                "replacement_node": null,
+                "reconnect_edges": null,
+                "proposal_id": null
+              }
+            ],
+            "rationale": "Saved from the MatFlow workflow editor",
+            "requires_human_confirmation": false
+          },
+          "before": {
+            "graph_id": "local-default",
+            "version": 0,
+            "revision": 0,
+            "updated_at": null,
+            "nodes": [],
+            "edges": [],
+            "history": []
+          }
+        },
+        {
+          "version": 2,
+          "patch": {
+            "patch_id": "0adbe56d-42fd-49c9-9f79-de3c4f4efc15",
+            "base_version": 1,
+            "operations": [
+              {
+                "op": "disconnect",
+                "node": null,
+                "node_id": null,
+                "params": null,
+                "changes": null,
+                "edge": null,
+                "edge_id": "raw_file_import-1-raw--normalize_columns-1-raw",
+                "replacement_node": null,
+                "reconnect_edges": null,
+                "proposal_id": null
+              },
+              {
+                "op": "disconnect",
+                "node": null,
+                "node_id": null,
+                "params": null,
+                "changes": null,
+                "edge": null,
+                "edge_id": "normalize_columns-1-table--eis_basic_qc-1-data",
+                "replacement_node": null,
+                "reconnect_edges": null,
+                "proposal_id": null
+              },
+              {
+                "op": "delete_node",
+                "node": null,
+                "node_id": "raw_file_import-1",
+                "params": null,
+                "changes": null,
+                "edge": null,
+                "edge_id": null,
+                "replacement_node": null,
+                "reconnect_edges": null,
+                "proposal_id": null
+              },
+              {
+                "op": "delete_node",
+                "node": null,
+                "node_id": "normalize_columns-1",
+                "params": null,
+                "changes": null,
+                "edge": null,
+                "edge_id": null,
+                "replacement_node": null,
+                "reconnect_edges": null,
+                "proposal_id": null
+              },
+              {
+                "op": "delete_node",
+                "node": null,
+                "node_id": "eis_basic_qc-1",
+                "params": null,
+                "changes": null,
+                "edge": null,
+                "edge_id": null,
+                "replacement_node": null,
+                "reconnect_edges": null,
+                "proposal_id": null
+              }
+            ],
+            "rationale": "Saved from the MatFlow workflow editor",
+            "requires_human_confirmation": false
+          },
+          "before": {
+            "graph_id": "local-default",
+            "version": 1,
+            "revision": 9,
+            "updated_at": "2026-10-21T02:31:13+00:00",
+            "nodes": [
+              {
+                "id": "raw_file_import-1",
+                "type": "raw_file_import",
+                "tool_id": "raw_file_import",
+                "tool_version": "1.0.0",
+                "label": "Raw File Import",
+                "params": {
+                  "file_name": "measurement.csv",
+                  "upload_id": "b9c995fdfcda4f0e997a529047340d74_eis_spectrum.csv"
+                },
+                "position": {
+                  "x": 80,
+                  "y": 80
+                },
+                "status": "completed",
+                "output": {
+                  "kind": "RawData",
+                  "upload_id": "b9c995fdfcda4f0e997a529047340d74_eis_spectrum.csv",
+                  "rows": 13,
+                  "columns": [
+                    "frequency_hz",
+                    "z_real_ohm",
+                    "z_imag_ohm"
+                  ],
+                  "preview": [
+                    {
+                      "frequency_hz": 100000,
+                      "z_real_ohm": 5.00001,
+                      "z_imag_ohm": -0.01592
+                    },
+                    {
+                      "frequency_hz": 50000,
+                      "z_real_ohm": 5.00003,
+                      "z_imag_ohm": -0.03183
+                    },
+                    {
+                      "frequency_hz": 20000,
+                      "z_real_ohm": 5.00016,
+                      "z_imag_ohm": -0.07958
+                    },
+                    {
+                      "frequency_hz": 10000,
+                      "z_real_ohm": 5.00063,
+                      "z_imag_ohm": -0.15915
+                    },
+                    {
+                      "frequency_hz": 5000,
+                      "z_real_ohm": 5.00253,
+                      "z_imag_ohm": -0.31829
+                    },
+                    {
+                      "frequency_hz": 2000,
+                      "z_real_ohm": 5.01583,
+                      "z_imag_ohm": -0.79546
+                    },
+                    {
+                      "frequency_hz": 1000,
+                      "z_real_ohm": 5.06323,
+                      "z_imag_ohm": -1.58903
+                    },
+                    {
+                      "frequency_hz": 500,
+                      "z_real_ohm": 5.25171,
+                      "z_imag_ohm": -3.16307
+                    }
+                  ]
+                },
+                "preview": {
+                  "kind": "table",
+                  "port": "raw",
+                  "rows": [
+                    {
+                      "frequency_hz": 100000,
+                      "z_real_ohm": 5.00001,
+                      "z_imag_ohm": -0.01592
+                    },
+                    {
+                      "frequency_hz": 50000,
+                      "z_real_ohm": 5.00003,
+                      "z_imag_ohm": -0.03183
+                    },
+                    {
+                      "frequency_hz": 20000,
+                      "z_real_ohm": 5.00016,
+                      "z_imag_ohm": -0.07958
+                    },
+                    {
+                      "frequency_hz": 10000,
+                      "z_real_ohm": 5.00063,
+                      "z_imag_ohm": -0.15915
+                    },
+                    {
+                      "frequency_hz": 5000,
+                      "z_real_ohm": 5.00253,
+                      "z_imag_ohm": -0.31829
+                    },
+                    {
+                      "frequency_hz": 2000,
+                      "z_real_ohm": 5.01583,
+                      "z_imag_ohm": -0.79546
+                    },
+                    {
+                      "frequency_hz": 1000,
+                      "z_real_ohm": 5.06323,
+                      "z_imag_ohm": -1.58903
+                    },
+                    {
+                      "frequency_hz": 500,
+                      "z_real_ohm": 5.25171,
+                      "z_imag_ohm": -3.16307
+                    }
+                  ],
+                  "truncated": false
+                },
+                "review_policy": {
+                  "after_run": false,
+                  "prompt": "Review this result before continuing."
+                },
+                "review_state": {
+                  "status": "off",
+                  "comment": null
+                }
+              },
+              {
+                "id": "normalize_columns-1",
+                "type": "normalize_columns",
+                "tool_id": "normalize_columns",
+                "tool_version": "1.0.0",
+                "label": "Normalize / Column Mapping",
+                "params": {},
+                "position": {
+                  "x": 420,
+                  "y": 80
+                },
+                "status": "completed",
+                "output": {
+                  "kind": "TypedTable",
+                  "upload_id": "b9c995fdfcda4f0e997a529047340d74_eis_spectrum.csv",
+                  "mapping": {},
+                  "rows": 13
+                },
+                "preview": {
+                  "kind": "json_tree",
+                  "port": "table",
+                  "data": {
+                    "kind": "TypedTable",
+                    "upload_id": "b9c995fdfcda4f0e997a529047340d74_eis_spectrum.csv",
+                    "mapping": {},
+                    "rows": 13
+                  }
+                },
+                "review_policy": {
+                  "after_run": false,
+                  "prompt": "Review this result before continuing."
+                },
+                "review_state": {
+                  "status": "off",
+                  "comment": null
+                }
+              },
+              {
+                "id": "eis_basic_qc-1",
+                "type": "eis_basic_qc",
+                "tool_id": "eis_basic_qc",
+                "tool_version": "1.0.0",
+                "label": "EIS Basic Analysis",
+                "params": {
+                  "min_frequency_hz": 10,
+                  "fit_model": "None",
+                  "frequency_column": "frequency_hz",
+                  "real_column": "z_real_ohm",
+                  "imag_column": "z_imag_ohm"
+                },
+                "position": {
+                  "x": 760,
+                  "y": 80
+                },
+                "status": "completed",
+                "output": {
+                  "kind": "EISQCReport",
+                  "upload_id": "b9c995fdfcda4f0e997a529047340d74_eis_spectrum.csv",
+                  "mapping": {
+                    "frequency_column": "frequency_hz",
+                    "real_column": "z_real_ohm",
+                    "imag_column": "z_imag_ohm"
+                  },
+                  "rows_valid": 13,
+                  "rows_retained": 13,
+                  "min_frequency_hz": 10,
+                  "pass": true,
+                  "issues": []
+                },
+                "preview": {
+                  "kind": "json_tree",
+                  "port": "report",
+                  "data": {
+                    "kind": "EISQCReport",
+                    "upload_id": "b9c995fdfcda4f0e997a529047340d74_eis_spectrum.csv",
+                    "mapping": {
+                      "frequency_column": "frequency_hz",
+                      "real_column": "z_real_ohm",
+                      "imag_column": "z_imag_ohm"
+                    },
+                    "rows_valid": 13,
+                    "rows_retained": 13,
+                    "min_frequency_hz": 10,
+                    "pass": true,
+                    "issues": []
+                  }
+                },
+                "review_policy": {
+                  "after_run": true,
+                  "prompt": "Review this result before continuing."
+                },
+                "review_state": {
+                  "status": "approved",
+                  "comment": null
+                }
+              }
+            ],
+            "edges": [
+              {
+                "id": "raw_file_import-1-raw--normalize_columns-1-raw",
+                "source": "raw_file_import-1",
+                "source_port": "raw",
+                "target": "normalize_columns-1",
+                "target_port": "raw"
+              },
+              {
+                "id": "normalize_columns-1-table--eis_basic_qc-1-data",
+                "source": "normalize_columns-1",
+                "source_port": "table",
+                "target": "eis_basic_qc-1",
+                "target_port": "data"
+              }
+            ],
+            "history": [
+              {
+                "version": 1,
+                "patch": {
+                  "patch_id": "862d4a0e-1cd8-41d5-b5c0-21313ac8c7df",
+                  "base_version": 0,
+                  "operations": [
+                    {
+                      "op": "add_node",
+                      "node": {
+                        "id": "raw_file_import-1",
+                        "type": "raw_file_import",
+                        "tool_id": "raw_file_import",
+                        "tool_version": "1.0.0",
+                        "label": "Raw File Import",
+                        "params": {
+                          "file_name": "measurement.csv",
+                          "upload_id": "b9c995fdfcda4f0e997a529047340d74_eis_spectrum.csv"
+                        },
+                        "position": {
+                          "x": 80,
+                          "y": 80
+                        },
+                        "status": "ready",
+                        "output": null,
+                        "preview": null,
+                        "review_policy": {
+                          "after_run": false,
+                          "prompt": "Review this result before continuing."
+                        },
+                        "review_state": {
+                          "status": "off",
+                          "comment": null
+                        }
+                      },
+                      "node_id": null,
+                      "params": null,
+                      "changes": null,
+                      "edge": null,
+                      "edge_id": null,
+                      "replacement_node": null,
+                      "reconnect_edges": null,
+                      "proposal_id": null
+                    },
+                    {
+                      "op": "add_node",
+                      "node": {
+                        "id": "normalize_columns-1",
+                        "type": "normalize_columns",
+                        "tool_id": "normalize_columns",
+                        "tool_version": "1.0.0",
+                        "label": "Normalize / Column Mapping",
+                        "params": {},
+                        "position": {
+                          "x": 420,
+                          "y": 80
+                        },
+                        "status": "ready",
+                        "output": null,
+                        "preview": null,
+                        "review_policy": {
+                          "after_run": false,
+                          "prompt": "Review this result before continuing."
+                        },
+                        "review_state": {
+                          "status": "off",
+                          "comment": null
+                        }
+                      },
+                      "node_id": null,
+                      "params": null,
+                      "changes": null,
+                      "edge": null,
+                      "edge_id": null,
+                      "replacement_node": null,
+                      "reconnect_edges": null,
+                      "proposal_id": null
+                    },
+                    {
+                      "op": "add_node",
+                      "node": {
+                        "id": "eis_basic_qc-1",
+                        "type": "eis_basic_qc",
+                        "tool_id": "eis_basic_qc",
+                        "tool_version": "1.0.0",
+                        "label": "EIS Basic Analysis",
+                        "params": {
+                          "min_frequency_hz": 10,
+                          "fit_model": "None",
+                          "frequency_column": "frequency_hz",
+                          "real_column": "z_real_ohm",
+                          "imag_column": "z_imag_ohm"
+                        },
+                        "position": {
+                          "x": 760,
+                          "y": 80
+                        },
+                        "status": "ready",
+                        "output": null,
+                        "preview": null,
+                        "review_policy": {
+                          "after_run": true,
+                          "prompt": "Review this result before continuing."
+                        },
+                        "review_state": {
+                          "status": "off",
+                          "comment": null
+                        }
+                      },
+                      "node_id": null,
+                      "params": null,
+                      "changes": null,
+                      "edge": null,
+                      "edge_id": null,
+                      "replacement_node": null,
+                      "reconnect_edges": null,
+                      "proposal_id": null
+                    },
+                    {
+                      "op": "connect",
+                      "node": null,
+                      "node_id": null,
+                      "params": null,
+                      "changes": null,
+                      "edge": {
+                        "id": "raw_file_import-1-raw--normalize_columns-1-raw",
+                        "source": "raw_file_import-1",
+                        "source_port": "raw",
+                        "target": "normalize_columns-1",
+                        "target_port": "raw"
+                      },
+                      "edge_id": null,
+                      "replacement_node": null,
+                      "reconnect_edges": null,
+                      "proposal_id": null
+                    },
+                    {
+                      "op": "connect",
+                      "node": null,
+                      "node_id": null,
+                      "params": null,
+                      "changes": null,
+                      "edge": {
+                        "id": "normalize_columns-1-table--eis_basic_qc-1-data",
+                        "source": "normalize_columns-1",
+                        "source_port": "table",
+                        "target": "eis_basic_qc-1",
+                        "target_port": "data"
+                      },
+                      "edge_id": null,
+                      "replacement_node": null,
+                      "reconnect_edges": null,
+                      "proposal_id": null
+                    }
+                  ],
+                  "rationale": "Saved from the MatFlow workflow editor",
+                  "requires_human_confirmation": false
+                },
+                "before": {
+                  "graph_id": "local-default",
+                  "version": 0,
+                  "revision": 0,
+                  "updated_at": null,
+                  "nodes": [],
+                  "edges": [],
+                  "history": []
+                }
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "qe": {
+      "graph_id": "local-default",
+      "version": 3,
+      "revision": 20,
+      "updated_at": "2026-10-21T02:31:13+00:00",
+      "nodes": [
+        {
+          "id": "qe-demo-structure",
+          "type": "qe_structure",
+          "tool_id": "qe_structure",
+          "tool_version": "1.0.0",
+          "label": "MgO structure",
+          "params": {
+            "cell": [
+              [
+                8.424,
+                0,
+                0
+              ],
+              [
+                0,
+                8.424,
+                0
+              ],
+              [
+                0,
+                0,
+                8.424
+              ]
+            ],
+            "cell_unit": "angstrom",
+            "positions": [
+              {
+                "element": "Mg",
+                "coordinates": [
+                  0,
+                  0,
+                  0
+                ]
+              },
+              {
+                "element": "Mg",
+                "coordinates": [
+                  0,
+                  0.25,
+                  0.25
+                ]
+              },
+              {
+                "element": "Mg",
+                "coordinates": [
+                  0.25,
+                  0,
+                  0.25
+                ]
+              },
+              {
+                "element": "Mg",
+                "coordinates": [
+                  0.25,
+                  0.25,
+                  0
+                ]
+              },
+              {
+                "element": "O",
+                "coordinates": [
+                  0.25,
+                  0,
+                  0
+                ]
+              },
+              {
+                "element": "O",
+                "coordinates": [
+                  0,
+                  0.25,
+                  0
+                ]
+              },
+              {
+                "element": "O",
+                "coordinates": [
+                  0,
+                  0,
+                  0.25
+                ]
+              },
+              {
+                "element": "O",
+                "coordinates": [
+                  0.25,
+                  0.25,
+                  0.25
+                ]
+              },
+              {
+                "element": "Mg",
+                "coordinates": [
+                  0,
+                  0,
+                  0.5
+                ]
+              },
+              {
+                "element": "Mg",
+                "coordinates": [
+                  0,
+                  0.25,
+                  0.75
+                ]
+              },
+              {
+                "element": "Mg",
+                "coordinates": [
+                  0.25,
+                  0,
+                  0.75
+                ]
+              },
+              {
+                "element": "Mg",
+                "coordinates": [
+                  0.25,
+                  0.25,
+                  0.5
+                ]
+              },
+              {
+                "element": "O",
+                "coordinates": [
+                  0.25,
+                  0,
+                  0.5
+                ]
+              },
+              {
+                "element": "O",
+                "coordinates": [
+                  0,
+                  0.25,
+                  0.5
+                ]
+              },
+              {
+                "element": "O",
+                "coordinates": [
+                  0,
+                  0,
+                  0.75
+                ]
+              },
+              {
+                "element": "O",
+                "coordinates": [
+                  0.25,
+                  0.25,
+                  0.75
+                ]
+              },
+              {
+                "element": "Mg",
+                "coordinates": [
+                  0,
+                  0.5,
+                  0
+                ]
+              },
+              {
+                "element": "Mg",
+                "coordinates": [
+                  0,
+                  0.75,
+                  0.25
+                ]
+              },
+              {
+                "element": "Mg",
+                "coordinates": [
+                  0.25,
+                  0.5,
+                  0.25
+                ]
+              },
+              {
+                "element": "Mg",
+                "coordinates": [
+                  0.25,
+                  0.75,
+                  0
+                ]
+              },
+              {
+                "element": "O",
+                "coordinates": [
+                  0.25,
+                  0.5,
+                  0
+                ]
+              },
+              {
+                "element": "O",
+                "coordinates": [
+                  0,
+                  0.75,
+                  0
+                ]
+              },
+              {
+                "element": "O",
+                "coordinates": [
+                  0,
+                  0.5,
+                  0.25
+                ]
+              },
+              {
+                "element": "O",
+                "coordinates": [
+                  0.25,
+                  0.75,
+                  0.25
+                ]
+              },
+              {
+                "element": "Mg",
+                "coordinates": [
+                  0,
+                  0.5,
+                  0.5
+                ]
+              },
+              {
+                "element": "Mg",
+                "coordinates": [
+                  0,
+                  0.75,
+                  0.75
+                ]
+              },
+              {
+                "element": "Mg",
+                "coordinates": [
+                  0.25,
+                  0.5,
+                  0.75
+                ]
+              },
+              {
+                "element": "Mg",
+                "coordinates": [
+                  0.25,
+                  0.75,
+                  0.5
+                ]
+              },
+              {
+                "element": "O",
+                "coordinates": [
+                  0.25,
+                  0.5,
+                  0.5
+                ]
+              },
+              {
+                "element": "O",
+                "coordinates": [
+                  0,
+                  0.75,
+                  0.5
+                ]
+              },
+              {
+                "element": "O",
+                "coordinates": [
+                  0,
+                  0.5,
+                  0.75
+                ]
+              },
+              {
+                "element": "O",
+                "coordinates": [
+                  0.25,
+                  0.75,
+                  0.75
+                ]
+              },
+              {
+                "element": "Mg",
+                "coordinates": [
+                  0.5,
+                  0,
+                  0
+                ]
+              },
+              {
+                "element": "Mg",
+                "coordinates": [
+                  0.5,
+                  0.25,
+                  0.25
+                ]
+              },
+              {
+                "element": "Mg",
+                "coordinates": [
+                  0.75,
+                  0,
+                  0.25
+                ]
+              },
+              {
+                "element": "Mg",
+                "coordinates": [
+                  0.75,
+                  0.25,
+                  0
+                ]
+              },
+              {
+                "element": "O",
+                "coordinates": [
+                  0.75,
+                  0,
+                  0
+                ]
+              },
+              {
+                "element": "O",
+                "coordinates": [
+                  0.5,
+                  0.25,
+                  0
+                ]
+              },
+              {
+                "element": "O",
+                "coordinates": [
+                  0.5,
+                  0,
+                  0.25
+                ]
+              },
+              {
+                "element": "O",
+                "coordinates": [
+                  0.75,
+                  0.25,
+                  0.25
+                ]
+              },
+              {
+                "element": "Mg",
+                "coordinates": [
+                  0.5,
+                  0,
+                  0.5
+                ]
+              },
+              {
+                "element": "Mg",
+                "coordinates": [
+                  0.5,
+                  0.25,
+                  0.75
+                ]
+              },
+              {
+                "element": "Mg",
+                "coordinates": [
+                  0.75,
+                  0,
+                  0.75
+                ]
+              },
+              {
+                "element": "Mg",
+                "coordinates": [
+                  0.75,
+                  0.25,
+                  0.5
+                ]
+              },
+              {
+                "element": "O",
+                "coordinates": [
+                  0.75,
+                  0,
+                  0.5
+                ]
+              },
+              {
+                "element": "O",
+                "coordinates": [
+                  0.5,
+                  0.25,
+                  0.5
+                ]
+              },
+              {
+                "element": "O",
+                "coordinates": [
+                  0.5,
+                  0,
+                  0.75
+                ]
+              },
+              {
+                "element": "O",
+                "coordinates": [
+                  0.75,
+                  0.25,
+                  0.75
+                ]
+              },
+              {
+                "element": "Mg",
+                "coordinates": [
+                  0.5,
+                  0.5,
+                  0
+                ]
+              },
+              {
+                "element": "Mg",
+                "coordinates": [
+                  0.5,
+                  0.75,
+                  0.25
+                ]
+              },
+              {
+                "element": "Mg",
+                "coordinates": [
+                  0.75,
+                  0.5,
+                  0.25
+                ]
+              },
+              {
+                "element": "Mg",
+                "coordinates": [
+                  0.75,
+                  0.75,
+                  0
+                ]
+              },
+              {
+                "element": "O",
+                "coordinates": [
+                  0.75,
+                  0.5,
+                  0
+                ]
+              },
+              {
+                "element": "O",
+                "coordinates": [
+                  0.5,
+                  0.75,
+                  0
+                ]
+              },
+              {
+                "element": "O",
+                "coordinates": [
+                  0.5,
+                  0.5,
+                  0.25
+                ]
+              },
+              {
+                "element": "O",
+                "coordinates": [
+                  0.75,
+                  0.75,
+                  0.25
+                ]
+              },
+              {
+                "element": "Mg",
+                "coordinates": [
+                  0.5,
+                  0.5,
+                  0.5
+                ]
+              },
+              {
+                "element": "Mg",
+                "coordinates": [
+                  0.5,
+                  0.75,
+                  0.75
+                ]
+              },
+              {
+                "element": "Mg",
+                "coordinates": [
+                  0.75,
+                  0.5,
+                  0.75
+                ]
+              },
+              {
+                "element": "Mg",
+                "coordinates": [
+                  0.75,
+                  0.75,
+                  0.5
+                ]
+              },
+              {
+                "element": "O",
+                "coordinates": [
+                  0.75,
+                  0.5,
+                  0.5
+                ]
+              },
+              {
+                "element": "O",
+                "coordinates": [
+                  0.5,
+                  0.75,
+                  0.5
+                ]
+              },
+              {
+                "element": "O",
+                "coordinates": [
+                  0.5,
+                  0.5,
+                  0.75
+                ]
+              },
+              {
+                "element": "O",
+                "coordinates": [
+                  0.75,
+                  0.75,
+                  0.75
+                ]
+              }
+            ],
+            "position_unit": "crystal",
+            "pseudopotentials": {
+              "Mg": "Mg.pbe-n-kjpaw_psl.0.3.0.UPF",
+              "O": "O.pbe-n-kjpaw_psl.0.1.UPF"
+            }
+          },
+          "position": {
+            "x": 80,
+            "y": 150
+          },
+          "status": "completed",
+          "output": {
+            "kind": "CrystalStructure",
+            "cell": [
+              [
+                8.424,
+                0,
+                0
+              ],
+              [
+                0,
+                8.424,
+                0
+              ],
+              [
+                0,
+                0,
+                8.424
+              ]
+            ],
+            "cell_unit": "angstrom",
+            "positions": [
+              {
+                "element": "Mg",
+                "coordinates": [
+                  0,
+                  0,
+                  0
+                ]
+              },
+              {
+                "element": "Mg",
+                "coordinates": [
+                  0,
+                  0.25,
+                  0.25
+                ]
+              },
+              {
+                "element": "Mg",
+                "coordinates": [
+                  0.25,
+                  0,
+                  0.25
+                ]
+              },
+              {
+                "element": "Mg",
+                "coordinates": [
+                  0.25,
+                  0.25,
+                  0
+                ]
+              },
+              {
+                "element": "O",
+                "coordinates": [
+                  0.25,
+                  0,
+                  0
+                ]
+              },
+              {
+                "element": "O",
+                "coordinates": [
+                  0,
+                  0.25,
+                  0
+                ]
+              },
+              {
+                "element": "O",
+                "coordinates": [
+                  0,
+                  0,
+                  0.25
+                ]
+              },
+              {
+                "element": "O",
+                "coordinates": [
+                  0.25,
+                  0.25,
+                  0.25
+                ]
+              },
+              {
+                "element": "Mg",
+                "coordinates": [
+                  0,
+                  0,
+                  0.5
+                ]
+              },
+              {
+                "element": "Mg",
+                "coordinates": [
+                  0,
+                  0.25,
+                  0.75
+                ]
+              },
+              {
+                "element": "Mg",
+                "coordinates": [
+                  0.25,
+                  0,
+                  0.75
+                ]
+              },
+              {
+                "element": "Mg",
+                "coordinates": [
+                  0.25,
+                  0.25,
+                  0.5
+                ]
+              },
+              {
+                "element": "O",
+                "coordinates": [
+                  0.25,
+                  0,
+                  0.5
+                ]
+              },
+              {
+                "element": "O",
+                "coordinates": [
+                  0,
+                  0.25,
+                  0.5
+                ]
+              },
+              {
+                "element": "O",
+                "coordinates": [
+                  0,
+                  0,
+                  0.75
+                ]
+              },
+              {
+                "element": "O",
+                "coordinates": [
+                  0.25,
+                  0.25,
+                  0.75
+                ]
+              },
+              {
+                "element": "Mg",
+                "coordinates": [
+                  0,
+                  0.5,
+                  0
+                ]
+              },
+              {
+                "element": "Mg",
+                "coordinates": [
+                  0,
+                  0.75,
+                  0.25
+                ]
+              },
+              {
+                "element": "Mg",
+                "coordinates": [
+                  0.25,
+                  0.5,
+                  0.25
+                ]
+              },
+              {
+                "element": "Mg",
+                "coordinates": [
+                  0.25,
+                  0.75,
+                  0
+                ]
+              },
+              {
+                "element": "O",
+                "coordinates": [
+                  0.25,
+                  0.5,
+                  0
+                ]
+              },
+              {
+                "element": "O",
+                "coordinates": [
+                  0,
+                  0.75,
+                  0
+                ]
+              },
+              {
+                "element": "O",
+                "coordinates": [
+                  0,
+                  0.5,
+                  0.25
+                ]
+              },
+              {
+                "element": "O",
+                "coordinates": [
+                  0.25,
+                  0.75,
+                  0.25
+                ]
+              },
+              {
+                "element": "Mg",
+                "coordinates": [
+                  0,
+                  0.5,
+                  0.5
+                ]
+              },
+              {
+                "element": "Mg",
+                "coordinates": [
+                  0,
+                  0.75,
+                  0.75
+                ]
+              },
+              {
+                "element": "Mg",
+                "coordinates": [
+                  0.25,
+                  0.5,
+                  0.75
+                ]
+              },
+              {
+                "element": "Mg",
+                "coordinates": [
+                  0.25,
+                  0.75,
+                  0.5
+                ]
+              },
+              {
+                "element": "O",
+                "coordinates": [
+                  0.25,
+                  0.5,
+                  0.5
+                ]
+              },
+              {
+                "element": "O",
+                "coordinates": [
+                  0,
+                  0.75,
+                  0.5
+                ]
+              },
+              {
+                "element": "O",
+                "coordinates": [
+                  0,
+                  0.5,
+                  0.75
+                ]
+              },
+              {
+                "element": "O",
+                "coordinates": [
+                  0.25,
+                  0.75,
+                  0.75
+                ]
+              },
+              {
+                "element": "Mg",
+                "coordinates": [
+                  0.5,
+                  0,
+                  0
+                ]
+              },
+              {
+                "element": "Mg",
+                "coordinates": [
+                  0.5,
+                  0.25,
+                  0.25
+                ]
+              },
+              {
+                "element": "Mg",
+                "coordinates": [
+                  0.75,
+                  0,
+                  0.25
+                ]
+              },
+              {
+                "element": "Mg",
+                "coordinates": [
+                  0.75,
+                  0.25,
+                  0
+                ]
+              },
+              {
+                "element": "O",
+                "coordinates": [
+                  0.75,
+                  0,
+                  0
+                ]
+              },
+              {
+                "element": "O",
+                "coordinates": [
+                  0.5,
+                  0.25,
+                  0
+                ]
+              },
+              {
+                "element": "O",
+                "coordinates": [
+                  0.5,
+                  0,
+                  0.25
+                ]
+              },
+              {
+                "element": "O",
+                "coordinates": [
+                  0.75,
+                  0.25,
+                  0.25
+                ]
+              },
+              {
+                "element": "Mg",
+                "coordinates": [
+                  0.5,
+                  0,
+                  0.5
+                ]
+              },
+              {
+                "element": "Mg",
+                "coordinates": [
+                  0.5,
+                  0.25,
+                  0.75
+                ]
+              },
+              {
+                "element": "Mg",
+                "coordinates": [
+                  0.75,
+                  0,
+                  0.75
+                ]
+              },
+              {
+                "element": "Mg",
+                "coordinates": [
+                  0.75,
+                  0.25,
+                  0.5
+                ]
+              },
+              {
+                "element": "O",
+                "coordinates": [
+                  0.75,
+                  0,
+                  0.5
+                ]
+              },
+              {
+                "element": "O",
+                "coordinates": [
+                  0.5,
+                  0.25,
+                  0.5
+                ]
+              },
+              {
+                "element": "O",
+                "coordinates": [
+                  0.5,
+                  0,
+                  0.75
+                ]
+              },
+              {
+                "element": "O",
+                "coordinates": [
+                  0.75,
+                  0.25,
+                  0.75
+                ]
+              },
+              {
+                "element": "Mg",
+                "coordinates": [
+                  0.5,
+                  0.5,
+                  0
+                ]
+              },
+              {
+                "element": "Mg",
+                "coordinates": [
+                  0.5,
+                  0.75,
+                  0.25
+                ]
+              },
+              {
+                "element": "Mg",
+                "coordinates": [
+                  0.75,
+                  0.5,
+                  0.25
+                ]
+              },
+              {
+                "element": "Mg",
+                "coordinates": [
+                  0.75,
+                  0.75,
+                  0
+                ]
+              },
+              {
+                "element": "O",
+                "coordinates": [
+                  0.75,
+                  0.5,
+                  0
+                ]
+              },
+              {
+                "element": "O",
+                "coordinates": [
+                  0.5,
+                  0.75,
+                  0
+                ]
+              },
+              {
+                "element": "O",
+                "coordinates": [
+                  0.5,
+                  0.5,
+                  0.25
+                ]
+              },
+              {
+                "element": "O",
+                "coordinates": [
+                  0.75,
+                  0.75,
+                  0.25
+                ]
+              },
+              {
+                "element": "Mg",
+                "coordinates": [
+                  0.5,
+                  0.5,
+                  0.5
+                ]
+              },
+              {
+                "element": "Mg",
+                "coordinates": [
+                  0.5,
+                  0.75,
+                  0.75
+                ]
+              },
+              {
+                "element": "Mg",
+                "coordinates": [
+                  0.75,
+                  0.5,
+                  0.75
+                ]
+              },
+              {
+                "element": "Mg",
+                "coordinates": [
+                  0.75,
+                  0.75,
+                  0.5
+                ]
+              },
+              {
+                "element": "O",
+                "coordinates": [
+                  0.75,
+                  0.5,
+                  0.5
+                ]
+              },
+              {
+                "element": "O",
+                "coordinates": [
+                  0.5,
+                  0.75,
+                  0.5
+                ]
+              },
+              {
+                "element": "O",
+                "coordinates": [
+                  0.5,
+                  0.5,
+                  0.75
+                ]
+              },
+              {
+                "element": "O",
+                "coordinates": [
+                  0.75,
+                  0.75,
+                  0.75
+                ]
+              }
+            ],
+            "position_unit": "crystal",
+            "pseudopotentials": {
+              "Mg": "Mg.pbe-n-kjpaw_psl.0.3.0.UPF",
+              "O": "O.pbe-n-kjpaw_psl.0.1.UPF"
+            },
+            "composition": {
+              "Mg": 32,
+              "O": 32
+            }
+          },
+          "preview": {
+            "kind": "json_tree",
+            "port": "structure",
+            "data": {
+              "kind": "CrystalStructure",
+              "cell": [
+                [
+                  8.424,
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  8.424,
+                  0
+                ],
+                [
+                  0,
+                  0,
+                  8.424
+                ]
+              ],
+              "cell_unit": "angstrom",
+              "positions": [
+                {
+                  "element": "Mg",
+                  "coordinates": [
+                    0,
+                    0,
+                    0
+                  ]
+                },
+                {
+                  "element": "Mg",
+                  "coordinates": [
+                    0,
+                    0.25,
+                    0.25
+                  ]
+                },
+                {
+                  "element": "Mg",
+                  "coordinates": [
+                    0.25,
+                    0,
+                    0.25
+                  ]
+                },
+                {
+                  "element": "Mg",
+                  "coordinates": [
+                    0.25,
+                    0.25,
+                    0
+                  ]
+                },
+                {
+                  "element": "O",
+                  "coordinates": [
+                    0.25,
+                    0,
+                    0
+                  ]
+                },
+                {
+                  "element": "O",
+                  "coordinates": [
+                    0,
+                    0.25,
+                    0
+                  ]
+                },
+                {
+                  "element": "O",
+                  "coordinates": [
+                    0,
+                    0,
+                    0.25
+                  ]
+                },
+                {
+                  "element": "O",
+                  "coordinates": [
+                    0.25,
+                    0.25,
+                    0.25
+                  ]
+                },
+                {
+                  "element": "Mg",
+                  "coordinates": [
+                    0,
+                    0,
+                    0.5
+                  ]
+                },
+                {
+                  "element": "Mg",
+                  "coordinates": [
+                    0,
+                    0.25,
+                    0.75
+                  ]
+                },
+                {
+                  "element": "Mg",
+                  "coordinates": [
+                    0.25,
+                    0,
+                    0.75
+                  ]
+                },
+                {
+                  "element": "Mg",
+                  "coordinates": [
+                    0.25,
+                    0.25,
+                    0.5
+                  ]
+                },
+                {
+                  "element": "O",
+                  "coordinates": [
+                    0.25,
+                    0,
+                    0.5
+                  ]
+                },
+                {
+                  "element": "O",
+                  "coordinates": [
+                    0,
+                    0.25,
+                    0.5
+                  ]
+                },
+                {
+                  "element": "O",
+                  "coordinates": [
+                    0,
+                    0,
+                    0.75
+                  ]
+                },
+                {
+                  "element": "O",
+                  "coordinates": [
+                    0.25,
+                    0.25,
+                    0.75
+                  ]
+                },
+                {
+                  "element": "Mg",
+                  "coordinates": [
+                    0,
+                    0.5,
+                    0
+                  ]
+                },
+                {
+                  "element": "Mg",
+                  "coordinates": [
+                    0,
+                    0.75,
+                    0.25
+                  ]
+                },
+                {
+                  "element": "Mg",
+                  "coordinates": [
+                    0.25,
+                    0.5,
+                    0.25
+                  ]
+                },
+                {
+                  "element": "Mg",
+                  "coordinates": [
+                    0.25,
+                    0.75,
+                    0
+                  ]
+                },
+                {
+                  "element": "O",
+                  "coordinates": [
+                    0.25,
+                    0.5,
+                    0
+                  ]
+                },
+                {
+                  "element": "O",
+                  "coordinates": [
+                    0,
+                    0.75,
+                    0
+                  ]
+                },
+                {
+                  "element": "O",
+                  "coordinates": [
+                    0,
+                    0.5,
+                    0.25
+                  ]
+                },
+                {
+                  "element": "O",
+                  "coordinates": [
+                    0.25,
+                    0.75,
+                    0.25
+                  ]
+                },
+                {
+                  "element": "Mg",
+                  "coordinates": [
+                    0,
+                    0.5,
+                    0.5
+                  ]
+                },
+                {
+                  "element": "Mg",
+                  "coordinates": [
+                    0,
+                    0.75,
+                    0.75
+                  ]
+                },
+                {
+                  "element": "Mg",
+                  "coordinates": [
+                    0.25,
+                    0.5,
+                    0.75
+                  ]
+                },
+                {
+                  "element": "Mg",
+                  "coordinates": [
+                    0.25,
+                    0.75,
+                    0.5
+                  ]
+                },
+                {
+                  "element": "O",
+                  "coordinates": [
+                    0.25,
+                    0.5,
+                    0.5
+                  ]
+                },
+                {
+                  "element": "O",
+                  "coordinates": [
+                    0,
+                    0.75,
+                    0.5
+                  ]
+                },
+                {
+                  "element": "O",
+                  "coordinates": [
+                    0,
+                    0.5,
+                    0.75
+                  ]
+                },
+                {
+                  "element": "O",
+                  "coordinates": [
+                    0.25,
+                    0.75,
+                    0.75
+                  ]
+                },
+                {
+                  "element": "Mg",
+                  "coordinates": [
+                    0.5,
+                    0,
+                    0
+                  ]
+                },
+                {
+                  "element": "Mg",
+                  "coordinates": [
+                    0.5,
+                    0.25,
+                    0.25
+                  ]
+                },
+                {
+                  "element": "Mg",
+                  "coordinates": [
+                    0.75,
+                    0,
+                    0.25
+                  ]
+                },
+                {
+                  "element": "Mg",
+                  "coordinates": [
+                    0.75,
+                    0.25,
+                    0
+                  ]
+                },
+                {
+                  "element": "O",
+                  "coordinates": [
+                    0.75,
+                    0,
+                    0
+                  ]
+                },
+                {
+                  "element": "O",
+                  "coordinates": [
+                    0.5,
+                    0.25,
+                    0
+                  ]
+                },
+                {
+                  "element": "O",
+                  "coordinates": [
+                    0.5,
+                    0,
+                    0.25
+                  ]
+                },
+                {
+                  "element": "O",
+                  "coordinates": [
+                    0.75,
+                    0.25,
+                    0.25
+                  ]
+                },
+                "… 24 more items"
+              ],
+              "position_unit": "crystal",
+              "pseudopotentials": {
+                "Mg": "Mg.pbe-n-kjpaw_psl.0.3.0.UPF",
+                "O": "O.pbe-n-kjpaw_psl.0.1.UPF"
+              },
+              "composition": {
+                "Mg": 32,
+                "O": 32
+              }
+            }
+          },
+          "review_policy": {
+            "after_run": false,
+            "prompt": "Review this result before continuing."
+          },
+          "review_state": {
+            "status": "off",
+            "comment": null
+          }
+        },
+        {
+          "id": "qe-demo-input",
+          "type": "qe_pw_input",
+          "tool_id": "qe_pw_input",
+          "tool_version": "1.0.0",
+          "label": "Generate QE SCF input",
+          "params": {
+            "calculation": "scf",
+            "ecutwfc_ry": 50,
+            "ecutrho_ry": 400,
+            "k_points": [
+              3,
+              3,
+              3,
+              0,
+              0,
+              0
+            ],
+            "conv_thr": 1e-8,
+            "prefix": "matflow_mgo_demo",
+            "pseudo_dir": "./pseudo",
+            "outdir": "./tmp",
+            "occupations": "smearing",
+            "smearing": "mv",
+            "degauss_ry": 0.01,
+            "nspin": 2,
+            "mixing_beta": 0.3
+          },
+          "position": {
+            "x": 360,
+            "y": 90
+          },
+          "status": "completed",
+          "output": {
+            "kind": "QEInput",
+            "input_text": "&CONTROL\n  calculation = 'scf'\n  prefix = 'matflow_mgo_demo'\n  pseudo_dir = './pseudo'\n  outdir = './tmp'\n  tprnfor = .true.\n  tstress = .true.\n/\n&SYSTEM\n  ibrav = 0\n  nat = 64\n  ntyp = 2\n  ecutwfc = 50\n  ecutrho = 400\n  occupations = 'smearing'\n  nspin = 2\n  input_dft = 'PBE'\n  smearing = 'mv'\n  degauss = 0.01\n/\n&ELECTRONS\n  conv_thr = 1e-08\n  mixing_beta = 0.3\n/\nCELL_PARAMETERS angstrom\n  8.424 0 0\n  0 8.424 0\n  0 0 8.424\nATOMIC_SPECIES\n  Mg  24.305 Mg.pbe-n-kjpaw_psl.0.3.0.UPF\n  O   15.999 O.pbe-n-kjpaw_psl.0.1.UPF\nATOMIC_POSITIONS crystal\nMg  0 0 0\nMg  0 0.25 0.25\nMg  0.25 0 0.25\nMg  0.25 0.25 0\nO   0.25 0 0\nO   0 0.25 0\nO   0 0 0.25\nO   0.25 0.25 0.25\nMg  0 0 0.5\nMg  0 0.25 0.75\nMg  0.25 0 0.75\nMg  0.25 0.25 0.5\nO   0.25 0 0.5\nO   0 0.25 0.5\nO   0 0 0.75\nO   0.25 0.25 0.75\nMg  0 0.5 0\nMg  0 0.75 0.25\nMg  0.25 0.5 0.25\nMg  0.25 0.75 0\nO   0.25 0.5 0\nO   0 0.75 0\nO   0 0.5 0.25\nO   0.25 0.75 0.25\nMg  0 0.5 0.5\nMg  0 0.75 0.75\nMg  0.25 0.5 0.75\nMg  0.25 0.75 0.5\nO   0.25 0.5 0.5\nO   0 0.75 0.5\nO   0 0.5 0.75\nO   0.25 0.75 0.75\nMg  0.5 0 0\nMg  0.5 0.25 0.25\nMg  0.75 0 0.25\nMg  0.75 0.25 0\nO   0.75 0 0\nO   0.5 0.25 0\nO   0.5 0 0.25\nO   0.75 0.25 0.25\nMg  0.5 0 0.5\nMg  0.5 0.25 0.75\nMg  0.75 0 0.75\nMg  0.75 0.25 0.5\nO   0.75 0 0.5\nO   0.5 0.25 0.5\nO   0.5 0 0.75\nO   0.75 0.25 0.75\nMg  0.5 0.5 0\nMg  0.5 0.75 0.25\nMg  0.75 0.5 0.25\nMg  0.75 0.75 0\nO   0.75 0.5 0\nO   0.5 0.75 0\nO   0.5 0.5 0.25\nO   0.75 0.75 0.25\nMg  0.5 0.5 0.5\nMg  0.5 0.75 0.75\nMg  0.75 0.5 0.75\nMg  0.75 0.75 0.5\nO   0.75 0.5 0.5\nO   0.5 0.75 0.5\nO   0.5 0.5 0.75\nO   0.75 0.75 0.75\nK_POINTS automatic\n  3 3 3 0 0 0\n",
+            "prefix": "matflow_mgo_demo",
+            "atom_count": 64,
+            "composition": {
+              "Mg": 32,
+              "O": 32
+            },
+            "parameters": {
+              "calculation": "scf",
+              "ecutwfc_ry": 50,
+              "ecutrho_ry": 400,
+              "k_points": [
+                3,
+                3,
+                3,
+                0,
+                0,
+                0
+              ],
+              "conv_thr": 1e-8,
+              "prefix": "matflow_mgo_demo",
+              "pseudo_dir": "./pseudo",
+              "outdir": "./tmp",
+              "occupations": "smearing",
+              "smearing": "mv",
+              "degauss_ry": 0.01,
+              "nspin": 2,
+              "mixing_beta": 0.3
+            }
+          },
+          "preview": {
+            "kind": "json_tree",
+            "port": "input",
+            "data": {
+              "kind": "QEInput",
+              "input_text": "&CONTROL\n  calculation = 'scf'\n  prefix = 'matflow_mgo_demo'\n  pseudo_dir = './pseudo'\n  outdir = './tmp'\n  tprnfor = .true.\n  tstress = .true.\n/\n&SYSTEM\n  ibrav = 0\n  nat = 64\n  ntyp = 2\n  ecutwfc = 50\n  ecutrho = 400\n  occupations = 'smearing'\n  nspin = 2\n  input_dft = 'PBE'\n  smearing = 'mv'\n  degauss = 0.01\n/\n&ELECTRONS\n  conv_thr = 1e-08\n  mixing_beta = 0.3\n/\nCELL_PARAMETERS angstrom\n  8.424 0 0\n  0 8.424 0\n  0 0 8.424\nATOMIC_SPECIES\n  Mg  24.305 Mg.pbe-n-kjpaw_psl.0.3.0.UPF\n  O   15.999 O.pbe-n-kjpaw_psl.0.1.UPF\nATOMIC_POSITIONS crystal\nMg  0 0 0\nMg  0 0.25 0.25\nMg  0.25 0 0.25\nMg  0.25 0.25 0\nO   0.25 0 0\nO   0 0.25 0\nO   0 0 0.25\nO   0.25 0.25 0.25\nMg  0 0 0.5\nMg  0 0.25 0.75\nMg  0.25 0 0.75\nMg  0.25 0.25 0.5\nO   0.25 0 0.5\nO   0 0.25 0.5\nO   0 0 0.75\nO   0.25 0.25 0.75\nMg  0 0.5 0\nMg  0 0.75 0.25\nMg  0.25 0.5 0.25\nMg  0.25 0.75 0\nO   0.25 0.5 0\nO   0 0.75 0\nO   0 0.5 0.25\nO   0.25 0.75 0.25\nMg  0 0.5 0.5\nMg  0 0.75 0.75\nMg  0.25 0.5 0.75\nMg  0.25 0.75 0.5\nO   0.25 0.5 0.5\nO   0 0.75 0.5\nO   0 0.5 0.75\nO   0.25 0.75 0.75\nMg  0.5 0 0\nMg  0.5 0.25 0.25\nMg  0.75 0 0.25\nMg  0.75 0.25 0\nO   0.75 0 0\nO   0.5 0.25 0\nO   0.5 0 0.25\nO   0.75 0.25 0.25\nMg  0.5 0 0.5\nMg  0.5 0.25 0.75\nMg  0.75 0 0.75\nMg  0.75 0.25 0.5\nO   0.75 0 0.5\nO   0.5 0.25 0.5\nO   0.5 0 0.75\nO   0.75 0.25 0.75\nMg  0.5 0.5 0\nMg  0.5 0.75 0.25\nMg  0.75 0.5 0.25\nMg  0.75 0.75 0\nO   0.75 0.5 0\nO   0.5 0.75 0\nO   0.5 0.5 0.25\nO   0.75 0.75 0.25\nMg  0.5 0.5 0.5\nMg  0.5 0.75 0.75\nMg  0.75 0.5 0.75\nMg  0.75 0.75 0.5\nO   0.75 0.5 0.5\nO   0.5 0.75 0.5\nO   0.5 0.5 0.75\nO   0.75 0.75 0.75\nK_POINTS automatic\n  3 3 3 0 0 0\n",
+              "prefix": "matflow_mgo_demo",
+              "atom_count": 64,
+              "composition": {
+                "Mg": 32,
+                "O": 32
+              },
+              "parameters": {
+                "calculation": "scf",
+                "ecutwfc_ry": 50,
+                "ecutrho_ry": 400,
+                "k_points": [
+                  3,
+                  3,
+                  3,
+                  0,
+                  0,
+                  0
+                ],
+                "conv_thr": 1e-8,
+                "prefix": "matflow_mgo_demo",
+                "pseudo_dir": "./pseudo",
+                "outdir": "./tmp",
+                "occupations": "smearing",
+                "smearing": "mv",
+                "degauss_ry": 0.01,
+                "nspin": 2,
+                "mixing_beta": 0.3
+              }
+            }
+          },
+          "review_policy": {
+            "after_run": false,
+            "prompt": "Review this result before continuing."
+          },
+          "review_state": {
+            "status": "off",
+            "comment": null
+          }
+        },
+        {
+          "id": "qe-demo-output",
+          "type": "qe_replay_stdout",
+          "tool_id": "qe_replay_stdout",
+          "tool_version": "1.0.0",
+          "label": "Archived output replay",
+          "params": {
+            "fixture_id": "mgo-scf-reference"
+          },
+          "position": {
+            "x": 360,
+            "y": 270
+          },
+          "status": "completed",
+          "output": {
+            "kind": "QEStdout",
+            "text": "!    total energy              =   -2417.17683284 Ry\nthe Fermi energy is     9.7133 ev\nconvergence has been achieved in  14 iterations\nJOB DONE",
+            "source": "archived_qe_output",
+            "source_path": "qe72_wave1_manual/results/kcheck/scf333.log"
+          },
+          "preview": {
+            "kind": "json_tree",
+            "port": "stdout",
+            "data": {
+              "kind": "QEStdout",
+              "text": "!    total energy              =   -2417.17683284 Ry\nthe Fermi energy is     9.7133 ev\nconvergence has been achieved in  14 iterations\nJOB DONE",
+              "source": "archived_qe_output",
+              "source_path": "qe72_wave1_manual/results/kcheck/scf333.log"
+            }
+          },
+          "review_policy": {
+            "after_run": false,
+            "prompt": "Review this result before continuing."
+          },
+          "review_state": {
+            "status": "off",
+            "comment": null
+          }
+        },
+        {
+          "id": "qe-demo-result",
+          "type": "qe_parse_output",
+          "tool_id": "qe_parse_output",
+          "tool_version": "1.0.0",
+          "label": "Parse QE result",
+          "params": {},
+          "position": {
+            "x": 650,
+            "y": 180
+          },
+          "status": "completed",
+          "output": {
+            "kind": "QEResult",
+            "convergence": "converged",
+            "iterations": 14,
+            "energy": {
+              "value": -2417.17683284,
+              "unit": "Ry"
+            },
+            "fermi_energy": {
+              "value": 9.7133,
+              "unit": "eV"
+            },
+            "source": "archived_qe_output",
+            "source_path": "qe72_wave1_manual/results/kcheck/scf333.log",
+            "provenance": "historical_output_replay"
+          },
+          "preview": {
+            "kind": "json_tree",
+            "port": "result",
+            "data": {
+              "kind": "QEResult",
+              "convergence": "converged",
+              "iterations": 14,
+              "energy": {
+                "value": -2417.17683284,
+                "unit": "Ry"
+              },
+              "fermi_energy": {
+                "value": 9.7133,
+                "unit": "eV"
+              },
+              "source": "archived_qe_output",
+              "source_path": "qe72_wave1_manual/results/kcheck/scf333.log",
+              "provenance": "historical_output_replay"
+            }
+          },
+          "review_policy": {
+            "after_run": false,
+            "prompt": "Review this result before continuing."
+          },
+          "review_state": {
+            "status": "off",
+            "comment": null
+          }
+        }
+      ],
+      "edges": [
+        {
+          "id": "qe-demo-e1",
+          "source": "qe-demo-structure",
+          "source_port": "structure",
+          "target": "qe-demo-input",
+          "target_port": "structure"
+        },
+        {
+          "id": "qe-demo-e2",
+          "source": "qe-demo-input",
+          "source_port": "input",
+          "target": "qe-demo-result",
+          "target_port": "input"
+        },
+        {
+          "id": "qe-demo-e3",
+          "source": "qe-demo-output",
+          "source_port": "stdout",
+          "target": "qe-demo-result",
+          "target_port": "stdout"
+        }
+      ],
+      "history": [
+        {
+          "version": 1,
+          "patch": {
+            "patch_id": "862d4a0e-1cd8-41d5-b5c0-21313ac8c7df",
+            "base_version": 0,
+            "operations": [
+              {
+                "op": "add_node",
+                "node": {
+                  "id": "raw_file_import-1",
+                  "type": "raw_file_import",
+                  "tool_id": "raw_file_import",
+                  "tool_version": "1.0.0",
+                  "label": "Raw File Import",
+                  "params": {
+                    "file_name": "measurement.csv",
+                    "upload_id": "b9c995fdfcda4f0e997a529047340d74_eis_spectrum.csv"
+                  },
+                  "position": {
+                    "x": 80,
+                    "y": 80
+                  },
+                  "status": "ready",
+                  "output": null,
+                  "preview": null,
+                  "review_policy": {
+                    "after_run": false,
+                    "prompt": "Review this result before continuing."
+                  },
+                  "review_state": {
+                    "status": "off",
+                    "comment": null
+                  }
+                },
+                "node_id": null,
+                "params": null,
+                "changes": null,
+                "edge": null,
+                "edge_id": null,
+                "replacement_node": null,
+                "reconnect_edges": null,
+                "proposal_id": null
+              },
+              {
+                "op": "add_node",
+                "node": {
+                  "id": "normalize_columns-1",
+                  "type": "normalize_columns",
+                  "tool_id": "normalize_columns",
+                  "tool_version": "1.0.0",
+                  "label": "Normalize / Column Mapping",
+                  "params": {},
+                  "position": {
+                    "x": 420,
+                    "y": 80
+                  },
+                  "status": "ready",
+                  "output": null,
+                  "preview": null,
+                  "review_policy": {
+                    "after_run": false,
+                    "prompt": "Review this result before continuing."
+                  },
+                  "review_state": {
+                    "status": "off",
+                    "comment": null
+                  }
+                },
+                "node_id": null,
+                "params": null,
+                "changes": null,
+                "edge": null,
+                "edge_id": null,
+                "replacement_node": null,
+                "reconnect_edges": null,
+                "proposal_id": null
+              },
+              {
+                "op": "add_node",
+                "node": {
+                  "id": "eis_basic_qc-1",
+                  "type": "eis_basic_qc",
+                  "tool_id": "eis_basic_qc",
+                  "tool_version": "1.0.0",
+                  "label": "EIS Basic Analysis",
+                  "params": {
+                    "min_frequency_hz": 10,
+                    "fit_model": "None",
+                    "frequency_column": "frequency_hz",
+                    "real_column": "z_real_ohm",
+                    "imag_column": "z_imag_ohm"
+                  },
+                  "position": {
+                    "x": 760,
+                    "y": 80
+                  },
+                  "status": "ready",
+                  "output": null,
+                  "preview": null,
+                  "review_policy": {
+                    "after_run": true,
+                    "prompt": "Review this result before continuing."
+                  },
+                  "review_state": {
+                    "status": "off",
+                    "comment": null
+                  }
+                },
+                "node_id": null,
+                "params": null,
+                "changes": null,
+                "edge": null,
+                "edge_id": null,
+                "replacement_node": null,
+                "reconnect_edges": null,
+                "proposal_id": null
+              },
+              {
+                "op": "connect",
+                "node": null,
+                "node_id": null,
+                "params": null,
+                "changes": null,
+                "edge": {
+                  "id": "raw_file_import-1-raw--normalize_columns-1-raw",
+                  "source": "raw_file_import-1",
+                  "source_port": "raw",
+                  "target": "normalize_columns-1",
+                  "target_port": "raw"
+                },
+                "edge_id": null,
+                "replacement_node": null,
+                "reconnect_edges": null,
+                "proposal_id": null
+              },
+              {
+                "op": "connect",
+                "node": null,
+                "node_id": null,
+                "params": null,
+                "changes": null,
+                "edge": {
+                  "id": "normalize_columns-1-table--eis_basic_qc-1-data",
+                  "source": "normalize_columns-1",
+                  "source_port": "table",
+                  "target": "eis_basic_qc-1",
+                  "target_port": "data"
+                },
+                "edge_id": null,
+                "replacement_node": null,
+                "reconnect_edges": null,
+                "proposal_id": null
+              }
+            ],
+            "rationale": "Saved from the MatFlow workflow editor",
+            "requires_human_confirmation": false
+          },
+          "before": {
+            "graph_id": "local-default",
+            "version": 0,
+            "revision": 0,
+            "updated_at": null,
+            "nodes": [],
+            "edges": [],
+            "history": []
+          }
+        },
+        {
+          "version": 2,
+          "patch": {
+            "patch_id": "0adbe56d-42fd-49c9-9f79-de3c4f4efc15",
+            "base_version": 1,
+            "operations": [
+              {
+                "op": "disconnect",
+                "node": null,
+                "node_id": null,
+                "params": null,
+                "changes": null,
+                "edge": null,
+                "edge_id": "raw_file_import-1-raw--normalize_columns-1-raw",
+                "replacement_node": null,
+                "reconnect_edges": null,
+                "proposal_id": null
+              },
+              {
+                "op": "disconnect",
+                "node": null,
+                "node_id": null,
+                "params": null,
+                "changes": null,
+                "edge": null,
+                "edge_id": "normalize_columns-1-table--eis_basic_qc-1-data",
+                "replacement_node": null,
+                "reconnect_edges": null,
+                "proposal_id": null
+              },
+              {
+                "op": "delete_node",
+                "node": null,
+                "node_id": "raw_file_import-1",
+                "params": null,
+                "changes": null,
+                "edge": null,
+                "edge_id": null,
+                "replacement_node": null,
+                "reconnect_edges": null,
+                "proposal_id": null
+              },
+              {
+                "op": "delete_node",
+                "node": null,
+                "node_id": "normalize_columns-1",
+                "params": null,
+                "changes": null,
+                "edge": null,
+                "edge_id": null,
+                "replacement_node": null,
+                "reconnect_edges": null,
+                "proposal_id": null
+              },
+              {
+                "op": "delete_node",
+                "node": null,
+                "node_id": "eis_basic_qc-1",
+                "params": null,
+                "changes": null,
+                "edge": null,
+                "edge_id": null,
+                "replacement_node": null,
+                "reconnect_edges": null,
+                "proposal_id": null
+              }
+            ],
+            "rationale": "Saved from the MatFlow workflow editor",
+            "requires_human_confirmation": false
+          },
+          "before": {
+            "graph_id": "local-default",
+            "version": 1,
+            "revision": 9,
+            "updated_at": "2026-10-21T02:31:13+00:00",
+            "nodes": [
+              {
+                "id": "raw_file_import-1",
+                "type": "raw_file_import",
+                "tool_id": "raw_file_import",
+                "tool_version": "1.0.0",
+                "label": "Raw File Import",
+                "params": {
+                  "file_name": "measurement.csv",
+                  "upload_id": "b9c995fdfcda4f0e997a529047340d74_eis_spectrum.csv"
+                },
+                "position": {
+                  "x": 80,
+                  "y": 80
+                },
+                "status": "completed",
+                "output": {
+                  "kind": "RawData",
+                  "upload_id": "b9c995fdfcda4f0e997a529047340d74_eis_spectrum.csv",
+                  "rows": 13,
+                  "columns": [
+                    "frequency_hz",
+                    "z_real_ohm",
+                    "z_imag_ohm"
+                  ],
+                  "preview": [
+                    {
+                      "frequency_hz": 100000,
+                      "z_real_ohm": 5.00001,
+                      "z_imag_ohm": -0.01592
+                    },
+                    {
+                      "frequency_hz": 50000,
+                      "z_real_ohm": 5.00003,
+                      "z_imag_ohm": -0.03183
+                    },
+                    {
+                      "frequency_hz": 20000,
+                      "z_real_ohm": 5.00016,
+                      "z_imag_ohm": -0.07958
+                    },
+                    {
+                      "frequency_hz": 10000,
+                      "z_real_ohm": 5.00063,
+                      "z_imag_ohm": -0.15915
+                    },
+                    {
+                      "frequency_hz": 5000,
+                      "z_real_ohm": 5.00253,
+                      "z_imag_ohm": -0.31829
+                    },
+                    {
+                      "frequency_hz": 2000,
+                      "z_real_ohm": 5.01583,
+                      "z_imag_ohm": -0.79546
+                    },
+                    {
+                      "frequency_hz": 1000,
+                      "z_real_ohm": 5.06323,
+                      "z_imag_ohm": -1.58903
+                    },
+                    {
+                      "frequency_hz": 500,
+                      "z_real_ohm": 5.25171,
+                      "z_imag_ohm": -3.16307
+                    }
+                  ]
+                },
+                "preview": {
+                  "kind": "table",
+                  "port": "raw",
+                  "rows": [
+                    {
+                      "frequency_hz": 100000,
+                      "z_real_ohm": 5.00001,
+                      "z_imag_ohm": -0.01592
+                    },
+                    {
+                      "frequency_hz": 50000,
+                      "z_real_ohm": 5.00003,
+                      "z_imag_ohm": -0.03183
+                    },
+                    {
+                      "frequency_hz": 20000,
+                      "z_real_ohm": 5.00016,
+                      "z_imag_ohm": -0.07958
+                    },
+                    {
+                      "frequency_hz": 10000,
+                      "z_real_ohm": 5.00063,
+                      "z_imag_ohm": -0.15915
+                    },
+                    {
+                      "frequency_hz": 5000,
+                      "z_real_ohm": 5.00253,
+                      "z_imag_ohm": -0.31829
+                    },
+                    {
+                      "frequency_hz": 2000,
+                      "z_real_ohm": 5.01583,
+                      "z_imag_ohm": -0.79546
+                    },
+                    {
+                      "frequency_hz": 1000,
+                      "z_real_ohm": 5.06323,
+                      "z_imag_ohm": -1.58903
+                    },
+                    {
+                      "frequency_hz": 500,
+                      "z_real_ohm": 5.25171,
+                      "z_imag_ohm": -3.16307
+                    }
+                  ],
+                  "truncated": false
+                },
+                "review_policy": {
+                  "after_run": false,
+                  "prompt": "Review this result before continuing."
+                },
+                "review_state": {
+                  "status": "off",
+                  "comment": null
+                }
+              },
+              {
+                "id": "normalize_columns-1",
+                "type": "normalize_columns",
+                "tool_id": "normalize_columns",
+                "tool_version": "1.0.0",
+                "label": "Normalize / Column Mapping",
+                "params": {},
+                "position": {
+                  "x": 420,
+                  "y": 80
+                },
+                "status": "completed",
+                "output": {
+                  "kind": "TypedTable",
+                  "upload_id": "b9c995fdfcda4f0e997a529047340d74_eis_spectrum.csv",
+                  "mapping": {},
+                  "rows": 13
+                },
+                "preview": {
+                  "kind": "json_tree",
+                  "port": "table",
+                  "data": {
+                    "kind": "TypedTable",
+                    "upload_id": "b9c995fdfcda4f0e997a529047340d74_eis_spectrum.csv",
+                    "mapping": {},
+                    "rows": 13
+                  }
+                },
+                "review_policy": {
+                  "after_run": false,
+                  "prompt": "Review this result before continuing."
+                },
+                "review_state": {
+                  "status": "off",
+                  "comment": null
+                }
+              },
+              {
+                "id": "eis_basic_qc-1",
+                "type": "eis_basic_qc",
+                "tool_id": "eis_basic_qc",
+                "tool_version": "1.0.0",
+                "label": "EIS Basic Analysis",
+                "params": {
+                  "min_frequency_hz": 10,
+                  "fit_model": "None",
+                  "frequency_column": "frequency_hz",
+                  "real_column": "z_real_ohm",
+                  "imag_column": "z_imag_ohm"
+                },
+                "position": {
+                  "x": 760,
+                  "y": 80
+                },
+                "status": "completed",
+                "output": {
+                  "kind": "EISQCReport",
+                  "upload_id": "b9c995fdfcda4f0e997a529047340d74_eis_spectrum.csv",
+                  "mapping": {
+                    "frequency_column": "frequency_hz",
+                    "real_column": "z_real_ohm",
+                    "imag_column": "z_imag_ohm"
+                  },
+                  "rows_valid": 13,
+                  "rows_retained": 13,
+                  "min_frequency_hz": 10,
+                  "pass": true,
+                  "issues": []
+                },
+                "preview": {
+                  "kind": "json_tree",
+                  "port": "report",
+                  "data": {
+                    "kind": "EISQCReport",
+                    "upload_id": "b9c995fdfcda4f0e997a529047340d74_eis_spectrum.csv",
+                    "mapping": {
+                      "frequency_column": "frequency_hz",
+                      "real_column": "z_real_ohm",
+                      "imag_column": "z_imag_ohm"
+                    },
+                    "rows_valid": 13,
+                    "rows_retained": 13,
+                    "min_frequency_hz": 10,
+                    "pass": true,
+                    "issues": []
+                  }
+                },
+                "review_policy": {
+                  "after_run": true,
+                  "prompt": "Review this result before continuing."
+                },
+                "review_state": {
+                  "status": "approved",
+                  "comment": null
+                }
+              }
+            ],
+            "edges": [
+              {
+                "id": "raw_file_import-1-raw--normalize_columns-1-raw",
+                "source": "raw_file_import-1",
+                "source_port": "raw",
+                "target": "normalize_columns-1",
+                "target_port": "raw"
+              },
+              {
+                "id": "normalize_columns-1-table--eis_basic_qc-1-data",
+                "source": "normalize_columns-1",
+                "source_port": "table",
+                "target": "eis_basic_qc-1",
+                "target_port": "data"
+              }
+            ],
+            "history": [
+              {
+                "version": 1,
+                "patch": {
+                  "patch_id": "862d4a0e-1cd8-41d5-b5c0-21313ac8c7df",
+                  "base_version": 0,
+                  "operations": [
+                    {
+                      "op": "add_node",
+                      "node": {
+                        "id": "raw_file_import-1",
+                        "type": "raw_file_import",
+                        "tool_id": "raw_file_import",
+                        "tool_version": "1.0.0",
+                        "label": "Raw File Import",
+                        "params": {
+                          "file_name": "measurement.csv",
+                          "upload_id": "b9c995fdfcda4f0e997a529047340d74_eis_spectrum.csv"
+                        },
+                        "position": {
+                          "x": 80,
+                          "y": 80
+                        },
+                        "status": "ready",
+                        "output": null,
+                        "preview": null,
+                        "review_policy": {
+                          "after_run": false,
+                          "prompt": "Review this result before continuing."
+                        },
+                        "review_state": {
+                          "status": "off",
+                          "comment": null
+                        }
+                      },
+                      "node_id": null,
+                      "params": null,
+                      "changes": null,
+                      "edge": null,
+                      "edge_id": null,
+                      "replacement_node": null,
+                      "reconnect_edges": null,
+                      "proposal_id": null
+                    },
+                    {
+                      "op": "add_node",
+                      "node": {
+                        "id": "normalize_columns-1",
+                        "type": "normalize_columns",
+                        "tool_id": "normalize_columns",
+                        "tool_version": "1.0.0",
+                        "label": "Normalize / Column Mapping",
+                        "params": {},
+                        "position": {
+                          "x": 420,
+                          "y": 80
+                        },
+                        "status": "ready",
+                        "output": null,
+                        "preview": null,
+                        "review_policy": {
+                          "after_run": false,
+                          "prompt": "Review this result before continuing."
+                        },
+                        "review_state": {
+                          "status": "off",
+                          "comment": null
+                        }
+                      },
+                      "node_id": null,
+                      "params": null,
+                      "changes": null,
+                      "edge": null,
+                      "edge_id": null,
+                      "replacement_node": null,
+                      "reconnect_edges": null,
+                      "proposal_id": null
+                    },
+                    {
+                      "op": "add_node",
+                      "node": {
+                        "id": "eis_basic_qc-1",
+                        "type": "eis_basic_qc",
+                        "tool_id": "eis_basic_qc",
+                        "tool_version": "1.0.0",
+                        "label": "EIS Basic Analysis",
+                        "params": {
+                          "min_frequency_hz": 10,
+                          "fit_model": "None",
+                          "frequency_column": "frequency_hz",
+                          "real_column": "z_real_ohm",
+                          "imag_column": "z_imag_ohm"
+                        },
+                        "position": {
+                          "x": 760,
+                          "y": 80
+                        },
+                        "status": "ready",
+                        "output": null,
+                        "preview": null,
+                        "review_policy": {
+                          "after_run": true,
+                          "prompt": "Review this result before continuing."
+                        },
+                        "review_state": {
+                          "status": "off",
+                          "comment": null
+                        }
+                      },
+                      "node_id": null,
+                      "params": null,
+                      "changes": null,
+                      "edge": null,
+                      "edge_id": null,
+                      "replacement_node": null,
+                      "reconnect_edges": null,
+                      "proposal_id": null
+                    },
+                    {
+                      "op": "connect",
+                      "node": null,
+                      "node_id": null,
+                      "params": null,
+                      "changes": null,
+                      "edge": {
+                        "id": "raw_file_import-1-raw--normalize_columns-1-raw",
+                        "source": "raw_file_import-1",
+                        "source_port": "raw",
+                        "target": "normalize_columns-1",
+                        "target_port": "raw"
+                      },
+                      "edge_id": null,
+                      "replacement_node": null,
+                      "reconnect_edges": null,
+                      "proposal_id": null
+                    },
+                    {
+                      "op": "connect",
+                      "node": null,
+                      "node_id": null,
+                      "params": null,
+                      "changes": null,
+                      "edge": {
+                        "id": "normalize_columns-1-table--eis_basic_qc-1-data",
+                        "source": "normalize_columns-1",
+                        "source_port": "table",
+                        "target": "eis_basic_qc-1",
+                        "target_port": "data"
+                      },
+                      "edge_id": null,
+                      "replacement_node": null,
+                      "reconnect_edges": null,
+                      "proposal_id": null
+                    }
+                  ],
+                  "rationale": "Saved from the MatFlow workflow editor",
+                  "requires_human_confirmation": false
+                },
+                "before": {
+                  "graph_id": "local-default",
+                  "version": 0,
+                  "revision": 0,
+                  "updated_at": null,
+                  "nodes": [],
+                  "edges": [],
+                  "history": []
+                }
+              }
+            ]
+          }
+        },
+        {
+          "version": 3,
+          "patch": {
+            "patch_id": "fe1dbbf3-653b-403e-a89e-e7ab4fae7471",
+            "base_version": 2,
+            "operations": [
+              {
+                "op": "add_node",
+                "node": {
+                  "id": "qe-demo-structure",
+                  "type": "qe_structure",
+                  "tool_id": "qe_structure",
+                  "tool_version": "1.0.0",
+                  "label": "MgO structure",
+                  "params": {
+                    "cell": [
+                      [
+                        8.424,
+                        0,
+                        0
+                      ],
+                      [
+                        0,
+                        8.424,
+                        0
+                      ],
+                      [
+                        0,
+                        0,
+                        8.424
+                      ]
+                    ],
+                    "cell_unit": "angstrom",
+                    "positions": [
+                      {
+                        "element": "Mg",
+                        "coordinates": [
+                          0,
+                          0,
+                          0
+                        ]
+                      },
+                      {
+                        "element": "Mg",
+                        "coordinates": [
+                          0,
+                          0.25,
+                          0.25
+                        ]
+                      },
+                      {
+                        "element": "Mg",
+                        "coordinates": [
+                          0.25,
+                          0,
+                          0.25
+                        ]
+                      },
+                      {
+                        "element": "Mg",
+                        "coordinates": [
+                          0.25,
+                          0.25,
+                          0
+                        ]
+                      },
+                      {
+                        "element": "O",
+                        "coordinates": [
+                          0.25,
+                          0,
+                          0
+                        ]
+                      },
+                      {
+                        "element": "O",
+                        "coordinates": [
+                          0,
+                          0.25,
+                          0
+                        ]
+                      },
+                      {
+                        "element": "O",
+                        "coordinates": [
+                          0,
+                          0,
+                          0.25
+                        ]
+                      },
+                      {
+                        "element": "O",
+                        "coordinates": [
+                          0.25,
+                          0.25,
+                          0.25
+                        ]
+                      },
+                      {
+                        "element": "Mg",
+                        "coordinates": [
+                          0,
+                          0,
+                          0.5
+                        ]
+                      },
+                      {
+                        "element": "Mg",
+                        "coordinates": [
+                          0,
+                          0.25,
+                          0.75
+                        ]
+                      },
+                      {
+                        "element": "Mg",
+                        "coordinates": [
+                          0.25,
+                          0,
+                          0.75
+                        ]
+                      },
+                      {
+                        "element": "Mg",
+                        "coordinates": [
+                          0.25,
+                          0.25,
+                          0.5
+                        ]
+                      },
+                      {
+                        "element": "O",
+                        "coordinates": [
+                          0.25,
+                          0,
+                          0.5
+                        ]
+                      },
+                      {
+                        "element": "O",
+                        "coordinates": [
+                          0,
+                          0.25,
+                          0.5
+                        ]
+                      },
+                      {
+                        "element": "O",
+                        "coordinates": [
+                          0,
+                          0,
+                          0.75
+                        ]
+                      },
+                      {
+                        "element": "O",
+                        "coordinates": [
+                          0.25,
+                          0.25,
+                          0.75
+                        ]
+                      },
+                      {
+                        "element": "Mg",
+                        "coordinates": [
+                          0,
+                          0.5,
+                          0
+                        ]
+                      },
+                      {
+                        "element": "Mg",
+                        "coordinates": [
+                          0,
+                          0.75,
+                          0.25
+                        ]
+                      },
+                      {
+                        "element": "Mg",
+                        "coordinates": [
+                          0.25,
+                          0.5,
+                          0.25
+                        ]
+                      },
+                      {
+                        "element": "Mg",
+                        "coordinates": [
+                          0.25,
+                          0.75,
+                          0
+                        ]
+                      },
+                      {
+                        "element": "O",
+                        "coordinates": [
+                          0.25,
+                          0.5,
+                          0
+                        ]
+                      },
+                      {
+                        "element": "O",
+                        "coordinates": [
+                          0,
+                          0.75,
+                          0
+                        ]
+                      },
+                      {
+                        "element": "O",
+                        "coordinates": [
+                          0,
+                          0.5,
+                          0.25
+                        ]
+                      },
+                      {
+                        "element": "O",
+                        "coordinates": [
+                          0.25,
+                          0.75,
+                          0.25
+                        ]
+                      },
+                      {
+                        "element": "Mg",
+                        "coordinates": [
+                          0,
+                          0.5,
+                          0.5
+                        ]
+                      },
+                      {
+                        "element": "Mg",
+                        "coordinates": [
+                          0,
+                          0.75,
+                          0.75
+                        ]
+                      },
+                      {
+                        "element": "Mg",
+                        "coordinates": [
+                          0.25,
+                          0.5,
+                          0.75
+                        ]
+                      },
+                      {
+                        "element": "Mg",
+                        "coordinates": [
+                          0.25,
+                          0.75,
+                          0.5
+                        ]
+                      },
+                      {
+                        "element": "O",
+                        "coordinates": [
+                          0.25,
+                          0.5,
+                          0.5
+                        ]
+                      },
+                      {
+                        "element": "O",
+                        "coordinates": [
+                          0,
+                          0.75,
+                          0.5
+                        ]
+                      },
+                      {
+                        "element": "O",
+                        "coordinates": [
+                          0,
+                          0.5,
+                          0.75
+                        ]
+                      },
+                      {
+                        "element": "O",
+                        "coordinates": [
+                          0.25,
+                          0.75,
+                          0.75
+                        ]
+                      },
+                      {
+                        "element": "Mg",
+                        "coordinates": [
+                          0.5,
+                          0,
+                          0
+                        ]
+                      },
+                      {
+                        "element": "Mg",
+                        "coordinates": [
+                          0.5,
+                          0.25,
+                          0.25
+                        ]
+                      },
+                      {
+                        "element": "Mg",
+                        "coordinates": [
+                          0.75,
+                          0,
+                          0.25
+                        ]
+                      },
+                      {
+                        "element": "Mg",
+                        "coordinates": [
+                          0.75,
+                          0.25,
+                          0
+                        ]
+                      },
+                      {
+                        "element": "O",
+                        "coordinates": [
+                          0.75,
+                          0,
+                          0
+                        ]
+                      },
+                      {
+                        "element": "O",
+                        "coordinates": [
+                          0.5,
+                          0.25,
+                          0
+                        ]
+                      },
+                      {
+                        "element": "O",
+                        "coordinates": [
+                          0.5,
+                          0,
+                          0.25
+                        ]
+                      },
+                      {
+                        "element": "O",
+                        "coordinates": [
+                          0.75,
+                          0.25,
+                          0.25
+                        ]
+                      },
+                      {
+                        "element": "Mg",
+                        "coordinates": [
+                          0.5,
+                          0,
+                          0.5
+                        ]
+                      },
+                      {
+                        "element": "Mg",
+                        "coordinates": [
+                          0.5,
+                          0.25,
+                          0.75
+                        ]
+                      },
+                      {
+                        "element": "Mg",
+                        "coordinates": [
+                          0.75,
+                          0,
+                          0.75
+                        ]
+                      },
+                      {
+                        "element": "Mg",
+                        "coordinates": [
+                          0.75,
+                          0.25,
+                          0.5
+                        ]
+                      },
+                      {
+                        "element": "O",
+                        "coordinates": [
+                          0.75,
+                          0,
+                          0.5
+                        ]
+                      },
+                      {
+                        "element": "O",
+                        "coordinates": [
+                          0.5,
+                          0.25,
+                          0.5
+                        ]
+                      },
+                      {
+                        "element": "O",
+                        "coordinates": [
+                          0.5,
+                          0,
+                          0.75
+                        ]
+                      },
+                      {
+                        "element": "O",
+                        "coordinates": [
+                          0.75,
+                          0.25,
+                          0.75
+                        ]
+                      },
+                      {
+                        "element": "Mg",
+                        "coordinates": [
+                          0.5,
+                          0.5,
+                          0
+                        ]
+                      },
+                      {
+                        "element": "Mg",
+                        "coordinates": [
+                          0.5,
+                          0.75,
+                          0.25
+                        ]
+                      },
+                      {
+                        "element": "Mg",
+                        "coordinates": [
+                          0.75,
+                          0.5,
+                          0.25
+                        ]
+                      },
+                      {
+                        "element": "Mg",
+                        "coordinates": [
+                          0.75,
+                          0.75,
+                          0
+                        ]
+                      },
+                      {
+                        "element": "O",
+                        "coordinates": [
+                          0.75,
+                          0.5,
+                          0
+                        ]
+                      },
+                      {
+                        "element": "O",
+                        "coordinates": [
+                          0.5,
+                          0.75,
+                          0
+                        ]
+                      },
+                      {
+                        "element": "O",
+                        "coordinates": [
+                          0.5,
+                          0.5,
+                          0.25
+                        ]
+                      },
+                      {
+                        "element": "O",
+                        "coordinates": [
+                          0.75,
+                          0.75,
+                          0.25
+                        ]
+                      },
+                      {
+                        "element": "Mg",
+                        "coordinates": [
+                          0.5,
+                          0.5,
+                          0.5
+                        ]
+                      },
+                      {
+                        "element": "Mg",
+                        "coordinates": [
+                          0.5,
+                          0.75,
+                          0.75
+                        ]
+                      },
+                      {
+                        "element": "Mg",
+                        "coordinates": [
+                          0.75,
+                          0.5,
+                          0.75
+                        ]
+                      },
+                      {
+                        "element": "Mg",
+                        "coordinates": [
+                          0.75,
+                          0.75,
+                          0.5
+                        ]
+                      },
+                      {
+                        "element": "O",
+                        "coordinates": [
+                          0.75,
+                          0.5,
+                          0.5
+                        ]
+                      },
+                      {
+                        "element": "O",
+                        "coordinates": [
+                          0.5,
+                          0.75,
+                          0.5
+                        ]
+                      },
+                      {
+                        "element": "O",
+                        "coordinates": [
+                          0.5,
+                          0.5,
+                          0.75
+                        ]
+                      },
+                      {
+                        "element": "O",
+                        "coordinates": [
+                          0.75,
+                          0.75,
+                          0.75
+                        ]
+                      }
+                    ],
+                    "position_unit": "crystal",
+                    "pseudopotentials": {
+                      "Mg": "Mg.pbe-n-kjpaw_psl.0.3.0.UPF",
+                      "O": "O.pbe-n-kjpaw_psl.0.1.UPF"
+                    }
+                  },
+                  "position": {
+                    "x": 80,
+                    "y": 150
+                  },
+                  "status": "ready",
+                  "output": null,
+                  "preview": null,
+                  "review_policy": {
+                    "after_run": false,
+                    "prompt": "Review this result before continuing."
+                  },
+                  "review_state": {
+                    "status": "off",
+                    "comment": null
+                  }
+                },
+                "node_id": null,
+                "params": null,
+                "changes": null,
+                "edge": null,
+                "edge_id": null,
+                "replacement_node": null,
+                "reconnect_edges": null,
+                "proposal_id": null
+              },
+              {
+                "op": "add_node",
+                "node": {
+                  "id": "qe-demo-input",
+                  "type": "qe_pw_input",
+                  "tool_id": "qe_pw_input",
+                  "tool_version": "1.0.0",
+                  "label": "Generate QE SCF input",
+                  "params": {
+                    "calculation": "scf",
+                    "ecutwfc_ry": 50,
+                    "ecutrho_ry": 400,
+                    "k_points": [
+                      3,
+                      3,
+                      3,
+                      0,
+                      0,
+                      0
+                    ],
+                    "conv_thr": 1e-8,
+                    "prefix": "matflow_mgo_demo",
+                    "pseudo_dir": "./pseudo",
+                    "outdir": "./tmp",
+                    "occupations": "smearing",
+                    "smearing": "mv",
+                    "degauss_ry": 0.01,
+                    "nspin": 2,
+                    "mixing_beta": 0.3
+                  },
+                  "position": {
+                    "x": 360,
+                    "y": 90
+                  },
+                  "status": "ready",
+                  "output": null,
+                  "preview": null,
+                  "review_policy": {
+                    "after_run": false,
+                    "prompt": "Review this result before continuing."
+                  },
+                  "review_state": {
+                    "status": "off",
+                    "comment": null
+                  }
+                },
+                "node_id": null,
+                "params": null,
+                "changes": null,
+                "edge": null,
+                "edge_id": null,
+                "replacement_node": null,
+                "reconnect_edges": null,
+                "proposal_id": null
+              },
+              {
+                "op": "add_node",
+                "node": {
+                  "id": "qe-demo-output",
+                  "type": "qe_replay_stdout",
+                  "tool_id": "qe_replay_stdout",
+                  "tool_version": "1.0.0",
+                  "label": "Archived output replay",
+                  "params": {
+                    "fixture_id": "mgo-scf-reference"
+                  },
+                  "position": {
+                    "x": 360,
+                    "y": 270
+                  },
+                  "status": "ready",
+                  "output": null,
+                  "preview": null,
+                  "review_policy": {
+                    "after_run": false,
+                    "prompt": "Review this result before continuing."
+                  },
+                  "review_state": {
+                    "status": "off",
+                    "comment": null
+                  }
+                },
+                "node_id": null,
+                "params": null,
+                "changes": null,
+                "edge": null,
+                "edge_id": null,
+                "replacement_node": null,
+                "reconnect_edges": null,
+                "proposal_id": null
+              },
+              {
+                "op": "add_node",
+                "node": {
+                  "id": "qe-demo-result",
+                  "type": "qe_parse_output",
+                  "tool_id": "qe_parse_output",
+                  "tool_version": "1.0.0",
+                  "label": "Parse QE result",
+                  "params": {},
+                  "position": {
+                    "x": 650,
+                    "y": 180
+                  },
+                  "status": "ready",
+                  "output": null,
+                  "preview": null,
+                  "review_policy": {
+                    "after_run": false,
+                    "prompt": "Review this result before continuing."
+                  },
+                  "review_state": {
+                    "status": "off",
+                    "comment": null
+                  }
+                },
+                "node_id": null,
+                "params": null,
+                "changes": null,
+                "edge": null,
+                "edge_id": null,
+                "replacement_node": null,
+                "reconnect_edges": null,
+                "proposal_id": null
+              },
+              {
+                "op": "connect",
+                "node": null,
+                "node_id": null,
+                "params": null,
+                "changes": null,
+                "edge": {
+                  "id": "qe-demo-e1",
+                  "source": "qe-demo-structure",
+                  "source_port": "structure",
+                  "target": "qe-demo-input",
+                  "target_port": "structure"
+                },
+                "edge_id": null,
+                "replacement_node": null,
+                "reconnect_edges": null,
+                "proposal_id": null
+              },
+              {
+                "op": "connect",
+                "node": null,
+                "node_id": null,
+                "params": null,
+                "changes": null,
+                "edge": {
+                  "id": "qe-demo-e2",
+                  "source": "qe-demo-input",
+                  "source_port": "input",
+                  "target": "qe-demo-result",
+                  "target_port": "input"
+                },
+                "edge_id": null,
+                "replacement_node": null,
+                "reconnect_edges": null,
+                "proposal_id": null
+              },
+              {
+                "op": "connect",
+                "node": null,
+                "node_id": null,
+                "params": null,
+                "changes": null,
+                "edge": {
+                  "id": "qe-demo-e3",
+                  "source": "qe-demo-output",
+                  "source_port": "stdout",
+                  "target": "qe-demo-result",
+                  "target_port": "stdout"
+                },
+                "edge_id": null,
+                "replacement_node": null,
+                "reconnect_edges": null,
+                "proposal_id": null
+              }
+            ],
+            "rationale": "Local QE replay workflow generated from research request: For pristine MgO 2x2x2, generate a QE SCF input and report convergence, total energy, and Fermi energy.",
+            "requires_human_confirmation": false
+          },
+          "before": {
+            "graph_id": "local-default",
+            "version": 2,
+            "revision": 10,
+            "updated_at": "2026-10-21T02:31:13+00:00",
+            "nodes": [],
+            "edges": [],
+            "history": [
+              {
+                "version": 1,
+                "patch": {
+                  "patch_id": "862d4a0e-1cd8-41d5-b5c0-21313ac8c7df",
+                  "base_version": 0,
+                  "operations": [
+                    {
+                      "op": "add_node",
+                      "node": {
+                        "id": "raw_file_import-1",
+                        "type": "raw_file_import",
+                        "tool_id": "raw_file_import",
+                        "tool_version": "1.0.0",
+                        "label": "Raw File Import",
+                        "params": {
+                          "file_name": "measurement.csv",
+                          "upload_id": "b9c995fdfcda4f0e997a529047340d74_eis_spectrum.csv"
+                        },
+                        "position": {
+                          "x": 80,
+                          "y": 80
+                        },
+                        "status": "ready",
+                        "output": null,
+                        "preview": null,
+                        "review_policy": {
+                          "after_run": false,
+                          "prompt": "Review this result before continuing."
+                        },
+                        "review_state": {
+                          "status": "off",
+                          "comment": null
+                        }
+                      },
+                      "node_id": null,
+                      "params": null,
+                      "changes": null,
+                      "edge": null,
+                      "edge_id": null,
+                      "replacement_node": null,
+                      "reconnect_edges": null,
+                      "proposal_id": null
+                    },
+                    {
+                      "op": "add_node",
+                      "node": {
+                        "id": "normalize_columns-1",
+                        "type": "normalize_columns",
+                        "tool_id": "normalize_columns",
+                        "tool_version": "1.0.0",
+                        "label": "Normalize / Column Mapping",
+                        "params": {},
+                        "position": {
+                          "x": 420,
+                          "y": 80
+                        },
+                        "status": "ready",
+                        "output": null,
+                        "preview": null,
+                        "review_policy": {
+                          "after_run": false,
+                          "prompt": "Review this result before continuing."
+                        },
+                        "review_state": {
+                          "status": "off",
+                          "comment": null
+                        }
+                      },
+                      "node_id": null,
+                      "params": null,
+                      "changes": null,
+                      "edge": null,
+                      "edge_id": null,
+                      "replacement_node": null,
+                      "reconnect_edges": null,
+                      "proposal_id": null
+                    },
+                    {
+                      "op": "add_node",
+                      "node": {
+                        "id": "eis_basic_qc-1",
+                        "type": "eis_basic_qc",
+                        "tool_id": "eis_basic_qc",
+                        "tool_version": "1.0.0",
+                        "label": "EIS Basic Analysis",
+                        "params": {
+                          "min_frequency_hz": 10,
+                          "fit_model": "None",
+                          "frequency_column": "frequency_hz",
+                          "real_column": "z_real_ohm",
+                          "imag_column": "z_imag_ohm"
+                        },
+                        "position": {
+                          "x": 760,
+                          "y": 80
+                        },
+                        "status": "ready",
+                        "output": null,
+                        "preview": null,
+                        "review_policy": {
+                          "after_run": true,
+                          "prompt": "Review this result before continuing."
+                        },
+                        "review_state": {
+                          "status": "off",
+                          "comment": null
+                        }
+                      },
+                      "node_id": null,
+                      "params": null,
+                      "changes": null,
+                      "edge": null,
+                      "edge_id": null,
+                      "replacement_node": null,
+                      "reconnect_edges": null,
+                      "proposal_id": null
+                    },
+                    {
+                      "op": "connect",
+                      "node": null,
+                      "node_id": null,
+                      "params": null,
+                      "changes": null,
+                      "edge": {
+                        "id": "raw_file_import-1-raw--normalize_columns-1-raw",
+                        "source": "raw_file_import-1",
+                        "source_port": "raw",
+                        "target": "normalize_columns-1",
+                        "target_port": "raw"
+                      },
+                      "edge_id": null,
+                      "replacement_node": null,
+                      "reconnect_edges": null,
+                      "proposal_id": null
+                    },
+                    {
+                      "op": "connect",
+                      "node": null,
+                      "node_id": null,
+                      "params": null,
+                      "changes": null,
+                      "edge": {
+                        "id": "normalize_columns-1-table--eis_basic_qc-1-data",
+                        "source": "normalize_columns-1",
+                        "source_port": "table",
+                        "target": "eis_basic_qc-1",
+                        "target_port": "data"
+                      },
+                      "edge_id": null,
+                      "replacement_node": null,
+                      "reconnect_edges": null,
+                      "proposal_id": null
+                    }
+                  ],
+                  "rationale": "Saved from the MatFlow workflow editor",
+                  "requires_human_confirmation": false
+                },
+                "before": {
+                  "graph_id": "local-default",
+                  "version": 0,
+                  "revision": 0,
+                  "updated_at": null,
+                  "nodes": [],
+                  "edges": [],
+                  "history": []
+                }
+              },
+              {
+                "version": 2,
+                "patch": {
+                  "patch_id": "0adbe56d-42fd-49c9-9f79-de3c4f4efc15",
+                  "base_version": 1,
+                  "operations": [
+                    {
+                      "op": "disconnect",
+                      "node": null,
+                      "node_id": null,
+                      "params": null,
+                      "changes": null,
+                      "edge": null,
+                      "edge_id": "raw_file_import-1-raw--normalize_columns-1-raw",
+                      "replacement_node": null,
+                      "reconnect_edges": null,
+                      "proposal_id": null
+                    },
+                    {
+                      "op": "disconnect",
+                      "node": null,
+                      "node_id": null,
+                      "params": null,
+                      "changes": null,
+                      "edge": null,
+                      "edge_id": "normalize_columns-1-table--eis_basic_qc-1-data",
+                      "replacement_node": null,
+                      "reconnect_edges": null,
+                      "proposal_id": null
+                    },
+                    {
+                      "op": "delete_node",
+                      "node": null,
+                      "node_id": "raw_file_import-1",
+                      "params": null,
+                      "changes": null,
+                      "edge": null,
+                      "edge_id": null,
+                      "replacement_node": null,
+                      "reconnect_edges": null,
+                      "proposal_id": null
+                    },
+                    {
+                      "op": "delete_node",
+                      "node": null,
+                      "node_id": "normalize_columns-1",
+                      "params": null,
+                      "changes": null,
+                      "edge": null,
+                      "edge_id": null,
+                      "replacement_node": null,
+                      "reconnect_edges": null,
+                      "proposal_id": null
+                    },
+                    {
+                      "op": "delete_node",
+                      "node": null,
+                      "node_id": "eis_basic_qc-1",
+                      "params": null,
+                      "changes": null,
+                      "edge": null,
+                      "edge_id": null,
+                      "replacement_node": null,
+                      "reconnect_edges": null,
+                      "proposal_id": null
+                    }
+                  ],
+                  "rationale": "Saved from the MatFlow workflow editor",
+                  "requires_human_confirmation": false
+                },
+                "before": {
+                  "graph_id": "local-default",
+                  "version": 1,
+                  "revision": 9,
+                  "updated_at": "2026-10-21T02:31:13+00:00",
+                  "nodes": [
+                    {
+                      "id": "raw_file_import-1",
+                      "type": "raw_file_import",
+                      "tool_id": "raw_file_import",
+                      "tool_version": "1.0.0",
+                      "label": "Raw File Import",
+                      "params": {
+                        "file_name": "measurement.csv",
+                        "upload_id": "b9c995fdfcda4f0e997a529047340d74_eis_spectrum.csv"
+                      },
+                      "position": {
+                        "x": 80,
+                        "y": 80
+                      },
+                      "status": "completed",
+                      "output": {
+                        "kind": "RawData",
+                        "upload_id": "b9c995fdfcda4f0e997a529047340d74_eis_spectrum.csv",
+                        "rows": 13,
+                        "columns": [
+                          "frequency_hz",
+                          "z_real_ohm",
+                          "z_imag_ohm"
+                        ],
+                        "preview": [
+                          {
+                            "frequency_hz": 100000,
+                            "z_real_ohm": 5.00001,
+                            "z_imag_ohm": -0.01592
+                          },
+                          {
+                            "frequency_hz": 50000,
+                            "z_real_ohm": 5.00003,
+                            "z_imag_ohm": -0.03183
+                          },
+                          {
+                            "frequency_hz": 20000,
+                            "z_real_ohm": 5.00016,
+                            "z_imag_ohm": -0.07958
+                          },
+                          {
+                            "frequency_hz": 10000,
+                            "z_real_ohm": 5.00063,
+                            "z_imag_ohm": -0.15915
+                          },
+                          {
+                            "frequency_hz": 5000,
+                            "z_real_ohm": 5.00253,
+                            "z_imag_ohm": -0.31829
+                          },
+                          {
+                            "frequency_hz": 2000,
+                            "z_real_ohm": 5.01583,
+                            "z_imag_ohm": -0.79546
+                          },
+                          {
+                            "frequency_hz": 1000,
+                            "z_real_ohm": 5.06323,
+                            "z_imag_ohm": -1.58903
+                          },
+                          {
+                            "frequency_hz": 500,
+                            "z_real_ohm": 5.25171,
+                            "z_imag_ohm": -3.16307
+                          }
+                        ]
+                      },
+                      "preview": {
+                        "kind": "table",
+                        "port": "raw",
+                        "rows": [
+                          {
+                            "frequency_hz": 100000,
+                            "z_real_ohm": 5.00001,
+                            "z_imag_ohm": -0.01592
+                          },
+                          {
+                            "frequency_hz": 50000,
+                            "z_real_ohm": 5.00003,
+                            "z_imag_ohm": -0.03183
+                          },
+                          {
+                            "frequency_hz": 20000,
+                            "z_real_ohm": 5.00016,
+                            "z_imag_ohm": -0.07958
+                          },
+                          {
+                            "frequency_hz": 10000,
+                            "z_real_ohm": 5.00063,
+                            "z_imag_ohm": -0.15915
+                          },
+                          {
+                            "frequency_hz": 5000,
+                            "z_real_ohm": 5.00253,
+                            "z_imag_ohm": -0.31829
+                          },
+                          {
+                            "frequency_hz": 2000,
+                            "z_real_ohm": 5.01583,
+                            "z_imag_ohm": -0.79546
+                          },
+                          {
+                            "frequency_hz": 1000,
+                            "z_real_ohm": 5.06323,
+                            "z_imag_ohm": -1.58903
+                          },
+                          {
+                            "frequency_hz": 500,
+                            "z_real_ohm": 5.25171,
+                            "z_imag_ohm": -3.16307
+                          }
+                        ],
+                        "truncated": false
+                      },
+                      "review_policy": {
+                        "after_run": false,
+                        "prompt": "Review this result before continuing."
+                      },
+                      "review_state": {
+                        "status": "off",
+                        "comment": null
+                      }
+                    },
+                    {
+                      "id": "normalize_columns-1",
+                      "type": "normalize_columns",
+                      "tool_id": "normalize_columns",
+                      "tool_version": "1.0.0",
+                      "label": "Normalize / Column Mapping",
+                      "params": {},
+                      "position": {
+                        "x": 420,
+                        "y": 80
+                      },
+                      "status": "completed",
+                      "output": {
+                        "kind": "TypedTable",
+                        "upload_id": "b9c995fdfcda4f0e997a529047340d74_eis_spectrum.csv",
+                        "mapping": {},
+                        "rows": 13
+                      },
+                      "preview": {
+                        "kind": "json_tree",
+                        "port": "table",
+                        "data": {
+                          "kind": "TypedTable",
+                          "upload_id": "b9c995fdfcda4f0e997a529047340d74_eis_spectrum.csv",
+                          "mapping": {},
+                          "rows": 13
+                        }
+                      },
+                      "review_policy": {
+                        "after_run": false,
+                        "prompt": "Review this result before continuing."
+                      },
+                      "review_state": {
+                        "status": "off",
+                        "comment": null
+                      }
+                    },
+                    {
+                      "id": "eis_basic_qc-1",
+                      "type": "eis_basic_qc",
+                      "tool_id": "eis_basic_qc",
+                      "tool_version": "1.0.0",
+                      "label": "EIS Basic Analysis",
+                      "params": {
+                        "min_frequency_hz": 10,
+                        "fit_model": "None",
+                        "frequency_column": "frequency_hz",
+                        "real_column": "z_real_ohm",
+                        "imag_column": "z_imag_ohm"
+                      },
+                      "position": {
+                        "x": 760,
+                        "y": 80
+                      },
+                      "status": "completed",
+                      "output": {
+                        "kind": "EISQCReport",
+                        "upload_id": "b9c995fdfcda4f0e997a529047340d74_eis_spectrum.csv",
+                        "mapping": {
+                          "frequency_column": "frequency_hz",
+                          "real_column": "z_real_ohm",
+                          "imag_column": "z_imag_ohm"
+                        },
+                        "rows_valid": 13,
+                        "rows_retained": 13,
+                        "min_frequency_hz": 10,
+                        "pass": true,
+                        "issues": []
+                      },
+                      "preview": {
+                        "kind": "json_tree",
+                        "port": "report",
+                        "data": {
+                          "kind": "EISQCReport",
+                          "upload_id": "b9c995fdfcda4f0e997a529047340d74_eis_spectrum.csv",
+                          "mapping": {
+                            "frequency_column": "frequency_hz",
+                            "real_column": "z_real_ohm",
+                            "imag_column": "z_imag_ohm"
+                          },
+                          "rows_valid": 13,
+                          "rows_retained": 13,
+                          "min_frequency_hz": 10,
+                          "pass": true,
+                          "issues": []
+                        }
+                      },
+                      "review_policy": {
+                        "after_run": true,
+                        "prompt": "Review this result before continuing."
+                      },
+                      "review_state": {
+                        "status": "approved",
+                        "comment": null
+                      }
+                    }
+                  ],
+                  "edges": [
+                    {
+                      "id": "raw_file_import-1-raw--normalize_columns-1-raw",
+                      "source": "raw_file_import-1",
+                      "source_port": "raw",
+                      "target": "normalize_columns-1",
+                      "target_port": "raw"
+                    },
+                    {
+                      "id": "normalize_columns-1-table--eis_basic_qc-1-data",
+                      "source": "normalize_columns-1",
+                      "source_port": "table",
+                      "target": "eis_basic_qc-1",
+                      "target_port": "data"
+                    }
+                  ],
+                  "history": [
+                    {
+                      "version": 1,
+                      "patch": {
+                        "patch_id": "862d4a0e-1cd8-41d5-b5c0-21313ac8c7df",
+                        "base_version": 0,
+                        "operations": [
+                          {
+                            "op": "add_node",
+                            "node": {
+                              "id": "raw_file_import-1",
+                              "type": "raw_file_import",
+                              "tool_id": "raw_file_import",
+                              "tool_version": "1.0.0",
+                              "label": "Raw File Import",
+                              "params": {
+                                "file_name": "measurement.csv",
+                                "upload_id": "b9c995fdfcda4f0e997a529047340d74_eis_spectrum.csv"
+                              },
+                              "position": {
+                                "x": 80,
+                                "y": 80
+                              },
+                              "status": "ready",
+                              "output": null,
+                              "preview": null,
+                              "review_policy": {
+                                "after_run": false,
+                                "prompt": "Review this result before continuing."
+                              },
+                              "review_state": {
+                                "status": "off",
+                                "comment": null
+                              }
+                            },
+                            "node_id": null,
+                            "params": null,
+                            "changes": null,
+                            "edge": null,
+                            "edge_id": null,
+                            "replacement_node": null,
+                            "reconnect_edges": null,
+                            "proposal_id": null
+                          },
+                          {
+                            "op": "add_node",
+                            "node": {
+                              "id": "normalize_columns-1",
+                              "type": "normalize_columns",
+                              "tool_id": "normalize_columns",
+                              "tool_version": "1.0.0",
+                              "label": "Normalize / Column Mapping",
+                              "params": {},
+                              "position": {
+                                "x": 420,
+                                "y": 80
+                              },
+                              "status": "ready",
+                              "output": null,
+                              "preview": null,
+                              "review_policy": {
+                                "after_run": false,
+                                "prompt": "Review this result before continuing."
+                              },
+                              "review_state": {
+                                "status": "off",
+                                "comment": null
+                              }
+                            },
+                            "node_id": null,
+                            "params": null,
+                            "changes": null,
+                            "edge": null,
+                            "edge_id": null,
+                            "replacement_node": null,
+                            "reconnect_edges": null,
+                            "proposal_id": null
+                          },
+                          {
+                            "op": "add_node",
+                            "node": {
+                              "id": "eis_basic_qc-1",
+                              "type": "eis_basic_qc",
+                              "tool_id": "eis_basic_qc",
+                              "tool_version": "1.0.0",
+                              "label": "EIS Basic Analysis",
+                              "params": {
+                                "min_frequency_hz": 10,
+                                "fit_model": "None",
+                                "frequency_column": "frequency_hz",
+                                "real_column": "z_real_ohm",
+                                "imag_column": "z_imag_ohm"
+                              },
+                              "position": {
+                                "x": 760,
+                                "y": 80
+                              },
+                              "status": "ready",
+                              "output": null,
+                              "preview": null,
+                              "review_policy": {
+                                "after_run": true,
+                                "prompt": "Review this result before continuing."
+                              },
+                              "review_state": {
+                                "status": "off",
+                                "comment": null
+                              }
+                            },
+                            "node_id": null,
+                            "params": null,
+                            "changes": null,
+                            "edge": null,
+                            "edge_id": null,
+                            "replacement_node": null,
+                            "reconnect_edges": null,
+                            "proposal_id": null
+                          },
+                          {
+                            "op": "connect",
+                            "node": null,
+                            "node_id": null,
+                            "params": null,
+                            "changes": null,
+                            "edge": {
+                              "id": "raw_file_import-1-raw--normalize_columns-1-raw",
+                              "source": "raw_file_import-1",
+                              "source_port": "raw",
+                              "target": "normalize_columns-1",
+                              "target_port": "raw"
+                            },
+                            "edge_id": null,
+                            "replacement_node": null,
+                            "reconnect_edges": null,
+                            "proposal_id": null
+                          },
+                          {
+                            "op": "connect",
+                            "node": null,
+                            "node_id": null,
+                            "params": null,
+                            "changes": null,
+                            "edge": {
+                              "id": "normalize_columns-1-table--eis_basic_qc-1-data",
+                              "source": "normalize_columns-1",
+                              "source_port": "table",
+                              "target": "eis_basic_qc-1",
+                              "target_port": "data"
+                            },
+                            "edge_id": null,
+                            "replacement_node": null,
+                            "reconnect_edges": null,
+                            "proposal_id": null
+                          }
+                        ],
+                        "rationale": "Saved from the MatFlow workflow editor",
+                        "requires_human_confirmation": false
+                      },
+                      "before": {
+                        "graph_id": "local-default",
+                        "version": 0,
+                        "revision": 0,
+                        "updated_at": null,
+                        "nodes": [],
+                        "edges": [],
+                        "history": []
+                      }
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        }
+      ]
+    }
+  },
+  "results": {
+    "initialStatus": "Connected · Graph v0",
+    "layout": {
+      "canvas": 1320,
+      "inspector": 320
+    },
+    "datasetDetail": "eis_spectrum.csv |  | 13 rows · 3 columns",
+    "datasetUploadId": "b9c995fdfcda4f0e997a529047340d74_eis_spectrum.csv",
+    "edges": 2,
+    "pausedStatus": "The workflow paused for human review",
+    "reviewPrompt": "Review this result before continuing.",
+    "completedStatus": "Decision submitted: continue",
+    "eisOutput": {
+      "kind": "EISQCReport",
+      "upload_id": "b9c995fdfcda4f0e997a529047340d74_eis_spectrum.csv",
+      "mapping": {
+        "frequency_column": "frequency_hz",
+        "real_column": "z_real_ohm",
+        "imag_column": "z_imag_ohm"
+      },
+      "rows_valid": 13,
+      "rows_retained": 13,
+      "min_frequency_hz": 10,
+      "pass": true,
+      "issues": []
+    },
+    "qeStatus": "MgO QE replay complete · -2417.17683284 Ry · no Slurm job submitted",
+    "routingSeconds": 3.455,
+    "decisionFacts": "Task ID | d4a63104-d1f3-4b7b-a5b2-77d2868ab5ee | Trace ID | b3da9c2fcf594eafbdc4f6cb0c54d4a6 | Graph version | v3 | Decision source | llm | Model | deepseek-official-flash | Confidence | 93% | model self-reported, not calibrated",
+    "decisionBadge": "Routed",
+    "selectedTools": "EIS Basic Analysis | eis_basic_qc | v1.0.0",
+    "finalStatus": "Routing decision saved"
+  },
+  "consoleErrors": [],
+  "pageErrors": []
+}

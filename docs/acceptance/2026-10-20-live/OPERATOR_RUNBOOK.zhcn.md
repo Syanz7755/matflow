@@ -5,6 +5,8 @@
 每一步都写清“命令 / 点击什么 / 应该看到什么”，并对应到本目录的截图。
 
 - 本文配套证据与逐项检查：[frontend-ops/FRONTEND_OPS.zhcn.md](frontend-ops/FRONTEND_OPS.zhcn.md)
+- **要把这套操作录成演示视频**：见 [demo-tutorial/DEMO_TUTORIAL.zhcn.md](demo-tutorial/DEMO_TUTORIAL.zhcn.md)
+  （分镜、旁白、功能清单、录屏与剪辑设置、重置流程）
 - 截图：`frontend-ops/screenshots/`
 - 现场实测结果：审核门 Waiting → Continue → Completed，EIS 质量检查
   `rows_valid=13 / rows_retained=13 / pass=true`；QE 回放 `-2417.17683284 Ry`。
