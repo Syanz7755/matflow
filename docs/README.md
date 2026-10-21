@@ -21,6 +21,7 @@ MatFlow is a vibe-research framework for materials-science researchers: research
 | Prepare a truthful project interview and run the offline QE replay | [Interview preparation (Chinese)](INTERVIEW_PREPARATION.zhcn.md), [A1 replay](../examples/cases/A1-qe-mgo/README.md) |
 | Inspect routing methodology and the current diagnostic run | [Routing evaluation](ROUTING_EVALUATION.md), [Recorded diagnostic](evaluation/README.md) |
 | Install, start, connect an AI and complete a first operation | [Getting started](GETTING_STARTED.md) |
+| Start, stop, restart and check the whole local stack with one script | [Startup scripts guide](STARTUP_SCRIPTS.md), `scripts/matflow.ps1` |
 | Choose and operate a CLI, PowerShell, or Windows launcher | [Startup scripts guide](STARTUP_SCRIPTS.md) |
 | Understand the features, complete an analysis and interpret the result | [User manual](USER_MANUAL.md) |
 | Connect a local DSH, ChatGPT or other MCP client | See the sibling `matflow-frontend/docs/MCP_INTEGRATION_GUIDE.md` |
