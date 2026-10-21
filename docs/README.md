@@ -15,7 +15,7 @@ MatFlow is a vibe-research framework for materials-science researchers: research
 | Watch or regenerate the 11 short demo clips and the ~36 s walkthrough video (real stack, Chinese captions) | [Clip index](acceptance/2026-10-20-live/demo-tutorial/clips/INDEX.zhcn.md), [walkthrough mp4](acceptance/2026-10-20-live/demo-tutorial/video/matflow-walkthrough.mp4), `scripts/live_acceptance/record_demo_clips.ps1` |
 | Re-check the 2026-10-20 known defects (routing has no refusal state, EISData type gate, compound request, Jev consensus) | [Defect verification (Chinese)](acceptance/2026-10-20-live/DEFECT_VERIFICATION.zhcn.md), [clips](acceptance/2026-10-20-live/defects/INDEX.zhcn.md) |
 | Quote agent-evaluation numbers (per-stage accuracy, stability, latency, tokens, failure classes) on a fixed test set | [Agent eval report (Chinese)](evaluation/agent/REPORT.zhcn.md), [fixed cases](../../evaluation/agent/agent_eval_cases.json), `scripts/live_acceptance/eval_agent.mjs` |
-| Find every artifact produced by the recording / defect-recheck / agent-eval work (absolute paths, reproduction, git status) | [Artifact index (Chinese)](acceptance/2026-10-20-live/ARTIFACTS.zhcn.md) |
+| Find every artifact from the recording / defect-recheck / agent-eval work and the EIS two-case feasibility (GIF + MP4, absolute paths, reproduction, git status) | [Artifact index (Chinese)](acceptance/2026-10-20-live/ARTIFACTS.zhcn.md) |
 | Read the 2026-10-20 demo acceptance result and its known gaps | [Acceptance report (Chinese)](acceptance/2026-10-20/REPORT.zhcn.md), [task assignment](acceptance/2026-10-20/TASK_ASSIGNMENT.zhcn.md) |
 | Review the 2026-10-19 portfolio milestone and remaining work | [Portfolio readiness](PORTFOLIO_READINESS.md) |
 | Prepare a truthful project interview and run the offline QE replay | [Interview preparation (Chinese)](INTERVIEW_PREPARATION.zhcn.md), [A1 replay](../examples/cases/A1-qe-mgo/README.md) |
@@ -25,6 +25,7 @@ MatFlow is a vibe-research framework for materials-science researchers: research
 | Understand the features, complete an analysis and interpret the result | [User manual](USER_MANUAL.md) |
 | Connect a local DSH, ChatGPT or other MCP client | See the sibling `matflow-frontend/docs/MCP_INTEGRATION_GUIDE.md` |
 | Day-to-day startup, diagnostics, backup and troubleshooting | [Deployment and operations](DEPLOYMENT_AND_OPERATIONS.md) |
+| Move the whole project to a new machine (backend + WebUI + tests + every demo case) in one command | [Reproduce on a new machine](REPRODUCE_ON_NEW_MACHINE.md), `scripts/repro/` |
 | Understand HTTP fields and client calling conventions | [Backend API contract](BACKEND_API_CONTRACT.md) |
 | Build a safe progressive node preview | [Node preview specification](NODE_PREVIEW_SPEC.md) |
 | Review current completeness, milestones and the next stage | [Project status](PROJECT_STATUS.md) |
@@ -72,6 +73,7 @@ MatFlow is a vibe-research framework for materials-science researchers: research
 - `USER_MANUAL.md` targets users, describes stable operations and carries no internal implementation detail.
 - MCP and DSH documentation is maintained in the `matflow-frontend` repository.
 - `DEPLOYMENT_AND_OPERATIONS.md` covers local deployment and maintenance.
+- `REPRODUCE_ON_NEW_MACHINE.md` is the migration procedure: `scripts/repro/snapshot.ps1` packages both checkouts, `scripts/repro/bootstrap.ps1` restores and provisions a new machine, and `scripts/repro/verify.ps1` proves the result against `scripts/repro/baseline.json`.
 - `BACKEND_API_CONTRACT.md` is the transport-layer interface reference.
 - `PROJECT_STATUS.md` records stage completeness, verification evidence and the next milestone.
 - `DESIGN_AND_ARCHITECTURE.md` records the design philosophy, implementation architecture and capability boundaries.
