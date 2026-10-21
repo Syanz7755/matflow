@@ -225,15 +225,19 @@ node D:\Projects\matflow\scripts\live_acceptance\eval_agent.mjs `
 
 ## 6. 版本控制状态
 
-除以下两处外，本批产物都是**未提交**的新文件：
+本批产物已全部入库并推送。仓库与提交：
 
-| 状态 | 文件 |
-|---|---|
-| `M`（已跟踪，已改） | `D:\Projects\matflow\backend\main.py` —— 新增**默认关闭**的 `MATFLOW_MODEL_USAGE_LOG` 用量插桩（只写 JSONL，不改变行为） |
-| `M`（已跟踪，已改） | `D:\Projects\matflow\docs\README.md` —— 新增三行索引，指向上述产物 |
-| `??`（未跟踪） | `docs/acceptance/2026-10-20-live/demo-tutorial/clips/`、`.../video/`、`.../defects/`、`docs/evaluation/agent/`、`evaluation/agent/`、`scripts/live_acceptance/{record_demo_clips,record_demo_video,record_defect_clips}.ps1`、`scripts/live_acceptance/eval_agent.mjs`、前端仓库 `demos/` |
+| 仓库 / 分支 | 提交 | 内容 |
+|---|---|---|
+| `matflow` @ `acceptance/2026-10-20-demo` | `2a8a452` | 录制的 GIF/MP4 媒体、contact sheet、中英文走查视频 |
+| `matflow` @ `acceptance/2026-10-20-demo` | `856e9bc` | 片段索引、缺陷复核报告与 8 份原始响应、Agent 评测（固定集/报告/观测）、录制与评测脚本、`docs/README.md` 索引 |
+| `matflow` @ `acceptance/2026-10-20-demo` | `db271a7` | `backend/main.py`：默认关闭的 `MATFLOW_MODEL_USAGE_LOG` 用量插桩（只写 JSONL，行为不变） |
+| `matflow-frontend` @ `architecture/v0.2-contract-first` 与 `main` | `fd7f97a` | 录制 spec（11 条片段 / 中英文走查 / 缺陷片段 / 英文路由）+ Windows 补丁版 `playdemo.mjs` |
+| `matflow-frontend` @ 同上 | `726f29f` | `apps/webui/src/main.jsx`：候选池显示为 `Candidate pool (type-gated)`，不再打印 `compatibility 0.00` |
 
-提交前需要决定：53 MB 的 GIF/MP4 是否进 git（或改用 LFS / 只提交文本与脚本、片段放 release 附件）。
+未跟踪的本机文件（未提交，也不应提交）：`.tmp/`（用量日志、评测临时文件）、`docs/_handoff/`（交接与可行性报告）、前端 `demos/.demos/`、`demos/.demo-video/`（录制中间产物，已进 `demos/.gitignore`）。
+
+媒体体积：GIF 约 56 MB、MP4 约 8.6 MB（短片）+ 4.2 MB（两条 36 s 走查）。后续若要减小仓库，可把媒体改为 release 附件或 Git LFS。
 
 ## 7. 已知限制
 
