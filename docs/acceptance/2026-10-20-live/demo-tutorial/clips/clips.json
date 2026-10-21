@@ -1,0 +1,84 @@
+{
+  "recorded_at": "2026-10-21T08:39:58Z",
+  "stack": {
+    "webui": "http://127.0.0.1:5173",
+    "api": "http://127.0.0.1:8000/api",
+    "llm": "deepseek-official-flash via local gateway :4080"
+  },
+  "recorder": "playdemo 0.3.0 (recording-pr-demos skill, patched for Windows)",
+  "capture": {
+    "viewport": "1440x900",
+    "gif_width": 960,
+    "fps": 20,
+    "speed": "1x real time, no playback speed-up",
+    "max_seconds": 8,
+    "overlays": [
+      "title card covering first paint",
+      "Chinese caption band",
+      "painted pointer + click ring"
+    ],
+    "display_fixes": [
+      "title card replaces the blank first-paint flash",
+      "page-drawn pointer because Playwright does not render the OS cursor",
+      "leading all-white frames trimmed",
+      "candidate pool shown as type-gated instead of compatibility 0.00 (clip 08)"
+    ]
+  },
+  "clips": [
+    {
+      "file": "clip-01-workbench.gif",
+      "duration_s": 4.05,
+      "bytes": 2023659
+    },
+    {
+      "file": "clip-02-import-dataset.gif",
+      "duration_s": 3.5,
+      "bytes": 1824658
+    },
+    {
+      "file": "clip-03-build-nodes.gif",
+      "duration_s": 4.1,
+      "bytes": 2146171
+    },
+    {
+      "file": "clip-04-connect-ports.gif",
+      "duration_s": 4.15,
+      "bytes": 2242427
+    },
+    {
+      "file": "clip-05-review-and-save.gif",
+      "duration_s": 3.5,
+      "bytes": 2292367
+    },
+    {
+      "file": "clip-06-run-to-review-gate.gif",
+      "duration_s": 3.3,
+      "bytes": 2107507
+    },
+    {
+      "file": "clip-07-continue-to-result.gif",
+      "duration_s": 3.95,
+      "bytes": 2190771
+    },
+    {
+      "file": "clip-08-chinese-routing.gif",
+      "duration_s": 7.0,
+      "bytes": 3741022
+    },
+    {
+      "file": "clip-09-delete-edge.gif",
+      "duration_s": 3.6,
+      "bytes": 2243740
+    },
+    {
+      "file": "clip-10-qe-replay.gif",
+      "duration_s": 3.1,
+      "bytes": 1946822
+    },
+    {
+      "file": "clip-11-qe-result.gif",
+      "duration_s": 3.0,
+      "bytes": 2522194
+    }
+  ]
+}
