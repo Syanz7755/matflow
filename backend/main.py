@@ -4,6 +4,7 @@ from __future__ import annotations
 import json
 import os
 import re
+import time
 import uuid
 from pathlib import Path
 from typing import Any
@@ -446,6 +447,32 @@ TOOL_SCHEMAS = [
     {"type": "function", "function": {"name": "propose_tool_recipe", "description": "Propose a draft, declarative XRD or FTIR analysis recipe. The proposal is isolated and requires evaluation and human review before activation.", "parameters": {"type": "object", "properties": {"label": {"type": "string"}, "description": {"type": "string"}, "recipe": {"type": "object"}}, "required": ["label", "description", "recipe"], "additionalProperties": False}}},
 ]
 
+def _record_model_usage(model: str | None, usage: dict[str, Any] | None, started_at: float, message_count: int) -> None:
+    """Append one JSONL row per model call when MATFLOW_MODEL_USAGE_LOG is set.
+
+    Evaluation instrumentation only: it never changes routing or execution, and it is
+    silent unless the environment variable names a writable log file.
+    """
+    path = os.getenv("MATFLOW_MODEL_USAGE_LOG")
+    if not path:
+        return
+    usage = usage if isinstance(usage, dict) else {}
+    row = {
+        "at": time.strftime("%Y-%m-%dT%H:%M:%S", time.gmtime()),
+        "model": model,
+        "messages": message_count,
+        "prompt_tokens": usage.get("prompt_tokens"),
+        "completion_tokens": usage.get("completion_tokens"),
+        "total_tokens": usage.get("total_tokens"),
+        "latency_ms": round((time.perf_counter() - started_at) * 1000, 1),
+    }
+    try:
+        with open(path, "a", encoding="utf-8") as handle:
+            handle.write(json.dumps(row, ensure_ascii=False) + "\n")
+    except OSError:
+        pass
+
+
 def model_completion(messages: list[dict[str, Any]], tools: list[dict[str, Any]], provider_id: str | None = None, model: str | None = None) -> dict[str, Any]:
     if provider_id and os.getenv("MATFLOW_ALLOW_MODEL_MOCK") == "1" and os.getenv("MATFLOW_REVISION_MOCK_JSON"):
         return {"role": "assistant", "content": os.environ["MATFLOW_REVISION_MOCK_JSON"]}
@@ -465,11 +492,13 @@ def model_completion(messages: list[dict[str, Any]], tools: list[dict[str, Any]]
     body = {"model": config["model"], "messages": messages, "temperature": config.get("temperature", 0.2)}
     if tools: body["tools"] = tools; body["tool_choice"] = "auto"
     req = urlrequest.Request(url, data=json.dumps(body).encode(), headers={"Content-Type": "application/json", "Authorization": f"Bearer {key}"}, method="POST")
+    started_at = time.perf_counter()
     try:
         with urlrequest.urlopen(req, timeout=load_llm_config().request_timeout_seconds) as response: data = json.loads(response.read(2 * 1024 * 1024))
         message = data["choices"][0]["message"]
         if not isinstance(message, dict):
             raise TypeError("Model provider message must be a JSON object")
+        _record_model_usage(config.get("model"), data.get("usage"), started_at, len(messages))
         return message
     except (OSError, TypeError, KeyError, IndexError, json.JSONDecodeError) as exc:
         audit("model.failed", error=str(exc))
