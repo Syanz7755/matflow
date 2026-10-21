@@ -8,7 +8,7 @@
 - 纯操作步骤（不含录制/分镜）见 [操作手册](../OPERATOR_RUNBOOK.zhcn.md)；逐项验收证据见 [验证报告](../REPORT.zhcn.md)。
 
 > 本教程里的所有界面文案、数值与截图都来自 2026-10-20 的真实运行，不是示意图。
-> 录制环境：后端仓库 `41d86db`、前端 `3df9139`、Windows 11、Chromium 1920×1080。
+> 录制环境：后端 `acceptance/2026-10-20-demo` 分支、前端 `88060b8`、Windows 11、Chromium 1920×1080。
 
 ---
 
@@ -51,8 +51,8 @@
 
 **精简版（3–4 分钟）**：S0 压缩到 15 秒，只录 S1 → S2 → S3 → S4 → S5，结尾加 10 秒 S8 的 QE 回放。
 
-**录制顺序就是上面的顺序，不要改**：S9 的路由对话框会把中文问题留在页面状态里，而 S8 的 QE 演示
-会复用它 —— 先路由后 QE 会失败（HTTP 422，见 [§8](#8-失败与重来最容易踩的-8-个坑)）。
+**顺序按叙事走即可**，不用再担心互相影响：旧版本里 S9 的路由问题会被 QE 演示复用、先路由后 QE 会 422，
+该问题已修复（前端 `88060b8`），现在 QE 演示始终使用固定的 MgO/SCF 提示词。
 
 ---
 
@@ -67,7 +67,7 @@
 | F03 | 数据导入与检视 | S1 | `Imported eis_spectrum.csv`；`eis_spectrum.csv`、`13 rows · 3 columns` | 真实文件上传、解析、列推断 |
 | F04 | 工具库搜索与添加节点 | S2 | 点卡片 → 画布出现节点并自动选中 | 图由工具定义动态生成 |
 | F05 | 类型化端口与连线 | S2 | 端口显示 `raw / RawData`（导入输出、Normalize 输入）、`table / TypedTable`（Normalize 输出）、`data / TypedTable`（EIS 输入）、`report / EISQCReport`；连成 2 条边 | 连接受数据类型约束（不是任意连线） |
-| F06 | 节点操作 | S2、S7 | `•••` 菜单：Rename node / Review after run / Delete node；Inspector `Delete node` | 图可编辑、可重命名、可删除 |
+| F06 | 节点与连线编辑 | S2、S7 | `•••` 菜单：Rename node / Review after run / Delete node；Inspector `Delete node`；**点连线选中（变粗）后按 Delete 只断开这一条** | 图可编辑、可重命名可删除；连错能拆掉一条线而不动节点 |
 | F07 | Inspector 参数编辑 | S3 | `Frequency Column=frequency_hz`、`Real Column=z_real_ohm`、`Imag Column=z_imag_ohm` | 参数在界面上可改并持久化到服务端 |
 | F08 | 人工审核门（Human-in-the-loop） | S3、S4、S6 | 节点头部 `Review` 勾选 → 运行时 `Waiting`；顶栏 `The workflow paused for human review`；`Continue / Revise node / Stop run` | 高风险步骤默认停下来等人确认 |
 | F09 | 真实执行与结果 | S5 | `Completed`；`EISQCReport`：`rows_valid=13`、`rows_retained=13`、`min_frequency_hz=10`、`pass=true`、`issues=[]` | 不是 mock：结果来自真实计算 |
@@ -87,7 +87,7 @@
 |---|---|
 | 真实提交 QE/Slurm 计算 | 本机没有 Slurm；QE 演示是**历史输出回放**，界面已明确标注 |
 | `Modify with AI` 让 LLM 生成节点 | 该路径未纳入本轮验收，现场可能不稳定 |
-| 断开单条连线 | **已知缺陷**：界面选中边按 Delete 无效（报告 D-02，唯一 FAIL）。录制时不要做这个动作 |
+| 按住端口拖拽连线 | 本轮验收用的是“点输出端口 → 点输入端口”，拖拽路径未纳入验收；录制保持点选方式 |
 | 多用户并发 / Ubuntu / Firefox、Safari | 本轮未验收，不能宣称 |
 | 实验室真实数据 | 用仓库自带示例数据 `examples/data/01_eis_basic_qc/eis_spectrum.csv`，讲解时说明是示例 |
 | 后端终端、启动日志 | 终端画面不进入视频，服务在开录前已启动好 |
@@ -194,13 +194,12 @@ Invoke-RestMethod http://127.0.0.1:8000/api/uploads |
 ```powershell
 # 前置：干净栈（同 §3.2），另开一个终端执行
 node scripts\live_acceptance\check_demo_ui.mjs
-# 期望末行：summary: {"PASS":57,"KNOWN":2}；退出码 0
+# 期望末行：summary: {"PASS":60}；退出码 0
 ```
 
-它按本教程 S0–S10 的顺序真实操作一遍界面并核对服务端状态（2026-10-20 实测 **57 PASS / 0 FAIL /
-2 KNOWN**）。两个 KNOWN 是已知偏差（暂停时左下提示文案、QE 复用路由问题），处置见
-[健康检查报告](HEALTH_CHECK.zhcn.md)。**注意：它会改动工作区**，请用独立存档（如 `demo-health`），
-或者录完再跑。
+它按本教程 S0–S10 的顺序真实操作一遍界面并核对服务端状态（修复后复跑实测 **60 PASS / 0 FAIL /
+0 KNOWN**，页面异常 0）。**注意：它会改动工作区**，请用独立存档（如 `demo-health`），或者录完再跑；
+细节与残留限制见[健康检查报告](HEALTH_CHECK.zhcn.md)。
 
 ---
 
@@ -307,10 +306,11 @@ EIS、XRD、FTIR、QE 等分析包。
   再点一次该输出端口，然后重新点输入端口即可（本次两次实拍都遇到过，重试就成功。
   这是已知缺陷 D-01，报告里有记录）。
 - 连错了想取消：按 `Esc`，或点提示条里的 `Cancel`。
-- 连错方向的线目前**不能**在界面里单独删除（D-02）。所以录制时**务必慢慢点**；
-  连错就删掉目标节点重来（Inspector 里 `Delete node`），不要在镜头里尝试选中边按 Delete。
-  **注意**：点击连线不会选中它；如果这时某个节点是选中状态，按 `Delete` 会删掉**那个节点**（实测），
-  所以千万不要在编辑时随手按 Delete。
+- 连错了想断开：**点那条连线**（选中后线会变粗）→ 按 `Delete`（或 `Backspace`）→ 左下提示
+  `Connection removed from the draft.`，两端节点都保留（前端 `88060b8` 起可用）。
+  如果两个节点挨得很近、连线很短，端口会把连线中点盖住导致点不中：先把节点拖开一点再点，
+  或直接删节点重来。**注意**：Delete 删的是“当前选中的东西”——选中的是节点就会删节点，
+  所以点连线后确认线变粗了再按。
 
 ---
 
@@ -368,9 +368,8 @@ EIS、XRD、FTIR、QE 等分析包。
 **旁白要点**：跑起来了。前两个节点自动完成，到 EIS 质检这里停住 —— 因为开了审核开关。
 这时下游的节点还是 `Ready`，没有执行。我可以继续、让 AI 改这个节点的参数，或者直接停掉整条运行。
 
-**录制提示**：这个暂停状态可以多停 2–3 秒，方便观众看清“Waiting”和三个按钮。左下角的提示
-文案可能仍是 `Workflow run finished.`（已知 D7：画布提示与顶栏不一致）；**以顶栏和节点状态为准**，
-旁白不要提这个细节。
+**录制提示**：这个暂停状态可以多停 2–3 秒，方便观众看清“Waiting”和三个按钮。左下提示现在与顶栏一致，
+也是 `The workflow paused for human review.`（D-07 已修复）。
 
 ---
 
@@ -487,8 +486,8 @@ EIS、XRD、FTIR、QE 等分析包。
 
 ### S9 中文路由与决策记录（8:40–10:10）
 
-> 必须在 S8 之后录：路由对话框会把中文问题写进页面状态，而 QE 演示会复用它；
-> 中文问题里没有 MgO/SCF 时 QE 演示会 `422`（详见 §8）。
+> 建议放在 S8 之后（叙事上先算后路由）。旧版 QE 演示会复用这里的路由问题、非 MgO 问题会 `422`；
+> 该问题已修复（前端 `88060b8`，QE 使用固定 MgO/SCF 提示词），顺序不再受限。
 
 **操作**：
 
@@ -626,10 +625,10 @@ EIS、XRD、FTIR、QE 等分析包。
 | # | 现象 | 原因 | 处置 |
 |---|---|---|---|
 | 1 | 点输出端口后没出现 `Select a compatible … input`；或点了输入端口没生成边 | 端口点击偶发未注册（D-01） | 再点一次输出端口 → 再点输入端口；或按住拖拽。实在不行删节点重来。**录制时慢一点** |
-| 2 | 想删一条连线，选中边按 `Delete` 没反应 | 已知缺陷 D-02：连线点不选中，界面不支持断开单条边；**若此刻有节点被选中，Delete 会删掉那个节点** | 录前就别连错；连错就删节点重来。不要在镜头里演示这个动作，编辑时也别随手按 Delete |
+| 2 | 点连线没反应、删不掉 | 节点挨得太近时连线太短，中点被端口盖住（不是删除逻辑问题） | 先把节点拖开再点连线；选中（变粗）后按 Delete 只删这一条。旧版完全不能删，`88060b8` 起已修复 |
 | 3 | 页面一直显示 `Reading the MatFlow control plane…` | CORS：后端允许来源不含当前前端端口；或 `VITE_MATFLOW_API_URL` 不对/后端没起 | 用 `scripts\start_demo.ps1` 启动（它会带 CORS）；自定义端口时前后端端口要一起改并设 `MATFLOW_CORS_ORIGINS` |
 | 4 | 点 `Run MgO QE replay demo` 后状态条报 `409` / `demo_requires_empty_workspace` | 工作区非空 | 先 `Clear workflow` 再 **保存**，然后点 QE 按钮（按钮此时才会亮） |
-| 5 | 点了 QE 按钮却 `422`，提示只支持 MgO/SCF | 路由对话框里留了非 MgO 的中文问题，QE 演示复用了它 | **按 §4 的顺序先录 QE、后录路由**；若已发生，刷新页面（清空问题）或重启后端再录 |
+| 5 | 点了 QE 按钮却 `422`，提示只支持 MgO/SCF | 旧版把路由对话框里的中文问题带进了 QE 演示（`88060b8` 前）；新版固定用 MgO/SCF 提示词 | 确认前端是 `88060b8` 之后的版本；旧版本按 §4 的顺序先录 QE、后录路由 |
 | 6 | 路由按钮转很久（30 s+）或超时 | 用了默认 SJTU 模型/网络变慢 | 录前设 `MATFLOW_LLM_CONFIG=config\llm-deepseek.json`（实测 3.5 s）；或剪辑时剪掉等待 |
 | 7 | 保存按钮是灰的 / 提示 `The workflow is already saved.` | 没有未保存改动；或导入的图与已保存图一致（D5，预期行为） | 正常现象；先改点东西再保存，或直接看画布/服务端状态确认 |
 | 8 | 工作区状态乱了（旧图、旧数据集、版本号很怪） | 用了带旧状态的存档 | 重置：见 [§9](#9-复跑重置与清理)，删掉 `data\saves\demo-video` 重启 |
@@ -785,7 +784,7 @@ Remove-Item -Recurse -Force data\saves\demo-video -ErrorAction SilentlyContinue
 | 前端操作逐项验收（17 PASS / 1 FAIL）与缺陷清单 | [`../frontend-ops/FRONTEND_OPS.zhcn.md`](../frontend-ops/FRONTEND_OPS.zhcn.md) |
 | Lead 独立实例复验 | [`../lead-verify/LEAD_VERIFY.zhcn.md`](../lead-verify/LEAD_VERIFY.zhcn.md) |
 | 本轮总报告（中文路由、多模型矩阵、缺陷） | [`../REPORT.zhcn.md`](../REPORT.zhcn.md) |
-| 录制顺序健康自检（57 PASS / 2 KNOWN） | [`HEALTH_CHECK.zhcn.md`](HEALTH_CHECK.zhcn.md)、[`health-check.json`](health-check.json) |
+| 录制顺序健康自检（60 PASS / 0 FAIL / 0 KNOWN） | [`HEALTH_CHECK.zhcn.md`](HEALTH_CHECK.zhcn.md)、[`health-check.json`](health-check.json) |
 | 健康自检脚本 | [`../../../../scripts/live_acceptance/check_demo_ui.mjs`](../../../../scripts/live_acceptance/check_demo_ui.mjs) |
 | 期望画面生成脚本 | [`../../../../scripts/live_acceptance/capture_demo_frames.mjs`](../../../../scripts/live_acceptance/capture_demo_frames.mjs) |
 | 端到端 API 断言脚本 | [`../../../../scripts/live_acceptance/check_workflow_api.py`](../../../../scripts/live_acceptance/check_workflow_api.py) |

@@ -184,3 +184,14 @@ Invoke-RestMethod http://127.0.0.1:8021/api/uploads | ConvertTo-Json -Depth 5
   `docs/acceptance/2026-10-20-live/lead-verify/LEAD_VERIFY.zhcn.md`），排除了“只在某一实例可用”的可能。
 - 操作手册见 `docs/acceptance/2026-10-20-live/OPERATOR_RUNBOOK.zhcn.md`；一键启动见
   `scripts/start_demo.ps1` / `scripts/start_demo.bat`。
+
+## 9. 后续修复（Lead，2026-10-20 深夜，在本报告之后）
+
+- **D-02 已修**（前端 `88060b8`）：连线现在可以被点选（变粗高亮），`Delete`/`Backspace` 只删除选中的
+  那条连线，节点保留；点节点/空白/`Esc` 会清掉连线选择。新增 e2e 用例覆盖“拖开节点→选连线→删除”，
+  e2e 8/8；健康检查 S7-04/S7-05 复验通过。本报告 §4 第 6 项的 FAIL 是当时现场记录，保留不改。
+- **D-07 已修**：审核门暂停时画布提示改为 `The workflow paused for human review.`，与顶栏一致。
+- **QE 复用路由问题已修**：`qeDemoPrompt()` 只在问题确实包含 MgO + SCF/自洽时沿用输入，否则回退到固定
+  提示词；5 条单元测试覆盖，健康检查 S9-07 复跑通过。
+- 修复后录制顺序健康检查：**60 PASS / 0 FAIL / 0 KNOWN**，页面未捕获异常 0；详见
+  `docs/acceptance/2026-10-20-live/demo-tutorial/HEALTH_CHECK.zhcn.md`。

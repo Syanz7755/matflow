@@ -1,141 +1,121 @@
 {
-  "capturedAt": "2026-10-21T02:31:04.716Z",
-  "webUrl": "http://127.0.0.1:5331/",
-  "api": "http://127.0.0.1:8032/api",
+  "capturedAt": "2026-10-21T03:35:10.666Z",
+  "webUrl": "http://127.0.0.1:5173/",
+  "api": "http://127.0.0.1:8000/api",
   "viewport": "1920x1080",
   "dataset": "examples/data/01_eis_basic_qc/eis_spectrum.csv",
   "routePrompt": "请对这份电化学阻抗谱数据做基本质控：检查高频段虚部符号是否为负、低频段是否发散，并给出质控结论。",
   "steps": [
     {
-      "at": "2026-10-21T02:31:04.987Z",
+      "at": "2026-10-21T03:35:10.917Z",
       "message": "screenshot 00-empty-workspace.png"
     },
     {
-      "at": "2026-10-21T02:31:05.068Z",
+      "at": "2026-10-21T03:35:11.000Z",
       "message": "screenshot 01-import-dataset.png"
     },
     {
-      "at": "2026-10-21T02:31:05.164Z",
+      "at": "2026-10-21T03:35:11.092Z",
       "message": "added node Raw File Import"
     },
     {
-      "at": "2026-10-21T02:31:05.252Z",
+      "at": "2026-10-21T03:35:11.181Z",
       "message": "added node Normalize / Column Mapping"
     },
     {
-      "at": "2026-10-21T02:31:05.319Z",
+      "at": "2026-10-21T03:35:11.250Z",
       "message": "added node EIS Basic Analysis"
     },
     {
-      "at": "2026-10-21T02:31:05.334Z",
+      "at": "2026-10-21T03:35:11.267Z",
       "message": "clicked the raw port on Raw File Import"
     },
     {
-      "at": "2026-10-21T02:31:07.342Z",
-      "message": "connect mode did not open from Raw File Import.raw (attempt 1); clicking again"
-    },
-    {
-      "at": "2026-10-21T02:31:07.621Z",
-      "message": "clicked the raw port on Raw File Import"
-    },
-    {
-      "at": "2026-10-21T02:31:07.633Z",
+      "at": "2026-10-21T03:35:11.283Z",
       "message": "clicked the raw port on Normalize / Column Mapping"
     },
     {
-      "at": "2026-10-21T02:31:07.657Z",
+      "at": "2026-10-21T03:35:11.304Z",
       "message": "connected raw -> raw on attempt 1"
     },
     {
-      "at": "2026-10-21T02:31:07.669Z",
+      "at": "2026-10-21T03:35:11.318Z",
       "message": "clicked the table port on Normalize / Column Mapping"
     },
     {
-      "at": "2026-10-21T02:31:07.674Z",
+      "at": "2026-10-21T03:35:11.334Z",
       "message": "clicked the data port on EIS Basic Analysis"
     },
     {
-      "at": "2026-10-21T02:31:12.675Z",
-      "message": "connect table -> data did not register on attempt 1; retrying"
+      "at": "2026-10-21T03:35:11.354Z",
+      "message": "connected table -> data on attempt 1"
     },
     {
-      "at": "2026-10-21T02:31:13.002Z",
-      "message": "clicked the table port on Normalize / Column Mapping"
-    },
-    {
-      "at": "2026-10-21T02:31:13.017Z",
-      "message": "clicked the data port on EIS Basic Analysis"
-    },
-    {
-      "at": "2026-10-21T02:31:13.019Z",
-      "message": "connected table -> data on attempt 2"
-    },
-    {
-      "at": "2026-10-21T02:31:13.058Z",
+      "at": "2026-10-21T03:35:11.572Z",
       "message": "screenshot 02-graph-built.png"
     },
     {
-      "at": "2026-10-21T02:31:13.101Z",
+      "at": "2026-10-21T03:35:11.609Z",
       "message": "selected eis_basic_qc-1"
     },
     {
-      "at": "2026-10-21T02:31:13.114Z",
+      "at": "2026-10-21T03:35:11.615Z",
       "message": "set frequency column=frequency_hz"
     },
     {
-      "at": "2026-10-21T02:31:13.130Z",
+      "at": "2026-10-21T03:35:11.629Z",
       "message": "set real column=z_real_ohm"
     },
     {
-      "at": "2026-10-21T02:31:13.146Z",
+      "at": "2026-10-21T03:35:11.643Z",
       "message": "set imag column=z_imag_ohm"
     },
     {
-      "at": "2026-10-21T02:31:13.194Z",
+      "at": "2026-10-21T03:35:11.691Z",
       "message": "screenshot 03-inspector-params.png"
     },
     {
-      "at": "2026-10-21T02:31:13.233Z",
+      "at": "2026-10-21T03:35:11.732Z",
       "message": "review gate on the EIS node"
     },
     {
-      "at": "2026-10-21T02:31:13.294Z",
+      "at": "2026-10-21T03:35:11.793Z",
       "message": "saved: Saved as graph v1."
     },
     {
-      "at": "2026-10-21T02:31:13.359Z",
+      "at": "2026-10-21T03:35:11.856Z",
       "message": "screenshot 04-saved-review-on.png"
     },
     {
-      "at": "2026-10-21T02:31:13.478Z",
+      "at": "2026-10-21T03:35:11.976Z",
       "message": "selected eis_basic_qc-1"
     },
     {
-      "at": "2026-10-21T02:31:13.543Z",
+      "at": "2026-10-21T03:35:12.043Z",
       "message": "screenshot 05-review-waiting.png"
     },
     {
-      "at": "2026-10-21T02:31:13.661Z",
+      "at": "2026-10-21T03:35:12.158Z",
       "message": "screenshot 06-completed-result.png"
     },
     {
-      "at": "2026-10-21T02:31:13.793Z",
+      "at": "2026-10-21T03:35:12.289Z",
       "message": "saved: Saved as graph v2."
     },
     {
-      "at": "2026-10-21T02:31:13.856Z",
+      "at": "2026-10-21T03:35:12.337Z",
       "message": "screenshot 07-cleared-workspace.png"
     },
     {
-      "at": "2026-10-21T02:31:14.097Z",
+      "at": "2026-10-21T03:35:12.558Z",
       "message": "screenshot 08-qe-replay.png"
     },
     {
-      "at": "2026-10-21T02:31:14.274Z",
+      "at": "2026-10-21T03:35:12.720Z",
       "message": "screenshot 09-route-dialog.png"
     },
     {
-      "at": "2026-10-21T02:31:17.913Z",
+      "at": "2026-10-21T03:35:16.820Z",
       "message": "screenshot 10-decision-record.png"
     }
   ],
@@ -144,7 +124,7 @@
       "graph_id": "local-default",
       "version": 1,
       "revision": 1,
-      "updated_at": "2026-10-21T02:31:13+00:00",
+      "updated_at": "2026-10-21T03:35:11+00:00",
       "nodes": [
         {
           "id": "raw_file_import-1",
@@ -154,7 +134,7 @@
           "label": "Raw File Import",
           "params": {
             "file_name": "measurement.csv",
-            "upload_id": "b9c995fdfcda4f0e997a529047340d74_eis_spectrum.csv"
+            "upload_id": "49747d840a7f42a5b42c92aa9278cda1_eis_spectrum.csv"
           },
           "position": {
             "x": 80,
@@ -245,7 +225,7 @@
         {
           "version": 1,
           "patch": {
-            "patch_id": "862d4a0e-1cd8-41d5-b5c0-21313ac8c7df",
+            "patch_id": "beab0a9e-d0e4-4498-9e2e-aa0252f517f9",
             "base_version": 0,
             "operations": [
               {
@@ -258,7 +238,7 @@
                   "label": "Raw File Import",
                   "params": {
                     "file_name": "measurement.csv",
-                    "upload_id": "b9c995fdfcda4f0e997a529047340d74_eis_spectrum.csv"
+                    "upload_id": "49747d840a7f42a5b42c92aa9278cda1_eis_spectrum.csv"
                   },
                   "position": {
                     "x": 80,
@@ -415,7 +395,7 @@
       "graph_id": "local-default",
       "version": 1,
       "revision": 8,
-      "updated_at": "2026-10-21T02:31:13+00:00",
+      "updated_at": "2026-10-21T03:35:11+00:00",
       "nodes": [
         {
           "id": "raw_file_import-1",
@@ -425,7 +405,7 @@
           "label": "Raw File Import",
           "params": {
             "file_name": "measurement.csv",
-            "upload_id": "b9c995fdfcda4f0e997a529047340d74_eis_spectrum.csv"
+            "upload_id": "49747d840a7f42a5b42c92aa9278cda1_eis_spectrum.csv"
           },
           "position": {
             "x": 80,
@@ -434,7 +414,7 @@
           "status": "completed",
           "output": {
             "kind": "RawData",
-            "upload_id": "b9c995fdfcda4f0e997a529047340d74_eis_spectrum.csv",
+            "upload_id": "49747d840a7f42a5b42c92aa9278cda1_eis_spectrum.csv",
             "rows": 13,
             "columns": [
               "frequency_hz",
@@ -554,7 +534,7 @@
           "status": "completed",
           "output": {
             "kind": "TypedTable",
-            "upload_id": "b9c995fdfcda4f0e997a529047340d74_eis_spectrum.csv",
+            "upload_id": "49747d840a7f42a5b42c92aa9278cda1_eis_spectrum.csv",
             "mapping": {},
             "rows": 13
           },
@@ -563,7 +543,7 @@
             "port": "table",
             "data": {
               "kind": "TypedTable",
-              "upload_id": "b9c995fdfcda4f0e997a529047340d74_eis_spectrum.csv",
+              "upload_id": "49747d840a7f42a5b42c92aa9278cda1_eis_spectrum.csv",
               "mapping": {},
               "rows": 13
             }
@@ -597,7 +577,7 @@
           "status": "waiting",
           "output": {
             "kind": "EISQCReport",
-            "upload_id": "b9c995fdfcda4f0e997a529047340d74_eis_spectrum.csv",
+            "upload_id": "49747d840a7f42a5b42c92aa9278cda1_eis_spectrum.csv",
             "mapping": {
               "frequency_column": "frequency_hz",
               "real_column": "z_real_ohm",
@@ -614,7 +594,7 @@
             "port": "report",
             "data": {
               "kind": "EISQCReport",
-              "upload_id": "b9c995fdfcda4f0e997a529047340d74_eis_spectrum.csv",
+              "upload_id": "49747d840a7f42a5b42c92aa9278cda1_eis_spectrum.csv",
               "mapping": {
                 "frequency_column": "frequency_hz",
                 "real_column": "z_real_ohm",
@@ -657,7 +637,7 @@
         {
           "version": 1,
           "patch": {
-            "patch_id": "862d4a0e-1cd8-41d5-b5c0-21313ac8c7df",
+            "patch_id": "beab0a9e-d0e4-4498-9e2e-aa0252f517f9",
             "base_version": 0,
             "operations": [
               {
@@ -670,7 +650,7 @@
                   "label": "Raw File Import",
                   "params": {
                     "file_name": "measurement.csv",
-                    "upload_id": "b9c995fdfcda4f0e997a529047340d74_eis_spectrum.csv"
+                    "upload_id": "49747d840a7f42a5b42c92aa9278cda1_eis_spectrum.csv"
                   },
                   "position": {
                     "x": 80,
@@ -827,7 +807,7 @@
       "graph_id": "local-default",
       "version": 1,
       "revision": 9,
-      "updated_at": "2026-10-21T02:31:13+00:00",
+      "updated_at": "2026-10-21T03:35:12+00:00",
       "nodes": [
         {
           "id": "raw_file_import-1",
@@ -837,7 +817,7 @@
           "label": "Raw File Import",
           "params": {
             "file_name": "measurement.csv",
-            "upload_id": "b9c995fdfcda4f0e997a529047340d74_eis_spectrum.csv"
+            "upload_id": "49747d840a7f42a5b42c92aa9278cda1_eis_spectrum.csv"
           },
           "position": {
             "x": 80,
@@ -846,7 +826,7 @@
           "status": "completed",
           "output": {
             "kind": "RawData",
-            "upload_id": "b9c995fdfcda4f0e997a529047340d74_eis_spectrum.csv",
+            "upload_id": "49747d840a7f42a5b42c92aa9278cda1_eis_spectrum.csv",
             "rows": 13,
             "columns": [
               "frequency_hz",
@@ -966,7 +946,7 @@
           "status": "completed",
           "output": {
             "kind": "TypedTable",
-            "upload_id": "b9c995fdfcda4f0e997a529047340d74_eis_spectrum.csv",
+            "upload_id": "49747d840a7f42a5b42c92aa9278cda1_eis_spectrum.csv",
             "mapping": {},
             "rows": 13
           },
@@ -975,7 +955,7 @@
             "port": "table",
             "data": {
               "kind": "TypedTable",
-              "upload_id": "b9c995fdfcda4f0e997a529047340d74_eis_spectrum.csv",
+              "upload_id": "49747d840a7f42a5b42c92aa9278cda1_eis_spectrum.csv",
               "mapping": {},
               "rows": 13
             }
@@ -1009,7 +989,7 @@
           "status": "completed",
           "output": {
             "kind": "EISQCReport",
-            "upload_id": "b9c995fdfcda4f0e997a529047340d74_eis_spectrum.csv",
+            "upload_id": "49747d840a7f42a5b42c92aa9278cda1_eis_spectrum.csv",
             "mapping": {
               "frequency_column": "frequency_hz",
               "real_column": "z_real_ohm",
@@ -1026,7 +1006,7 @@
             "port": "report",
             "data": {
               "kind": "EISQCReport",
-              "upload_id": "b9c995fdfcda4f0e997a529047340d74_eis_spectrum.csv",
+              "upload_id": "49747d840a7f42a5b42c92aa9278cda1_eis_spectrum.csv",
               "mapping": {
                 "frequency_column": "frequency_hz",
                 "real_column": "z_real_ohm",
@@ -1069,7 +1049,7 @@
         {
           "version": 1,
           "patch": {
-            "patch_id": "862d4a0e-1cd8-41d5-b5c0-21313ac8c7df",
+            "patch_id": "beab0a9e-d0e4-4498-9e2e-aa0252f517f9",
             "base_version": 0,
             "operations": [
               {
@@ -1082,7 +1062,7 @@
                   "label": "Raw File Import",
                   "params": {
                     "file_name": "measurement.csv",
-                    "upload_id": "b9c995fdfcda4f0e997a529047340d74_eis_spectrum.csv"
+                    "upload_id": "49747d840a7f42a5b42c92aa9278cda1_eis_spectrum.csv"
                   },
                   "position": {
                     "x": 80,
@@ -1239,14 +1219,14 @@
       "graph_id": "local-default",
       "version": 2,
       "revision": 10,
-      "updated_at": "2026-10-21T02:31:13+00:00",
+      "updated_at": "2026-10-21T03:35:12+00:00",
       "nodes": [],
       "edges": [],
       "history": [
         {
           "version": 1,
           "patch": {
-            "patch_id": "862d4a0e-1cd8-41d5-b5c0-21313ac8c7df",
+            "patch_id": "beab0a9e-d0e4-4498-9e2e-aa0252f517f9",
             "base_version": 0,
             "operations": [
               {
@@ -1259,7 +1239,7 @@
                   "label": "Raw File Import",
                   "params": {
                     "file_name": "measurement.csv",
-                    "upload_id": "b9c995fdfcda4f0e997a529047340d74_eis_spectrum.csv"
+                    "upload_id": "49747d840a7f42a5b42c92aa9278cda1_eis_spectrum.csv"
                   },
                   "position": {
                     "x": 80,
@@ -1413,7 +1393,7 @@
         {
           "version": 2,
           "patch": {
-            "patch_id": "0adbe56d-42fd-49c9-9f79-de3c4f4efc15",
+            "patch_id": "77ecd35d-6472-45d0-b1f2-768f24f82eae",
             "base_version": 1,
             "operations": [
               {
@@ -1484,7 +1464,7 @@
             "graph_id": "local-default",
             "version": 1,
             "revision": 9,
-            "updated_at": "2026-10-21T02:31:13+00:00",
+            "updated_at": "2026-10-21T03:35:12+00:00",
             "nodes": [
               {
                 "id": "raw_file_import-1",
@@ -1494,7 +1474,7 @@
                 "label": "Raw File Import",
                 "params": {
                   "file_name": "measurement.csv",
-                  "upload_id": "b9c995fdfcda4f0e997a529047340d74_eis_spectrum.csv"
+                  "upload_id": "49747d840a7f42a5b42c92aa9278cda1_eis_spectrum.csv"
                 },
                 "position": {
                   "x": 80,
@@ -1503,7 +1483,7 @@
                 "status": "completed",
                 "output": {
                   "kind": "RawData",
-                  "upload_id": "b9c995fdfcda4f0e997a529047340d74_eis_spectrum.csv",
+                  "upload_id": "49747d840a7f42a5b42c92aa9278cda1_eis_spectrum.csv",
                   "rows": 13,
                   "columns": [
                     "frequency_hz",
@@ -1623,7 +1603,7 @@
                 "status": "completed",
                 "output": {
                   "kind": "TypedTable",
-                  "upload_id": "b9c995fdfcda4f0e997a529047340d74_eis_spectrum.csv",
+                  "upload_id": "49747d840a7f42a5b42c92aa9278cda1_eis_spectrum.csv",
                   "mapping": {},
                   "rows": 13
                 },
@@ -1632,7 +1612,7 @@
                   "port": "table",
                   "data": {
                     "kind": "TypedTable",
-                    "upload_id": "b9c995fdfcda4f0e997a529047340d74_eis_spectrum.csv",
+                    "upload_id": "49747d840a7f42a5b42c92aa9278cda1_eis_spectrum.csv",
                     "mapping": {},
                     "rows": 13
                   }
@@ -1666,7 +1646,7 @@
                 "status": "completed",
                 "output": {
                   "kind": "EISQCReport",
-                  "upload_id": "b9c995fdfcda4f0e997a529047340d74_eis_spectrum.csv",
+                  "upload_id": "49747d840a7f42a5b42c92aa9278cda1_eis_spectrum.csv",
                   "mapping": {
                     "frequency_column": "frequency_hz",
                     "real_column": "z_real_ohm",
@@ -1683,7 +1663,7 @@
                   "port": "report",
                   "data": {
                     "kind": "EISQCReport",
-                    "upload_id": "b9c995fdfcda4f0e997a529047340d74_eis_spectrum.csv",
+                    "upload_id": "49747d840a7f42a5b42c92aa9278cda1_eis_spectrum.csv",
                     "mapping": {
                       "frequency_column": "frequency_hz",
                       "real_column": "z_real_ohm",
@@ -1726,7 +1706,7 @@
               {
                 "version": 1,
                 "patch": {
-                  "patch_id": "862d4a0e-1cd8-41d5-b5c0-21313ac8c7df",
+                  "patch_id": "beab0a9e-d0e4-4498-9e2e-aa0252f517f9",
                   "base_version": 0,
                   "operations": [
                     {
@@ -1739,7 +1719,7 @@
                         "label": "Raw File Import",
                         "params": {
                           "file_name": "measurement.csv",
-                          "upload_id": "b9c995fdfcda4f0e997a529047340d74_eis_spectrum.csv"
+                          "upload_id": "49747d840a7f42a5b42c92aa9278cda1_eis_spectrum.csv"
                         },
                         "position": {
                           "x": 80,
@@ -1899,7 +1879,7 @@
       "graph_id": "local-default",
       "version": 3,
       "revision": 20,
-      "updated_at": "2026-10-21T02:31:13+00:00",
+      "updated_at": "2026-10-21T03:35:12+00:00",
       "nodes": [
         {
           "id": "qe-demo-structure",
@@ -3595,7 +3575,7 @@
         {
           "version": 1,
           "patch": {
-            "patch_id": "862d4a0e-1cd8-41d5-b5c0-21313ac8c7df",
+            "patch_id": "beab0a9e-d0e4-4498-9e2e-aa0252f517f9",
             "base_version": 0,
             "operations": [
               {
@@ -3608,7 +3588,7 @@
                   "label": "Raw File Import",
                   "params": {
                     "file_name": "measurement.csv",
-                    "upload_id": "b9c995fdfcda4f0e997a529047340d74_eis_spectrum.csv"
+                    "upload_id": "49747d840a7f42a5b42c92aa9278cda1_eis_spectrum.csv"
                   },
                   "position": {
                     "x": 80,
@@ -3762,7 +3742,7 @@
         {
           "version": 2,
           "patch": {
-            "patch_id": "0adbe56d-42fd-49c9-9f79-de3c4f4efc15",
+            "patch_id": "77ecd35d-6472-45d0-b1f2-768f24f82eae",
             "base_version": 1,
             "operations": [
               {
@@ -3833,7 +3813,7 @@
             "graph_id": "local-default",
             "version": 1,
             "revision": 9,
-            "updated_at": "2026-10-21T02:31:13+00:00",
+            "updated_at": "2026-10-21T03:35:12+00:00",
             "nodes": [
               {
                 "id": "raw_file_import-1",
@@ -3843,7 +3823,7 @@
                 "label": "Raw File Import",
                 "params": {
                   "file_name": "measurement.csv",
-                  "upload_id": "b9c995fdfcda4f0e997a529047340d74_eis_spectrum.csv"
+                  "upload_id": "49747d840a7f42a5b42c92aa9278cda1_eis_spectrum.csv"
                 },
                 "position": {
                   "x": 80,
@@ -3852,7 +3832,7 @@
                 "status": "completed",
                 "output": {
                   "kind": "RawData",
-                  "upload_id": "b9c995fdfcda4f0e997a529047340d74_eis_spectrum.csv",
+                  "upload_id": "49747d840a7f42a5b42c92aa9278cda1_eis_spectrum.csv",
                   "rows": 13,
                   "columns": [
                     "frequency_hz",
@@ -3972,7 +3952,7 @@
                 "status": "completed",
                 "output": {
                   "kind": "TypedTable",
-                  "upload_id": "b9c995fdfcda4f0e997a529047340d74_eis_spectrum.csv",
+                  "upload_id": "49747d840a7f42a5b42c92aa9278cda1_eis_spectrum.csv",
                   "mapping": {},
                   "rows": 13
                 },
@@ -3981,7 +3961,7 @@
                   "port": "table",
                   "data": {
                     "kind": "TypedTable",
-                    "upload_id": "b9c995fdfcda4f0e997a529047340d74_eis_spectrum.csv",
+                    "upload_id": "49747d840a7f42a5b42c92aa9278cda1_eis_spectrum.csv",
                     "mapping": {},
                     "rows": 13
                   }
@@ -4015,7 +3995,7 @@
                 "status": "completed",
                 "output": {
                   "kind": "EISQCReport",
-                  "upload_id": "b9c995fdfcda4f0e997a529047340d74_eis_spectrum.csv",
+                  "upload_id": "49747d840a7f42a5b42c92aa9278cda1_eis_spectrum.csv",
                   "mapping": {
                     "frequency_column": "frequency_hz",
                     "real_column": "z_real_ohm",
@@ -4032,7 +4012,7 @@
                   "port": "report",
                   "data": {
                     "kind": "EISQCReport",
-                    "upload_id": "b9c995fdfcda4f0e997a529047340d74_eis_spectrum.csv",
+                    "upload_id": "49747d840a7f42a5b42c92aa9278cda1_eis_spectrum.csv",
                     "mapping": {
                       "frequency_column": "frequency_hz",
                       "real_column": "z_real_ohm",
@@ -4075,7 +4055,7 @@
               {
                 "version": 1,
                 "patch": {
-                  "patch_id": "862d4a0e-1cd8-41d5-b5c0-21313ac8c7df",
+                  "patch_id": "beab0a9e-d0e4-4498-9e2e-aa0252f517f9",
                   "base_version": 0,
                   "operations": [
                     {
@@ -4088,7 +4068,7 @@
                         "label": "Raw File Import",
                         "params": {
                           "file_name": "measurement.csv",
-                          "upload_id": "b9c995fdfcda4f0e997a529047340d74_eis_spectrum.csv"
+                          "upload_id": "49747d840a7f42a5b42c92aa9278cda1_eis_spectrum.csv"
                         },
                         "position": {
                           "x": 80,
@@ -4245,7 +4225,7 @@
         {
           "version": 3,
           "patch": {
-            "patch_id": "fe1dbbf3-653b-403e-a89e-e7ab4fae7471",
+            "patch_id": "d0f40043-1a3d-486f-bf36-51bfbb4e0e25",
             "base_version": 2,
             "operations": [
               {
@@ -5007,14 +4987,14 @@
             "graph_id": "local-default",
             "version": 2,
             "revision": 10,
-            "updated_at": "2026-10-21T02:31:13+00:00",
+            "updated_at": "2026-10-21T03:35:12+00:00",
             "nodes": [],
             "edges": [],
             "history": [
               {
                 "version": 1,
                 "patch": {
-                  "patch_id": "862d4a0e-1cd8-41d5-b5c0-21313ac8c7df",
+                  "patch_id": "beab0a9e-d0e4-4498-9e2e-aa0252f517f9",
                   "base_version": 0,
                   "operations": [
                     {
@@ -5027,7 +5007,7 @@
                         "label": "Raw File Import",
                         "params": {
                           "file_name": "measurement.csv",
-                          "upload_id": "b9c995fdfcda4f0e997a529047340d74_eis_spectrum.csv"
+                          "upload_id": "49747d840a7f42a5b42c92aa9278cda1_eis_spectrum.csv"
                         },
                         "position": {
                           "x": 80,
@@ -5181,7 +5161,7 @@
               {
                 "version": 2,
                 "patch": {
-                  "patch_id": "0adbe56d-42fd-49c9-9f79-de3c4f4efc15",
+                  "patch_id": "77ecd35d-6472-45d0-b1f2-768f24f82eae",
                   "base_version": 1,
                   "operations": [
                     {
@@ -5252,7 +5232,7 @@
                   "graph_id": "local-default",
                   "version": 1,
                   "revision": 9,
-                  "updated_at": "2026-10-21T02:31:13+00:00",
+                  "updated_at": "2026-10-21T03:35:12+00:00",
                   "nodes": [
                     {
                       "id": "raw_file_import-1",
@@ -5262,7 +5242,7 @@
                       "label": "Raw File Import",
                       "params": {
                         "file_name": "measurement.csv",
-                        "upload_id": "b9c995fdfcda4f0e997a529047340d74_eis_spectrum.csv"
+                        "upload_id": "49747d840a7f42a5b42c92aa9278cda1_eis_spectrum.csv"
                       },
                       "position": {
                         "x": 80,
@@ -5271,7 +5251,7 @@
                       "status": "completed",
                       "output": {
                         "kind": "RawData",
-                        "upload_id": "b9c995fdfcda4f0e997a529047340d74_eis_spectrum.csv",
+                        "upload_id": "49747d840a7f42a5b42c92aa9278cda1_eis_spectrum.csv",
                         "rows": 13,
                         "columns": [
                           "frequency_hz",
@@ -5391,7 +5371,7 @@
                       "status": "completed",
                       "output": {
                         "kind": "TypedTable",
-                        "upload_id": "b9c995fdfcda4f0e997a529047340d74_eis_spectrum.csv",
+                        "upload_id": "49747d840a7f42a5b42c92aa9278cda1_eis_spectrum.csv",
                         "mapping": {},
                         "rows": 13
                       },
@@ -5400,7 +5380,7 @@
                         "port": "table",
                         "data": {
                           "kind": "TypedTable",
-                          "upload_id": "b9c995fdfcda4f0e997a529047340d74_eis_spectrum.csv",
+                          "upload_id": "49747d840a7f42a5b42c92aa9278cda1_eis_spectrum.csv",
                           "mapping": {},
                           "rows": 13
                         }
@@ -5434,7 +5414,7 @@
                       "status": "completed",
                       "output": {
                         "kind": "EISQCReport",
-                        "upload_id": "b9c995fdfcda4f0e997a529047340d74_eis_spectrum.csv",
+                        "upload_id": "49747d840a7f42a5b42c92aa9278cda1_eis_spectrum.csv",
                         "mapping": {
                           "frequency_column": "frequency_hz",
                           "real_column": "z_real_ohm",
@@ -5451,7 +5431,7 @@
                         "port": "report",
                         "data": {
                           "kind": "EISQCReport",
-                          "upload_id": "b9c995fdfcda4f0e997a529047340d74_eis_spectrum.csv",
+                          "upload_id": "49747d840a7f42a5b42c92aa9278cda1_eis_spectrum.csv",
                           "mapping": {
                             "frequency_column": "frequency_hz",
                             "real_column": "z_real_ohm",
@@ -5494,7 +5474,7 @@
                     {
                       "version": 1,
                       "patch": {
-                        "patch_id": "862d4a0e-1cd8-41d5-b5c0-21313ac8c7df",
+                        "patch_id": "beab0a9e-d0e4-4498-9e2e-aa0252f517f9",
                         "base_version": 0,
                         "operations": [
                           {
@@ -5507,7 +5487,7 @@
                               "label": "Raw File Import",
                               "params": {
                                 "file_name": "measurement.csv",
-                                "upload_id": "b9c995fdfcda4f0e997a529047340d74_eis_spectrum.csv"
+                                "upload_id": "49747d840a7f42a5b42c92aa9278cda1_eis_spectrum.csv"
                               },
                               "position": {
                                 "x": 80,
@@ -5674,14 +5654,14 @@
       "inspector": 320
     },
     "datasetDetail": "eis_spectrum.csv |  | 13 rows · 3 columns",
-    "datasetUploadId": "b9c995fdfcda4f0e997a529047340d74_eis_spectrum.csv",
+    "datasetUploadId": "49747d840a7f42a5b42c92aa9278cda1_eis_spectrum.csv",
     "edges": 2,
     "pausedStatus": "The workflow paused for human review",
     "reviewPrompt": "Review this result before continuing.",
     "completedStatus": "Decision submitted: continue",
     "eisOutput": {
       "kind": "EISQCReport",
-      "upload_id": "b9c995fdfcda4f0e997a529047340d74_eis_spectrum.csv",
+      "upload_id": "49747d840a7f42a5b42c92aa9278cda1_eis_spectrum.csv",
       "mapping": {
         "frequency_column": "frequency_hz",
         "real_column": "z_real_ohm",
@@ -5694,8 +5674,8 @@
       "issues": []
     },
     "qeStatus": "MgO QE replay complete · -2417.17683284 Ry · no Slurm job submitted",
-    "routingSeconds": 3.455,
-    "decisionFacts": "Task ID | d4a63104-d1f3-4b7b-a5b2-77d2868ab5ee | Trace ID | b3da9c2fcf594eafbdc4f6cb0c54d4a6 | Graph version | v3 | Decision source | llm | Model | deepseek-official-flash | Confidence | 93% | model self-reported, not calibrated",
+    "routingSeconds": 3.94,
+    "decisionFacts": "Task ID | c2e2bd18-6777-4b17-a124-a6a314376c26 | Trace ID | 7cbb89ed97114ba2a3a52640000aee7c | Graph version | v3 | Decision source | llm | Model | deepseek-official-flash | Confidence | 95% | model self-reported, not calibrated",
     "decisionBadge": "Routed",
     "selectedTools": "EIS Basic Analysis | eis_basic_qc | v1.0.0",
     "finalStatus": "Routing decision saved"

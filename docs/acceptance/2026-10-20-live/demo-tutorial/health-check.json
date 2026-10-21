@@ -1,6 +1,6 @@
 {
-  "checkedAt": "2026-10-21T03:02:39.371Z",
-  "finishedAt": "2026-10-21T03:03:09.835Z",
+  "checkedAt": "2026-10-21T03:34:44.371Z",
+  "finishedAt": "2026-10-21T03:35:00.570Z",
   "webUrl": "http://127.0.0.1:5173/",
   "api": "http://127.0.0.1:8000/api",
   "viewport": "1920x1080",
@@ -19,8 +19,7 @@
     "G"
   ],
   "summary": {
-    "PASS": 57,
-    "KNOWN": 2
+    "PASS": 60
   },
   "checks": [
     {
@@ -126,7 +125,7 @@
       "id": "S2-03",
       "name": "Raw File Import binds the imported dataset",
       "status": "PASS",
-      "detail": "upload_id=b4aad8f3c82e46d2bcb36c13e2e57985_eis_spectrum.csv"
+      "detail": "upload_id=14f420d52797463c8943f98f3330a490_eis_spectrum.csv"
     },
     {
       "scene": "S2",
@@ -215,9 +214,9 @@
     {
       "scene": "S4",
       "id": "S4-03",
-      "name": "Canvas notice while paused still says \"Workflow run finished.\" (D-07)",
-      "status": "KNOWN",
-      "detail": "canvas notice while paused: \"Workflow run finished.\" (D-07)"
+      "name": "Canvas notice agrees with the paused top bar",
+      "status": "PASS",
+      "detail": "The workflow paused for human review."
     },
     {
       "scene": "S5",
@@ -306,9 +305,16 @@
     {
       "scene": "S7",
       "id": "S7-04",
-      "name": "Saving after import produces a clear outcome",
+      "name": "Clicking a connection selects it; Delete removes only that edge",
       "status": "PASS",
-      "detail": "The workflow is already saved."
+      "detail": "edges=1 nodes=3; Connection removed from the draft."
+    },
+    {
+      "scene": "S7",
+      "id": "S7-05",
+      "name": "The removed edge can be recreated through the typed ports",
+      "status": "PASS",
+      "detail": "Saved as graph v4."
     },
     {
       "scene": "S8",
@@ -322,7 +328,7 @@
       "id": "S8-02",
       "name": "Clear workflow plus Save empties the server graph",
       "status": "PASS",
-      "detail": "v4 0/0"
+      "detail": "v5 0/0"
     },
     {
       "scene": "S8",
@@ -350,7 +356,7 @@
       "id": "S8-06",
       "name": "Server holds the four-node QE graph",
       "status": "PASS",
-      "detail": "v5 4/3"
+      "detail": "v6 4/3"
     },
     {
       "scene": "S9",
@@ -364,21 +370,21 @@
       "id": "S9-02",
       "name": "A Chinese prompt gets a routing decision",
       "status": "PASS",
-      "detail": "status=\"Routing decision saved\" after 4.00 s"
+      "detail": "status=\"Routing decision saved\" after 3.47 s"
     },
     {
       "scene": "S9",
       "id": "S9-03",
       "name": "Decision record exposes provenance, model and confidence",
       "status": "PASS",
-      "detail": "Task ID | f86e39d6-8464-47cf-82e7-e8ec18a1b910 | Trace ID | 7562457fb0be4d8fb29499b889cd54f8 | Graph version | v5 | Decision source | llm | Model | deepseek-official-flash | Confidence | 95% | model self-reported, not…"
+      "detail": "Task ID | e175e31a-3df6-4150-92c5-b14c7c18650b | Trace ID | c70e1b7ba8fb41c293b9eb372bef144e | Graph version | v6 | Decision source | llm | Model | deepseek-official-flash | Confidence | 95% | model self-reported, not…"
     },
     {
       "scene": "S9",
       "id": "S9-04",
       "name": "The decision selects eis_basic_qc with a sanitized rationale",
       "status": "PASS",
-      "detail": "EIS Basic Analysis | eis_basic_qc | v1.0.0 :: [llm] Jev routing unavailable; the LLM decided instead. The request is a basic EIS quality check (Nyquist/Bode sanity ch"
+      "detail": "EIS Basic Analysis | eis_basic_qc | v1.0.0 :: [llm] Jev routing unavailable; the LLM decided instead. The request asks for basic quality control of electrochemical im"
     },
     {
       "scene": "S9",
@@ -392,14 +398,14 @@
       "id": "S9-06",
       "name": "The Decision record button reopens the recorded decision",
       "status": "PASS",
-      "detail": "Task ID | f86e39d6-8464-47cf-82e7-e8ec18a1b910 | Trace ID | 7562457fb0be4d8fb29499b889cd54f8 | Graph version | v5 | Decision source | llm | Model | deepseek-official-flash | Confidence | 95% | model self-reported, not…"
+      "detail": "Task ID | e175e31a-3df6-4150-92c5-b14c7c18650b | Trace ID | c70e1b7ba8fb41c293b9eb372bef144e | Graph version | v6 | Decision source | llm | Model | deepseek-official-flash | Confidence | 95% | model self-reported, not…"
     },
     {
       "scene": "S9",
       "id": "S9-07",
-      "name": "QE demo reuses the routed question and rejects it when it names no MgO/SCF (documented trap)",
-      "status": "KNOWN",
-      "detail": "QE demo rejected the routed question: \"The local QE demo supports a pristine MgO SCF request; mention MgO and SCF/self-consistency.\""
+      "name": "QE replay still works after a non-MgO routed question (prompt fallback)",
+      "status": "PASS",
+      "detail": "MgO QE replay complete · -2417.17683284 Ry · no Slurm job submitted"
     },
     {
       "scene": "S10",
@@ -434,61 +440,63 @@
       "id": "G-02",
       "name": "No unexpected console errors",
       "status": "PASS",
-      "detail": "console=1 (expected: the routed-question QE rejection)"
+      "detail": "console=0 (expected: the routed-question QE rejection)"
     }
   ],
   "steps": [
     {
-      "at": "2026-10-21T03:02:39.604Z",
+      "at": "2026-10-21T03:34:44.607Z",
       "message": "S0 loading the empty workbench"
     },
     {
-      "at": "2026-10-21T03:02:39.867Z",
+      "at": "2026-10-21T03:34:44.857Z",
       "message": "S1 importing the dataset"
     },
     {
-      "at": "2026-10-21T03:02:39.938Z",
+      "at": "2026-10-21T03:34:44.928Z",
       "message": "S2 building the typed graph"
     },
     {
-      "at": "2026-10-21T03:02:42.630Z",
+      "at": "2026-10-21T03:34:47.545Z",
       "message": "connect mode did not open from Raw File Import.raw (attempt 1); retrying"
     },
     {
-      "at": "2026-10-21T03:02:43.228Z",
+      "at": "2026-10-21T03:34:52.872Z",
+      "message": "connect table -> data did not register (attempt 1); retrying"
+    },
+    {
+      "at": "2026-10-21T03:34:53.432Z",
       "message": "S3 editing parameters, enabling review and saving"
     },
     {
-      "at": "2026-10-21T03:02:43.457Z",
+      "at": "2026-10-21T03:34:53.606Z",
       "message": "S4 running to the human review gate"
     },
     {
-      "at": "2026-10-21T03:02:43.572Z",
+      "at": "2026-10-21T03:34:53.728Z",
       "message": "S5 continuing and reading the EISQCReport"
     },
     {
-      "at": "2026-10-21T03:02:43.642Z",
+      "at": "2026-10-21T03:34:53.798Z",
       "message": "S6 stopping a branch and proving downstream did not run"
     },
     {
-      "at": "2026-10-21T03:02:44.170Z",
+      "at": "2026-10-21T03:34:54.343Z",
       "message": "S7 exporting and re-importing the workflow"
     },
     {
-      "at": "2026-10-21T03:02:44.409Z",
+      "at": "2026-10-21T03:34:55.077Z",
       "message": "S8 replaying the pinned QE archive"
     },
     {
-      "at": "2026-10-21T03:02:44.816Z",
+      "at": "2026-10-21T03:34:55.514Z",
       "message": "S9 routing a Chinese research question"
     },
     {
-      "at": "2026-10-21T03:03:09.171Z",
+      "at": "2026-10-21T03:34:59.904Z",
       "message": "S10 checking narrow viewport and API docs"
     }
   ],
   "pageErrors": [],
-  "consoleErrors": [
-    "Failed to load resource: the server responded with a status of 422 (Unprocessable Entity)"
-  ]
+  "consoleErrors": []
 }

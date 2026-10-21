@@ -145,8 +145,11 @@ Ubuntu 双平台项按用户指令暂缓，Jev 在线路径、上列缺陷与录
   [`demo-tutorial/capture.json`](demo-tutorial/capture.json)（含 `rows_valid=13`、`pass=true`、
   `-2417.17683284 Ry`、路由 3.46 s / `deepseek-official-flash` / 置信度 95%）。
 - 新增脚本 `scripts/live_acceptance/check_demo_ui.mjs` 与 [健康检查报告](demo-tutorial/HEALTH_CHECK.zhcn.md)：
-  按录制顺序真实操作界面并核对服务端状态，实测 **57 PASS / 0 FAIL / 2 KNOWN**（页面未捕获异常 0），
-  结论“可开录”；同时复验 D-02（单条连线不可选中/删除；若节点处于选中状态，Delete 会删掉该节点）。
+  按录制顺序真实操作界面并核对服务端状态。修复后复跑 **60 PASS / 0 FAIL / 0 KNOWN**（页面异常 0、控制台错误 0）。
+- **录制链路遗留缺陷已修**（前端 `88060b8`，`main` 与 `architecture/v0.2-contract-first` 均已推送）：
+  D-02 连线可选中并删除（新增 e2e 用例，8/8 通过）；D-07 暂停提示与顶栏一致；QE 演示不再复用路由
+  问题（`qeDemoPrompt()` 回退到固定 MgO/SCF 提示词，新增 5 条单元测试）。教程的期望画面与 `capture.json`
+  已按修复后的界面重新生成。
 - 新增可复跑脚本 `scripts/live_acceptance/capture_demo_frames.mjs`（Playwright，只读走完 S0–S9 并截图记账；
   两次实拍均复现 D-01 端口点击偶发不注册，脚本按“再点一次”自动重试）。
 - **视频本身尚未录制**：本轮交付的是录制教材、期望画面与可复跑脚本；未新增 `demo-2026-10-20` 标签。

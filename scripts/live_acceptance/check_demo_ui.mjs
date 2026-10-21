@@ -377,10 +377,10 @@ async function main() {
       must(labels.includes('Continue') && labels.includes('Revise node') && labels.includes('Stop run'), `gate buttons=${labels.join(',')}`);
       return `${labels.join(' / ')}`;
     });
-    await recordKnown('S4', 'S4-03', 'Canvas notice while paused still says "Workflow run finished." (D-07)', async () => {
+    await record('S4', 'S4-03', 'Canvas notice agrees with the paused top bar', async () => {
       const notice = await noticeText();
-      if (notice === 'Workflow run finished.') throw new Error(`canvas notice while paused: "${notice}" (D-07)`);
-      return `canvas notice: "${notice}"`;
+      must(notice === 'The workflow paused for human review.', `notice="${notice}"`);
+      return notice;
     });
 
     // ---------------- S5 continue and read the result ----------------
@@ -490,12 +490,42 @@ async function main() {
       must((await edgeCount()) === 2, `edges=${await edgeCount()}`);
       return await noticeText();
     });
-    await record('S7', 'S7-04', 'Saving after import produces a clear outcome', async () => {
+    await record('S7', 'S7-04', 'Clicking a connection selects it; Delete removes only that edge', async () => {
+      const canvasBox = await canvas.boundingBox();
+      const middle = nodeByLabel('Normalize / Column Mapping');
+      const box = await middle.boundingBox();
+      must(box, 'Normalize node has no box');
+      await page.mouse.move(box.x + box.width / 2, box.y + 16);
+      await page.mouse.down();
+      await page.mouse.move(box.x + box.width / 2 - 40, box.y + 300, { steps: 10 });
+      await page.mouse.up();
+      await page.waitForFunction(() => document.querySelectorAll('[data-testid="workflow-canvas"] .react-flow__edge-path').length >= 2, null, { timeout: 10000 });
+      await page.mouse.click(canvasBox.x + canvasBox.width - 60, canvasBox.y + canvasBox.height - 60);
+      await page.waitForTimeout(200);
+      const point = await page.evaluate(() => {
+        const paths = [...document.querySelectorAll('[data-testid="workflow-canvas"] .react-flow__edge-path')];
+        if (!paths.length) throw new Error('no edge paths are rendered');
+        const path = paths
+          .map((item) => ({ item, length: item.getTotalLength() }))
+          .sort((a, b) => b.length - a.length)[0].item;
+        const middle2 = path.getPointAtLength(path.getTotalLength() * 0.5);
+        const matrix = path.getScreenCTM();
+        return { x: middle2.x * matrix.a + middle2.y * matrix.c + matrix.e, y: middle2.x * matrix.b + middle2.y * matrix.d + matrix.f };
+      });
+      await page.mouse.click(point.x, point.y);
+      await page.waitForFunction(() => document.querySelectorAll('.react-flow__edge.selected').length === 1, null, { timeout: 5000 });
+      await page.keyboard.press('Delete');
+      await page.waitForFunction(() => document.querySelectorAll('[data-testid="workflow-canvas"] .react-flow__edge').length === 1, null, { timeout: 5000 });
+      must((await nodeCount()) === 3, `deleting the edge also changed the node count: nodes=${await nodeCount()}`);
+      must((await noticeText()).includes('Connection removed from the draft.'), `notice="${await noticeText()}"`);
+      return `edges=1 nodes=3; ${await noticeText()}`;
+    });
+    await record('S7', 'S7-05', 'The removed edge can be recreated through the typed ports', async () => {
+      await connectPorts('Normalize / Column Mapping', 'table', 'EIS Basic Analysis', 'data');
+      must((await edgeCount()) === 2, `edges=${await edgeCount()}`);
       await page.locator('button[aria-label="Save workflow"]').click();
       await waitNotice(/Saved as graph|already saved/);
-      const notice = await noticeText();
-      must(/already saved/.test(notice) || /Saved as graph/.test(notice), `notice="${notice}"`);
-      return notice;
+      return await noticeText();
     });
 
     // ---------------- S8 QE replay ----------------
@@ -597,18 +627,15 @@ async function main() {
       await page.locator('.dialog-close').click();
       return facts;
     });
-    await recordKnown('S9', 'S9-07', 'QE demo reuses the routed question and rejects it when it names no MgO/SCF (documented trap)', async () => {
+    await record('S9', 'S9-07', 'QE replay still works after a non-MgO routed question (prompt fallback)', async () => {
       await canvas.locator('.react-flow__pane').click({ position: { x: 900, y: 520 } });
       await page.locator('.inspector-empty button', { hasText: 'Clear workflow' }).click();
       await page.waitForFunction(() => document.querySelectorAll('[data-testid="workflow-canvas"] article.workflow-node').length === 0, null, { timeout: 8000 });
       await saveWorkflow();
       await page.locator('.topbar-actions button', { hasText: 'Run MgO QE replay demo' }).click();
-      try {
-        await waitStatus('MgO QE replay complete', 20000);
-        return 'QE replay started with the routed question';
-      } catch {
-        throw new Error(`QE demo rejected the routed question: "${await statusText()}"`);
-      }
+      await waitStatus('MgO QE replay complete', 180000);
+      must((await nodeCount()) === 4, `QE nodes=${await nodeCount()}`);
+      return `${await statusText()}`;
     });
 
     // ---------------- S10 wrap-up ----------------
