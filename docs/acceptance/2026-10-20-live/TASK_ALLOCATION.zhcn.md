@@ -24,6 +24,7 @@
 | C2 | 前端决策可视化截图（候选/模型选择/置信度/审核状态） | chinese-routing 子代理 | 同上 | 完成（修复前/后截图；Lead 修复后已含 model/confidence） |
 | F1 | 浏览器全程操作一条真实工作流（导入→建图→审核暂停→继续→结果→导出/导入） | frontend-ops 子代理 + Lead 复验 | `docs/acceptance/2026-10-20-live/frontend-ops/`、`OPERATOR_RUNBOOK.zhcn.md` | 完成（真实数值 + 截图 + 独立复验） |
 | F2 | 前端功能与操作清单（增删节点/连线/参数/审核/保存/运行/停止/路由面板/QE 演示/窄屏） | frontend-ops 子代理 | 同上 | 完成（17 PASS / 1 FAIL：无法断开单条连线） |
+| T2 | 按录制顺序逐项检查 WebUI 是否健康可用（S0–S10 真实操作 + 服务端断言） | Lead | `scripts/live_acceptance/check_demo_ui.mjs`、`docs/acceptance/2026-10-20-live/demo-tutorial/HEALTH_CHECK.zhcn.md`、`health-check.json` | 完成（57 PASS / 0 FAIL / 2 KNOWN；D-02 复验并补充风险；发现并修正教程端口类型错误） |
 | T1 | 演示录制教材（10 个分镜逐步操作 + 18 项演示功能清单 + 旁白 + 录屏/剪辑 + 重置）与期望画面脚本 | Lead | `docs/acceptance/2026-10-20-live/demo-tutorial/`、`scripts/live_acceptance/capture_demo_frames.mjs` | 完成（11 张 1920×1080 实拍 + `capture.json` + 可复跑脚本；视频本身未录制） |
 
 ## 2. 端口与数据根隔离（避免并发冲突）

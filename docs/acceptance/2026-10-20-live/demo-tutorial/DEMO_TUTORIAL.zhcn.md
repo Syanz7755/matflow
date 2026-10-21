@@ -66,7 +66,7 @@
 | F02 | 工具注册表（18 个工具、5 个领域包） | S0、S2、S10 | `Active registry 18 tools`；Tool library 卡片带 `v1.0.0` 与 `N in · M out` | 工具是注册表驱动的，不是写死的页面 |
 | F03 | 数据导入与检视 | S1 | `Imported eis_spectrum.csv`；`eis_spectrum.csv`、`13 rows · 3 columns` | 真实文件上传、解析、列推断 |
 | F04 | 工具库搜索与添加节点 | S2 | 点卡片 → 画布出现节点并自动选中 | 图由工具定义动态生成 |
-| F05 | 类型化端口与连线 | S2 | 端口显示 `raw / TypedTable`、`table / TypedTable`、`data / TypedTable`、`report / EISQCReport`；连成 2 条边 | 连接受数据类型约束（不是任意连线） |
+| F05 | 类型化端口与连线 | S2 | 端口显示 `raw / RawData`（导入输出、Normalize 输入）、`table / TypedTable`（Normalize 输出）、`data / TypedTable`（EIS 输入）、`report / EISQCReport`；连成 2 条边 | 连接受数据类型约束（不是任意连线） |
 | F06 | 节点操作 | S2、S7 | `•••` 菜单：Rename node / Review after run / Delete node；Inspector `Delete node` | 图可编辑、可重命名、可删除 |
 | F07 | Inspector 参数编辑 | S3 | `Frequency Column=frequency_hz`、`Real Column=z_real_ohm`、`Imag Column=z_imag_ohm` | 参数在界面上可改并持久化到服务端 |
 | F08 | 人工审核门（Human-in-the-loop） | S3、S4、S6 | 节点头部 `Review` 勾选 → 运行时 `Waiting`；顶栏 `The workflow paused for human review`；`Continue / Revise node / Stop run` | 高风险步骤默认停下来等人确认 |
@@ -189,6 +189,19 @@ Invoke-RestMethod http://127.0.0.1:8000/api/uploads |
 `rows_valid=13 / pass=true`。然后把工作区重置（[§9](#9-复跑重置与清理)），再正式开录。
 这样能避免“录到一半发现状态不对”重来。
 
+### 3.5 开录前跑一遍自动健康自检（推荐，约 40 秒）
+
+```powershell
+# 前置：干净栈（同 §3.2），另开一个终端执行
+node scripts\live_acceptance\check_demo_ui.mjs
+# 期望末行：summary: {"PASS":57,"KNOWN":2}；退出码 0
+```
+
+它按本教程 S0–S10 的顺序真实操作一遍界面并核对服务端状态（2026-10-20 实测 **57 PASS / 0 FAIL /
+2 KNOWN**）。两个 KNOWN 是已知偏差（暂停时左下提示文案、QE 复用路由问题），处置见
+[健康检查报告](HEALTH_CHECK.zhcn.md)。**注意：它会改动工作区**，请用独立存档（如 `demo-health`），
+或者录完再跑。
+
 ---
 
 ## 4. 分镜脚本与旁白
@@ -272,7 +285,7 @@ EIS、XRD、FTIR、QE 等分析包。
    **`Dataset`** 下拉选成 `eis_spectrum.csv`（首项是 `Choose an imported dataset`，别选它）。
 4. 连线（**点端口**，不需要拖拽）：
    1. 点 Raw File Import 右侧输出端口 **`raw`** → 画布底部出现提示
-      `Select a compatible TypedTable input`（带 `Cancel` 按钮）；
+      `Select a compatible RawData input`（第二条连线时是 `Select a compatible TypedTable input`，带 `Cancel` 按钮）；
    2. 点 Normalize 左侧输入端口 **`raw`** → 生成第 1 条边；
    3. 点 Normalize 右侧输出端口 **`table`** → 再点 EIS 左侧输入端口 **`data`** → 第 2 条边。
 
@@ -280,13 +293,13 @@ EIS、XRD、FTIR、QE 等分析包。
 
 - 画布 3 个节点、2 条边，节点之间是带箭头的连线；
 - 节点标题下显示工具 id 与版本（如 `raw_file_import · v1.0.0`）；
-- 端口上标着数据类型：`raw / TypedTable`、`table / TypedTable`、`data / TypedTable`、`report / EISQCReport`；
+- 端口上标着数据类型：`raw / RawData`、`table / TypedTable`、`data / TypedTable`、`report / EISQCReport`（EIS 还有一个输出 `data / EISData`）；
 - 画布顶部版本块显示 `N unsaved changes`。
 
 ![建好的三节点图](screenshots/02-graph-built.png)
 
 **旁白要点**：工作流就是“导入 → 列映射 → EIS 质检”三块。端口带类型：`raw` 是原始数据、
-`table` 是规范化表格、`data` 是 EIS 数据；类型不匹配连不上，这是平台在防止接错线。
+`table` 是规范化表格、`data` 是 EIS 数据（输入是 `TypedTable`，输出是 `EISQCReport`）；类型不匹配连不上，这是平台在防止接错线。
 
 **常见卡点（现场真的会遇到）**：
 
@@ -296,6 +309,8 @@ EIS、XRD、FTIR、QE 等分析包。
 - 连错了想取消：按 `Esc`，或点提示条里的 `Cancel`。
 - 连错方向的线目前**不能**在界面里单独删除（D-02）。所以录制时**务必慢慢点**；
   连错就删掉目标节点重来（Inspector 里 `Delete node`），不要在镜头里尝试选中边按 Delete。
+  **注意**：点击连线不会选中它；如果这时某个节点是选中状态，按 `Delete` 会删掉**那个节点**（实测），
+  所以千万不要在编辑时随手按 Delete。
 
 ---
 
@@ -611,7 +626,7 @@ EIS、XRD、FTIR、QE 等分析包。
 | # | 现象 | 原因 | 处置 |
 |---|---|---|---|
 | 1 | 点输出端口后没出现 `Select a compatible … input`；或点了输入端口没生成边 | 端口点击偶发未注册（D-01） | 再点一次输出端口 → 再点输入端口；或按住拖拽。实在不行删节点重来。**录制时慢一点** |
-| 2 | 想删一条连线，选中边按 `Delete` 没反应 | 已知缺陷 D-02，界面不支持断开单条边 | 录前就别连错；连错就删节点重来。不要在镜头里演示这个动作 |
+| 2 | 想删一条连线，选中边按 `Delete` 没反应 | 已知缺陷 D-02：连线点不选中，界面不支持断开单条边；**若此刻有节点被选中，Delete 会删掉那个节点** | 录前就别连错；连错就删节点重来。不要在镜头里演示这个动作，编辑时也别随手按 Delete |
 | 3 | 页面一直显示 `Reading the MatFlow control plane…` | CORS：后端允许来源不含当前前端端口；或 `VITE_MATFLOW_API_URL` 不对/后端没起 | 用 `scripts\start_demo.ps1` 启动（它会带 CORS）；自定义端口时前后端端口要一起改并设 `MATFLOW_CORS_ORIGINS` |
 | 4 | 点 `Run MgO QE replay demo` 后状态条报 `409` / `demo_requires_empty_workspace` | 工作区非空 | 先 `Clear workflow` 再 **保存**，然后点 QE 按钮（按钮此时才会亮） |
 | 5 | 点了 QE 按钮却 `422`，提示只支持 MgO/SCF | 路由对话框里留了非 MgO 的中文问题，QE 演示复用了它 | **按 §4 的顺序先录 QE、后录路由**；若已发生，刷新页面（清空问题）或重启后端再录 |
@@ -770,6 +785,8 @@ Remove-Item -Recurse -Force data\saves\demo-video -ErrorAction SilentlyContinue
 | 前端操作逐项验收（17 PASS / 1 FAIL）与缺陷清单 | [`../frontend-ops/FRONTEND_OPS.zhcn.md`](../frontend-ops/FRONTEND_OPS.zhcn.md) |
 | Lead 独立实例复验 | [`../lead-verify/LEAD_VERIFY.zhcn.md`](../lead-verify/LEAD_VERIFY.zhcn.md) |
 | 本轮总报告（中文路由、多模型矩阵、缺陷） | [`../REPORT.zhcn.md`](../REPORT.zhcn.md) |
+| 录制顺序健康自检（57 PASS / 2 KNOWN） | [`HEALTH_CHECK.zhcn.md`](HEALTH_CHECK.zhcn.md)、[`health-check.json`](health-check.json) |
+| 健康自检脚本 | [`../../../../scripts/live_acceptance/check_demo_ui.mjs`](../../../../scripts/live_acceptance/check_demo_ui.mjs) |
 | 期望画面生成脚本 | [`../../../../scripts/live_acceptance/capture_demo_frames.mjs`](../../../../scripts/live_acceptance/capture_demo_frames.mjs) |
 | 端到端 API 断言脚本 | [`../../../../scripts/live_acceptance/check_workflow_api.py`](../../../../scripts/live_acceptance/check_workflow_api.py) |
 

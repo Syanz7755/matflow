@@ -1,0 +1,494 @@
+{
+  "checkedAt": "2026-10-21T03:02:39.371Z",
+  "finishedAt": "2026-10-21T03:03:09.835Z",
+  "webUrl": "http://127.0.0.1:5173/",
+  "api": "http://127.0.0.1:8000/api",
+  "viewport": "1920x1080",
+  "sceneOrder": [
+    "S0",
+    "S1",
+    "S2",
+    "S3",
+    "S4",
+    "S5",
+    "S6",
+    "S7",
+    "S8",
+    "S9",
+    "S10",
+    "G"
+  ],
+  "summary": {
+    "PASS": 57,
+    "KNOWN": 2
+  },
+  "checks": [
+    {
+      "scene": "S0",
+      "id": "S0-01",
+      "name": "WebUI connects to the backend",
+      "status": "PASS",
+      "detail": "status=\"Connected · Graph v0\""
+    },
+    {
+      "scene": "S0",
+      "id": "S0-02",
+      "name": "Graph state panel shows v0 / 0 nodes / 0 edges",
+      "status": "PASS",
+      "detail": "GRAPH STATE | Refresh | v0 |  | 0 nodes · 0 edges |  | The current graph is empty. Routing never changes it on its own."
+    },
+    {
+      "scene": "S0",
+      "id": "S0-03",
+      "name": "Active registry lists 18 tools",
+      "status": "PASS",
+      "detail": "registry count=\"18 TOOLS\""
+    },
+    {
+      "scene": "S0",
+      "id": "S0-04",
+      "name": "No dataset imported yet",
+      "status": "PASS",
+      "detail": "datasets=0"
+    },
+    {
+      "scene": "S0",
+      "id": "S0-05",
+      "name": "Canvas is empty",
+      "status": "PASS",
+      "detail": "nodes=0"
+    },
+    {
+      "scene": "S0",
+      "id": "S0-06",
+      "name": "Topbar exposes the three demo actions and QE is enabled on an empty graph",
+      "status": "PASS",
+      "detail": "buttons=Run MgO QE replay demo / Route a research task / Decision record"
+    },
+    {
+      "scene": "S0",
+      "id": "S0-07",
+      "name": "Feature flags render",
+      "status": "PASS",
+      "detail": "flags=3"
+    },
+    {
+      "scene": "S0",
+      "id": "S0-08",
+      "name": "Refresh re-reads server state",
+      "status": "PASS",
+      "detail": "Connected · Graph v0"
+    },
+    {
+      "scene": "S0",
+      "id": "S0-09",
+      "name": "Server reports an empty graph",
+      "status": "PASS",
+      "detail": "v0"
+    },
+    {
+      "scene": "S1",
+      "id": "S1-01",
+      "name": "Import dataset succeeds",
+      "status": "PASS",
+      "detail": "Imported eis_spectrum.csv"
+    },
+    {
+      "scene": "S1",
+      "id": "S1-02",
+      "name": "Dataset detail shows 13 rows x 3 columns",
+      "status": "PASS",
+      "detail": "eis_spectrum.csv |  | 13 rows · 3 columns"
+    },
+    {
+      "scene": "S1",
+      "id": "S1-03",
+      "name": "Clicking the dataset lists its columns",
+      "status": "PASS",
+      "detail": "upload=eis_spectrum.csv"
+    },
+    {
+      "scene": "S2",
+      "id": "S2-01",
+      "name": "Tool library adds three nodes",
+      "status": "PASS",
+      "detail": "nodes=3"
+    },
+    {
+      "scene": "S2",
+      "id": "S2-02",
+      "name": "Nodes expose typed ports",
+      "status": "PASS",
+      "detail": "Raw File Import:->RawData | Normalize / Column Mapping:RawData->TypedTable | EIS Basic Analysis:TypedTable->EISQCReport+EISData"
+    },
+    {
+      "scene": "S2",
+      "id": "S2-03",
+      "name": "Raw File Import binds the imported dataset",
+      "status": "PASS",
+      "detail": "upload_id=b4aad8f3c82e46d2bcb36c13e2e57985_eis_spectrum.csv"
+    },
+    {
+      "scene": "S2",
+      "id": "S2-04",
+      "name": "Typed port connections create two edges",
+      "status": "PASS",
+      "detail": "edges=1 (mode attempt 1); edges=2 (mode attempt 1)"
+    },
+    {
+      "scene": "S2",
+      "id": "S2-05",
+      "name": "Draft is dirty and Discard draft changes is enabled",
+      "status": "PASS",
+      "detail": "5 unsaved changes"
+    },
+    {
+      "scene": "S2",
+      "id": "S2-06",
+      "name": "Discard draft changes resets the canvas",
+      "status": "PASS",
+      "detail": "Saved · Graph v0; Draft changes discarded."
+    },
+    {
+      "scene": "S2",
+      "id": "S2-07",
+      "name": "Rebuilt graph still connects after the discard",
+      "status": "PASS",
+      "detail": "nodes=3 edges=2"
+    },
+    {
+      "scene": "S2",
+      "id": "S2-08",
+      "name": "Node action menu renames a node",
+      "status": "PASS",
+      "detail": "Renamed node to EIS Basic Analysis."
+    },
+    {
+      "scene": "S3",
+      "id": "S3-01",
+      "name": "Inspector edits the three column parameters",
+      "status": "PASS",
+      "detail": "frequency_hz/z_real_ohm/z_imag_ohm"
+    },
+    {
+      "scene": "S3",
+      "id": "S3-02",
+      "name": "Review toggle turns on",
+      "status": "PASS",
+      "detail": "review=on"
+    },
+    {
+      "scene": "S3",
+      "id": "S3-03",
+      "name": "Save creates Graph v1",
+      "status": "PASS",
+      "detail": "Workflow saved · Graph v1"
+    },
+    {
+      "scene": "S3",
+      "id": "S3-04",
+      "name": "Server persisted nodes, edges, params and review policy",
+      "status": "PASS",
+      "detail": "v1 review=true"
+    },
+    {
+      "scene": "S3",
+      "id": "S3-05",
+      "name": "Save button disables when the draft is clean",
+      "status": "PASS",
+      "detail": "save=disabled"
+    },
+    {
+      "scene": "S4",
+      "id": "S4-01",
+      "name": "Run pauses at the EIS review gate",
+      "status": "PASS",
+      "detail": "The workflow paused for human review"
+    },
+    {
+      "scene": "S4",
+      "id": "S4-02",
+      "name": "Upstream nodes completed and the gate offers three actions",
+      "status": "PASS",
+      "detail": "Continue / Revise node / Stop run"
+    },
+    {
+      "scene": "S4",
+      "id": "S4-03",
+      "name": "Canvas notice while paused still says \"Workflow run finished.\" (D-07)",
+      "status": "KNOWN",
+      "detail": "canvas notice while paused: \"Workflow run finished.\" (D-07)"
+    },
+    {
+      "scene": "S5",
+      "id": "S5-01",
+      "name": "Continue completes the node",
+      "status": "PASS",
+      "detail": "Decision submitted: continue"
+    },
+    {
+      "scene": "S5",
+      "id": "S5-02",
+      "name": "Preview shows the real EISQCReport values",
+      "status": "PASS",
+      "detail": "rows_valid=13 pass=true"
+    },
+    {
+      "scene": "S5",
+      "id": "S5-03",
+      "name": "Latest output is available",
+      "status": "PASS",
+      "detail": "latest-output=present"
+    },
+    {
+      "scene": "S5",
+      "id": "S5-04",
+      "name": "Server holds the same result",
+      "status": "PASS",
+      "detail": "rows_valid=13 rows_retained=13"
+    },
+    {
+      "scene": "S6",
+      "id": "S6-01",
+      "name": "Normalize review gate saves as Graph v2",
+      "status": "PASS",
+      "detail": "v2"
+    },
+    {
+      "scene": "S6",
+      "id": "S6-02",
+      "name": "Run pauses at Normalize and leaves EIS unexecuted",
+      "status": "PASS",
+      "detail": "normalize=Waiting eis=Ready"
+    },
+    {
+      "scene": "S6",
+      "id": "S6-03",
+      "name": "Revise node opens an isolated proposal dialog and can be cancelled",
+      "status": "PASS",
+      "detail": "dialog=\"Modify Normalize / Column Mapping\""
+    },
+    {
+      "scene": "S6",
+      "id": "S6-04",
+      "name": "Stop run cancels the branch without executing downstream",
+      "status": "PASS",
+      "detail": "normalize=cancelled eis=ready eisOutput=null"
+    },
+    {
+      "scene": "S6",
+      "id": "S6-05",
+      "name": "Review can be switched off and saved",
+      "status": "PASS",
+      "detail": "v3"
+    },
+    {
+      "scene": "S7",
+      "id": "S7-01",
+      "name": "Export downloads a complete workflow document",
+      "status": "PASS",
+      "detail": "local-default.matflow.json (3/2)"
+    },
+    {
+      "scene": "S7",
+      "id": "S7-02",
+      "name": "Deleting a node removes it from the draft",
+      "status": "PASS",
+      "detail": "1 node removed from the draft."
+    },
+    {
+      "scene": "S7",
+      "id": "S7-03",
+      "name": "Import restores the exported graph",
+      "status": "PASS",
+      "detail": "Imported exported.matflow.json. Review and save to apply it."
+    },
+    {
+      "scene": "S7",
+      "id": "S7-04",
+      "name": "Saving after import produces a clear outcome",
+      "status": "PASS",
+      "detail": "The workflow is already saved."
+    },
+    {
+      "scene": "S8",
+      "id": "S8-01",
+      "name": "QE demo is disabled while the workspace is not empty",
+      "status": "PASS",
+      "detail": "title=\"The QE replay demo needs an empty workspace; clear the workflow first.\""
+    },
+    {
+      "scene": "S8",
+      "id": "S8-02",
+      "name": "Clear workflow plus Save empties the server graph",
+      "status": "PASS",
+      "detail": "v4 0/0"
+    },
+    {
+      "scene": "S8",
+      "id": "S8-03",
+      "name": "QE replay completes with the archived energy",
+      "status": "PASS",
+      "detail": "MgO QE replay complete · -2417.17683284 Ry · no Slurm job submitted"
+    },
+    {
+      "scene": "S8",
+      "id": "S8-04",
+      "name": "Four QE nodes complete",
+      "status": "PASS",
+      "detail": "=Completed / =Completed / =Completed / =Completed"
+    },
+    {
+      "scene": "S8",
+      "id": "S8-05",
+      "name": "QE preview shows the replay provenance and parsed values",
+      "status": "PASS",
+      "detail": "Historical output replay · Slurm not submitted | Convergence | converged | Total energy | -2417.17683284 Ry | Fermi energy | 9.7133 eV | SCF iterations | 14 | Source | qe72_wave1_manual/results/kcheck/scf333.log"
+    },
+    {
+      "scene": "S8",
+      "id": "S8-06",
+      "name": "Server holds the four-node QE graph",
+      "status": "PASS",
+      "detail": "v5 4/3"
+    },
+    {
+      "scene": "S9",
+      "id": "S9-01",
+      "name": "Route dialog exposes the question field and 14 input types",
+      "status": "PASS",
+      "detail": "types=14"
+    },
+    {
+      "scene": "S9",
+      "id": "S9-02",
+      "name": "A Chinese prompt gets a routing decision",
+      "status": "PASS",
+      "detail": "status=\"Routing decision saved\" after 4.00 s"
+    },
+    {
+      "scene": "S9",
+      "id": "S9-03",
+      "name": "Decision record exposes provenance, model and confidence",
+      "status": "PASS",
+      "detail": "Task ID | f86e39d6-8464-47cf-82e7-e8ec18a1b910 | Trace ID | 7562457fb0be4d8fb29499b889cd54f8 | Graph version | v5 | Decision source | llm | Model | deepseek-official-flash | Confidence | 95% | model self-reported, not…"
+    },
+    {
+      "scene": "S9",
+      "id": "S9-04",
+      "name": "The decision selects eis_basic_qc with a sanitized rationale",
+      "status": "PASS",
+      "detail": "EIS Basic Analysis | eis_basic_qc | v1.0.0 :: [llm] Jev routing unavailable; the LLM decided instead. The request is a basic EIS quality check (Nyquist/Bode sanity ch"
+    },
+    {
+      "scene": "S9",
+      "id": "S9-05",
+      "name": "Candidate retrieval and the user prompt are shown",
+      "status": "PASS",
+      "detail": "candidates=6"
+    },
+    {
+      "scene": "S9",
+      "id": "S9-06",
+      "name": "The Decision record button reopens the recorded decision",
+      "status": "PASS",
+      "detail": "Task ID | f86e39d6-8464-47cf-82e7-e8ec18a1b910 | Trace ID | 7562457fb0be4d8fb29499b889cd54f8 | Graph version | v5 | Decision source | llm | Model | deepseek-official-flash | Confidence | 95% | model self-reported, not…"
+    },
+    {
+      "scene": "S9",
+      "id": "S9-07",
+      "name": "QE demo reuses the routed question and rejects it when it names no MgO/SCF (documented trap)",
+      "status": "KNOWN",
+      "detail": "QE demo rejected the routed question: \"The local QE demo supports a pristine MgO SCF request; mention MgO and SCF/self-consistency.\""
+    },
+    {
+      "scene": "S10",
+      "id": "S10-01",
+      "name": "1280x720 has no horizontal overflow and keeps the actions visible",
+      "status": "PASS",
+      "detail": "{\"innerWidth\":1280,\"scrollWidth\":1280,\"canvas\":680,\"actions\":3}"
+    },
+    {
+      "scene": "S10",
+      "id": "S10-02",
+      "name": "Registry still lists 18 tools",
+      "status": "PASS",
+      "detail": "registry=18"
+    },
+    {
+      "scene": "S10",
+      "id": "S10-03",
+      "name": "API docs answer over HTTP",
+      "status": "PASS",
+      "detail": "http://127.0.0.1:8000/docs -> 200"
+    },
+    {
+      "scene": "G",
+      "id": "G-01",
+      "name": "No uncaught page errors",
+      "status": "PASS",
+      "detail": "pageerrors=0"
+    },
+    {
+      "scene": "G",
+      "id": "G-02",
+      "name": "No unexpected console errors",
+      "status": "PASS",
+      "detail": "console=1 (expected: the routed-question QE rejection)"
+    }
+  ],
+  "steps": [
+    {
+      "at": "2026-10-21T03:02:39.604Z",
+      "message": "S0 loading the empty workbench"
+    },
+    {
+      "at": "2026-10-21T03:02:39.867Z",
+      "message": "S1 importing the dataset"
+    },
+    {
+      "at": "2026-10-21T03:02:39.938Z",
+      "message": "S2 building the typed graph"
+    },
+    {
+      "at": "2026-10-21T03:02:42.630Z",
+      "message": "connect mode did not open from Raw File Import.raw (attempt 1); retrying"
+    },
+    {
+      "at": "2026-10-21T03:02:43.228Z",
+      "message": "S3 editing parameters, enabling review and saving"
+    },
+    {
+      "at": "2026-10-21T03:02:43.457Z",
+      "message": "S4 running to the human review gate"
+    },
+    {
+      "at": "2026-10-21T03:02:43.572Z",
+      "message": "S5 continuing and reading the EISQCReport"
+    },
+    {
+      "at": "2026-10-21T03:02:43.642Z",
+      "message": "S6 stopping a branch and proving downstream did not run"
+    },
+    {
+      "at": "2026-10-21T03:02:44.170Z",
+      "message": "S7 exporting and re-importing the workflow"
+    },
+    {
+      "at": "2026-10-21T03:02:44.409Z",
+      "message": "S8 replaying the pinned QE archive"
+    },
+    {
+      "at": "2026-10-21T03:02:44.816Z",
+      "message": "S9 routing a Chinese research question"
+    },
+    {
+      "at": "2026-10-21T03:03:09.171Z",
+      "message": "S10 checking narrow viewport and API docs"
+    }
+  ],
+  "pageErrors": [],
+  "consoleErrors": [
+    "Failed to load resource: the server responded with a status of 422 (Unprocessable Entity)"
+  ]
+}
